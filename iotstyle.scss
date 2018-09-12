@@ -53,7 +53,7 @@ h4 {
   >img {
     // assume image in text containers to be inline icons
     height: 1em;
-    &:not(:first-child) {
+    &:first-child {
       margin-right: 0.4em;
     }
   }
@@ -215,24 +215,22 @@ h4 {
   width: 400px;
   >.block {
     flex: 1 1 auto;
-    padding: 1em;
+    padding: 0.6em;
     &.header {
       background-image: url(/cardback.png);
       background-size: 100%;
       background-repeat: repeat-y;
+      >h1,
+      >h2,
+      >h3,
+      >h4 {
+        margin: 0
+      }
     }
     &.action {
       background-color: limegreen;
       padding-top: 0;
       padding-bottom: 0;
-    }
-    h2,
-    h4 {
-      margin: 0;
-      img {
-        margin-right: 0.4em;
-        height: 1em
-      }
     }
   }
   >hr {

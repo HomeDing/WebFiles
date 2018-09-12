@@ -21,7 +21,7 @@ p, h1, h2, h3, h4 { margin: 0 0 0.5em 0; }
 
 p > img, h1 > img, h2 > img, h3 > img, h4 > img { height: 1em; }
 
-p > img:not(:first-child), h1 > img:not(:first-child), h2 > img:not(:first-child), h3 > img:not(:first-child), h4 > img:not(:first-child) { margin-right: 0.4em; }
+p > img:first-child, h1 > img:first-child, h2 > img:first-child, h3 > img:first-child, h4 > img:first-child { margin-right: 0.4em; }
 
 h1, h2, h3, h4 { font-family: Arial; color: black; }
 
@@ -35,6 +35,8 @@ h4 { font-size: 0.8em; }
 
 /* === Grid Design with grid of 6 === */
 .container { margin-right: 2rem; margin-left: 2rem; }
+
+@media (max-width: 720px) { .container { margin-right: 0.6rem; margin-left: 0.6rem; } }
 
 .container-fluid { margin-right: 0; margin-left: 0; }
 
@@ -77,26 +79,23 @@ h4 { font-size: 0.8em; }
 /* === Cards === */
 .card { position: relative; display: flex; flex-direction: column; background-color: #d4dced; border: 1px solid rgba(0, 0, 0, 0.125); border-radius: .25rem; width: 400px; }
 
-.card > .block { flex: 1 1 auto; padding: 1em; }
+.card > .block { flex: 1 1 auto; padding: 0.6em; }
 
 .card > .block.header { background-image: url(/cardback.png); background-size: 100%; background-repeat: repeat-y; }
 
+.card > .block.header > h1, .card > .block.header > h2, .card > .block.header > h3, .card > .block.header > h4 { margin: 0; }
+
 .card > .block.action { background-color: limegreen; padding-top: 0; padding-bottom: 0; }
-
-.card > .block h2, .card > .block h4 { margin: 0; }
-
-.card > .block h2 img, .card > .block h4 img { margin-right: 0.4em; height: 1em; }
 
 .card > hr { background-color: rgba(0, 0, 0, 0.125); border: 0; height: 1px; padding: 0; margin: 0; }
 
 a + a, a + button, a + label, label + a, label + button, label + label, button + a, button + button, button + label { margin-left: 1.25rem; }
 
-@media (max-width: 720px) { .container { margin-right: 0.6rem; margin-left: 0.6rem; } }
-
 button { font-size: 1em; border: 0.1em solid gray; border-radius: 0.4em; padding-left: 0.4em; padding-right: 0.4em; min-width: 4em; }
 
 button.active { background-color: #acc1e4 !important; border-color: #203050 !important; }
 
+/* === SWITCH === */
 .u-switch { display: inline-block; width: 100%; }
 
 .u-switch > label { display: inline-block; padding: .4rem 1rem; margin-bottom: 0.5rem; vertical-align: top; font-size: 1.4rem; cursor: pointer; }
