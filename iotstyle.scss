@@ -1,0 +1,311 @@
+html,
+body {
+  padding: 0;
+  margin: 0;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial;
+  font-size: 1em;
+  color: black;
+}
+
+img.icon,
+svg.icon {
+  width: 4em;
+  height: 4em;
+  .object {
+    fill: #304878;
+    fill-opacity: 1;
+  }
+  .connect {
+    fill: green;
+    fill-opacity: 1;
+  }
+}
+
+svg.button {
+  width: 2em;
+  height: 2em;
+  .object {
+    fill: #304878;
+    fill-opacity: 1;
+  }
+  .connect {
+    fill: green;
+    fill-opacity: 1;
+  }
+}
+
+
+/* === Text containers === */
+
+p,
+h1,
+h2,
+h3,
+h4 {
+  margin: 0 0 0.5em 0;
+  >img {
+    // assume image in text containers to be inline icons
+    height: 1em;
+    &:not(:first-child) {
+      margin-right: 0.4em;
+    }
+  }
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: Arial;
+  color: black;
+}
+
+// Page title
+h1 {
+  font-size: 3em;
+}
+
+// Chapter
+h2 {
+  font-size: 1.6em;
+}
+
+// Topic
+h3 {
+  font-size: 1em;
+  font-weight: bold;
+}
+
+// Subtitle
+h4 {
+  font-size: 0.8em;
+}
+
+
+/* === Grid Design with grid of 6 === */
+
+.container {
+  margin-right: 2rem;
+  margin-left: 2rem;
+  @media (max-width: 720px) {
+    margin-right: 0.6rem;
+    margin-left: 0.6rem;
+  }
+}
+
+.container-fluid {
+  margin-right: 0;
+  margin-left: 0;
+}
+
+
+/* row with 0.5rem gutter */
+
+.row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  margin: -0.5rem 0.1rem 0.5rem -0.5rem;
+  clear: both;
+  padding: 0px;
+  &.wrap {
+    flex-wrap: wrap;
+  }
+  &.nogutter {
+    margin: 0;
+  }
+}
+
+.col,
+.col-1,
+.col-2,
+.col-3,
+.col-4,
+.col-5,
+.col-6 {
+  flex: 0 0 0;
+  margin: 0.5rem 0 0 0.5rem;
+}
+
+.row.nogutter>.col {
+  margin: 0;
+}
+
+.col.stretch {
+  flex-grow: 1;
+}
+
+.col-1 {
+  flex-basis: 16.66666667%;
+}
+
+.col-2 {
+  flex-basis: 33.33333333%;
+}
+
+.col-3 {
+  flex-basis: 50%;
+}
+
+.col-4 {
+  flex-basis: 66.66666667%;
+}
+
+.col-5 {
+  flex-basis: 83.33333334%;
+}
+
+.col-6 {
+  flex-basis: 100%;
+}
+
+
+/* === Header === */
+
+// The header in the micro css is used to display the primary icon of the device, the name and links to important pages.
+.u-header {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  margin: 0.2em 0 0 0;
+}
+
+.u-header .icon {
+  height: 3em;
+  width: 3em;
+  background-color: #cccccc;
+  border-radius: 0.5em;
+}
+
+.u-header a,
+.u-header a:visited,
+.u-header a:hover {
+  text-decoration: none;
+  color: black;
+}
+
+.u-header>* {
+  align-self: center;
+  margin-top: 0;
+  margin-bottom: 0;
+  padding: 0;
+}
+
+.u-header>*+* {
+  margin-left: 0.4rem;
+}
+
+
+/* === Cards === */
+
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background-color: #d4dced;
+  border: 1px solid rgba(0, 0, 0, .125);
+  border-radius: .25rem;
+  width: 400px;
+  >.block {
+    flex: 1 1 auto;
+    padding: 1em;
+    &.header {
+      background-image: url(/cardback.png);
+      background-size: 100%;
+      background-repeat: repeat-y;
+    }
+    &.action {
+      background-color: limegreen;
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+    h2,
+    h4 {
+      margin: 0;
+      img {
+        margin-right: 0.4em;
+        height: 1em
+      }
+    }
+  }
+  >hr {
+    background-color: rgba(0, 0, 0, .125);
+    border: 0;
+    height: 1px;
+    padding: 0;
+    margin: 0;
+  }
+}
+
+a+a,
+a+button,
+a+label,
+label+a,
+label+button,
+label+label,
+button+a,
+button+button,
+button+label {
+  margin-left: 1.25rem;
+}
+
+button {
+  font-size: 1em;
+  border: 0.1em solid gray;
+  border-radius: 0.4em;
+  padding-left: 0.4em;
+  padding-right: 0.4em;
+  min-width: 4em;
+}
+
+button.active {
+  background-color: #acc1e4 !important;
+  border-color: #203050 !important;
+}
+
+
+/* === SWITCH === */
+
+.u-switch {
+  display: inline-block;
+  width: 100%;
+  >label {
+    display: inline-block;
+    padding: .4rem 1rem;
+    margin-bottom: 0.5rem;
+    vertical-align: top;
+    font-size: 1.4rem;
+    cursor: pointer;
+  }
+  >.box {
+    position: relative;
+    cursor: pointer;
+    display: inline-block;
+    width: 3rem;
+    height: 1.6rem;
+    border: 0.1rem solid #C0C0C0;
+    border-radius: 1.3rem;
+    background-color: #eeeeee;
+    >.handle {
+      position: absolute;
+      display: inline-block;
+      top: 0.1rem;
+      left: 0.1rem;
+      height: 1.2rem;
+      width: 1.2rem;
+      border-radius: 1.2rem;
+      background-color: #203050;
+      transition: left 0.2s cubic-bezier(0.25, 0.1, 0.25, 1);
+    }
+  }
+  &.active>.box>.handle {
+    left: 1.5rem;
+  }
+}
