@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+  <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+  <link rel="apple-touch-icon-precomposed" href="/favicon-256.png">
+  <link rel="xx-manifest" href="/watermanifest.json">
+  <title>Timer HomeDing</title>
+  <link Content-Type="text/css" href="iotstyle.css" rel="stylesheet" />
+  <script src="micro.js"></script>
+  <style>
+    img.light {
+      width: 1rem;
+      height: 1rem;
+      display: inline-block;
+      background-image: url(red.svg);
+      background-size: 100%;
+    }
+    
+    img.light.active {
+      background-image: url(green.svg);
+    }
+    
+    .u-bar {
+      position: relative;
+      height: 1.4em;
+      width: 100%;
+      background-color: #aaaaaa;
+    }
+    
+    .u-bar>.pulse,
+    .u-bar>.current {
+      display: inline-block;
+      position: absolute;
+    }
+    
+    .u-bar>.pulse {
+      top: 0;
+      left: 0;
+      height: 1.4em;
+      background-color: green
+    }
+    
+    .u-bar>.current {
+      top: 0.3em;
+      height: 0.8em;
+      background-color: red;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="u-header">
+      <a href="/"><img class="icon" src="/i/timer.svg" /></a>
+      <h1>Water</h1>
+      <a href="/index.htm"><img class="icon" src="/i/home.svg" /></a>
+      <a href="/index.htm">Home</a>
+      <a href="/ding-ide.htm"><img class="icon" src="/i/ide.svg" /></a>
+      <a href="/ding-ide.htm">IDE</a>
+
+      <a href="/ding.htm">[UI]</a>
+      <a href="/ding-info.htm">[Info]</a>
+      <a href="/$sysinfo">[$sysinfo]</a>
+    </div>
+
+
+    <div class="row wrap">
+      <div class="col">
+        <div class="card" microID="/timer/blink" microBehavior='timer'>
+          <div class="block header">
+            <h2 style="margin-bottom: 0"><img src="/i/timer.svg" /><span property='description'>.</span></h2>
+          </div>
+          <div class="block">
+            <label>wait:</label><span property='waittime'>.</span>
+            <label>pulse:</label><span property='pulsetime'>.</span>
+          </div>
+          <div class="block">
+            <div class="u-bar">
+              <span class="pulse"></span>
+              <span class="current"></span>
+            </div>
+          </div>
+          <hr />
+          <div class="block">
+            <button property='start' value='1'>Start</button>
+            <button property='next' value='1'>Next</button>
+            <button property='stop' value='1'>Stop</button>
+          </div>
+        </div>
+        <p>&nbsp;</p>
+        <div class="card">
+          <div class="block header">
+            <!-- <img style="display:inline-block;height:2em" xclass="icon" src="/style/v0002/db-logo.svg"> -->
+            <h2><img style="margin-right:0.4em;height:1em" src="/i/timer.svg" />Card title</h2>
+            <h4>Card subtitle</h4>
+          </div>
+          <div class="block action">
+            <p>Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+          </div>
+          <hr />
+          <div class="block">
+            <a href="#">Card link</a>
+            <a href="#">Another link</a>
+            <label>do</label><button>click</button>
+          </div>
+          <div class="block action">
+            Some quick example text to build on the card title and make up the bulk of the card's content.
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+    GenericElementBehavior = {
+      microID: "",
+
+      init: function() {
+        hub.subscribe(this.microid + "?*", this.newData.bind(this));
+      }, // init
+
+      newData: function(path, key, value) {
+        forAllNodeList(this.querySelectorAll("img[property='" + key + "']"), function(e) {
+          if (value)
+            e.classList.add('active');
+          else
+            e.classList.remove('active')
+            // e.textContent = value;
+          e.title = value;
+        });
+
+        forAllNodeList(this.querySelectorAll("span[property='" + key + "']"), function(e) {
+          e.textContent = value;
+          e.title = value;
+        });
+
+        forAllNodeList(this.querySelectorAll("input[property='" + key + "']"), function(e) {
+          e.value = value;
+        });
+      }, // newData()
+
+      onchange: function(e) {
+        var src = e.srcElement;
+        dispatch(this.microid, src.getAttribute('property'), e.srcElement.value);
+        // debugger;
+      },
+
+      onclick: function(e) {
+        var src = e.srcElement;
+        dispatch(this.microid, src.getAttribute('property'), e.srcElement.value);
+        // debugger;
+      }
+
+    }; // GenericElementBehavior
+
+    TimerElementBehavior = {
+      microID: "",
+      wt: 0,
+      pt: 0,
+      ct: 0,
+      time: 0,
+
+      _timeToSec: function(v) {
+        v = v.toLowerCase();
+        if (v.endsWith('m')) {
+          v = parseInt(v, 10) * 60;
+        } // if
+        return (v);
+      },
+
+      init: function() {
+        hub.subscribe(this.microid + "?*", this.newData.bind(this));
+      }, // init
+
+      newData: function(path, key, value) {
+        // alert(key);
+        if (key == "waittime") {
+          this.wt = this._timeToSec(value);
+        } else if (key == "pulsetime") {
+          this.pt = this._timeToSec(value);
+        } else if (key == "cycletime") {
+          this.ct = this._timeToSec(value);
+        } else if (key == "time") {
+          this.time = this._timeToSec(value);
+        }
+
+        if (this.ct < 0 + this.wt + this.pt)
+          this.ct = 0 + this.wt + this.pt
+
+        // update bars
+        if (this.ct > 0) {
+          var el = this.querySelectorAll(".u-bar")[0];
+          var f = el.clientWidth / this.ct;
+          var pto = el.querySelectorAll(".pulse")[0];
+          pto.style.left = Math.floor(this.wt * f) + "px";
+          pto.style.width = Math.floor(this.pt * f) + "px";
+          var cto = el.querySelectorAll(".current")[0];
+          cto.style.width = Math.floor(this.time * f) + "px";
+        }
+
+        forAllNodeList(this.querySelectorAll("span[property='" + key + "']"), function(e) {
+          e.textContent = value;
+          e.title = value;
+        });
+
+      }, // newData()
+
+      onchange: function(e) {
+        var src = e.srcElement;
+        dispatch(this.microid, src.getAttribute('property'), e.srcElement.value);
+        // debugger;
+      },
+
+      onclick: function(e) {
+        var src = e.srcElement;
+        dispatch(this.microid, src.getAttribute('property'), e.srcElement.value);
+        // debugger;
+      }
+
+    }; // TimerElementBehavior
+
+    jcl.registerBehaviour("timer", TimerElementBehavior);
+    jcl.registerBehaviour("generic", GenericElementBehavior);
+
+    jcl.attachAll(document.body);
+
+    function loadConfig() {
+      loadAsync("/config.json", "application/json", function(txt) {
+        var obj = JSON.parse(txt);
+        hub.publishObj(obj);
+      });
+    } // loadConfig()
+
+    function updateState() {
+      loadAsync("/$board", "application/json", function(txt) {
+        try {
+          var obj = JSON.parse(txt);
+          hub.publishObj(obj);
+        } catch (e) {}
+      });
+    } // updateState()
+
+    loadConfig();
+    window.setInterval(updateState, 1000);
+  </script>
+
+</body>
