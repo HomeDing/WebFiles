@@ -121,6 +121,15 @@
       border: 2px solid #00CC00;
       background-color: #ccFFcc
     }
+    
+    button:disabled.once {
+      background-image: url(/spinner.gif);
+      background-size: 2em;
+      background-position: center;
+      background-repeat: no-repeat;
+      color: transparent;
+      border: 1px solid black;
+    }
   </style>
 </head>
 
@@ -142,6 +151,9 @@
       <a href="/ding.htm">[UI]</a>
       <a href="/ding-info.htm">[Info]</a>
       <a href="/$sysinfo">[$sysinfo]</a>
+
+      <button class="once" id="resetbutton">reset</button>
+      <!-- <img src="/spinner.gif" style="display:none"> -->
     </div>
 
     <div class="row" style="flex:0 0 auto">
@@ -167,4 +179,29 @@
     </div>
   </div>
   <script src="ding-ide.js"></script>
+  <script>
+    MicroTQ.startTask(function() {
+      var cacheImage = new Image();
+      cacheImage.src = "/spinner.gif";
+    });
+
+    // call this to start blocking the button while activity is running.
+    function runOnce() {
+      this.disabled = true;
+      MicroTQ.startTask(loadAsync("/$reboot", runWait.bind(this), runWait.bind(this)));
+    } // runOnce
+
+    // call this to stop blocking the button.
+    function runWait(evt) {
+      window.setTimeout(runDone.bind(this), 2500);
+    } // runWait
+
+    // call this to stop blocking the button.
+    function runDone(evt) {
+      this.disabled = false;
+    } // runDone
+
+    var resetObj = document.getElementById("resetbutton");
+    resetObj.addEventListener("click", runOnce);
+  </script>
 </body>

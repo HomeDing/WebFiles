@@ -277,4 +277,34 @@ function forAllNodeList(nodeList, callbackFn) {
   }
 } // forAllNodeList()
 
+
+var MicroTQ = new(function() {
+  this._queue = [];
+  this._tHandle = null;
+
+  this.startTask = function(func) {
+      this._queue.push(func); // add at the end of array
+      if (!this._tHandle) {
+        this._tHandle = window.setTimeout(this.nextTask.bind(this), 1);
+      } // if
+    } // startTask
+
+  this.nextTask = function() {
+      this._tHandle = null;
+      if (this._queue.length > 0) {
+        var func = this._queue.shift();
+        func();
+      } // if
+      if ((!this._tHandle) && (this._queue.length > 0)) {
+        this._tHandle = window.setTimeout(this.nextTask.bind(this), 1);
+      } // if
+    } // nextTask
+
+  this.clear = function() {
+      this._queue = [];
+    } // clear
+
+}); // MicroTQ
+
+
 // End
