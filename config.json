@@ -1,55 +1,46 @@
 {
-  "timer": {
-    "blink": {
-      "type": "LOOP",
-      "waittime": "80m",
-      "pulsetime": "10m",
-      "cycletime": "100m",
+  "displaytext": {
+    "date": {
+      "type": "TEXT",
+      "x": 0,
+      "y": 0,
+      "description": "show the date"
+    },
 
-      "onon": "digitalout/relais?on,device/main?log=*on*",
-      "onoff": "digitalout/relais?off,device/main?log=*off*",
-      "description": "Water Timer"
+    "time": {
+      "type": "TEXT",
+      "x": 0,
+      "y": 16,
+      "fontsize": 16,
+      "description": "show the time"
     }
   },
 
-  "dht": {
+  "ntptime": {
     "on": {
-      "description": "Local DHT sensor",
-      "pin": "D4",
-      "type": "DHT22",
-      "readtime": "30s",
-      "resendtime": "2m",
-      "onTemperature": "remote/display-t?show=$v",
-      "onHumidity": "remote/display-h?show=$v"
+      "readtime": "2m",
+      "zone": 2,
+      "ondate": "displaytext/date?show=$v",
+      "ontime": "displaytext/time?show=$v"
     }
   },
 
-  "rfsend": {
-    "i1": {
-      "pin": "D4",
-      "codeOn": "s_#_###__#_#__#_##_#_###_#__#____x",
-      "codeOff": "s_#_###__#_#__#_##_#_###_#_______x",
-      "description": "Switch fan."
-    },
-    "i2": {
-      "pin": "D4",
-      "codeOn": "s_#_###__#_#__#_##_#_###_#__#___#x",
-      "codeOff": "s_#_###__#_#__#_##_#_###_#______#x",
-      "description": "Switch light."
-    },
-    "i3": {
-      "pin": "D4",
-      "codeOn": "s_#_###__#_#__#_##_#_###_#__#__#_x",
-      "codeOff": "s_#_###__#_#__#_##_#_###_#_____#_x",
-      "description": "Send out specifc RF signal"
+  "displaydot": {
+    "b": {
+      "x": 110,
+      "y": 8,
+      "description": "Display a bink"
     }
   },
 
-  "digitalout": {
-    "relais": {
-      "pin": 2,
-      "invers": "true",
-      "description": "Relais on Port GPIO2"
+
+  "schedule": {
+    "0": {
+      "onTime": "22:05:00",
+      "offTime": "22:05:30",
+      "onon": "device/0?log=switch on,displaydot/b?show=1",
+      "onoff": "device/0?log=switch off,displaydot/b?show=0"
     }
   }
+
 }
