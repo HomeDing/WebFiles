@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+  <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+  <link rel="apple-touch-icon-precomposed" href="/favicon-256.png">
+  <link rel="xx-manifest" href="/watermanifest.json">
+  <title>DHT HomeDing</title>
+  <link Content-Type="text/css" href="iotstyle.css" rel="stylesheet" />
+  <script src="micro.js"></script>
+  <script src="ding.js"></script>
+  <style>
+
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="u-header">
+      <a href="/"><img class="icon" src="/i/dht.svg" /></a>
+      <h1>DHT Sensor</h1>
+    </div>
+
+
+    <div class="row wrap">
+      <div class="col">
+        <div class="card" microID="/dht/on" microBehavior='generic'>
+          <div class="block header">
+            <h2 style="margin-bottom: 0"><img src="/i/dht.svg" property="active" /><span property='description'></span></h2>
+          </div>
+          <div class="block">
+            <div>
+              <label class="fixed">id:</label><span property='id'></span>
+            </div>
+            <div>
+              <label class="fixed">active:</label><span property='active'></span>
+            </div>
+            <div>
+              <label class="fixed">temperature:</label><span property='temperature'></span>&nbsp;°C
+            </div>
+            <div>
+              <label class="fixed">humidity:</label><span property='humidity'></span>&nbsp;%
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+    jcl.attachAll(document.body);
+
+    function loadConfig() {
+      loadAsync("/config.json", "application/json", function(txt) {
+        var obj = JSON.parse(txt);
+        hub.publishObj(obj);
+      });
+    } // loadConfig()
+
+    function updateState() {
+      loadAsync("/$board", "application/json", function(txt) {
+        try {
+          var obj = JSON.parse(txt);
+          hub.publishObj(obj);
+        } catch (e) {}
+      });
+    } // updateState()
+
+    loadConfig();
+    window.setInterval(updateState, 1000);
+  </script>
+
+</body>

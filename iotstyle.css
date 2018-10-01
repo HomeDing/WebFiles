@@ -79,6 +79,8 @@ h4 { font-size: 0.8em; }
 /* === Cards === */
 .card { position: relative; display: flex; flex-direction: column; background-color: #d4dced; border: 1px solid rgba(0, 0, 0, 0.125); border-radius: .25rem; width: 400px; }
 
+.card img.active { background-color: limegreen; }
+
 .card > .block { flex: 1 1 auto; padding: 0.6em; }
 
 .card > .block.header { background-image: url(/cardback.png); background-size: 100%; background-repeat: repeat-y; }
@@ -90,6 +92,8 @@ h4 { font-size: 0.8em; }
 .card > hr { background-color: rgba(0, 0, 0, 0.125); border: 0; height: 1px; padding: 0; margin: 0; }
 
 a + a, a + button, a + label, label + a, label + button, label + label, button + a, button + button, button + label { margin-left: 1.25rem; }
+
+label.fixed { display: inline-block; text-align: right; width: 8em; margin-right: 0.5em; }
 
 button { font-size: 1em; border: 0.1em solid gray; border-radius: 0.4em; padding-left: 0.4em; padding-right: 0.4em; min-width: 4em; }
 
@@ -105,3 +109,6 @@ button.active { background-color: #acc1e4 !important; border-color: #203050 !imp
 .u-switch > .box > .handle { position: absolute; display: inline-block; top: 0.1rem; left: 0.1rem; height: 1.2rem; width: 1.2rem; border-radius: 1.2rem; background-color: #203050; transition: left 0.2s cubic-bezier(0.25, 0.1, 0.25, 1); }
 
 .u-switch.active > .box > .handle { left: 1.5rem; }
+
+/* === Responsive Utilities === */
+@media (max-width: 767px) { .hidden-xs { display: none; } }

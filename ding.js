@@ -1,5 +1,50 @@
 // ding.js: Behaviors for Elements
 
+// === Generic Behavior ===
+
+GenericElementBehavior = {
+  microID: "",
+
+  init: function() {
+    hub.subscribe(this.microid + "?*", this.newData.bind(this));
+    this.newData(this.microid, "id", this.microid);
+  }, // init
+
+  newData: function(path, key, value) {
+    forAllNodeList(this.querySelectorAll("img[property='" + key + "']"), function(e) {
+      if (value)
+        e.classList.add('active');
+      else
+        e.classList.remove('active')
+        // e.textContent = value;
+      e.title = value;
+    });
+
+    forAllNodeList(this.querySelectorAll("span[property='" + key + "']"), function(e) {
+      e.textContent = value;
+      e.title = value;
+    });
+
+    forAllNodeList(this.querySelectorAll("input[property='" + key + "']"), function(e) {
+      e.value = value;
+    });
+  }, // newData()
+
+  onchange: function(e) {
+    var src = e.srcElement;
+    dispatch(this.microid, src.getAttribute('property'), e.srcElement.value);
+    // debugger;
+  },
+
+  onclick: function(e) {
+    var src = e.srcElement;
+    dispatch(this.microid, src.getAttribute('property'), e.srcElement.value);
+    // debugger;
+  }
+
+}; // GenericElementBehavior
+
+jcl.registerBehaviour("generic", GenericElementBehavior);
 
 // === Timer Behavior ===
 

@@ -213,6 +213,9 @@ h4 {
   border: 1px solid rgba(0, 0, 0, .125);
   border-radius: .25rem;
   width: 400px;
+  img.active {
+    background-color: limegreen;
+  }
   >.block {
     flex: 1 1 auto;
     padding: 0.6em;
@@ -252,6 +255,13 @@ button+a,
 button+button,
 button+label {
   margin-left: 1.25rem;
+}
+
+label.fixed {
+  display: inline-block;
+  text-align: right;
+  width: 8em;
+  margin-right: 0.5em;
 }
 
 button {
@@ -305,5 +315,14 @@ button.active {
   }
   &.active>.box>.handle {
     left: 1.5rem;
+  }
+}
+
+
+/* === Responsive Utilities === */
+
+@media (max-width: 767px) {
+  .hidden-xs {
+    display: none
   }
 }
