@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
   <link rel="icon" href="/favicon.ico" type="image/x-icon" />
   <link rel="apple-touch-icon-precomposed" href="/favicon-256.png">
@@ -10,6 +10,7 @@
   <title>Ding Control</title>
   <link Content-Type="text/css" href="iotstyle.css" rel="stylesheet" />
   <script src="micro.js"></script>
+  <script src="ding.js"></script>
   <style>
     .panel {
       background-color: lightsteelblue
@@ -26,140 +27,135 @@
     img.light.active {
       background-image: url(green.svg);
     }
+    
+    .u-bar {
+      position: relative;
+      height: 1.4em;
+      width: 80%;
+      background-color: #aaaaaa;
+    }
+    
+    .u-bar>.pulse,
+    .u-bar>.current {
+      display: inline-block;
+      position: absolute;
+    }
+    
+    .u-bar>.pulse {
+      top: 0;
+      left: 0;
+      height: 1.4em;
+      background-color: green
+    }
+    
+    .u-bar>.current {
+      top: 0.3em;
+      height: 0.8em;
+      background-color: red;
+    }
   </style>
 </head>
 
 <body>
   <div class="container">
-    <div class="row wrap header">
-      <div class="col stretch">
-        <img class="icon menuicon" src="i/digitalout.svg" style="float:left" />
-        <h1>Remote Plugs</h1>
-      </div>
+    <div class="u-header">
+      <a href="/"><img class="icon" src="/i/rfsend.svg" /></a>
+      <h1>RF Send</h1>
     </div>
 
-    <div microID="/rfsend/i1" microBehavior='generic'>
-      <div class="row panel">
-        <div class="col-3">
-          <span property='description'>.</span>
-        </div>
-        <div class="col-3">
-          <button property='value' value='1'>On</button>
-          <button property='value' value='0'>Off</button>
+    <div class="row wrap">
+      <div class="col">
+        <div class="card" microID="/rfsend/i1" microBehavior='generic'>
+          <div class="block header">
+            <h2 style="margin-bottom: 0"><img src="/i/rfsend.svg" /><span property='description'>.</span></h2>
+          </div>
+          <div class="block">
+            <label class="fixed">id:</label><span property='id'></span>
+          </div>
+          <div class="block">
+            <button property='value' value='1'>On</button>
+            <button property='value' value='0'>Off</button>
+          </div>
         </div>
       </div>
-    </div>
 
-    <div microID="/rfsend/i2" microBehavior='generic'>
-      <div class="row panel">
-        <div class="col-3">
-          <span property='description'>.</span>
-        </div>
-        <div class="col-3">
-          <button property='value' value='1'>On</button>
-          <button property='value' value='0'>Off</button>
+      <div class="col">
+        <div class="card" microID="/rfsend/i2" microBehavior='generic'>
+          <div class="block header">
+            <h2 style="margin-bottom: 0"><img src="/i/rfsend.svg" /><span property='description'>.</span></h2>
+          </div>
+          <div class="block">
+            <div>
+              <button property='value' value='1'>On</button>
+              <button property='value' value='0'>Off</button>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
 
-    <div microID="/rfsend/i3" microBehavior='generic'>
-      <div class="row panel">
-        <div class="col-3">
-          <span property='description'>.</span>
-        </div>
-        <div class="col-3">
-          <button property='value' value='1'>On</button>
-          <button property='value' value='0'>Off</button>
-        </div>
-      </div>
-    </div>
-    <hr />
-    <div microID="/rfsend/a1" microBehavior='generic'>
-      <div class="row panel">
-        <div class="col-3">
-          <span property='description'>.</span>
-        </div>
-        <div class="col-3">
-          <button property='value' value='1'>On</button>
-          <button property='value' value='0'>Off</button>
+      <div class="col">
+        <div class="card" microID="/rfsend/i3" microBehavior='generic'>
+          <div class="block header">
+            <h2 style="margin-bottom: 0"><img src="/i/rfsend.svg" /><span property='description'>.</span></h2>
+          </div>
+          <div class="block">
+            <div>
+              <button property='value' value='1'>On</button>
+              <button property='value' value='0'>Off</button>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
 
-    <div microID="/rfsend/a2" microBehavior='generic'>
-      <div class="row panel">
-        <div class="col-3">
-          <span property='description'>.</span>
-        </div>
-        <div class="col-3">
-          <button property='value' value='1'>On</button>
-          <button property='value' value='0'>Off</button>
+      <div class="col">
+        <div class="card" microID="/rfsend/a1" microBehavior='generic'>
+          <div class="block header">
+            <h2 style="margin-bottom: 0"><img src="/i/rfsend.svg" /><span property='description'>.</span></h2>
+          </div>
+          <div class="block">
+            <div>
+              <button property='value' value='1'>On</button>
+              <button property='value' value='0'>Off</button>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
 
-    <div microID="/rfsend/a3" microBehavior='generic'>
-      <div class="row panel">
-        <div class="col-3">
-          <span property='description'>.</span>
+      <div class="col">
+        <div class="card" microID="/rfsend/a2" microBehavior='generic'>
+          <div class="block header">
+            <h2 style="margin-bottom: 0"><img src="/i/rfsend.svg" /><span property='description'>.</span></h2>
+          </div>
+          <div class="block">
+            <div>
+              <button property='value' value='1'>On</button>
+              <button property='value' value='0'>Off</button>
+            </div>
+          </div>
         </div>
-        <div class="col-3">
-          <button property='value' value='1'>On</button>
-          <button property='value' value='0'>Off</button>
+      </div>
+
+      <div class="col">
+        <div class="card" microID="/rfsend/a3" microBehavior='generic'>
+          <div class="block header">
+            <h2 style="margin-bottom: 0"><img src="/i/rfsend.svg" /><span property='description'>.</span></h2>
+          </div>
+          <div class="block">
+            <div>
+              <button property='value' value='1'>On</button>
+              <button property='value' value='0'>Off</button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
 
-
   <script>
-    GenericElementBehavior = {
-      microID: "",
-
-      init: function() {
-        hub.subscribe(this.microid + "?*", this.newData.bind(this));
-      }, // init
-
-      newData: function(path, key, value) {
-        forAllNodeList(this.querySelectorAll("img[property='" + key + "']"), function(e) {
-          if (value)
-            e.classList.add('active');
-          else
-            e.classList.remove('active')
-            // e.textContent = value;
-          e.title = value;
-        });
-
-        forAllNodeList(this.querySelectorAll("span[property='" + key + "']"), function(e) {
-          e.textContent = value;
-          e.title = value;
-        });
-
-        forAllNodeList(this.querySelectorAll("input[property='" + key + "']"), function(e) {
-          e.value = value;
-        });
-      }, // newData()
-
-      onchange: function(e) {
-        var src = e.srcElement;
-        dispatch(this.microid, src.getAttribute('property'), e.srcElement.value);
-        // debugger;
-      },
-
-      onclick: function(e) {
-        var src = e.srcElement;
-        dispatch(this.microid, src.getAttribute('property'), e.srcElement.value);
-        // debugger;
-      }
-
-    }; // GenericElementBehavior
-
-    jcl.registerBehaviour("generic", GenericElementBehavior);
-
     jcl.attachAll(document.body);
 
     function loadConfig() {
-      loadAsync("config.json", "application/json", function(txt) {
+      loadAsync("/config.json", "application/json", function(txt) {
         var obj = JSON.parse(txt);
         hub.publishObj(obj);
       });
