@@ -8,15 +8,18 @@
     "serve-favicon": "^2.4.5"
   },
   "devDependencies": {
-    "node-sass": "^4.9.3"
+    "node-sass": "^4.9.3",
+    "uglify-js": "^3.4.9"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js",
     "css": "node-sass iotstyle.scss iotstyle.css --output-style compact",
     "css-watch": "node-sass -w iotstyle.scss iotstyle.css --output-style compact",
-    "css-min": "node-sass iotstyle.scss iotstyle.min.css --output-style compressed"
-
+    "css-min": "node-sass iotstyle.scss iotstyle.min.css --output-style compressed",
+    "min-micro": "uglifyjs micro.js -o micro.min.js",
+    "min-ding": "uglifyjs ding.js -o ding.min.js",
+    "min-ide": "uglifyjs ding-ide.js -o ding-ide.min.js"
   },
   "keywords": [
     "HomeDing",

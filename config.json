@@ -16,6 +16,27 @@
     }
   },
 
+  "rfsend": {
+    "i1": {
+      "pin": "D4",
+      "codeOn": "s_#_###__#_#__#_##_#_###_#__#____x",
+      "codeOff": "s_#_###__#_#__#_##_#_###_#_______x",
+      "description": "Switch fan."
+    },
+    "i2": {
+      "pin": "D4",
+      "codeOn": "s_#_###__#_#__#_##_#_###_#__#___#x",
+      "codeOff": "s_#_###__#_#__#_##_#_###_#______#x",
+      "description": "Switch light."
+    },
+    "i3": {
+      "pin": "D4",
+      "codeOn": "s_#_###__#_#__#_##_#_###_#__#__#_x",
+      "codeOff": "s_#_###__#_#__#_##_#_###_#_____#_x",
+      "description": "Send out specifc RF signal"
+    }
+  },
+
   "ntptime": {
     "on": {
       "readtime": "2m",
@@ -33,6 +54,31 @@
     }
   },
 
+  "dht": {
+    "on": {
+      "description": "Local DHT sensor",
+      "pin": "D4",
+      "type": "DHT22",
+      "readtime": "30s",
+      "resendtime": "2m",
+      "onTemperature": "device/0?log=temp:$v,remote/display-t?show=$v",
+      "T": "displaytext/temp?show=$v,",
+      "onHumidity": "device/0?log=hum:$v%,remote/display-h?show=$v",
+      "H": "displaytext/hum?show=$v,"
+    }
+  },
+
+  "timer": {
+    "water": {
+      "type": "LOOP",
+      "waittime": "1s",
+      "pulsetime": "4s",
+      "cycletime": "12s",
+      "onon": "digitalout/relais?on,device/0?log=on",
+      "onoff": "digitalout/relais?off,device/0?log=off",
+      "description": "Water timing"
+    }
+  },
 
   "schedule": {
     "0": {

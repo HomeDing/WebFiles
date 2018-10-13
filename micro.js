@@ -211,6 +211,11 @@ var MicroJCL = function() {
         alert("LoadBehaviour: behaviour argument is missing.");
 
       } else {
+        if (behaviour.inheritFrom) {
+          jcl.LoadBehaviour(obj, behaviour.inheritFrom);
+          jcl.List.pop();
+        }
+
         if (obj.attributes) { // IE9 compatible
           // copy all new attributes to properties
           for (var n = 0; n < obj.attributes.length; n++)

@@ -1,8 +1,6 @@
-html, body { padding: 0; margin: 0; }
+html, body { padding: 0; margin: 0; font-family: Arial; font-size: 1em; color: black; }
 
 * { box-sizing: border-box; }
-
-body { font-family: Arial; font-size: 1em; color: black; }
 
 img.icon, svg.icon { width: 4em; height: 4em; }
 
@@ -22,6 +20,8 @@ p, h1, h2, h3, h4 { margin: 0 0 0.5em 0; }
 p > img, h1 > img, h2 > img, h3 > img, h4 > img { height: 1em; }
 
 p > img:first-child, h1 > img:first-child, h2 > img:first-child, h3 > img:first-child, h4 > img:first-child { margin-right: 0.4em; }
+
+a, a:visited, a:hover { text-decoration: none; color: black; }
 
 h1, h2, h3, h4 { font-family: Arial; color: black; }
 
@@ -69,8 +69,6 @@ h4 { font-size: 0.8em; }
 .u-header { display: flex; flex-direction: row; flex-wrap: nowrap; margin: 0.2em 0 0 0; }
 
 .u-header .icon { height: 3em; width: 3em; background-color: #cccccc; border-radius: 0.5em; }
-
-.u-header a, .u-header a:visited, .u-header a:hover { text-decoration: none; color: black; }
 
 .u-header > * { align-self: center; margin-top: 0; margin-bottom: 0; padding: 0; }
 
