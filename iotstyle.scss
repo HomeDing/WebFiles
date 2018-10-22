@@ -6,7 +6,7 @@ $u-disabled: #808080; // disabled objects
 $u-text: #111111; // any text
 $u-heading: #304878; // any headlines
 $u-connect: #00cc00; // connectivity / net
-$u-background: #d0d0d0; // connectivity / net
+$u-background: #d4dced; // connectivity / net
 
 /* main */
 
@@ -204,6 +204,7 @@ svg.button {
   flex-direction: row;
   flex-wrap: nowrap;
   margin: 0.2em 0 0 0;
+  align-items: flex-start;
 
   >a,
   >h1 {
@@ -218,9 +219,6 @@ svg.button {
     margin-left: 0.4rem;
   }
 
-  // >h1 {
-  //   font-size: 3em;
-  // }
   .icon {
     background-color: $u-background;
     border-radius: 0.2em;
@@ -234,8 +232,8 @@ svg.button {
   position: relative;
   display: flex;
   flex-direction: column;
-  background-color: #d4dced;
-  border: 1px solid rgba(0, 0, 0, .125);
+  background-color: $u-background;
+  border: 1px solid $u-primary;
   border-radius: .25rem;
   width: 400px;
 
@@ -248,13 +246,9 @@ svg.button {
     padding: 0.6em;
 
     &.header {
-      background-image: url(/cardback.png);
-      background-size: 100%;
-      background-repeat: repeat-y;
+      background-image: linear-gradient(to bottom, $u-background, darken($u-background, 10%));
 
-      >h1,
       >h2,
-      >h3,
       >h4 {
         margin: 0
       }
@@ -301,9 +295,11 @@ button {
   background-color: $u-primary;
   color: white;
   border-radius: 0.2em;
-  padding-left: 0.4em;
-  padding-right: 0.4em;
+  padding:0 0.4em;
   min-width: 4em;
+  cursor: pointer;
+  user-select: none;
+  -ms-user-select: none;
 }
 
 button:focus {

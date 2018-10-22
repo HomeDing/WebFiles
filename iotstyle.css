@@ -66,24 +66,24 @@ svg.button .object { fill: #304878; fill-opacity: 1; }
 svg.button .connect { fill: #00cc00; fill-opacity: 1; }
 
 /* === Header === */
-.u-header { display: flex; flex-direction: row; flex-wrap: nowrap; margin: 0.2em 0 0 0; }
+.u-header { display: flex; flex-direction: row; flex-wrap: nowrap; margin: 0.2em 0 0 0; align-items: flex-start; }
 
 .u-header > a, .u-header > h1 { font-size: 2rem; align-self: center; margin-top: 0; margin-bottom: 0; padding: 0; }
 
 .u-header > * + * { margin-left: 0.4rem; }
 
-.u-header .icon { background-color: #d0d0d0; border-radius: 0.2em; }
+.u-header .icon { background-color: #d4dced; border-radius: 0.2em; }
 
 /* === Cards === */
-.card { position: relative; display: flex; flex-direction: column; background-color: #d4dced; border: 1px solid rgba(0, 0, 0, 0.125); border-radius: .25rem; width: 400px; }
+.card { position: relative; display: flex; flex-direction: column; background-color: #d4dced; border: 1px solid #304878; border-radius: .25rem; width: 400px; }
 
 .card img.active { background-color: limegreen; }
 
 .card > .block { flex: 1 1 auto; padding: 0.6em; }
 
-.card > .block.header { background-image: url(/cardback.png); background-size: 100%; background-repeat: repeat-y; }
+.card > .block.header { background-image: linear-gradient(to bottom, #d4dced, #b0bfde); }
 
-.card > .block.header > h1, .card > .block.header > h2, .card > .block.header > h3, .card > .block.header > h4 { margin: 0; }
+.card > .block.header > h2, .card > .block.header > h4 { margin: 0; }
 
 .card > .block.action { background-color: limegreen; padding-top: 0; padding-bottom: 0; }
 
@@ -93,7 +93,7 @@ a + a, a + button, a + label, label + a, label + button, label + label, button +
 
 label.fixed { display: inline-block; text-align: right; width: 8em; margin-right: 0.5em; }
 
-button { font-size: 1.6em; border: 0.1rem solid #304878; background-color: #304878; color: white; border-radius: 0.2em; padding-left: 0.4em; padding-right: 0.4em; min-width: 4em; }
+button { font-size: 1.6em; border: 0.1rem solid #304878; background-color: #304878; color: white; border-radius: 0.2em; padding: 0 0.4em; min-width: 4em; cursor: pointer; user-select: none; -ms-user-select: none; }
 
 button:focus { border: 0.1rem solid #4466ee; background-color: #4466ee; }
 
