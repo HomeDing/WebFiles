@@ -78,10 +78,9 @@ function addFileEntry(container, f) {
   entry.innerText = entry.title = f.name + " (" + f.size + ")";
   row.appendChild(entry);
 
-
   var delx = document.createElement("div");
   delx.className = "col file-delete";
-  delx.innerText = "[del]";
+  delx.innerText = "[X]";
   delx.addEventListener("click", handleDeleteFile);
   row.appendChild(delx);
 } // addFileEntry()

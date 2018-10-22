@@ -11,17 +11,17 @@
     .Element {
       font-size: 0.8em;
     }
-    
+
     .card img.active {
       background-color: limegreen;
     }
-    
+
     .Element .KV {
       display: block;
       clear: both;
       height: 1.5em;
     }
-    
+
     .Element .Key,
     .Element .Value {
       display: inline-block;
@@ -29,33 +29,33 @@
       white-space: nowrap;
       overflow: hidden;
     }
-    
+
     .Element .Key {
       width: 5.2rem;
       margin-right: 0.1rem;
       text-align: right;
     }
-    
+
     .u-bar {
       position: relative;
       height: 1.4em;
       width: 100%;
       background-color: #aaaaaa;
     }
-    
+
     .u-bar>.pulse,
     .u-bar>.current {
       display: inline-block;
       position: absolute;
     }
-    
+
     .u-bar>.pulse {
       top: 0;
       left: 0;
       height: 1.4em;
       background-color: green
     }
-    
+
     .u-bar>.current {
       top: 0.3em;
       height: 0.8em;
@@ -85,11 +85,10 @@
       <div class='col' microControl='generic' id='${id}'>
         <div class="card" microBehavior='generic' microID='${id}'>
           <div class="block header">
-            <h2><img src="/i/${type}.svg" />${id}</h2>
-            <h4 property='description'></h4>
+            <h2><img src="/i/${type}.svg" class='Icon' property='active' />${id}</h2>
+              <h4 property='description'></h4>
           </div>
           <div class="block Element">
-            <span property='active' style="display:none"></span>
           </div>
         </div>
       </div>
@@ -97,8 +96,8 @@
       <div class='col' microControl='timer' id='${id}'>
         <div class="card" microID='${id}' microBehavior='timer'>
           <div class="block header">
-            <h2><img src="/i/${type}.svg" />${id}</h2>
-            <h4 property='description'></h4>
+            <h2><img src="/i/${type}.svg" class='Icon' property='active' />${id}</h2>
+              <h4 property='description'></h4>
           </div>
 
           <div class="block">
@@ -123,34 +122,14 @@
       <div microControl='dht' class='col' id='${id}'>
         <div class="card" microID='${id}' microBehavior='timer'>
           <div class="block header">
-            <h2><img src="/i/${type}.svg" />${id}</h2>
-            <h4 property='description'></h4>
+            <h2><img src="/i/${type}.svg" class='Icon' property='active' />${id}</h2>
+              <h4 property='description'></h4>
           </div>
 
           <div class="block">
             <div class='Element'>
-              <span property='active' style="display:none"></span>
-              <div class='KV'><span class='Key'>Temp/Hum:</span><span class='Value'><span property='temperature'></span>°C / <span property='humidity'></span>%</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div microControl='display' class='col'>
-        <div class="card" microBehavior='generic'>
-          <div class="block header">
-            <h3>Generic</h3>
-          </div>
-          <div class="block">
-            <div id='${id}' class='Element' microID='${id}'>
-              <img src="/i/${type}.svg" class='Icon' /> <span property='active' style="display:none"></span>
-              <div><span>${id}</span></div>
-              <div property='description'></div>
-              <div class='KV'><span class='Key'>Type:</span><span class='Value' property='type'></span></div>
-              <div class='KV'><span class='Key'>X/Y:</span><span class='Value'><span property='x'></span> / <span property='y'></span></span>
-              </div>
-              <div class='KV'><span class='Key'>Pre-/Postfix:</span><span class='Value'><span property='prefix'></span>&nbsp;/&nbsp;<span property='postfix'></span></span>
+              <div class='KV'><span class='Key'>Temp/Hum:</span><span class='Value'><span property='temperature'></span>°C
+                / <span property='humidity'></span>%</span>
               </div>
             </div>
           </div>
@@ -167,30 +146,6 @@
       var tempObj = document.getElementById('templates');
 
       jcl.loadTemplates(tempObj);
-
-      // === Generic Behavior === 
-
-      GenericElementBehavior = {
-        microID: "",
-
-        init: function() {
-          hub.subscribe(this.microid + "?*", this.newData.bind(this));
-        }, // init
-
-        newData: function(path, key, value) {
-            if (key == 'active') {
-              var e = this.querySelector("img");
-              if (e) {
-                if (value)
-                  e.classList.add('active')
-                else
-                  e.classList.remove('active')
-              } // if
-            }
-          } // newData()
-      }; // GenericElementBehavior
-      jcl.registerBehaviour("generic", GenericElementBehavior);
-
 
       function createElement(path, key, value) {
         var hElem = document.getElementById(path);
@@ -215,10 +170,6 @@
           var elems = hElem.querySelectorAll("[property='" + key + "']");
 
           if (elems.length == 0) {
-            // create html to display this property.
-            // <div><span class='Key'>Label:</span><span class='Value' property='key'></span></div>
-            // hText = Generic.kv.replace(/\$\{key\}/g, key); // .replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-            // debugger;
             hElem = hElem.querySelectorAll(".Element")[0];
             if (hElem) {
               var p = {
@@ -230,7 +181,7 @@
           } // if
 
           // update values
-          forAllNodeList(elems, function(e) {
+          forAllNodeList(elems, function (e) {
             e.textContent = value;
             e.title = value;
           });
@@ -240,20 +191,28 @@
       hub.subscribe("/*/*", createElement);
       hub.subscribe("/**/**?**", setElement);
 
-      loadAsync("config.json", "application/json", function(txt) {
-        obj = JSON.parse(txt);
-        hub.publishObj(obj);
+      MicroTQ.startTask(function () {
+        loadAsync("env.json", "application/json", function (txt) {
+          obj = JSON.parse(txt);
+          hub.publishObj(obj);
+        })
+      });
+
+      MicroTQ.startTask(function () {
+        loadAsync("config.json", "application/json", function (txt) {
+          obj = JSON.parse(txt);
+          hub.publishObj(obj);
+        })
       });
 
       function updateState() {
-        loadAsync("$board", "application/json", function(txt) {
+        loadAsync("$board", "application/json", function (txt) {
           var obj = JSON.parse(txt);
-
           hub.publishObj(obj);
         });
       } // updateState()
 
-      window.setInterval(updateState, 8000);
+      window.setInterval(updateState, 3000);
     </script>
 
   </div>

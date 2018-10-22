@@ -2,7 +2,7 @@
 
 // === Generic Behavior ===
 
-GenericElementBehavior = {
+var GenericElementBehavior = {
   microID: "",
 
   init: function() {
@@ -47,7 +47,7 @@ jcl.registerBehaviour("generic", GenericElementBehavior);
 
 // === Timer Behavior ===
 
-TimerElementBehavior = {
+var TimerElementBehavior = {
   inheritFrom: GenericElementBehavior,
   microID: "",
   wt: 0,
