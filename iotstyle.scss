@@ -1,43 +1,41 @@
+/* Colors */
+
+$u-primary: #304878; // active objects
+$u-focus: #4466ee; // active object with focus
+$u-disabled: #808080; // disabled objects
+$u-text: #111111; // any text
+$u-heading: #304878; // any headlines
+$u-connect: #00cc00; // connectivity / net
+$u-background: #d0d0d0; // connectivity / net
+
+/* main */
+
 html,
 body {
   padding: 0;
   margin: 0;
   font-family: Arial;
   font-size: 1em;
-  color: black;
+  color: $u-text;
 }
 
 * {
   box-sizing: border-box;
 }
 
-img.icon,
-svg.icon {
-  width: 4em;
-  height: 4em;
-  .object {
-    fill: #304878;
-    fill-opacity: 1;
-  }
-  .connect {
-    fill: green;
-    fill-opacity: 1;
-  }
-}
-
-svg.button {
-  width: 2em;
-  height: 2em;
-  .object {
-    fill: #304878;
-    fill-opacity: 1;
-  }
-  .connect {
-    fill: green;
-    fill-opacity: 1;
-  }
-}
-
+// img.icon,
+// svg.icon {
+//   width: 4em;
+//   height: 4em;
+//   .object {
+//     fill: $u-primary;
+//     fill-opacity: 1;
+//   }
+//   .connect {
+//     fill: $u-connect;
+//     fill-opacity: 1;
+//   }
+// }
 
 /* === Text containers === */
 
@@ -47,20 +45,33 @@ h2,
 h3,
 h4 {
   margin: 0 0 0.5em 0;
+
   >img {
     // assume image in text containers to be inline icons
     height: 1em;
+
     &:first-child {
-      margin-right: 0.4em;
+      margin-right: 0.2em;
     }
   }
 }
 
-a,
-a:visited,
-a:hover {
+a {
   text-decoration: none;
-  color: black;
+  cursor: pointer;
+}
+
+a:visited {
+  color: $u-primary;
+}
+
+p>a {
+  text-decoration: underline;
+}
+
+a:hover,
+a:focus {
+  color: $u-focus;
 }
 
 h1,
@@ -68,17 +79,13 @@ h2,
 h3,
 h4 {
   font-family: Arial;
-  color: black;
+  color: $u-heading;
 }
 
-// Page title
-h1 {
-  font-size: 3em;
-}
-
+// h1 Page title always inside u-header
 // Chapter
 h2 {
-  font-size: 1.6em;
+  font-size: 1.6rem;
 }
 
 // Topic
@@ -98,6 +105,7 @@ h4 {
 .container {
   margin-right: 2rem;
   margin-left: 2rem;
+
   @media (max-width: 720px) {
     margin-right: 0.6rem;
     margin-left: 0.6rem;
@@ -119,9 +127,11 @@ h4 {
   margin: -0.5rem 0.1rem 0.5rem -0.5rem;
   clear: both;
   padding: 0px;
+
   &.wrap {
     flex-wrap: wrap;
   }
+
   &.nogutter {
     margin: 0;
   }
@@ -170,6 +180,21 @@ h4 {
   flex-basis: 100%;
 }
 
+svg.button {
+  width: 2em;
+  height: 2em;
+
+  .object {
+    fill: $u-primary;
+    fill-opacity: 1;
+  }
+
+  .connect {
+    fill: $u-connect;
+    fill-opacity: 1;
+  }
+}
+
 
 /* === Header === */
 
@@ -179,23 +204,27 @@ h4 {
   flex-direction: row;
   flex-wrap: nowrap;
   margin: 0.2em 0 0 0;
-  .icon {
-    height: 3em;
-    width: 3em;
-    background-color: #cccccc;
-    border-radius: 0.5em;
+
+  >a,
+  >h1 {
+    font-size: 2rem;
+    align-self: center;
+    margin-top: 0;
+    margin-bottom: 0;
+    padding: 0;
   }
-}
 
-.u-header>* {
-  align-self: center;
-  margin-top: 0;
-  margin-bottom: 0;
-  padding: 0;
-}
+  >*+* {
+    margin-left: 0.4rem;
+  }
 
-.u-header>*+* {
-  margin-left: 0.4rem;
+  // >h1 {
+  //   font-size: 3em;
+  // }
+  .icon {
+    background-color: $u-background;
+    border-radius: 0.2em;
+  }
 }
 
 
@@ -209,16 +238,20 @@ h4 {
   border: 1px solid rgba(0, 0, 0, .125);
   border-radius: .25rem;
   width: 400px;
+
   img.active {
     background-color: limegreen;
   }
+
   >.block {
     flex: 1 1 auto;
     padding: 0.6em;
+
     &.header {
       background-image: url(/cardback.png);
       background-size: 100%;
       background-repeat: repeat-y;
+
       >h1,
       >h2,
       >h3,
@@ -226,12 +259,14 @@ h4 {
         margin: 0
       }
     }
+
     &.action {
       background-color: limegreen;
       padding-top: 0;
       padding-bottom: 0;
     }
   }
+
   >hr {
     background-color: rgba(0, 0, 0, .125);
     border: 0;
@@ -261,12 +296,24 @@ label.fixed {
 }
 
 button {
-  font-size: 1em;
-  border: 0.1em solid gray;
-  border-radius: 0.4em;
+  font-size: 1.6em;
+  border: 0.1rem solid $u-primary;
+  background-color: $u-primary;
+  color: white;
+  border-radius: 0.2em;
   padding-left: 0.4em;
   padding-right: 0.4em;
   min-width: 4em;
+}
+
+button:focus {
+  border: 0.1rem solid $u-focus;
+  background-color: $u-focus;
+}
+
+button:disabled {
+  border: 0.1rem solid $u-disabled;
+  background-color: $u-disabled;
 }
 
 button.active {
@@ -275,11 +322,74 @@ button.active {
 }
 
 
+/* === element Icons === */
+
+.element {
+  position: relative;
+  display: inline-block;
+  height: 6rem;
+  width: 6rem;
+  margin: 0.6rem;
+
+  &.wide {
+    width: 10rem;
+  }
+
+  >img {
+    position: relative;
+    left: 1rem;
+    top: 0.4rem;
+    height: 4rem;
+    width: 4rem;
+  }
+
+  >.flag {
+    position: absolute;
+    display: inline-block;
+    top: 0;
+    left: 4.4rem;
+    height: 1.6rem;
+    width: 1.6rem;
+    border-radius: 0.8rem;
+    text-align: center;
+    background-color: silver;
+  }
+
+  >.flag[value="1"] {
+    background-color: lime;
+  }
+
+  >.flag[value="0"] {
+    background-color: red;
+  }
+
+  >.id {
+    position: absolute;
+    display: inline-block;
+    bottom: 0.4rem;
+    left: 0;
+    height: 1rem;
+    width: 6rem;
+    text-align: center;
+  }
+
+  >.info {
+    position: absolute;
+    display: inline-block;
+    top: 0.4rem;
+    right: 0;
+    height: 5.2rem;
+    width: 4rem;
+  }
+}
+
+
 /* === SWITCH === */
 
 .u-switch {
   display: inline-block;
   width: 100%;
+
   >label {
     display: inline-block;
     padding: .4rem 1rem;
@@ -288,6 +398,7 @@ button.active {
     font-size: 1.4rem;
     cursor: pointer;
   }
+
   >.box {
     position: relative;
     cursor: pointer;
@@ -297,6 +408,7 @@ button.active {
     border: 0.1rem solid #C0C0C0;
     border-radius: 1.3rem;
     background-color: #eeeeee;
+
     >.handle {
       position: absolute;
       display: inline-block;
@@ -309,6 +421,7 @@ button.active {
       transition: left 0.2s cubic-bezier(0.25, 0.1, 0.25, 1);
     }
   }
+
   &.active>.box>.handle {
     left: 1.5rem;
   }

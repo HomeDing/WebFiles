@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+  <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+  <title>Style Reference</title>
+  <link Content-Type="text/css" href="iotstyle.css" rel="stylesheet" />
+  <style>
+    div.c {
+      border: 1px solid grey;
+      padding: 0.4rem;
+      margin-bottom: 0.4rem;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1>Style Reference</h1>
+    <h2>Header</h2>
+    <div class="c">
+      <div class="u-header">
+        <a href="/"><img class="icon" src="/i/device.svg" /></a>
+        <h1>Device</h1>
+        <a href="/index.htm"><img class="icon" src="/i/home.svg" /></a>
+        <a href="/index.htm" class="hidden-xs">Home</a>
+        <a href="/ding-ide.htm"><img class="icon" src="/i/ide.svg" /></a>
+        <a href="/ding-ide.htm" class="hidden-xs">IDE</a>
+      </div>
+    </div>
+    <p>Height is adjusted to 2rem. Place the &lt;h1&gt; element inside for page title. Use &lt;a&gt; elements inside
+      for navigation. Use class="hidden-xs" to hide text elements.</p>
+
+    <h2>Typo</h2>
+    <div class="c">
+      <h2>Chapter headings h2</h2>
+      <h3>Topic headings h3</h3>
+      <h4>Subtitles h4</h4>
+      <p>Normal floating text with <a href="#">links</a>.</p>
+    </div>
+
+    <h2>Card</h2>
+    <div class="c">
+      <div class="card">
+        <div class="block header">
+          <h2><img src="/i/home.svg" />Heading-h2</h2>
+            <h4>Sub-Heading-h4</h4>
+        </div>
+        <div class="block">
+          <p><a href="ding.htm">Links</a></p>
+          <p>Links can also be <a href="ding.htm">inline</a>.</p>
+          <button>action</button><button disabled>disabled</button>
+        </div>
+      </div>
+    </div>
+    <p>Elements will have 2 cards each. The first one is for inspecting the current state of the element and triggering
+      actions. The second one is for changing the configuration of an element.</p> 
+
+    <h2>Element Icons</h2>
+    <div class="c">
+      <span class="element">
+        <img src="/i/bulb.svg">
+      <span class="flag"></span>
+      <span class="id">Entry</span>
+      </span>
+
+      <span class="element">
+      <img src="/i/timer.svg" />
+      <span class="flag" value="0"></span>
+      <span class="id">GardenWater</span>
+      </span>
+
+      <span class="element">
+      <img src="/i/value.svg" />
+      <span class="flag" value="1"></span>
+      <span class="id">volume</span>
+      </span>
+
+      <span class="element wide">
+        <img src="/i/dht.svg" />
+        <span class="flag" value="1"></span>
+      <span class="id">kitchen</span>
+      <span class="info">37°C</span>
+      </span>
+    </div>
+    <p>Elements can be placed on maps and dashboard by using the element icons. Some elements provide a on/off value
+      that can be shown as a red and green flag. Other elements do have a main value that can be shown aside the
+      element.
+    </p>
+    <h2>Switch</h2>
+    <div class="c">
+      <div id="us" class="u-switch">
+        <label value="0">left</label>
+        <div class="box">
+          <div class="handle"></div>
+        </div>
+        <label value="1">right</label>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function toggle(evt) {
+      var hObj = evt.srcElement;
+      window.status = evt.target.nodeName;
+      var tObjV = evt.target.attributes['value'];
+
+      if ((tObjV) && (tObjV.value == 1)) {
+        this.value = 1;
+      } else if ((tObjV) && (tObjV.value == 0)) {
+        this.value = 0;
+      } else if (this.value == 1) {
+        this.value = 0;
+      } else if (this.value == 0) {
+        this.value = 1;
+      } // if
+
+      if (this.value == 1) {
+        this.classList.add("active");
+      } else {
+        this.classList.remove("active");
+      } // if
+    }
+
+    var usObj = document.getElementById('us');
+    usObj.addEventListener("click", toggle);
+    usObj.value = 0;
+  </script>
+</body>
