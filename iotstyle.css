@@ -41,7 +41,7 @@ h4 { font-size: 0.8em; }
 
 .row.nogutter { margin: 0; }
 
-.col, .col-1, .col-2, .col-3, .col-4, .col-5, .col-6 { flex: 0 0 0; margin: 0.5rem 0 0 0.5rem; }
+.col, .col-1, .col-2, .col-3, .col-4, .col-5, .col-6 { flex: 0 0 auto; margin: 0.5rem 0 0 0.5rem; }
 
 .row.nogutter > .col { margin: 0; }
 
@@ -66,16 +66,16 @@ svg.button .object { fill: #304878; fill-opacity: 1; }
 svg.button .connect { fill: #00cc00; fill-opacity: 1; }
 
 /* === Header === */
-.u-header { display: flex; flex-direction: row; flex-wrap: nowrap; margin: 0.2em 0 0 0; align-items: flex-start; }
+.u-header { display: flex; height: 3.5rem; margin: 0.2em 0 0 0; flex-direction: row; flex-wrap: nowrap; align-items: flex-start; }
 
 .u-header > a, .u-header > h1 { font-size: 2rem; align-self: center; margin-top: 0; margin-bottom: 0; padding: 0; }
 
 .u-header > * + * { margin-left: 0.4rem; }
 
-.u-header .icon { background-color: #d4dced; border-radius: 0.2em; }
+.u-header .icon { width: 3rem; height: 3rem; background-color: #d4dced; border-radius: 0.2em; }
 
 /* === Cards === */
-.card { position: relative; display: flex; flex-direction: column; background-color: #d4dced; border: 1px solid #304878; border-radius: .25rem; width: 400px; }
+.card { position: relative; display: flex; flex-direction: column; background-color: #d4dced; border: 1px solid #304878; border-radius: .25rem; width: 400px; min-width: 400px; }
 
 .card img.active { background-color: limegreen; }
 

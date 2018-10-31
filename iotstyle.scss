@@ -147,7 +147,7 @@ h4 {
 .col-4,
 .col-5,
 .col-6 {
-  flex: 0 0 0;
+  flex: 0 0 auto;
   margin: 0.5rem 0 0 0.5rem;
 }
 
@@ -204,9 +204,10 @@ svg.button {
 // The header in the micro css is used to display the primary icon of the device, the name and links to important pages.
 .u-header {
   display: flex;
+  height: 3.5rem;
+  margin: 0.2em 0 0 0;
   flex-direction: row;
   flex-wrap: nowrap;
-  margin: 0.2em 0 0 0;
   align-items: flex-start;
 
   >a,
@@ -223,6 +224,8 @@ svg.button {
   }
 
   .icon {
+    width: 3rem;
+    height: 3rem;
     background-color: $u-background;
     border-radius: 0.2em;
   }
@@ -239,6 +242,7 @@ svg.button {
   border: 1px solid $u-primary;
   border-radius: .25rem;
   width: 400px;
+  min-width: 400px;
 
   img.active {
     background-color: limegreen;
@@ -298,7 +302,7 @@ button {
   background-color: $u-primary;
   color: white;
   border-radius: 0.2em;
-  padding:0 0.4em;
+  padding: 0 0.4em;
   min-width: 4em;
   cursor: pointer;
   user-select: none;
