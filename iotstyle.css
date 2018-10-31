@@ -108,15 +108,18 @@ button.active { background-color: #acc1e4 !important; border-color: #203050 !imp
 
 .element > img { position: relative; left: 1rem; top: 0.4rem; height: 4rem; width: 4rem; }
 
-.element > .flag { position: absolute; display: inline-block; top: 0; left: 4.4rem; height: 1.6rem; width: 1.6rem; border-radius: 0.8rem; text-align: center; background-color: silver; }
-
-.element > .flag[value="1"] { background-color: lime; }
-
-.element > .flag[value="0"] { background-color: red; }
+.element > .u-indicator { position: absolute; top: 0; left: 4.4rem; height: 1.4rem; width: 1.4rem; border-radius: 0.7rem; }
 
 .element > .id { position: absolute; display: inline-block; bottom: 0.4rem; left: 0; height: 1rem; width: 6rem; text-align: center; }
 
 .element > .info { position: absolute; display: inline-block; top: 0.4rem; right: 0; height: 5.2rem; width: 4rem; }
+
+/* === Indicators === */
+.u-indicator { display: inline-block; height: 2rem; width: 2rem; border-radius: 1rem; text-align: center; background-color: silver; }
+
+.u-indicator[value="1"] { background-image: linear-gradient(145deg, #1aff1a, green); }
+
+.u-indicator[value="0"] { background-image: linear-gradient(145deg, #ff9999, red); }
 
 /* === SWITCH === */
 .u-switch { display: inline-block; width: 100%; }

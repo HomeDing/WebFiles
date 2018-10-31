@@ -56,37 +56,45 @@
       </div>
     </div>
     <p>Elements will have 2 cards each. The first one is for inspecting the current state of the element and triggering
-      actions. The second one is for changing the configuration of an element.</p> 
+      actions. The second one is for changing the configuration of an element.</p>
+
+    <h2>Indicators</h2>
+    <div class="c">
+      <span class="u-indicator"></span>
+      <span class="u-indicator" value="0"></span>
+      <span class="u-indicator" value="1"></span>
+    </div>
+    <p>Indicators are used to inform about a logical level of an element. This can be unknown, off/false or on/true.</p>
 
     <h2>Element Icons</h2>
     <div class="c">
       <span class="element">
         <img src="/i/bulb.svg">
-      <span class="flag"></span>
+      <span class="u-indicator"></span>
       <span class="id">Entry</span>
       </span>
 
       <span class="element">
       <img src="/i/timer.svg" />
-      <span class="flag" value="0"></span>
+      <span class="u-indicator" value="0"></span>
       <span class="id">GardenWater</span>
       </span>
 
       <span class="element">
       <img src="/i/value.svg" />
-      <span class="flag" value="1"></span>
+      <span class="u-indicator" value="1"></span>
       <span class="id">volume</span>
       </span>
 
       <span class="element wide">
         <img src="/i/dht.svg" />
-        <span class="flag" value="1"></span>
+        <span class="u-indicator" value="1"></span>
       <span class="id">kitchen</span>
       <span class="info">37°C</span>
       </span>
     </div>
     <p>Elements can be placed on maps and dashboard by using the element icons. Some elements provide a on/off value
-      that can be shown as a red and green flag. Other elements do have a main value that can be shown aside the
+      that can be shown as a red and green indicator. Other elements do have a main value that can be shown aside the
       element.
     </p>
     <h2>Switch</h2>
@@ -100,6 +108,9 @@
       </div>
     </div>
   </div>
+
+  </div>
+
 
   <script>
     function toggle(evt) {
