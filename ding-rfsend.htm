@@ -3,63 +3,30 @@
 
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
-  <link rel="icon" href="/favicon.ico" type="image/x-icon" />
-  <link rel="apple-touch-icon-precomposed" href="/favicon-256.png">
-  <link rel="xx-manifest" href="/watermanifest.json">
-  <title>Ding Control</title>
+  <title>RF Send</title>
+
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="application-name" content="Ding">
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon180.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon16.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/favicon192.png">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="mask-icon" href="/favicon.svg" color="#5bbad5">
+  <meta name="msapplication-config" content="/browserconfig.xml" />
+  <meta name="msapplication-TileColor" content="#2b5797">
+  <meta name="msapplication-TileImage" content="/favicon144.png">
+  <meta name="theme-color" content="#ffffff">
+
   <link Content-Type="text/css" href="iotstyle.css" rel="stylesheet" />
   <script src="micro.js"></script>
   <script src="ding.js"></script>
-  <style>
-    .panel {
-      background-color: lightsteelblue
-    }
-    
-    img.light {
-      width: 1rem;
-      height: 1rem;
-      display: inline-block;
-      background-image: url(red.svg);
-      background-size: 100%;
-    }
-    
-    img.light.active {
-      background-image: url(green.svg);
-    }
-    
-    .u-bar {
-      position: relative;
-      height: 1.4em;
-      width: 80%;
-      background-color: #aaaaaa;
-    }
-    
-    .u-bar>.pulse,
-    .u-bar>.current {
-      display: inline-block;
-      position: absolute;
-    }
-    
-    .u-bar>.pulse {
-      top: 0;
-      left: 0;
-      height: 1.4em;
-      background-color: green
-    }
-    
-    .u-bar>.current {
-      top: 0.3em;
-      height: 0.8em;
-      background-color: red;
-    }
-  </style>
 </head>
 
 <body>
   <div class="container">
     <div class="u-header">
-      <a href="/"><img class="icon" src="/i/rfsend.svg" /></a>
+      <a href="/"><img class="icon" src="/favicon.svg" /></a>
       <h1>RF Send</h1>
     </div>
 
@@ -68,9 +35,6 @@
         <div class="card" microID="/rfsend/i1" microBehavior='generic'>
           <div class="block header">
             <h2 style="margin-bottom: 0"><img src="/i/rfsend.svg" /><span property='description'>.</span></h2>
-          </div>
-          <div class="block">
-            <label class="fixed">id:</label><span property='id'></span>
           </div>
           <div class="block">
             <button property='value' value='1'>On</button>
@@ -106,7 +70,9 @@
           </div>
         </div>
       </div>
+    </div>
 
+    <div class="row wrap">
       <div class="col">
         <div class="card" microID="/rfsend/a1" microBehavior='generic'>
           <div class="block header">
@@ -148,6 +114,36 @@
           </div>
         </div>
       </div>
+
+      <div class="col">
+        <div class="card" microID="/rfsend/aa" microBehavior='generic'>
+          <div class="block header">
+            <h2 style="margin-bottom: 0"><img src="/i/rfsend.svg" /><span property='description'>.</span></h2>
+          </div>
+          <div class="block">
+            <div>
+              <button property='value' value='1'>All Off</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row wrap">
+      <div class="col">
+        <div class="card" microID="/rfsend/d1" microBehavior='generic'>
+          <div class="block header">
+            <h2 style="margin-bottom: 0"><img src="/i/rfsend.svg" /><span property='description'>.</span></h2>
+          </div>
+          <div class="block">
+            <div>
+              <button property='value' value='1'>Enable</button>
+              <button property='value' value='0'>Disable</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 
@@ -171,7 +167,7 @@
     } // updateState()
 
     loadConfig();
-    window.setInterval(updateState, 4000);
+    // window.setInterval(updateState, 4000);
   </script>
 
 </body>

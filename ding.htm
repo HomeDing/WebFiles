@@ -131,14 +131,14 @@
     jcl.attachAll(document.body);
 
     function loadConfig() {
-      loadAsync("/config.json", "application/json", function (txt) {
+      loadAsync('/config.json', 'application/json', function (txt) {
         var obj = JSON.parse(txt);
         hub.publishObj(obj);
       });
     } // loadConfig()
 
     function updateState() {
-      loadAsync("/$board", "application/json", function (txt) {
+      loadAsync('/$board', 'application/json', function (txt) {
         try {
           var obj = JSON.parse(txt);
           hub.publishObj(obj);
