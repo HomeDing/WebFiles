@@ -3,11 +3,22 @@
 
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
-  <link rel="icon" href="/favicon.ico" type="image/x-icon" />
-  <title>IoT Board System</title>
-  <link Content-Type="text/css" href="iotstyle.css" rel="stylesheet" />
+  <title>IoT HomeDing Device</title>
 
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="application-name" content="Ding">
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon180.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon16.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/favicon192.png">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="mask-icon" href="/favicon.svg" color="#5bbad5">
+  <meta name="msapplication-config" content="/browserconfig.xml" />
+  <meta name="msapplication-TileColor" content="#2b5797">
+  <meta name="msapplication-TileImage" content="/favicon144.png">
+  <meta name="theme-color" content="#ffffff">
+
+  <link Content-Type="text/css" href="iotstyle.css" rel="stylesheet" />
   <style>
 
   </style>
@@ -16,7 +27,7 @@
 <body>
   <div class="container">
     <div class="u-header">
-      <a href="/"><img class="icon" src="/i/device.svg" /></a>
+      <a href="/"><img class="icon" src="/favicon.svg" /></a>
       <h1>Device</h1>
       <a href="/index.htm"><img class="icon" src="/i/home.svg" /></a>
       <a href="/index.htm" class="hidden-xs">Home</a>
@@ -64,6 +75,11 @@
             <p><a href="/$board/display/temp?show=00.00">display/info?show=Hello</a></p>
             <p><a href="/$board/remote/display-t?show=88.88">remote/display?show=8888</a></p>
 
+            <hr>
+            <p><a href="/$upload">upload root files</a></p>
+            <p><a href="/$upload#fi">upload file type icons</a></p>
+            <p><a href="/$upload#i">upload element icons</a></p>
+
             <!-- <p><a href="/$check">$check()</a></p> -->
 
             <!-- <p><a href="/visualize.htm">/visualize.htm</a></p> -->
@@ -71,6 +87,7 @@
         </div>
       </div>
     </div>
+
     <!-- <div class="row">
       <div id="us" class="u-switch">
         <label value="0">left</label>
@@ -109,7 +126,6 @@
       </script>
 
     </div> -->
-
 
   </div>
 </body>
