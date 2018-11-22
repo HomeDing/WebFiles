@@ -3,48 +3,54 @@
 
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
-  <link rel="icon" href="/favicon.ico" type="image/x-icon" />
-  <link rel="apple-touch-icon-precomposed" href="/favicon-256.png">
-  <link rel="xx-manifest" href="/watermanifest.json">
-  <title>DHT HomeDing</title>
+  <title>DHT Sensor</title>
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="application-name" content="Ding">
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon180.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon16.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/favicon192.png">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="mask-icon" href="/favicon.svg" color="#5bbad5">
+  <meta name="msapplication-config" content="/browserconfig.xml" />
+  <meta name="msapplication-TileColor" content="#2b5797">
+  <meta name="msapplication-TileImage" content="/favicon144.png">
+  <meta name="theme-color" content="#ffffff">
+
   <link Content-Type="text/css" href="iotstyle.css" rel="stylesheet" />
   <script src="micro.js"></script>
   <script src="ding.js"></script>
-  <style>
-
-  </style>
 </head>
 
 <body>
   <div class="container">
     <div class="u-header">
-      <a href="/"><img class="icon" src="/i/dht.svg" /></a>
+      <a href="/"><img class="icon" src="/favicon.svg" /></a>
       <h1>DHT Sensor</h1>
     </div>
 
     <div class="row wrap">
       <div class="col">
         <div class="card" microID="/dht/on" microBehavior='generic'>
-          <div class="block header">
-            <h2 style="margin-bottom: 0"><img src="/i/dht.svg" property="active" /><span property='description'></span></h2>
-          </div>
           <div class="block">
-            <div>
-              <label class="fixed">id:</label><span property='id'></span>
-            </div>
-            <div>
-              <label class="fixed">active:</label><span property='active'></span>
-            </div>
-            <div>
-              <label class="fixed">temperature:</label><span property='temperature'></span>&nbsp;&deg;C
-            </div>
-            <div>
-              <label class="fixed">humidity:</label><span property='humidity'></span>&nbsp;%
-            </div>
+            <img src="/i/dht.svg" property="xactive" style="float: left;height:5rem;margin-right:1rem"/>
+            <table>
+              <tr>
+                <td colspan="3"><span property='description'></span></td>
+              </tr>
+              <tr>
+                <td style="font-size: 2rem"><span  property='temperature'>__.__</span>&deg;C</td>
+                <td style="width:2.6rem"></td>
+                <td style="font-size: 2rem"><span property='humidity'>__.__</span>%</td>
+              </tr>
+              <tr>
+                <td>Temperature</td>
+                <td></td>
+                <td>Humidity</td>
+              </tr>
+            </table>
           </div>
         </div>
-
       </div>
     </div>
   </div>
@@ -53,14 +59,14 @@
     jcl.attachAll(document.body);
 
     function loadConfig() {
-      loadAsync("/config.json", "application/json", function(txt) {
+      loadAsync("/config.json", "application/json", function (txt) {
         var obj = JSON.parse(txt);
         hub.publishObj(obj);
       });
     } // loadConfig()
 
     function updateState() {
-      loadAsync("/$board", "application/json", function(txt) {
+      loadAsync("/$board", "application/json", function (txt) {
         try {
           var obj = JSON.parse(txt);
           hub.publishObj(obj);

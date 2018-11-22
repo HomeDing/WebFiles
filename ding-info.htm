@@ -120,18 +120,24 @@
       </div>
 
       <div microControl='dht' class='col' id='${id}'>
-        <div class="card" microID='${id}' microBehavior='timer'>
-          <div class="block header">
-            <h2><img src="/i/${type}.svg" class='Icon' property='active' />${id}</h2>
-              <h4 property='description'></h4>
-          </div>
-
+        <div class="card" microID="${id}" microBehavior='generic'>
           <div class="block">
-            <div class='Element'>
-              <div class='KV'><span class='Key'>Temp/Hum:</span><span class='Value'><span property='temperature'></span>°C
-                / <span property='humidity'></span>%</span>
-              </div>
-            </div>
+            <img src="/i/dht.svg" property="active" style="float: left;height:5rem;margin-right:1rem"/>
+            <table>
+              <tr>
+                <td colspan="3"><span property='description'></span></td>
+              </tr>
+              <tr>
+                <td style="font-size: 2rem"><span  property='temperature'>__.__</span>&deg;C</td>
+                <td style="width:2.6rem"></td>
+                <td style="font-size: 2rem"><span property='humidity'>__.__</span>%</td>
+              </tr>
+              <tr>
+                <td>Temperature</td>
+                <td></td>
+                <td>Humidity</td>
+              </tr>
+            </table>
           </div>
         </div>
       </div>
@@ -198,12 +204,12 @@
         })
       });
 
-      MicroTQ.startTask(function () {
-        loadAsync("config.json", "application/json", function (txt) {
-          obj = JSON.parse(txt);
-          hub.publishObj(obj);
-        })
-      });
+      // MicroTQ.startTask(function () {
+      //   loadAsync("config.json", "application/json", function (txt) {
+      //     obj = JSON.parse(txt);
+      //     hub.publishObj(obj);
+      //   })
+      // });
 
       function updateState() {
         loadAsync("$board", "application/json", function (txt) {
