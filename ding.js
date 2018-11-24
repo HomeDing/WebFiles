@@ -101,11 +101,6 @@ var TimerElementBehavior = {
       var cto = el.querySelectorAll(".current")[0];
       cto.style.width = Math.floor(this.time * f) + "px";
     }
-
-    forAllNodeList(this.querySelectorAll("span[property='" + key + "']"), function (e) {
-      e.textContent = value;
-      e.title = value;
-    });
   } // newData()
 }; // TimerElementBehavior
 
