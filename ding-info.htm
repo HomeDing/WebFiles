@@ -61,87 +61,52 @@
       height: 0.8em;
       background-color: red;
     }
+
+    .u-indicator {
+      position: absolute;
+      top: 0.4rem;
+      right: 0.4rem;
+      height: 1.4rem;
+      width: 1.4rem;
+      border-radius: 0.7rem;
+    }
   </style>
   <script src="micro.js"></script>
   <script src="ding.js"></script>
-  </script>
+
+  <!-- <script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.auto.js"></script> -->
+  <script src="es6-promise.auto.js"></script>
+
 </head>
 
 <body>
   <div class="container">
     <div class="u-header">
-      <a href="/"><img class="icon" src="/i/device.svg" /></a>
-      <h1>Elements</h1>
-      <a href="/index.htm"><img class="icon" src="/i/home.svg" /></a>
-      <a href="/index.htm">Home</a>
-      <a href="/ding-ide.htm"><img class="icon" src="/i/ide.svg" /></a>
-      <a href="/ding-ide.htm">IDE</a>
+      <a href="/" title="Go to Startpage"><img class="icon" src="/favicon.svg" /></a>
+      <h1>Config</h1>
+      <a href="/ding-ide.htm" title="Start IDE"><img class="icon" 
+          src="/i/ide.svg" /><span class="hidden-xs">IDE</span></a>
+      <a href="/ding-info.htm" title="Start Config"><img class="icon" 
+            src="/i/config.svg" /><span class="hidden-xs">Config</span></a>
+    </div>
+    <div class="u-navbar" style="">
+      <button id="addButton">+</button>
     </div>
 
     <div id="panel" class="row wrap"></div>
 
     <div id="templates" class="row wrap" style="border:2px solid green;display:none">
-
       <div class='col' microControl='generic' id='${id}'>
         <div class="card" microBehavior='generic' microID='${id}'>
           <div class="block header">
-            <h2><img src="/i/${type}.svg" class='Icon' property='active' />${id}</h2>
+            <h2><img src="/i/${type}.svg" class='Icon' />${id}</h2>
               <h4 property='description'></h4>
+              <span class="u-indicator" property='active'></span>
           </div>
           <div class="block Element">
           </div>
         </div>
       </div>
-
-      <div class='col' microControl='timer' id='${id}'>
-        <div class="card" microID='${id}' microBehavior='timer'>
-          <div class="block header">
-            <h2><img src="/i/${type}.svg" class='Icon' property='active' />${id}</h2>
-              <h4 property='description'></h4>
-          </div>
-
-          <div class="block">
-            <label>wait:</label><span property='waittime'>.</span>
-            <label>pulse:</label><span property='pulsetime'>.</span>
-          </div>
-          <div class="block">
-            <div class="u-bar">
-              <span class="pulse"></span>
-              <span class="current"></span>
-            </div>
-          </div>
-          <hr />
-          <div class="block">
-            <button property='start' value='1'>Start</button>
-            <button property='next' value='1'>Next</button>
-            <button property='stop' value='1'>Stop</button>
-          </div>
-        </div>
-      </div>
-
-      <div microControl='dht' class='col' id='${id}'>
-        <div class="card" microID="${id}" microBehavior='generic'>
-          <div class="block">
-            <img src="/i/dht.svg" property="active" style="float: left;height:5rem;margin-right:1rem"/>
-            <table>
-              <tr>
-                <td colspan="3"><span property='description'></span></td>
-              </tr>
-              <tr>
-                <td style="font-size: 2rem"><span  property='temperature'>__.__</span>&deg;C</td>
-                <td style="width:2.6rem"></td>
-                <td style="font-size: 2rem"><span property='humidity'>__.__</span>%</td>
-              </tr>
-              <tr>
-                <td>Temperature</td>
-                <td></td>
-                <td>Humidity</td>
-              </tr>
-            </table>
-          </div>
-        </div>
-      </div>
-
       <div microControl='kv' class='KV'><span class='Key'>${key}:</span><span class='Value' property='${key}'></span></div>
     </div>
 
@@ -150,8 +115,45 @@
       var eObj = document.getElementById('atype/aname');
       var panelObj = document.getElementById('panel');
       var tempObj = document.getElementById('templates');
+      var addObj = document.getElementById('addButton');
+      var elementDef;
 
-      jcl.loadTemplates(tempObj);
+      if (!window.xfetch) {
+        // only fetch with GET methond and URL ist supported. No init parameter.
+        // The returned Result is supporting .text() and .json() only.
+        window.xfetch = function (url) {
+          return new Promise(function (resolve, reject) {
+            let xhr = new XMLHttpRequest();
+            xhr.open('GET', url);
+            xhr.onreadystatechange = function () {
+              if (this.readyState === this.DONE) {
+                if (this.status === 200) {
+                  // Build object using a string with extensions.
+                  var res = {
+                    status: this.status,
+                    _text: this.responseText
+                  };
+                  res.text = function () {
+                    return (this._text)
+                  };
+                  res.json = function () {
+                    return (JSON.parse(this._text))
+                  };
+                  resolve(res);
+                } else {
+                  reject(new Error('fetch: `' + url + '` failed with status: [' + this.status + ']'));
+                }
+              }
+            };
+            xhr.send();
+          });
+        }
+      }
+
+      addObj.addEventListener("click", function (evt) {
+        alert(elementDef.types);
+      });
+
 
       function createElement(path, key, value) {
         var hElem = document.getElementById(path);
@@ -186,39 +188,68 @@
             }
           } // if
 
-          // update values
-          forAllNodeList(elems, function (e) {
-            e.textContent = value;
-            e.title = value;
-          });
+          // // update values
+          // forAllNodeList(elems, function (e) {
+          //   e.textContent = value;
+          //   e.title = value;
+          // });
         } // if
       } // setElement
 
       hub.subscribe("/*/*", createElement);
       hub.subscribe("/**/**?**", setElement);
 
-      MicroTQ.startTask(function () {
-        loadAsync("env.json", "application/json", function (txt) {
-          obj = JSON.parse(txt);
-          hub.publishObj(obj);
-        })
+      // get one resource after the other and do not request too much in parallel from the server.
+      // template -> env.json -> config.json
+      var p1 = fetch('/ding-templates.htm')
+        .then(function (result) {
+          return (result.text())
+        }).then(function (html) {
+          tempObj.insertAdjacentHTML('beforeend', html);
+          jcl.loadTemplates(tempObj);
+
+          return (fetch('/env.json'));
+        }).then(function (result) {
+          return (result.json())
+        }).then(function (json) {
+          hub.publishObj(json);
+
+          return (fetch('/config.json'));
+        }).then(function (result) {
+          return (result.json())
+        }).then(function (json) {
+          hub.publishObj(json);
+        });
+
+      var p2 = fetch('/elements.json')
+        .then(function (result) {
+          return (result.json())
+        }).then(function (json) {
+          elementDef = json;
+        });
+
+      Promise.all([p1, p2]).then(function () {
+        console.log("all done.");
+        updateState();
+        // window.setInterval(updateState, 2000);
       });
 
-      // MicroTQ.startTask(function () {
-      //   loadAsync("config.json", "application/json", function (txt) {
-      //     obj = JSON.parse(txt);
-      //     hub.publishObj(obj);
-      //   })
-      // });
-
       function updateState() {
-        loadAsync("$board", "application/json", function (txt) {
-          var obj = JSON.parse(txt);
-          hub.publishObj(obj);
-        });
-      } // updateState()
+        fetch('/$board')
+          .then(function (result) {
+            return (result.json())
+          }).then(function (json) {
+            hub.publishObj(json);
+          });
+      }
 
-      window.setInterval(updateState, 3000);
+      //   fetch("$board", ... 
+      //  function (txt) {
+      //     var obj = JSON.parse(txt);
+      //     hub.publishObj(obj);
+      //   });
+      // } // updateState()
+
     </script>
 
   </div>

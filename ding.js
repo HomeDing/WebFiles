@@ -5,38 +5,43 @@
 var GenericElementBehavior = {
   microID: "",
 
-  init: function() {
+  init: function () {
     hub.subscribe(this.microid + "?*", this.newData.bind(this));
     this.newData(this.microid, "id", this.microid);
   }, // init
 
-  newData: function(path, key, value) {
-    forAllNodeList(this.querySelectorAll("img[property='" + key + "']"), function(e) {
+  newData: function (path, key, value) {
+    forAllNodeList(this.querySelectorAll("img[property='" + key + "']"), function (e) {
       if (value)
         e.classList.add('active');
       else
         e.classList.remove('active')
-        // e.textContent = value;
+      // e.textContent = value;
       e.title = value;
     });
 
-    forAllNodeList(this.querySelectorAll("span[property='" + key + "']"), function(e) {
-      e.textContent = value;
-      e.title = value;
+    forAllNodeList(this.querySelectorAll("span[property='" + key + "']"), function (e) {
+      if (e.classList.contains('u-indicator')) {
+        e.setAttribute('value', (toBool(value) ? 1 : 0));
+        e.title = (toBool(value) ? 'active' : 'not active');
+      } else {
+        e.textContent = value;
+        e.title = value;
+      }
     });
 
-    forAllNodeList(this.querySelectorAll("input[property='" + key + "']"), function(e) {
+    forAllNodeList(this.querySelectorAll("input[property='" + key + "']"), function (e) {
       e.value = value;
     });
   }, // newData()
 
-  onchange: function(e) {
+  onchange: function (e) {
     var src = e.srcElement;
     dispatch(this.microid, src.getAttribute('property'), e.srcElement.value);
     // debugger;
   },
 
-  onclick: function(e) {
+  onclick: function (e) {
     var src = e.srcElement;
     dispatch(this.microid, src.getAttribute('property'), e.srcElement.value);
   }
@@ -55,7 +60,7 @@ var TimerElementBehavior = {
   ct: 0,
   time: 0,
 
-  _timeToSec: function(v) {
+  _timeToSec: function (v) {
     v = v.toLowerCase();
     if (v.endsWith('h')) {
       v = parseInt(v, 10) * 60 * 60;
@@ -67,41 +72,41 @@ var TimerElementBehavior = {
     return (v);
   },
 
-  init: function() {
+  init: function () {
     hub.subscribe(this.microid + "?*", this.newData.bind(this));
   }, // init
 
-  newData: function(path, key, value) {
-      // alert(key);
-      if (key == "waittime") {
-        this.wt = this._timeToSec(value);
-      } else if (key == "pulsetime") {
-        this.pt = this._timeToSec(value);
-      } else if (key == "cycletime") {
-        this.ct = this._timeToSec(value);
-      } else if (key == "time") {
-        this.time = this._timeToSec(value);
-      }
+  newData: function (path, key, value) {
+    // alert(key);
+    if (key == "waittime") {
+      this.wt = this._timeToSec(value);
+    } else if (key == "pulsetime") {
+      this.pt = this._timeToSec(value);
+    } else if (key == "cycletime") {
+      this.ct = this._timeToSec(value);
+    } else if (key == "time") {
+      this.time = this._timeToSec(value);
+    }
 
-      if (this.ct < 0 + this.wt + this.pt)
-        this.ct = 0 + this.wt + this.pt
+    if (this.ct < 0 + this.wt + this.pt)
+      this.ct = 0 + this.wt + this.pt
 
-      // update bars
-      if (this.ct > 0) {
-        var el = this.querySelectorAll(".u-bar")[0];
-        var f = el.clientWidth / this.ct;
-        var pto = el.querySelectorAll(".pulse")[0];
-        pto.style.left = Math.floor(this.wt * f) + "px";
-        pto.style.width = Math.floor(this.pt * f) + "px";
-        var cto = el.querySelectorAll(".current")[0];
-        cto.style.width = Math.floor(this.time * f) + "px";
-      }
+    // update bars
+    if (this.ct > 0) {
+      var el = this.querySelectorAll(".u-bar")[0];
+      var f = el.clientWidth / this.ct;
+      var pto = el.querySelectorAll(".pulse")[0];
+      pto.style.left = Math.floor(this.wt * f) + "px";
+      pto.style.width = Math.floor(this.pt * f) + "px";
+      var cto = el.querySelectorAll(".current")[0];
+      cto.style.width = Math.floor(this.time * f) + "px";
+    }
 
-      forAllNodeList(this.querySelectorAll("span[property='" + key + "']"), function(e) {
-        e.textContent = value;
-        e.title = value;
-      });
-    } // newData()
+    forAllNodeList(this.querySelectorAll("span[property='" + key + "']"), function (e) {
+      e.textContent = value;
+      e.title = value;
+    });
+  } // newData()
 }; // TimerElementBehavior
 
 jcl.registerBehaviour("timer", TimerElementBehavior);

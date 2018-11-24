@@ -7,6 +7,7 @@ $u-text: #111111; // any text
 $u-heading: #304878; // any headlines
 $u-connect: #00cc00; // connectivity / net
 $u-background: #d4dced; // connectivity / net
+$u-navbar: #cccccc; // connectivity / net
 
 $u-on: green;
 $u-off: red;
@@ -204,8 +205,7 @@ svg.button {
 // The header in the micro css is used to display the primary icon of the device, the name and links to important pages.
 .u-header {
   display: flex;
-  height: 3.5rem;
-  margin: 0.2em 0 0 0;
+  padding: 0.4rem 0;
   flex-direction: row;
   flex-wrap: nowrap;
   align-items: flex-start;
@@ -238,6 +238,14 @@ svg.button {
   }
 }
 
+.u-navbar {
+  background-color: $u-navbar;
+  padding: 0.4rem;
+  margin-bottom: 0.4rem;
+  >button {
+    min-width:2em;
+  }
+}
 
 /* === Cards === */
 
@@ -246,8 +254,8 @@ svg.button {
   display: flex;
   flex-direction: column;
   background-color: $u-background;
-  border: 1px solid $u-primary;
-  border-radius: .25rem;
+  border: 0.1rem solid $u-primary;
+  border-radius: .4rem;
   width: 400px;
   min-width: 400px;
 
@@ -261,7 +269,8 @@ svg.button {
 
     &.header {
       background-image: linear-gradient(to bottom, $u-background, darken($u-background, 10%));
-
+      border-top-right-radius: .4rem;
+      border-top-left-radius: .4rem;
       >h2,
       >h4 {
         margin: 0

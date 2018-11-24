@@ -66,7 +66,7 @@ svg.button .object { fill: #304878; fill-opacity: 1; }
 svg.button .connect { fill: #00cc00; fill-opacity: 1; }
 
 /* === Header === */
-.u-header { display: flex; height: 3.5rem; margin: 0.2em 0 0 0; flex-direction: row; flex-wrap: nowrap; align-items: flex-start; }
+.u-header { display: flex; padding: 0.4rem 0; flex-direction: row; flex-wrap: nowrap; align-items: flex-start; }
 
 .u-header a, .u-header h1, .u-header img, .u-header span { font-size: 2rem; align-self: center; margin-top: 0; margin-bottom: 0; padding: 0; vertical-align: middle; }
 
@@ -76,14 +76,18 @@ svg.button .connect { fill: #00cc00; fill-opacity: 1; }
 
 .u-header .icon { width: 3rem; height: 3rem; background-color: #d4dced; border-radius: 0.2em; }
 
+.u-navbar { background-color: #cccccc; padding: 0.4rem; margin-bottom: 0.4rem; }
+
+.u-navbar > button { min-width: 2em; }
+
 /* === Cards === */
-.card { position: relative; display: flex; flex-direction: column; background-color: #d4dced; border: 1px solid #304878; border-radius: .25rem; width: 400px; min-width: 400px; }
+.card { position: relative; display: flex; flex-direction: column; background-color: #d4dced; border: 0.1rem solid #304878; border-radius: .4rem; width: 400px; min-width: 400px; }
 
 .card img.active { background-color: limegreen; }
 
 .card > .block { flex: 1 1 auto; padding: 0.6em; }
 
-.card > .block.header { background-image: linear-gradient(to bottom, #d4dced, #b0bfde); }
+.card > .block.header { background-image: linear-gradient(to bottom, #d4dced, #b0bfde); border-top-right-radius: .4rem; border-top-left-radius: .4rem; }
 
 .card > .block.header > h2, .card > .block.header > h4 { margin: 0; }
 
