@@ -68,9 +68,11 @@ svg.button .connect { fill: #00cc00; fill-opacity: 1; }
 /* === Header === */
 .u-header { display: flex; height: 3.5rem; margin: 0.2em 0 0 0; flex-direction: row; flex-wrap: nowrap; align-items: flex-start; }
 
-.u-header > a, .u-header > h1 { font-size: 2rem; align-self: center; margin-top: 0; margin-bottom: 0; padding: 0; }
+.u-header a, .u-header h1, .u-header img, .u-header span { font-size: 2rem; align-self: center; margin-top: 0; margin-bottom: 0; padding: 0; vertical-align: middle; }
 
-.u-header > * + * { margin-left: 0.4rem; }
+.u-header img + * { margin-left: 0.2rem; }
+
+.u-header > * + * { margin-left: 0.6rem; }
 
 .u-header .icon { width: 3rem; height: 3rem; background-color: #d4dced; border-radius: 0.2em; }
 

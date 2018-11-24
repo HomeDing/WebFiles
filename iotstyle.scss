@@ -210,17 +210,24 @@ svg.button {
   flex-wrap: nowrap;
   align-items: flex-start;
 
-  >a,
-  >h1 {
+  a,
+  h1,
+  img,
+  span {
     font-size: 2rem;
     align-self: center;
     margin-top: 0;
     margin-bottom: 0;
     padding: 0;
+    vertical-align: middle;
+  }
+
+  img+* {
+    margin-left: 0.2rem;
   }
 
   >*+* {
-    margin-left: 0.4rem;
+    margin-left: 0.6rem;
   }
 
   .icon {
