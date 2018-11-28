@@ -47,9 +47,11 @@ function toBool(s) {
 
 
 function dispatch(id, prop, val) {
-  var url = "/$board" + id + "?" + prop + "=" + val;
-  loadAsync(url, null, function (txt) {}, function (txt) {})
-}
+  if (val != null) {
+    var url = "/$board" + id + "?" + prop + "=" + val;
+    loadAsync(url, null, function (txt) {}, function (txt) {})
+  }
+} // dispatch()
 
 
 // Traverse / Scan a complex object and send all nodes with attributes to a receiver function. */

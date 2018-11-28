@@ -11,12 +11,11 @@ var GenericElementBehavior = {
   }, // init
 
   newData: function (path, key, value) {
-    forAllNodeList(this.querySelectorAll("img[property='" + key + "']"), function (e) {
-      if (value)
+    forAllNodeList(this.querySelectorAll(".u-level[property='" + key + "']"), function (e) {
+      if (toBool(value))
         e.classList.add('active');
       else
         e.classList.remove('active')
-      // e.textContent = value;
       e.title = value;
     });
 
@@ -52,9 +51,32 @@ jcl.registerBehaviour("generic", GenericElementBehavior);
 
 // === Timer Behavior ===
 
+var ButtonElementBehavior = {
+  inheritFrom: GenericElementBehavior,
+
+  onmousedown: function (e) {
+    var src = e.srcElement;
+    if (src.classList.contains('u-button')) {
+      src.classList.add('active');
+      dispatch(this.microid, src.getAttribute('property'), 1);
+    } // if
+  },
+
+  onmouseup: function (e) {
+    var src = e.srcElement;
+    if (src.classList.contains('u-button')) {
+      src.classList.remove('active');
+      dispatch(this.microid, src.getAttribute('property'), 0);
+    } // if
+  }
+}; // ButtonElementBehavior
+
+jcl.registerBehaviour("button", ButtonElementBehavior);
+
+// === Timer Behavior ===
+
 var TimerElementBehavior = {
   inheritFrom: GenericElementBehavior,
-  microID: "",
   wt: 0,
   pt: 0,
   ct: 0,
@@ -71,10 +93,6 @@ var TimerElementBehavior = {
     } // if
     return (v);
   },
-
-  init: function () {
-    hub.subscribe(this.microid + "?*", this.newData.bind(this));
-  }, // init
 
   newData: function (path, key, value) {
     // alert(key);

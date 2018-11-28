@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Upload</title>
+</head>
+
+<body>
+  <div id="zone" style="width:9em;height:6em;padding:1em;background-color:#ddd">Drop here</div>
+  <script>
+    // allow drag&drop of file objects 
+    function dragHelper(e) {
+      e.stopPropagation();
+      e.preventDefault();
+    }
+
+    // allow drag&drop of file objects 
+    function dropped(e) {
+      dragHelper(e);
+      var fls = e.dataTransfer.files;
+      var formData = new FormData();
+      var r = '/' + (location.hash ? location.hash.substr(1) + '/' : '')
+      for (var i = 0; i < fls.length; i++) {
+        formData.append('file', fls[i], r + fls[i].name);
+      }
+      var xmlHttp = new XMLHttpRequest();
+      xmlHttp.addEventListener("readystatechange", function (p) {
+        if ((xmlHttp.readyState == 4) && (xmlHttp.status >= 200) && (xmlHttp.status < 300)) {
+          window.alert("done.");
+        }
+      });
+      xmlHttp.open("POST", "/");
+      xmlHttp.send(formData);
+    }
+    var zoneObj = document.getElementById('zone');
+    zoneObj.addEventListener("dragenter", dragHelper, false);
+    zoneObj.addEventListener("dragover", dragHelper, false);
+    zoneObj.addEventListener("drop", dropped, false);
+
+
+</script>
+</body>
