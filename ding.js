@@ -11,7 +11,7 @@ var GenericElementBehavior = {
   }, // init
 
   newData: function (path, key, value) {
-    forAllNodeList(this.querySelectorAll(".u-level[property='" + key + "']"), function (e) {
+    forAllNodeList(this.querySelectorAll(".u-valueindicator[property='" + key + "']"), function (e) {
       if (toBool(value))
         e.classList.add('active');
       else
@@ -44,10 +44,10 @@ var GenericElementBehavior = {
     var src = e.srcElement;
     dispatch(this.microid, src.getAttribute('property'), e.srcElement.value);
   }
-
 }; // GenericElementBehavior
 
 jcl.registerBehaviour("generic", GenericElementBehavior);
+
 
 // === Timer Behavior ===
 
@@ -58,7 +58,7 @@ var ButtonElementBehavior = {
     var src = e.srcElement;
     if (src.classList.contains('u-button')) {
       src.classList.add('active');
-      dispatch(this.microid, src.getAttribute('property'), 1);
+      dispatch(this.microid, 'value', 1);
     } // if
   },
 
@@ -66,12 +66,12 @@ var ButtonElementBehavior = {
     var src = e.srcElement;
     if (src.classList.contains('u-button')) {
       src.classList.remove('active');
-      dispatch(this.microid, src.getAttribute('property'), 0);
+      dispatch(this.microid, 'value', 0);
     } // if
   }
 }; // ButtonElementBehavior
-
 jcl.registerBehaviour("button", ButtonElementBehavior);
+
 
 // === Timer Behavior ===
 

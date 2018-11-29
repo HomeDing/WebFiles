@@ -314,7 +314,7 @@
       Promise.all([p1, p2]).then(function () {
         console.log("all done.");
         updateState();
-        // window.setInterval(updateState, 2000);
+        window.setInterval(updateState, 300);
       });
 
       function updateState() {
@@ -325,13 +325,6 @@
             hub.publishObj(json);
           });
       }
-
-      //   fetch("$board", ... 
-      //  function (txt) {
-      //     var obj = JSON.parse(txt);
-      //     hub.publishObj(obj);
-      //   });
-      // } // updateState()
     </script>
 
 </body>

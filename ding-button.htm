@@ -37,10 +37,22 @@
             <h2 style="margin-bottom: 0"><img src="/i/button.svg" /><span property='description'>.</span></h2>
           </div>
           <div class="block">
-            <img src="/i/button.svg" class="u-button u-level" property='value' style="border-radius:3rem; float: left;height:5rem;margin-right:1rem"/>
+            <img src="/i/button.svg" class="u-button u-valueindicator" style="border-radius:3rem; float: left;height:5rem;margin-right:1rem"/>
           </div>
         </div>
       </div>
+
+      <div class="col">
+        <div class="card" microID="/digitalout/led" microBehavior='generic'>
+          <div class="block header">
+            <h2 style="margin-bottom: 0"><img src="/i/digitalout.svg" /><span property='description'>.</span></h2>
+          </div>
+          <div class="block">
+            <img src="/i/digitalout.svg" class="u-button u-valueindicator" property='value' style="border-radius:3rem; float: left;height:5rem;margin-right:1rem"/>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 
@@ -65,7 +77,7 @@
 
     loadConfig();
     updateState();
-    // window.setInterval(updateState, 8000);
+    window.setInterval(updateState, 400);
   </script>
 
 </body>
