@@ -11,28 +11,35 @@
   <!-- https://milligram.io/#grids -->
   <!-- https://www.sitepoint.com/how-to-translate-from-dom-to-svg-coordinates-and-back-again/ -->
 
+  <script src="micro.js"></script>
+  <script src="panel.js"></script>
+
+  <!-- <script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.auto.js"></script> -->
+  <script src="es6-promise.auto.js"></script>
+  <script src="polyfill.js"></script>
+
   <style>
     #panel {
-      background-color: #eeeeee;
+      background-color: #f8f8f8;
     }
-    
+
     #panel #templates {
       display: none;
     }
-    
+
     #links>line {
-      stroke: green;
+      stroke: #080808;
       stroke-width: 2;
       stroke-linecap: round;
     }
-    
+
     .node rect {
-      fill: yellow;
+      fill: #d4dced;
       stroke-width: 0;
     }
-    
+
     .node {
-      font-size: 8;
+      font-size: 12px;
       font-family: sans-serif;
       fill: #000000;
       fill-opacity: 1;
@@ -40,14 +47,18 @@
       font-style: normal;
       font-weight: normal;
     }
-    
+
     .node circle {
-      fill: green;
+      fill: #505050;
       stroke-width: 0;
     }
-    
+
+    .node text {
+      font-size: 10px;
+    }
+
     #Grid {
-      fill: #cccccc;
+      fill: #e0e0e0;
       stroke: none
     }
   </style>
@@ -56,49 +67,46 @@
 <body>
   <div class="container">
     <div class="u-header">
-      <a href="/"><img class="icon" src="/i/device.svg" /></a>
+      <a href="/"><img class="icon" src="/favicon.svg" /></a>
       <h1>Panel</h1>
-      <a href="/index.htm"><img class="icon" src="/i/home.svg" /></a>
-      <a href="/index.htm">Home</a>
       <a href="/ding-ide.htm"><img class="icon" src="/i/ide.svg" /></a>
-      <a href="/ding-ide.htm">IDE</a>
+      <a href="/ding-ide.htm" class="hidden-xs">IDE</a>
+    </div>
+    <div class="u-navbar">
       <button id="moveButton">move</button>
     </div>
 
     <svg id="panel">
-        <defs>
-          <pattern id="Grid" height="64" width="64" patternUnits="userSpaceOnUse">
-            <path d="m0,0h8v1h-7v7h-1z" />
-          </pattern>
-        </defs>
-        <rect fill="url(#Grid)" height="100%" width="100%"></rect>
+      <defs>
+        <pattern id="Grid" height="72" width="72" patternUnits="userSpaceOnUse">
+          <path d="m0,0h8v1h-7v7h-1z" />
+        </pattern>
+      </defs>
+      <rect fill="url(#Grid)" height="100%" width="100%"></rect>
   
         <g id="templates">
           <g dragabble="true" class="node">
             <rect width="64" height="64" rx="8"></rect>
-            <image x="16" y="4" width="32" height="32" xlink:href="/i/default.svg" />
-            <text x="32" y="60" text-anchor="middle">subtitle</text>
-            <circle pin="m" cx="8" cy="24" r="6"></circle>
-            <circle pin="a" cx="56" cy="12" r="6"></circle>
-            <circle pin="b" cx="56" cy="36" r="6"></circle>
+            <image class="icon" x="16" y="4" width="32" height="32" xlink:href="/i/default.svg" />
+            <text class="id" x="32" y="56" text-anchor="middle">subtitle</text>
+            <circle pin="in" cx="8" cy="36" r="6"></circle>
+            <circle pin="out" cx="56" cy="36" r="6"></circle>
           </g>
         </g>
         <g id="viewport">
           <g id="nodes"></g>
           <g id="links"></g>
         </g>
-        <circle id="mark" cx="-10" cy="-10" r="5" style="fill:red"></circle>
       </svg>
 
     <script>
-      var PANEL_GRIDSIZE = 64; // px
-      var PANEL_WIDTH = 16;
-      var PANEL_HEIGHT = 12;
+      var PANEL_GRIDSIZE = 72; // px
+      var PANEL_WIDTH = 12;
+      var PANEL_HEIGHT = 8;
 
       var panelObj = document.getElementById('panel');
       var viewObj = document.getElementById('viewport');
       var moveButtonObj = document.getElementById('moveButton');
-      var markObj = document.getElementById('mark');
 
       panelObj.style.width = PANEL_GRIDSIZE * PANEL_WIDTH + "px";
       panelObj.style.height = PANEL_GRIDSIZE * PANEL_HEIGHT + "px";
@@ -106,59 +114,12 @@
       var DragObj = null;
       var DragOffset = null;
 
-      var nodes = {
-        "timer/0": {
-          icon: "home",
-          x: 1,
-          y: 1
-        },
-        "digitalout/0": {
-          icon: "button",
-          x: 4,
-          y: 6
-        },
-        "timer/1": {
-          icon: "digitalout",
-          x: 4,
-          y: 4
-        },
-        "digitalout/1": {
-          icon: "door",
-          x: 8,
-          y: 8
-        },
-        "timer/2": {
-          x: 7,
-          y: 2
-        },
-        "digitalout/2": {
-          x: 7,
-          y: 5
-        }
-      };
-
-      var links = [{
-        src: "timer/0",
-        srcPin: "b",
-        tar: "digitalout/0",
-        tarPin: "m"
-      }, {
-        src: "timer/1",
-        srcPin: "a",
-        tar: "digitalout/1",
-        tarPin: "m"
-      }, {
-        src: "timer/2",
-        srcPin: "a",
-        tar: "digitalout/2",
-        tarPin: "m"
-      }];
-
+      var nodes = {};
+      var links = [];
 
       // find the position of the pin of a node.
       function _pinPos(node, pin) {
         var panelPos = panelObj.getBoundingClientRect();
-        window.status = viewObj.currentScale;
 
         var obj = node.obj.querySelector('[pin="' + pin + '"]');
         if (!obj)
@@ -174,30 +135,63 @@
       } // _pinPos()
 
 
-      // mode a svg group to a specific position using transform:translate
-      function moveSVGGroup(g, x, y) {
-        g.setAttribute('transform', 'translate(' + x + ',' + y + ')');
-      } // moveSVGGroup
+      // create all links from the actions of nodes.
+      function createLinks(srcPath, actions) {
+        actions.split(',').forEach(function (a) {
+          var tarPath = a.split('?')[0];
+          links.push({
+            src: srcPath,
+            srcPin: "out",
+            tar: tarPath,
+            tarPin: "in"
+          });
+        });
+      }
 
 
-      // update all nodes
+      // create all nodes from the HomeDing config file
+      function createNodes(json) {
+        var xPos = 0;
+        jsonParse(json, function (path, key, val) {
+          if (path.split('/').length == 3) {
+            path = path.substr(1);
+            var n = nodes[path];
+            if (!n) {
+              n = nodes[path] = {}; // create a new node
+              n.xPos = xPos++;
+              n.yPos = 0;
+              n.icon = path.split('/')[0];
+            } // if
+            if (key) {
+              n[key] = val;
+              if (key.substr(0, 2) == 'on') {
+                createLinks(path, val);
+              }
+            } // if
+          } // if
+        });
+      } // createNodes()
+
+
+      // update svg objects for all nodes
       function updateNodes() {
-        for (var eName in nodes) {
-          var e = nodes[eName];
+        for (var nodeId in nodes) {
+          var e = nodes[nodeId];
           var obj = e.obj;
           if (!obj) {
+            // create a new svg object for node
             var nodesObj = document.getElementById('nodes');
             var t = document.querySelector('#templates .node');
             obj = e.obj = t.cloneNode(true);
             nodesObj.appendChild(obj);
           }
-          if (e.icon) {
-            var img = obj.querySelector('image');
-            img.setAttribute("xlink:href", "/i/" + e.icon + ".svg");
-            // debugger;
-          }
 
-          moveSVGGroup(obj, e.x * PANEL_GRIDSIZE, e.y * PANEL_GRIDSIZE);
+          // update svg object by node properties
+          if (e.icon)
+            obj.querySelector('.icon').setAttribute("xlink:href", "/i/" + e.icon + ".svg");
+          obj.querySelector('.id').firstChild.textContent = nodeId;
+
+          moveSVGGroup(obj, e.xPos * PANEL_GRIDSIZE, e.yPos * PANEL_GRIDSIZE);
         } // for
       } // updateNodes()
 
@@ -207,48 +201,44 @@
 
         for (var n = 0; n < links.length; n++) {
           var f = links[n];
+          var sObj = nodes[f.src];
+          var tObj = nodes[f.tar];
 
-          var obj = f.obj;
-          if (!obj) {
-            var linksObj = document.getElementById('links');
-            obj = f.obj = linksObj.ownerDocument.createElementNS("http://www.w3.org/2000/svg", 'line');
-            linksObj.appendChild(obj);
-          } // if
-          aPos = _pinPos(nodes[f.src], f.srcPin);
-          obj.setAttribute("x1", aPos.x);
-          obj.setAttribute("y1", aPos.y);
+          if (sObj && tObj) {
+            var obj = f.obj;
+            if (!obj) {
+              var linksObj = document.getElementById('links');
+              obj = f.obj = linksObj.ownerDocument.createElementNS("http://www.w3.org/2000/svg", 'line');
+              linksObj.appendChild(obj);
+            } // if
+            aPos = _pinPos(sObj, f.srcPin);
+            obj.setAttribute("x1", aPos.x);
+            obj.setAttribute("y1", aPos.y);
 
-          aPos = _pinPos(nodes[f.tar], f.tarPin);
-          obj.setAttribute("x2", aPos.x);
-          obj.setAttribute("y2", aPos.y);
-        } // for
+            aPos = _pinPos(tObj, f.tarPin);
+            obj.setAttribute("x2", aPos.x);
+            obj.setAttribute("y2", aPos.y);
+          } // for
+        }
       } // updateLinks()
 
-      updateNodes();
-      updateLinks();
+      fetch('/config.json')
+        .then(function (result) {
+          return (result.json())
+        }).then(function (json) {
+          createNodes(json);
+          updateNodes();
+          updateLinks();
+        });
 
-      moveButtonObj.addEventListener("click", function() {
-        nodes['timer/1'].x++;
+
+      moveButtonObj.addEventListener("click", function () {
+        nodes['time/0'].xPos++;
         updateNodes();
         updateLinks();
       })
 
-      // http://www.petercollingridge.co.uk/tutorials/svg/interactive/dragging/
-
-      // calc the current event/mouse/touch position
-      function getSVGPos(evt) {
-        var newScale = panelObj.currentScale;
-        var translation = panelObj.currentTranslate;
-        var panelPos = panelObj.getBoundingClientRect();
-        var ret = {
-          x: Math.round((evt.clientX - translation.x) / newScale - panelPos.left),
-          y: Math.round((evt.clientY - translation.y) / newScale - panelPos.top)
-        };
-        return (ret);
-      } // getSVGPos()
-
-
-      panelObj.addEventListener("mousedown", function(evt) {
+      panelObj.addEventListener("mousedown", function (evt) {
         if (!DragObj) {
           var o = evt.target;
           // check for a draggable object.
@@ -260,7 +250,7 @@
 
         if (DragObj) {
           // calculate Drag Offset = mouse position - drag object position
-          DragOffset = getSVGPos(evt);
+          DragOffset = getSVGPos(panelObj, evt);
           var cc = DragObj.getCTM();
           DragOffset.x -= cc.e;
           DragOffset.y -= cc.f;
@@ -268,25 +258,23 @@
       }); // mouseDown
 
 
-      panelObj.addEventListener("mousemove", function(evt) {
+      panelObj.addEventListener("mousemove", function (evt) {
         if (DragObj) {
-          var DragPos = getSVGPos(evt);
-          // markObj.setAttribute("cx", DragPos.x - DragOffset.x);
-          // markObj.setAttribute("cy", DragPos.y - DragOffset.y);
+          var DragPos = getSVGPos(panelObj, evt);
           moveSVGGroup(DragObj, DragPos.x - DragOffset.x, DragPos.y - DragOffset.y);
           updateLinks();
         } // if
       }); // mousemove
 
 
-      panelObj.addEventListener("mouseup", function(evt) {
+      panelObj.addEventListener("mouseup", function (evt) {
         if (DragObj) {
-          var DragPos = getSVGPos(evt);
+          var DragPos = getSVGPos(panelObj, evt);
 
           for (var n in nodes) {
             if (nodes[n].obj == DragObj) {
-              nodes[n].x = Math.floor(DragPos.x / PANEL_GRIDSIZE);
-              nodes[n].y = Math.floor(DragPos.y / PANEL_GRIDSIZE);
+              nodes[n].xPos = Math.floor(DragPos.x / PANEL_GRIDSIZE);
+              nodes[n].yPos = Math.floor(DragPos.y / PANEL_GRIDSIZE);
               break;
             }
           } // for
@@ -299,14 +287,13 @@
 
 
       var scrollSensitivity = 0.2
-
-      panelObj.addEventListener("mousewheel", function(e) {
-        debugger;
+      panelObj.addEventListener("mousewheel", function (e) {
+        // debugger;
         var cs = panelObj.currentScale;
         panelObj.setAttribute("transform", "scale(" + (cs + 0.2) + ")");
-
       });
     </script>
+
 
   </div>
 </body>
