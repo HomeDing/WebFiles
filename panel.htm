@@ -151,15 +151,14 @@
 
       // create all nodes from the HomeDing config file
       function createNodes(json) {
-        var xPos = 0;
+        var px = 0;
+        var py = 1;
         jsonParse(json, function (path, key, val) {
           if (path.split('/').length == 3) {
             path = path.substr(1);
             var n = nodes[path];
             if (!n) {
               n = nodes[path] = {}; // create a new node
-              n.xPos = xPos++;
-              n.yPos = 0;
               n.icon = path.split('/')[0];
             } // if
             if (key) {
@@ -170,7 +169,43 @@
             } // if
           } // if
         });
+        // remove links into nirvana
+        links = links.filter(function (l) {
+          return (nodes[l.src] && nodes[l.tar]);
+        });
+        // find nodes without links:
+        p = 0;
+        for (n in nodes) {
+          nodes[n]._out = nodes[n]._in = 0;
+        }
+        links.forEach(function (l) {
+          nodes[l.src]._out++;
+          nodes[l.tar]._in++;
+        });
+        for (n in nodes) {
+          if (nodes[n]._out == 0 && nodes[n]._in == 0) {
+            // nodes without links in line 1:
+            nodes[n].xPos = px++;
+            nodes[n].yPos = 0;
+          } else {
+            // nodes with links vertically;
+            nodes[n].xPos = 5 + nodes[n]._in - nodes[n]._out;
+            nodes[n].yPos = py++;
+          }
+        };
       } // createNodes()
+
+      function moveNodes() {
+        links.forEach(function (l) {
+          var sObj = nodes[l.src];
+          var tObj = nodes[l.tar];
+          // debugger;
+          // sObj.xPos--;
+          // tObj.xPos++;
+
+        });
+
+      }
 
 
       // update svg objects for all nodes
@@ -227,6 +262,7 @@
           return (result.json())
         }).then(function (json) {
           createNodes(json);
+          moveNodes();
           updateNodes();
           updateLinks();
         });
