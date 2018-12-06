@@ -1,6 +1,0 @@
-{
-  "device/main": { "active": "true", "description": "Water on the balcony", "name": "water2" },
-  "ssdp/0": { "active": "true" },
-  "timer/water": { "active": "true", "description": "Water Timer", "state": "0", "time": "54", "level": "0" },
-  "digitalout/relais": { "active": "true", "description": "Relaison Port GPIO2", "pin": "2", "invers": "1", "level": "0" }
-}

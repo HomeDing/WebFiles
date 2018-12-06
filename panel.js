@@ -1,6 +1,4 @@
-// panel.js
-
-// http://www.petercollingridge.co.uk/tutorials/svg/interactive/dragging/
+// panel.js: panel javascript functions
 
 // calc the current event/mouse/touch position
 function getSVGPos(panel, evt) {
@@ -18,3 +16,33 @@ function getSVGPos(panel, evt) {
 function moveSVGGroup(g, x, y) {
   g.setAttribute('transform', 'translate(' + x + ',' + y + ')');
 } // moveSVGGroup
+
+
+// find the position of the pin of a node.
+function _pinPos(node, pin) {
+  var panelPos = panelObj.getBoundingClientRect();
+
+  var obj = node.obj.querySelector('[pin="' + pin + '"]');
+  if (!obj)
+    obj = node.obj;
+
+  var b2 = obj.getBoundingClientRect();
+
+  var pos = {
+    x: Math.round(b2.left + b2.width / 2 - panelPos.left),
+    y: Math.round(b2.top + b2.height / 2 - panelPos.top)
+  };
+  return (pos);
+} // _pinPos()
+
+// return actual parameters in hash part of URL as object
+function getHashParams(defaults) {
+  var params = {};
+  for (var p in defaults) params[p] = defaults[p];
+
+  window.location.hash.substr(1).split('&').forEach(function (p) {
+    var pa = p.split('=');
+    params[pa[0]] = pa[1];
+  });
+  return(params);
+} // getHashParams()

@@ -31,6 +31,7 @@ function loadAsync(url, mime, loadCallback, errorCallback) {
 } // loadAsync()
 
 function toBool(s) {
+  if (! s) return(false);
   switch (s.toLowerCase().trim()) {
     case "true":
     case "yes":

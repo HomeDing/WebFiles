@@ -7,10 +7,6 @@
   <title>Element Panel</title>
   <link href="/iotstyle.css" rel="stylesheet" type="text/css">
 
-  <!-- https://necolas.github.io/normalize.css/ -->
-  <!-- https://milligram.io/#grids -->
-  <!-- https://www.sitepoint.com/how-to-translate-from-dom-to-svg-coordinates-and-back-again/ -->
-
   <script src="micro.js"></script>
   <script src="panel.js"></script>
 
@@ -72,7 +68,7 @@
       <a href="/ding-ide.htm"><img class="icon" src="/i/ide.svg" /></a>
       <a href="/ding-ide.htm" class="hidden-xs">IDE</a>
     </div>
-    <div class="u-navbar">
+    <div class="u-navbar hidden" >
       <button id="moveButton">move</button>
     </div>
 
@@ -104,6 +100,13 @@
       var PANEL_WIDTH = 12;
       var PANEL_HEIGHT = 8;
 
+      var paramsDefault = {
+        sys: false
+      };
+      var params;
+
+      var elementDef, envDef, configDef;
+
       var panelObj = document.getElementById('panel');
       var viewObj = document.getElementById('viewport');
       var moveButtonObj = document.getElementById('moveButton');
@@ -111,29 +114,16 @@
       panelObj.style.width = PANEL_GRIDSIZE * PANEL_WIDTH + "px";
       panelObj.style.height = PANEL_GRIDSIZE * PANEL_HEIGHT + "px";
 
+      params = getHashParams(paramsDefault);
+      window.addEventListener("hashchange", function () {
+        window.location.reload();
+      });
+
       var DragObj = null;
       var DragOffset = null;
 
       var nodes = {};
       var links = [];
-
-      // find the position of the pin of a node.
-      function _pinPos(node, pin) {
-        var panelPos = panelObj.getBoundingClientRect();
-
-        var obj = node.obj.querySelector('[pin="' + pin + '"]');
-        if (!obj)
-          obj = node.obj;
-
-        var b2 = obj.getBoundingClientRect();
-
-        var pos = {
-          x: Math.round(b2.left + b2.width / 2 - panelPos.left),
-          y: Math.round(b2.top + b2.height / 2 - panelPos.top)
-        };
-        return (pos);
-      } // _pinPos()
-
 
       // create all links from the actions of nodes.
       function createLinks(srcPath, actions) {
@@ -148,31 +138,42 @@
         });
       }
 
+      /*
+      node = {id = xPos, yPos, onXXX, obj }
+      */
 
       // create all nodes from the HomeDing config file
       function createNodes(json) {
-        var px = 0;
-        var py = 1;
         jsonParse(json, function (path, key, val) {
           if (path.split('/').length == 3) {
-            path = path.substr(1);
-            var n = nodes[path];
-            if (!n) {
-              n = nodes[path] = {}; // create a new node
-              n.icon = path.split('/')[0];
-            } // if
-            if (key) {
-              n[key] = val;
-              if (key.substr(0, 2) == 'on') {
-                createLinks(path, val);
-              }
+            var t = path.split('/')[1].toLowerCase();
+            var id = path.substr(1);
+
+            if ((params.sys) || (!elementDef[t]) || (toBool(elementDef[t].sys) == false)) {
+              var n = nodes[id];
+              if (!n) {
+                n = nodes[id] = {}; // create a new node
+                n.icon = t;
+              } // if
+              if (key) {
+                n[key] = val;
+                if (key.substr(0, 2) == 'on') {
+                  createLinks(id, val);
+                }
+              } // if
             } // if
           } // if
         });
+      } // createNodes()
+
+      function placeNodes() {
+        var px = 0;
+        var py = 1;
         // remove links into nirvana
         links = links.filter(function (l) {
           return (nodes[l.src] && nodes[l.tar]);
         });
+
         // find nodes without links:
         p = 0;
         for (n in nodes) {
@@ -193,19 +194,69 @@
             nodes[n].yPos = py++;
           }
         };
-      } // createNodes()
+      } // placeNodes()
+
+      function posInUse(x, y) {
+        var found = null;
+        Object.values(nodes).forEach(function (o) {
+          if ((!found) && (o.xPos == x) && (o.yPos == y))
+            found = o;
+        });
+        return (found);
+      };
+
+      function lineInUse(y) {
+        var found = null;
+        Object.values(nodes).forEach(function (o) {
+          if ((!found) && (o.yPos == y))
+            found = o;
+        });
+        return (found);
+      };
+
+
+      function yForce(nodeId) {
+        var dist = 0;
+        var num = 0;
+        var yPos = nodes[nodeId].yPos;
+        links.forEach(function (l) {
+          if (l.src == nodeId) {
+            dist += nodes[l.tar].yPos - yPos;
+            num++;
+          }
+          if (l.tar == nodeId) {
+            dist += nodes[l.src].yPos - yPos;
+            num++;
+          }
+        });
+        return (dist / num);
+      };
+
 
       function moveNodes() {
-        links.forEach(function (l) {
-          var sObj = nodes[l.src];
-          var tObj = nodes[l.tar];
-          // debugger;
-          // sObj.xPos--;
-          // tObj.xPos++;
+        var moved = false;
+        for (var nodeId in nodes) {
+          var node = nodes[nodeId];
+          f = yForce(nodeId);
+          if ((f < -0.5) && (!posInUse(node.xPos, node.yPos - 1))) {
+            node.yPos--;
+            moved = true;
+          }
+        } // for
 
-        });
-
-      }
+        for (var n = 0; n < 12; n++) {
+          if (!lineInUse(n)) {
+            for (var nodeId in nodes) {
+              var e = nodes[nodeId];
+              if (e.yPos === n + 1) {
+                e.yPos--;
+                moved = true;
+              }
+            } // for
+          }
+        }
+        return (moved);
+      } // moveNodes()
 
 
       // update svg objects for all nodes
@@ -257,19 +308,48 @@
         }
       } // updateLinks()
 
-      fetch('/config.json')
+      var p1 = fetch('/env.json')
         .then(function (result) {
           return (result.json())
         }).then(function (json) {
-          createNodes(json);
-          moveNodes();
-          updateNodes();
-          updateLinks();
+          envDef = json;
+          return (fetch('/config.json'));
+        }).then(function (result) {
+          return (result.json())
+        }).then(function (json) {
+          configDef = json;
         });
+
+      var p2 = fetch('/elements.json')
+        .then(function (result) {
+          return (result.json())
+        }).then(function (json) {
+          elementDef = json;
+        });
+
+      Promise.all([p1, p2]).then(function () {
+        console.log("all done.");
+        createNodes(envDef);
+        createNodes(configDef);
+        placeNodes();
+        while (moveNodes()) {};
+        updateNodes();
+        updateLinks();
+      });
 
 
       moveButtonObj.addEventListener("click", function () {
-        nodes['time/0'].xPos++;
+        moveNodes();
+        for (var n = 0; n < 12; n++) {
+          if (!lineInUse(n)) {
+            for (var nodeId in nodes) {
+              var e = nodes[nodeId];
+              if (e.yPos === n + 1) e.yPos--;
+            } // for
+          }
+        }
+        // alert(lineInUse(3));
+        // nodes['time/0'].xPos++;
         updateNodes();
         updateLinks();
       })
