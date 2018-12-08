@@ -1,6 +1,7 @@
-// polyfill.js: Some polyfills
+// polyfill.js: Some polyfills and modern functions.
 // requires browser that offers Promises or use polifill from 
 // https://www.github.com/stefanpenner/es6-promise/
+
 
 // polyfill window.fetch
 
@@ -36,6 +37,8 @@ if (!window.fetch) {
   }
 }
 
+// polyfill Object.keys
+
 if (!Object.keys) {
   Object.keys = function (o) {
     var k = [];
@@ -47,6 +50,9 @@ if (!Object.keys) {
   }
 }
 
+
+// polyfill Object.values
+
 if (!Object.values) {
   Object.values = function (o) {
     var v = [];
@@ -57,4 +63,20 @@ if (!Object.values) {
     return v;
   }
 }
+
+
+// polyfill NodeList.prototype.forEach
+if (window.NodeList && !NodeList.prototype.forEach) {
+  NodeList.prototype.forEach = Array.prototype.forEach;
+}
+
+
+// General Purpose Pomise
+
+function DelayPromise(ms) {
+  return new Promise(function (resolve, reject) {
+    setTimeout(resolve, ms);
+  });
+}
+
 // End.

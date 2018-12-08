@@ -35,14 +35,3 @@ function _pinPos(node, pin) {
   return (pos);
 } // _pinPos()
 
-// return actual parameters in hash part of URL as object
-function getHashParams(defaults) {
-  var params = {};
-  for (var p in defaults) params[p] = defaults[p];
-
-  window.location.hash.substr(1).split('&').forEach(function (p) {
-    var pa = p.split('=');
-    params[pa[0]] = pa[1];
-  });
-  return(params);
-} // getHashParams()

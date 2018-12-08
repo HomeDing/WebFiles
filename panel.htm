@@ -7,12 +7,11 @@
   <title>Element Panel</title>
   <link href="/iotstyle.css" rel="stylesheet" type="text/css">
 
+  <script src="es6-promise.auto.js"></script>
+  <!-- <script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.auto.js"></script> -->
+  <script src="polyfill.js"></script>
   <script src="micro.js"></script>
   <script src="panel.js"></script>
-
-  <!-- <script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.auto.js"></script> -->
-  <script src="es6-promise.auto.js"></script>
-  <script src="polyfill.js"></script>
 
   <style>
     #panel {
@@ -63,12 +62,13 @@
 <body>
   <div class="container">
     <div class="u-header">
-      <a href="/"><img class="icon" src="/favicon.svg" /></a>
+      <a href="/" title="Startpage" ><img class="icon" src="/favicon.svg" /></a>
       <h1>Panel</h1>
-      <a href="/ding-ide.htm"><img class="icon" src="/i/ide.svg" /></a>
-      <a href="/ding-ide.htm" class="hidden-xs">IDE</a>
+      <a href="/ding-ide.htm" title="Start IDE"><img class="icon" src="/i/ide.svg" /><span class="hidden-xs">IDE</span></a>
+      <a href="/ding-info.htm" title="Start Config"><img class="icon" src="/i/config.svg" /><span class="hidden-xs">Config</span></a>
+      <a href="/ding-log.htm" title="Logfile"><img class="icon" src="/i/log.svg" /><span class="hidden-xs">Log</span></a>
     </div>
-    <div class="u-navbar hidden" >
+    <div class="u-navbar hidden">
       <button id="moveButton">move</button>
     </div>
 
@@ -100,10 +100,12 @@
       var PANEL_WIDTH = 12;
       var PANEL_HEIGHT = 8;
 
-      var paramsDefault = {
+      var params = getHashParams({
         sys: false
-      };
-      var params;
+      });
+      window.addEventListener("hashchange", function () {
+        window.location.reload();
+      });
 
       var elementDef, envDef, configDef;
 
@@ -114,32 +116,30 @@
       panelObj.style.width = PANEL_GRIDSIZE * PANEL_WIDTH + "px";
       panelObj.style.height = PANEL_GRIDSIZE * PANEL_HEIGHT + "px";
 
-      params = getHashParams(paramsDefault);
-      window.addEventListener("hashchange", function () {
-        window.location.reload();
-      });
 
       var DragObj = null;
       var DragOffset = null;
 
       var nodes = {};
-      var links = [];
+      var edges = [];
 
-      // create all links from the actions of nodes.
-      function createLinks(srcPath, actions) {
+      // create all edges from the actions of a node.
+      function createEdges(srcPath, actions) {
         actions.split(',').forEach(function (a) {
           var tarPath = a.split('?')[0];
-          links.push({
+          edges.push({
             src: srcPath,
             srcPin: "out",
             tar: tarPath,
             tarPin: "in"
           });
         });
-      }
+      } // createEdges()
 
       /*
-      node = {id = xPos, yPos, onXXX, obj }
+      HomeDing config data model ->
+        create nodes = {id, xPos, yPos, onXXX, obj }
+        create edges = {src, srcPin, tar, tarPin, obj}
       */
 
       // create all nodes from the HomeDing config file
@@ -149,16 +149,18 @@
             var t = path.split('/')[1].toLowerCase();
             var id = path.substr(1);
 
-            if ((params.sys) || (!elementDef[t]) || (toBool(elementDef[t].sys) == false)) {
+            if (toBool(params.sys) || (!elementDef[t]) || (toBool(elementDef[t].sys) == false)) {
               var n = nodes[id];
               if (!n) {
-                n = nodes[id] = {}; // create a new node
+                n = nodes[id] = {
+                  id: id
+                }; // create a new node
                 n.icon = t;
               } // if
               if (key) {
                 n[key] = val;
                 if (key.substr(0, 2) == 'on') {
-                  createLinks(id, val);
+                  createEdges(id, val);
                 }
               } // if
             } // if
@@ -166,30 +168,32 @@
         });
       } // createNodes()
 
+
+      // initial placement of all nodes
       function placeNodes() {
         var px = 0;
         var py = 1;
-        // remove links into nirvana
-        links = links.filter(function (l) {
+        // remove edge going into the nirvana
+        edges = edges.filter(function (l) {
           return (nodes[l.src] && nodes[l.tar]);
         });
 
-        // find nodes without links:
+        // find nodes without edges:
         p = 0;
         for (n in nodes) {
           nodes[n]._out = nodes[n]._in = 0;
         }
-        links.forEach(function (l) {
+        edges.forEach(function (l) {
           nodes[l.src]._out++;
           nodes[l.tar]._in++;
         });
         for (n in nodes) {
           if (nodes[n]._out == 0 && nodes[n]._in == 0) {
-            // nodes without links in line 1:
+            // nodes without edges in line 1:
             nodes[n].xPos = px++;
             nodes[n].yPos = 0;
           } else {
-            // nodes with links vertically;
+            // nodes with edges vertically;
             nodes[n].xPos = 5 + nodes[n]._in - nodes[n]._out;
             nodes[n].yPos = py++;
           }
@@ -219,7 +223,7 @@
         var dist = 0;
         var num = 0;
         var yPos = nodes[nodeId].yPos;
-        links.forEach(function (l) {
+        edges.forEach(function (l) {
           if (l.src == nodeId) {
             dist += nodes[l.tar].yPos - yPos;
             num++;
@@ -259,17 +263,31 @@
       } // moveNodes()
 
 
-      // update svg objects for all nodes
+      // create / update svg objects for all nodes
       function updateNodes() {
         for (var nodeId in nodes) {
+          var t = nodeId.split('/')[0];
           var e = nodes[nodeId];
+          var ed = elementDef[t];
+
           var obj = e.obj;
           if (!obj) {
             // create a new svg object for node
             var nodesObj = document.getElementById('nodes');
-            var t = document.querySelector('#templates .node');
-            obj = e.obj = t.cloneNode(true);
+            obj = e.obj = document.querySelector('#templates .node').cloneNode(true);
             nodesObj.appendChild(obj);
+            // disable outgoing pin ?
+            if (ed) {
+              if ((ed.actions) && (ed.actions.length == 0)) {
+                var pin = obj.querySelector('[pin="in"]');
+                if (pin) pin.style.display = "none";
+              }
+              if ((ed.events) && (ed.events.length == 0)) {
+                var pin = obj.querySelector('[pin="out"]');
+                if (pin) pin.style.display = "none";
+              }
+            }
+
           }
 
           // update svg object by node properties
@@ -282,18 +300,19 @@
       } // updateNodes()
 
 
-      function updateLinks() {
+      // create / update all svg objects edges to current position of nodes
+      function updateEdges() {
         var aPos;
+        var linksObj = document.getElementById('links');
 
-        for (var n = 0; n < links.length; n++) {
-          var f = links[n];
+        for (var n = 0; n < edges.length; n++) {
+          var f = edges[n];
           var sObj = nodes[f.src];
           var tObj = nodes[f.tar];
 
           if (sObj && tObj) {
             var obj = f.obj;
             if (!obj) {
-              var linksObj = document.getElementById('links');
               obj = f.obj = linksObj.ownerDocument.createElementNS("http://www.w3.org/2000/svg", 'line');
               linksObj.appendChild(obj);
             } // if
@@ -306,8 +325,9 @@
             obj.setAttribute("y2", aPos.y);
           } // for
         }
-      } // updateLinks()
+      } // updateEdges()
 
+      // get configuration data
       var p1 = fetch('/env.json')
         .then(function (result) {
           return (result.json())
@@ -320,6 +340,7 @@
           configDef = json;
         });
 
+      // get element meta data
       var p2 = fetch('/elements.json')
         .then(function (result) {
           return (result.json())
@@ -327,6 +348,7 @@
           elementDef = json;
         });
 
+      // start when all data is available
       Promise.all([p1, p2]).then(function () {
         console.log("all done.");
         createNodes(envDef);
@@ -334,24 +356,13 @@
         placeNodes();
         while (moveNodes()) {};
         updateNodes();
-        updateLinks();
+        updateEdges();
       });
-
 
       moveButtonObj.addEventListener("click", function () {
         moveNodes();
-        for (var n = 0; n < 12; n++) {
-          if (!lineInUse(n)) {
-            for (var nodeId in nodes) {
-              var e = nodes[nodeId];
-              if (e.yPos === n + 1) e.yPos--;
-            } // for
-          }
-        }
-        // alert(lineInUse(3));
-        // nodes['time/0'].xPos++;
         updateNodes();
-        updateLinks();
+        updateEdges();
       })
 
       panelObj.addEventListener("mousedown", function (evt) {
@@ -378,7 +389,7 @@
         if (DragObj) {
           var DragPos = getSVGPos(panelObj, evt);
           moveSVGGroup(DragObj, DragPos.x - DragOffset.x, DragPos.y - DragOffset.y);
-          updateLinks();
+          updateEdges();
         } // if
       }); // mousemove
 
@@ -395,7 +406,7 @@
             }
           } // for
           updateNodes();
-          updateLinks();
+          updateEdges();
 
           DragObj = null;
         } // if

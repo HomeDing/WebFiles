@@ -297,58 +297,20 @@ var MicroJCL = function () {
 
 } // MicroDOMTemplate class
 
-
 var jcl = new MicroJCL();
 window.addEventListener('unload', jcl.onunload.bind(jcl), false);
 
+// return actual parameters in hash part of URL as object
+function getHashParams(defaults) {
+  var params = {};
+  for (var p in defaults) params[p] = defaults[p];
 
-function forAllNodeList(nodeList, callbackFn) {
-  for (var n = 0; n < nodeList.length; n++) {
-    callbackFn(nodeList[n]);
-  }
-} // forAllNodeList()
-
-
-// http://www.javascriptkit.com/jsref/promises.shtml
-
-// http://www.javascriptkit.com/javatutors/javascriptpromises.shtml
-
-
-var MicroTQ = new(function () {
-  this._queue = [];
-  this._tHandle = null;
-
-  // add a new task to the queue
-  this.startTask = function (func) {
-    this._queue.push(func); // add at the end of array
-    if (!this._tHandle) {
-      this._tHandle = window.setTimeout(this.nextTask.bind(this), 1);
-    } // if
-  } // startTask
-
-  this.resolve = function (result) {
-    this._queue.push(func); // add at the end of array
-    if (!this._tHandle) {
-      this._tHandle = window.setTimeout(this.nextTask.bind(this), 1);
-    } // if
-  } // startTask
-
-  this.nextTask = function () {
-    this._tHandle = null;
-    if (this._queue.length > 0) {
-      var func = this._queue.shift();
-      func();
-    } // if
-    if ((!this._tHandle) && (this._queue.length > 0)) {
-      this._tHandle = window.setTimeout(this.nextTask.bind(this), 1);
-    } // if
-  } // nextTask
-
-  this.clear = function () {
-    this._queue = [];
-  } // clear
-
-}); // MicroTQ
+  window.location.hash.substr(1).split('&').forEach(function (p) {
+    var pa = p.split('=');
+    params[pa[0]] = pa[1];
+  });
+  return(params);
+} // getHashParams()
 
 
 // End
