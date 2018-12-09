@@ -1,0 +1,83 @@
+{
+  "device": {
+    "sys": "true",
+    "properties": ["description", "room"]
+  },
+
+  "ota": {
+    "sys": "true"
+  },
+  "ssdp": {
+    "sys": "true"
+  },
+  "ntptime": {
+    "sys": "true"
+  },
+  "displaylcd": {
+    "sys": "true"
+  },
+  "displayssd1306": {
+    "sys": "true"
+  },
+
+  "analog": {
+    "properties": ["description", "readtime", "hysteresis", "reference"],
+    "actions": [],
+    "events": ["value", "reference"]
+  },
+
+  "button": {
+    "properties": ["description", "pin", "type", "inverse", "pullup"],
+    "actions": ["value", "on", "off"],
+    "events": ["value"]
+  },
+
+  "displaytext": {
+    "properties": ["description", "x", "y", "fontsize", "prefix", "postfix"],
+    "actions": ["value", "show", "clear"],
+    "events": []
+  },
+
+  "displaydot": {
+    "properties": ["description", "x", "y"],
+    "actions": ["value", "show", "clear"],
+    "events": []
+  },
+
+  "time": {
+    "properties": ["description"],
+    "actions": [],
+    "events": ["minute", "timestamp", "time", "date"]
+  },
+
+  "rotary": {
+    "properties": ["description", "pin1", "pin2", "step", "value"],
+    "actions": [],
+    "events": ["change"]
+  },
+
+  "serialcmd": {
+    "properties": ["description"],
+    "actions": [],
+    "events": ["preset0", "preset1", "preset2", "preset3"]
+  },
+
+  "timer": {
+    "properties": ["description", "type", "waittime", "pulsetime", "cycletime"],
+    "actions": ["start", "stop", "next"],
+    "events": ["on", "off", "value"]
+  },
+
+  "digitalout": {
+    "properties": ["description", "value", "pin", "inverse"],
+    "actions": ["on", "off", "value"],
+    "events": []
+  },
+
+  "pwmout": {
+    "properties": ["description", "value", "range", "pin", "inverse"],
+    "actions": ["on", "off", "value"],
+    "events": []
+  }
+
+}

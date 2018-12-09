@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <title>IoT-IDE</title>
   <link Content-Type="text/css" href="iotstyle.css" rel="stylesheet" />
+  <script src="es6-promise.auto.js"></script>
+  <script src="polyfill.js"></script>
   <script src="micro.js"></script>
   <style>
     html,
@@ -12,7 +14,8 @@
       height: 100%;
     }
 
-    .file-icon, .file-icon img,
+    .file-icon,
+    .file-icon img,
     .file-entry,
     .file-delete {
       cursor: pointer;
@@ -138,19 +141,17 @@
     </div>
 
     <div class="u-header">
-      <a href="/"><img class="icon" src="/favicon.svg" /></a>
+      <a href="/" title="Startpage" ><img class="icon" src="/favicon.svg" /></a>
       <h1>Device</h1>
-      <a href="/index.htm"><img class="icon" src="/i/home.svg" /></a>
-      <a href="/index.htm" class="hidden-xs">Home</a>
-      <a href="/ding-ide.htm"><img class="icon" src="/i/ide.svg" /></a>
-      <a href="/ding-ide.htm" class="hidden-xs">IDE</a>
+      <a href="/ding-ide.htm" title="Start IDE"><img class="icon" src="/i/ide.svg" /><span class="hidden-xs">IDE</span></a>
+      <a href="/ding-info.htm" title="Start Config"><img class="icon" src="/i/config.svg" /><span class="hidden-xs">Config</span></a>
+      <a href="/ding-log.htm" title="Logfile"><img class="icon" src="/i/log.svg" /><span class="hidden-xs">Log</span></a>
 
       <a href="/ding.htm">[UI]</a>
-      <a href="/ding-info.htm">[Info]</a>
       <a href="/$sysinfo">[$sysinfo]</a>
       <span style="flex-grow: 1"></span>
       <button class="once" id="doReset">reset</button>
-            <span style="flex-grow: 1"></span>
+      <span style="flex-grow: 1"></span>
     </div>
 
     <div class="row" style="flex:0 0 auto">
@@ -178,7 +179,7 @@
   </div>
   <script src="ding-ide.js"></script>
   <script>
-    MicroTQ.startTask(function () {
+    DelayPromise(4).then(function () {
       var cacheImage = new Image();
       cacheImage.src = "/spinner.gif";
     });
@@ -187,20 +188,14 @@
     function runOnce() {
       var scope = this;
       this.disabled = true;
-      MicroTQ.startTask(function () {
-          loadAsync("/$reboot", null, runDone.bind(scope), runWait.bind(scope));
+      DelayPromise(2000).then(function () {
+        return (fetch('/$reboot'));
+      }).finally(function (result) {
+        scope.disabled = false;
+        // }).catch(function () {
+        //   scope.disabled = false;
       });
     } // runOnce
-
-    // call this to stop blocking the button.
-    function runWait(evt) {
-      window.setTimeout(runDone.bind(this), 500);
-    } // runWait
-
-    // call this to stop blocking the button.
-    function runDone(evt) {
-      this.disabled = false;
-    } // runDone
 
     var resetObj = document.getElementById("doReset");
     resetObj.addEventListener("click", runOnce);

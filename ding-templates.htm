@@ -1,8 +1,7 @@
 <div microControl='dht' class='col' id='${id}'>
   <div class="card" microID="${id}" microBehavior='generic'>
     <div class="block">
-      <a href="ding-dht.htm">
-      <img src="/i/dht.svg" style="float: left;height:5rem;margin-right:1rem"/></a>
+      <img title="${id}" src="/i/dht.svg" style="float: left;height:5rem;margin-right:1rem"/>
       <span class="u-indicator" property='active'></span>
       <table>
         <tr>
@@ -10,7 +9,7 @@
         </tr>
         <tr>
           <td style="font-size: 2rem"><span  property='temperature'>__.__</span>&deg;C</td>
-          <td style="width:2.6rem"></td>
+          <td style="width:2rem"></td>
           <td style="font-size: 2rem"><span property='humidity'>__.__</span>%</td>
         </tr>
         <tr>
@@ -58,16 +57,19 @@
     <div class="block">
       <img src="/i/button.svg" class="u-button u-valueindicator" style="border-radius:3rem; float: left;height:5rem;margin-right:1rem" >
     </div>
+    </div>
   </div>
-</div>
 
-<div class='col' microControl='digitalout' id='${id}'>
-  <div class="card" microID="${id}" microBehavior='generic'>
-    <div class="block header">
-      <h2 style="margin-bottom: 0"><img src="/i/digitalout.svg" /><span property='description'>.</span></h2>
+  <div class='col' microControl='digitalout' id='${id}'>
+    <div class="card" microID="${id}" microBehavior='generic'>
+      <div class="block header">
+        <h2><img src="/i/digitalout.svg" class='Icon'/>${id}</h2>
+          <h4 property='description'></h4>
+          <span class="u-indicator" property='active'></span>
+      </div>
+
+      <div class="block">
+        <img src="/i/digitalout.svg" class="u-button u-valueindicator" property='value' style="border-radius:3rem; float: left;height:5rem;margin-right:1rem" >
     </div>
-    <div class="block">
-      <img src="/i/digitalout.svg" class="u-button u-valueindicator" property='value' style="border-radius:3rem; float: left;height:5rem;margin-right:1rem" >
+      </div>
     </div>
-  </div>
-</div>

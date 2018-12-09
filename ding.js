@@ -11,7 +11,7 @@ var GenericElementBehavior = {
   }, // init
 
   newData: function (path, key, value) {
-    forAllNodeList(this.querySelectorAll(".u-valueindicator[property='" + key + "']"), function (e) {
+    this.querySelectorAll(".u-valueindicator[property='" + key + "']").forEach(function (e) {
       if (toBool(value))
         e.classList.add('active');
       else
@@ -19,17 +19,19 @@ var GenericElementBehavior = {
       e.title = value;
     });
 
-    forAllNodeList(this.querySelectorAll("span[property='" + key + "']"), function (e) {
-      if (e.classList.contains('u-indicator')) {
-        e.setAttribute('value', (toBool(value) ? 1 : 0));
-        e.title = (toBool(value) ? 'active' : 'not active');
-      } else {
-        e.textContent = value;
-        e.title = value;
-      }
-    });
+    ['h2', 'h4', 'span'].forEach(function (elType) {
+      this.querySelectorAll(elType + "[property='" + key + "']").forEach(function (el) {
+        if (el.classList.contains('u-indicator')) {
+          el.setAttribute('value', (toBool(value) ? 1 : 0));
+          el.title = (toBool(value) ? 'active' : 'not active');
+        } else {
+          el.textContent = value;
+          el.title = value;
+        }
+      });
+    }, this);
 
-    forAllNodeList(this.querySelectorAll("input[property='" + key + "']"), function (e) {
+    this.querySelectorAll("input[property='" + key + "']").forEach(function (e) {
       e.value = value;
     });
   }, // newData()

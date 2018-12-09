@@ -22,6 +22,11 @@
   <style>
 
   </style>
+  <script src="polyfill.js"></script>
+  <script src="es6-promise.auto.js"></script>
+  <!-- <script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.auto.js"></script> -->
+  <script src="micro.js"></script>
+
 </head>
 
 <body>
@@ -68,7 +73,6 @@
             <h3>SSDP...</h3>
             <p><a href="/description.xml">/description.xml</a></p>
 
-            <p><a href="/$sysinfo">sysinfo</a></p>
             <p><a href="/$list">current files</a></p>
             <p><a href="/$reboot">reboot</a></p>
             <!-- <p><a href="monitor.htm">Monitor</a></p> -->
@@ -87,13 +91,25 @@
             <p><a href="/$upload">upload root files</a></p>
             <p><a href="/$upload#ft">upload file type icons</a></p>
             <p><a href="/$upload#i">upload element icons</a></p>
-
-            <!-- <p><a href="/$check">$check()</a></p> -->
-
-            <!-- <p><a href="/visualize.htm">/visualize.htm</a></p> -->
           </div>
         </div>
       </div>
+
+      <div class="col">
+        <div class="card">
+          <div class="block">
+            <pre id="sysinfo"></pre>
+            <script>
+              loadAsync('/$sysinfo', 'application/json', function (txt) {
+                var d = JSON.parse(txt);
+                var o = document.getElementById("sysinfo");
+                o.innerText = JSON.stringify(d, null, 2);
+              });
+            </script>
+          </div>
+        </div>
+      </div>
+
     </div>
 
     <!-- <div class="row">

@@ -1,0 +1,10 @@
+{ "devicename":"devding",
+ "build": "Dec  9 2018",
+ "free heap":28640,
+ "flash-size":4194304,
+ "flash-real-size":4194304,
+ "fs-totalBytes":957314,
+ "fs-usedBytes":208330,
+ "ssid":"KH",
+ "bssid":"74:DA:38:2C:70:B7"
+}

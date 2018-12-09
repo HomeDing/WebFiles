@@ -87,9 +87,9 @@ svg.button .connect { fill: #00cc00; fill-opacity: 1; }
 
 .card img.active { background-color: limegreen; }
 
-.card > .block { flex: 1 1 auto; padding: 0.6em; }
+.card > .block { flex: 1 1 auto; padding: 0.4em; }
 
-.card > .block.header { background-image: linear-gradient(to bottom, #d4dced, #b0bfde); border-top-right-radius: .4rem; border-top-left-radius: .4rem; }
+.card > .block.header { background-image: linear-gradient(to bottom, #d4dced, #b0bfde); border-top-right-radius: .4rem; border-top-left-radius: .4rem; min-height: 3.6rem; }
 
 .card > .block.header > h2, .card > .block.header > h4 { margin: 0; }
 

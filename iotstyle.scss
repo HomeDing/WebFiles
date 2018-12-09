@@ -269,12 +269,13 @@ svg.button {
 
   >.block {
     flex: 1 1 auto;
-    padding: 0.6em;
+    padding: 0.4em;
 
     &.header {
       background-image: linear-gradient(to bottom, $u-background, darken($u-background, 10%));
       border-top-right-radius: .4rem;
       border-top-left-radius: .4rem;
+      min-height: 3.6rem;
       >h2,
       >h4 {
         margin: 0

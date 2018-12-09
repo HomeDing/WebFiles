@@ -123,25 +123,25 @@
       width: 12em;
     }
   </style>
+  <script src="polyfill.js"></script>
+  <script src="es6-promise.auto.js"></script>
+  <!-- <script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.auto.js"></script> -->
   <script src="micro.js"></script>
   <script src="ding.js"></script>
-  <!-- <script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.auto.js"></script> -->
-  <script src="es6-promise.auto.js"></script>
-  <script src="polyfill.js"></script>
 </head>
 
 <body>
   <div class="container">
     <div class="u-header">
-      <a href="/" title="Go to Startpage"><img class="icon" src="/favicon.svg" /></a>
+      <a href="/" title="Startpage" ><img class="icon" src="/favicon.svg" /></a>
       <h1>Config</h1>
-      <a href="/ding-ide.htm" title="Start IDE"><img class="icon" 
-          src="/i/ide.svg" /><span class="hidden-xs">IDE</span></a>
-      <a href="/ding-info.htm" title="Start Config"><img class="icon" 
-            src="/i/config.svg" /><span class="hidden-xs">Config</span></a>
+      <a href="/ding-ide.htm" title="Start IDE"><img class="icon" src="/i/ide.svg" /><span class="hidden-xs">IDE</span></a>
+      <a href="/ding-info.htm" title="Start Config"><img class="icon" src="/i/config.svg" /><span class="hidden-xs">Config</span></a>
+      <a href="/ding-log.htm" title="Logfile"><img class="icon" src="/i/log.svg" /><span class="hidden-xs">Log</span></a>
     </div>
     <div class="u-navbar">
       <button id="addButton">+</button>
+      <button id="sysButton">sys</button>
     </div>
 
     <div id="panel" class="row wrap"></div>
@@ -161,6 +161,22 @@
       <hr />
       <div microControl='kv' class='KV'><span class='Key'>${key}:</span><span class='Value' property='${key}'></span></div>
       <hr />
+
+      <div class='col' microControl='schedule' id='${id}'>
+        <div class="card" microBehavior='generic' microID='${id}'>
+          <div class="block header">
+            <h2><img src="/i/schedule.svg" class='Icon' />${id}</h2>
+              <h4 property='description'></h4>
+              <span class="u-indicator" property='active'></span>
+          </div>
+          <div class="block">
+            <label>Start:</label><input type="time" step="1" property="ontime">
+            <td style="width:2rem"></td>
+            <label>End:</label><input type="time" step="1" property="offtime">
+            <label>out:</label><span property='value'></span>
+          </div>
+        </div>
+      </div>
 
       <div microControl="modalNewElement" class="card">
         <div class="block header">
@@ -205,19 +221,23 @@
       var panelObj = document.getElementById('panel');
       var tempObj = document.getElementById('templates');
       var addObj = document.getElementById('addButton');
+      var sysObj = document.getElementById('sysButton');
+
       var elementDef;
+      var params = getHashParams({
+        sys: false
+      });
+      window.addEventListener("hashchange", function () {
+        window.location.reload();
+      });
 
       function openModal(url, data) {
         var modalObj = document.getElementById('modal');
         var containerObj = document.getElementById('modalContainer');
         modalObj.classList.remove('hidden');
 
-        var t = document.querySelector(".card[name='modalNewElement'");
+        var t = document.querySelector(".card[microControl='modalNewElement'");
         Promise.resolve(t.outerHTML)
-          // fetch(url)
-          // .then(function (result) {
-          // return (result.text())
-          // })
           .then(function (html) {
             containerObj.innerHTML = html;
             containerObj.style.width = containerObj.scrollWidth + "px";
@@ -231,32 +251,30 @@
         modalObj.classList.add('hidden');
       }
 
+      sysObj.addEventListener("click", function (evt) {
+        params.sys = !toBool(params.sys);
+        window.location.hash = "sys=" + params.sys;
+      });
+
       addObj.addEventListener("click", function (evt) {
         openModal();
-        // var modalObj = document.getElementById('modal');
-        // var containerObj = document.getElementById('modalContainer');
-        // var h = "";
-        // var t = elementDef.types;
-        // for (let i = 0; i < t.length; i++) {
-        //   h += '<div>' + t[i] + '</div>';
-        // }
-        // containerObj.innerHTML = h;
-
-        // alert();
       });
 
 
       function createElement(path, key, value) {
         var hElem = document.getElementById(path);
         if (!hElem) {
-
+          var t = path.split('/')[1];
           var p = {
             id: path,
-            type: path.split('/')[1]
+            type: t
           };
-          var e = jcl.insertTemplate(panelObj, p.type, p);
-          if (!e)
-            var e = jcl.insertTemplate(panelObj, "generic", p);
+
+          if (toBool(params.sys) || (!elementDef[t]) || (toBool(elementDef[t].sys) == false)) {
+            var e = jcl.insertTemplate(panelObj, t, p);
+            if (!e)
+              var e = jcl.insertTemplate(panelObj, "generic", p);
+          } // if
         } // if
       } // createElement()
 
@@ -265,16 +283,17 @@
         var hText;
         if ((key) && (path.match(/^\/.*\/.*/))) {
           var hElem = document.getElementById(path);
-
-          var elem = hElem.querySelector("[property='" + key + "']");
-          if (! elem) {
-            hElem = hElem.querySelector(".Element");
-            if (hElem) {
-              var p = {
-                key: key
-              };
-              jcl.insertTemplate(hElem, "kv", p);
-            }
+          if (hElem) {
+            var elem = hElem.querySelector("[property='" + key + "']");
+            if (!elem) {
+              hElem = hElem.querySelector(".Element");
+              if (hElem) {
+                var p = {
+                  key: key
+                };
+                jcl.insertTemplate(hElem, "kv", p);
+              }
+            } // if
           } // if
         } // if
       } // addValueInfo
