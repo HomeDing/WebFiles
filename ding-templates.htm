@@ -2,7 +2,7 @@
   <div class="card" microID="${id}" microBehavior='generic'>
     <div class="block">
       <img title="${id}" src="/i/dht.svg" style="float: left;height:5rem;margin-right:1rem"/>
-      <span class="u-indicator" property='active'></span>
+      <span class="activeState" boolproperty='active'></span>
       <table>
         <tr>
           <td colspan="3"><span property='description'></span></td>
@@ -27,7 +27,7 @@
     <div class="block header">
       <h2><img src="/i/timer.svg" class='Icon'/>${id}</h2>
         <h4 property='description'></h4>
-        <span class="u-indicator" property='active'></span>
+        <span class="activeState" boolproperty='active'></span>
     </div>
 
     <div class="block">
@@ -55,7 +55,7 @@
       <h2 style="margin-bottom: 0"><img src="/i/button.svg" /><span property='description'>.</span></h2>
     </div>
     <div class="block">
-      <img src="/i/button.svg" class="u-button u-valueindicator" style="border-radius:3rem; float: left;height:5rem;margin-right:1rem" >
+      <img src="/i/button.svg" class="u-button" style="border-radius:3rem; float: left;height:5rem;margin-right:1rem" >
     </div>
     </div>
   </div>
@@ -65,11 +65,13 @@
       <div class="block header">
         <h2><img src="/i/digitalout.svg" class='Icon'/>${id}</h2>
           <h4 property='description'></h4>
-          <span class="u-indicator" property='active'></span>
+          <span class="activeState" boolproperty='active'></span>
       </div>
 
       <div class="block">
-        <img src="/i/digitalout.svg" class="u-button u-valueindicator" property='value' style="border-radius:3rem; float: left;height:5rem;margin-right:1rem" >
-    </div>
+        <img src="/i/digitalout.svg" style="float: left;height:5rem;margin-right:1rem">
+        <span class="u-bool" boolproperty='value' style="position: absolute;
+        top: 4.4rem;right: 0.4rem;height: 1.4rem;width: 1.4rem;border-radius: 0.7rem;" ></span>
       </div>
     </div>
+  </div>

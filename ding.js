@@ -4,30 +4,37 @@
 
 var GenericElementBehavior = {
   microID: "",
+  data: {},
 
   init: function () {
     hub.subscribe(this.microid + "?*", this.newData.bind(this));
     this.newData(this.microid, "id", this.microid);
+    this.data = {};
   }, // init
 
   newData: function (path, key, value) {
-    this.querySelectorAll(".u-valueindicator[property='" + key + "']").forEach(function (e) {
-      if (toBool(value))
-        e.classList.add('active');
-      else
-        e.classList.remove('active')
-      e.title = value;
-    });
+    // save data to title
+    this.data[key] = value;
+    var ic = this.querySelector("img");
+    if (ic) {
+      ic.title = JSON.stringify(this.data, null, 2);
+    }
 
+    // flags
+    ['span'].forEach(function (elType) {
+      this.querySelectorAll(elType + "[boolproperty='" + key + "']").forEach(function (el) {
+        var b = toBool(value);
+        el.setAttribute('value', (b ? 1 : 0));
+        el.title = (b ? 'active' : 'not active');
+        el.classList.toggle('active', b);
+      });
+    }, this);
+
+    // textContent
     ['h2', 'h4', 'span'].forEach(function (elType) {
       this.querySelectorAll(elType + "[property='" + key + "']").forEach(function (el) {
-        if (el.classList.contains('u-indicator')) {
-          el.setAttribute('value', (toBool(value) ? 1 : 0));
-          el.title = (toBool(value) ? 'active' : 'not active');
-        } else {
-          el.textContent = value;
-          el.title = value;
-        }
+        el.textContent = value;
+        el.title = value;
       });
     }, this);
 
@@ -113,12 +120,12 @@ var TimerElementBehavior = {
 
     // update bars
     if (this.ct > 0) {
-      var el = this.querySelectorAll(".u-bar")[0];
+      var el = this.querySelector(".u-bar");
       var f = el.clientWidth / this.ct;
-      var pto = el.querySelectorAll(".pulse")[0];
+      var pto = el.querySelector(".pulse");
       pto.style.left = Math.floor(this.wt * f) + "px";
       pto.style.width = Math.floor(this.pt * f) + "px";
-      var cto = el.querySelectorAll(".current")[0];
+      var cto = el.querySelector(".current");
       cto.style.width = Math.floor(this.time * f) + "px";
     }
   } // newData()

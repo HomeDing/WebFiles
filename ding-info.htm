@@ -62,16 +62,32 @@
       background-color: red;
     }
 
-    .u-indicator {
+    .activeState {
       position: absolute;
       top: 0.4rem;
       right: 0.4rem;
       height: 1.4rem;
       width: 1.4rem;
-      border-radius: 0.7rem;
+      background-image: url(/i/stop.svg);
+      background-size: 1.4rem;
     }
 
-    #modal {
+    .activeState.active {
+      background-image: url(/i/start.svg);
+      background-size: 1.4rem;
+    }
+
+    .config {
+      position: absolute;
+      top: 0.4rem;
+      right: 2.2rem;
+      height: 1.4rem;
+      width: 1.4rem;
+      background-image: url(/i/config.svg);
+      background-size: 1.4rem;
+    }
+
+      #modal {
       position: fixed;
       top: 0px;
       left: 0;
@@ -152,7 +168,8 @@
           <div class="block header">
             <h2><img src="/i/${type}.svg" class='Icon' />${id}</h2>
               <h4 property='description'></h4>
-              <span class="u-indicator" property='active'></span>
+              <span class="activeState" boolproperty='active'></span>
+              <span class="config"></span>
           </div>
           <div class="block Element">
           </div>
@@ -167,7 +184,7 @@
           <div class="block header">
             <h2><img src="/i/schedule.svg" class='Icon' />${id}</h2>
               <h4 property='description'></h4>
-              <span class="u-indicator" property='active'></span>
+              <span class="activeState" boolproperty='active'></span>
           </div>
           <div class="block">
             <label>Start:</label><input type="time" step="1" property="ontime">
@@ -278,10 +295,9 @@
         } // if
       } // createElement()
 
-
       function addValueInfo(path, key, value) {
         var hText;
-        if ((key) && (path.match(/^\/.*\/.*/))) {
+        if ((key) && (key != 'active') && (path.match(/^\/.*\/.*/))) {
           var hElem = document.getElementById(path);
           if (hElem) {
             var elem = hElem.querySelector("[property='" + key + "']");
