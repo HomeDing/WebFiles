@@ -3,13 +3,15 @@
 // === Generic Behavior ===
 
 var GenericElementBehavior = {
-  microID: "",
+  microid: "",
   data: {},
 
   init: function () {
     hub.subscribe(this.microid + "?*", this.newData.bind(this));
     this.newData(this.microid, "id", this.microid);
-    this.data = {};
+    this.data = {
+      id: this.microid
+    };
   }, // init
 
   newData: function (path, key, value) {
@@ -58,7 +60,7 @@ var GenericElementBehavior = {
 jcl.registerBehaviour("generic", GenericElementBehavior);
 
 
-// === Timer Behavior ===
+// === Button ===
 
 var ButtonElementBehavior = {
   inheritFrom: GenericElementBehavior,
@@ -80,6 +82,28 @@ var ButtonElementBehavior = {
   }
 }; // ButtonElementBehavior
 jcl.registerBehaviour("button", ButtonElementBehavior);
+
+
+// === PWMOUT ===
+
+var PwmoutElementBehavior = {
+  inheritFrom: GenericElementBehavior,
+  range: 255,
+  init: function () {
+    // debugger;
+  hub.subscribe(this.microid + "?*", this.newValue.bind(this));
+    // this.inheritFrom.init().bind(this);
+  },
+  newValue: function (path, key, value) {
+    if (key == "value") {
+      // debugger;
+      var o = this.querySelector(".u-level");
+      var h = o.offsetHeight * value / this.range;
+      o.style.borderBottomWidth = h + "px";
+    }
+  }
+}; // PwmoutElementBehavior
+jcl.registerBehaviour("pwmout", PwmoutElementBehavior);
 
 
 // === Timer Behavior ===

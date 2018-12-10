@@ -101,6 +101,7 @@ h3 {
 // Subtitle
 h4 {
   font-size: 0.8em;
+  min-height: 0.8rem;
 }
 
 .hidden {
@@ -246,8 +247,9 @@ svg.button {
   background-color: $u-navbar;
   padding: 0.4rem;
   margin-bottom: 0.4rem;
+
   >button {
-    min-width:2em;
+    min-width: 2em;
   }
 }
 
@@ -276,6 +278,7 @@ svg.button {
       border-top-right-radius: .4rem;
       border-top-left-radius: .4rem;
       min-height: 3.6rem;
+
       >h2,
       >h4 {
         margin: 0
@@ -387,7 +390,7 @@ button.active {
   }
 }
 
-/* === Booleans === */
+/* === Value indicators all kind of === */
 
 .u-bool {
   display: inline-block;
@@ -404,6 +407,15 @@ button.active {
 
 .u-bool[value="0"] {
   background-image: linear-gradient(145deg, lighten($u-off, 30%), $u-off);
+}
+
+.u-level {
+  display: inline-block;
+  border-color: $u-primary;
+  border-style: solid;
+  border-width: 1px;
+  width: 32px;
+  height: 64px;
 }
 
 /* === SWITCH === */

@@ -20,6 +20,7 @@
       display: block;
       clear: both;
       height: 1.5em;
+      xbackground-color: azure;
     }
 
     .Element .Key,
@@ -178,6 +179,23 @@
       <hr />
       <div microControl='kv' class='KV'><span class='Key'>${key}:</span><span class='Value' property='${key}'></span></div>
       <hr />
+
+      <div class='col' microControl='pwmout' id='${id}'>
+        <div class="card" microBehavior='pwmout' microID='${id}'>
+          <div class="block header">
+            <h2><img src="/i/pwmout.svg" class='Icon' />${id}</h2>
+              <h4 property='description'></h4>
+              <span class="activeState" boolproperty='active'></span>
+              <span class="config"></span>
+          </div>
+          <div class="block" style="position: relative;min-height: 5rem">
+            <span class="u-level" style="position:absolute;right:0.4em;top:0.4em;"></span>
+            <div style="font-size: 2rem">
+              <span property="value"></span> / <span property="range"></span>
+            </div>
+          </div>
+        </div>
+      </div>
 
       <div class='col' microControl='schedule' id='${id}'>
         <div class="card" microBehavior='generic' microID='${id}'>
