@@ -65,21 +65,21 @@ jcl.registerBehaviour("generic", GenericElementBehavior);
 var ButtonElementBehavior = {
   inheritFrom: GenericElementBehavior,
 
-  onmousedown: function (e) {
+  onpointerdown: function (e) {
     var src = e.srcElement;
     if (src.classList.contains('u-button')) {
       src.classList.add('active');
       dispatch(this.microid, 'value', 1);
     } // if
   },
-
-  onmouseup: function (e) {
+  onpointerup: function (e) {
     var src = e.srcElement;
     if (src.classList.contains('u-button')) {
       src.classList.remove('active');
       dispatch(this.microid, 'value', 0);
     } // if
   }
+
 }; // ButtonElementBehavior
 jcl.registerBehaviour("button", ButtonElementBehavior);
 
@@ -90,16 +90,16 @@ var PwmoutElementBehavior = {
   inheritFrom: GenericElementBehavior,
   range: 255,
   init: function () {
-    // debugger;
-  hub.subscribe(this.microid + "?*", this.newValue.bind(this));
-    // this.inheritFrom.init().bind(this);
+    hub.subscribe(this.microid + "?*", this.newValue.bind(this));
   },
   newValue: function (path, key, value) {
     if (key == "value") {
-      // debugger;
       var o = this.querySelector(".u-level");
-      var h = o.offsetHeight * value / this.range;
-      o.style.borderBottomWidth = h + "px";
+      var h = o.offsetHeight;
+      var bh = h * value / this.range;
+      if (bh > h - 1) bh = h - 1;
+      if (bh < 1) bh = 1;
+      o.style.borderBottomWidth = bh + "px";
     }
   }
 }; // PwmoutElementBehavior

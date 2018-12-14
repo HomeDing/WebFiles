@@ -20,7 +20,6 @@
       display: block;
       clear: both;
       height: 1.5em;
-      xbackground-color: azure;
     }
 
     .Element .Key,
@@ -139,6 +138,8 @@
     .form-group>select {
       width: 12em;
     }
+
+    img {user-select: none;-ms-user-select: none;
   </style>
   <script src="polyfill.js"></script>
   <script src="es6-promise.auto.js"></script>
@@ -161,9 +162,9 @@
       <button id="sysButton">sys</button>
     </div>
 
-    <div id="panel" class="row wrap"></div>
+    <div id="panel" class="row wrap" style="user-select: none;-ms-user-select: none;"></div>
 
-    <div id="templates" style="border:2px solid green;padding:1rem;xdisplay:none">
+    <div id="templates" style="border:2px solid green;padding:1rem;display:none">
       <div class='col' microControl='generic' id='${id}'>
         <div class="card" microBehavior='generic' microID='${id}'>
           <div class="block header">
@@ -367,7 +368,7 @@
       Promise.all([p1, p2]).then(function () {
         console.log("all done.");
         updateState();
-        window.setInterval(updateState, 300);
+        window.setInterval(updateState, 800);
       });
 
       function updateState() {

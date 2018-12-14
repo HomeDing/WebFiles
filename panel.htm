@@ -145,22 +145,23 @@
       // create all nodes from the HomeDing config file
       function createNodes(json) {
         jsonParse(json, function (path, key, val) {
-          if (path.split('/').length == 3) {
-            var t = path.split('/')[1].toLowerCase();
-            var id = path.substr(1);
+          if ((path.length > 1) && (path[0] === '/'))
+            path = path.substr(1);
+          if (path.split('/').length == 2) {
+            var t = path.split('/')[0].toLowerCase();
 
             if (toBool(params.sys) || (!elementDef[t]) || (toBool(elementDef[t].sys) == false)) {
-              var n = nodes[id];
+              var n = nodes[path];
               if (!n) {
-                n = nodes[id] = {
-                  id: id
+                n = nodes[path] = {
+                  id: path
                 }; // create a new node
                 n.icon = t;
               } // if
               if (key) {
                 n[key] = val;
                 if (key.substr(0, 2) == 'on') {
-                  createEdges(id, val);
+                  createEdges(path, val);
                 }
               } // if
             } // if

@@ -13,6 +13,15 @@
       padding: 0.4rem;
       margin-bottom: 0.4rem;
     }
+
+    /* unfinished */
+    /* === Indicators === */
+
+    .element>.u-bool {
+      position: absolute;
+      top: 0;
+      left: 4.4rem;
+    }
   </style>
 </head>
 
@@ -65,36 +74,28 @@
       actions. The second one is for changing the configuration of an element.</p>
 
     <div class="c">
-      <h2>Indicators</h2>
-      <span class="u-indicator"></span>
-      <span class="u-indicator" value="0"></span>
-      <span class="u-indicator" value="1"></span>
-    </div>
-    <p>Indicators are used to inform about a logical level of an element. This can be unknown, off/false or on/true.</p>
-
-    <div class="c">
       <h2>Element Icons</h2>
       <div class="element">
         <img src="/i/bulb.svg">
-        <span class="u-indicator"></span>
+        <span class="u-bool"></span>
         <span class="id">Entry</span>
       </div>
 
       <div class="element">
         <img src="/i/timer.svg" />
-        <span class="u-indicator" value="0"></span>
+        <span class="u-bool" value="0"></span>
         <span class="id">GardenWater</span>
       </div>
 
       <div class="element">
         <img src="/i/value.svg" />
-        <span class="u-indicator" value="1"></span>
+        <span class="u-bool active" value="1"></span>
         <span class="id">volume</span>
       </div>
 
       <div class="element wide">
         <img src="/i/dht.svg" />
-        <span class="u-indicator" value="1"></span>
+        <span class="u-bool active" value="1"></span>
         <span class="id">kitchen</span>
         <span class="info">37°C</span>
       </div>
@@ -113,6 +114,17 @@
         <label value="1">right</label>
       </div>
     </div>
+
+    <hr>
+
+    <div class="c">
+      <h2>Indicators</h2>
+      <span class="u-bool"></span>
+      <span class="u-bool" value="0"></span>
+      <span class="u-bool active" value="1"></span>
+    </div>
+    <p>Indicators are used to inform about a logical level of an element. This can be unknown, off/false or on/true.</p>
+
   </div>
 
   </div>

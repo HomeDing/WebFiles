@@ -6,7 +6,9 @@
       <span class="config"></span>
       <table>
         <tr>
-          <td colspan="3"><h4 property="title"></h4></td>
+          <td colspan="3">
+            <h4 property="title"></h4>
+          </td>
         </tr>
         <tr>
           <td colspan="3"><span property='description'></span></td>
@@ -32,7 +34,8 @@
       <h2><img src="/i/timer.svg" class='Icon'/>${id}</h2>
         <h4 property='description'></h4>
         <span class="activeState" boolproperty='active'></span>
-    </div>
+        <span class="config"></span>
+      </div>
 
     <div class="block">
       <label>wait:</label><span property='waittime'>.</span>
@@ -56,8 +59,11 @@
 <div class='col' microControl='button' id='${id}'>
   <div class="card" microID="${id}" microBehavior='button'>
     <div class="block header">
-      <h2 style="margin-bottom: 0"><img src="/i/button.svg" /><span property='description'>.</span></h2>
-    </div>
+      <h2><img src="/i/button.svg" class='Icon'/>${id}</h2>
+        <h4 property='description'></h4>
+        <span class="activeState" boolproperty='active'></span>
+        <span class="config"></span>
+      </div>
     <div class="block">
       <img src="/i/button.svg" class="u-button" style="border-radius:3rem; float: left;height:5rem;margin-right:1rem" >
     </div>
@@ -70,7 +76,8 @@
         <h2><img src="/i/digitalout.svg" class='Icon'/>${id}</h2>
           <h4 property='description'></h4>
           <span class="activeState" boolproperty='active'></span>
-      </div>
+          <span class="config"></span>
+        </div>
 
       <div class="block">
         <img src="/i/digitalout.svg" style="float: left;height:5rem;margin-right:1rem">
