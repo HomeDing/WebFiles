@@ -165,52 +165,46 @@
     <div id="panel" class="row wrap" style="user-select: none;-ms-user-select: none;"></div>
 
     <div id="templates" style="border:2px solid green;padding:1rem;display:none">
-      <div class='col' microControl='generic' id='${id}'>
-        <div class="card" microBehavior='generic' microID='${id}'>
-          <div class="block header">
-            <h2><img src="/i/${type}.svg" class='Icon' />${id}</h2>
-              <h4 property='description'></h4>
-              <span class="activeState" boolproperty='active'></span>
-              <span class="config"></span>
-          </div>
-          <div class="block Element">
-          </div>
+      <div class='col card' microControl='generic' id='${id}' microBehavior='generic' microID='${id}'>
+        <div class="block header">
+          <h2><img src="/i/${type}.svg" class='Icon' />${id}</h2>
+            <h4 property='description'></h4>
+            <span class="activeState" boolproperty='active'></span>
+            <span class="config"></span>
+        </div>
+        <div class="block Element">
         </div>
       </div>
       <hr />
       <div microControl='kv' class='KV'><span class='Key'>${key}:</span><span class='Value' property='${key}'></span></div>
       <hr />
 
-      <div class='col' microControl='pwmout' id='${id}'>
-        <div class="card" microBehavior='pwmout' microID='${id}'>
-          <div class="block header">
-            <h2><img src="/i/pwmout.svg" class='Icon' />${id}</h2>
-              <h4 property='description'></h4>
-              <span class="activeState" boolproperty='active'></span>
-              <span class="config"></span>
-          </div>
-          <div class="block" style="position: relative;min-height: 5rem">
-            <span class="u-level" style="position:absolute;right:0.4em;top:0.4em;"></span>
-            <div style="font-size: 2rem">
-              <span property="value"></span> / <span property="range"></span>
-            </div>
+      <div class='col card' microControl='pwmout' id='${id}' microBehavior='pwmout' microID='${id}'>
+        <div class="block header">
+          <h2><img src="/i/pwmout.svg" class='Icon' />${id}</h2>
+            <h4 property='description'></h4>
+            <span class="activeState" boolproperty='active'></span>
+            <span class="config"></span>
+        </div>
+        <div class="block" style="position: relative;min-height: 5rem">
+          <span class="u-level" style="position:absolute;right:0.4em;top:0.4em;"></span>
+          <div style="font-size: 2rem">
+            <span property="value"></span> / <span property="range"></span>
           </div>
         </div>
       </div>
 
-      <div class='col' microControl='schedule' id='${id}'>
-        <div class="card" microBehavior='generic' microID='${id}'>
-          <div class="block header">
-            <h2><img src="/i/schedule.svg" class='Icon' />${id}</h2>
-              <h4 property='description'></h4>
-              <span class="activeState" boolproperty='active'></span>
-          </div>
-          <div class="block">
-            <label>Start:</label><input type="time" step="1" property="ontime">
-            <td style="width:2rem"></td>
-            <label>End:</label><input type="time" step="1" property="offtime">
-            <label>out:</label><span property='value'></span>
-          </div>
+      <div class='col card' microControl='schedule' id='${id}' microBehavior='generic' microID='${id}'>
+        <div class="block header">
+          <h2><img src="/i/schedule.svg" class='Icon' />${id}</h2>
+            <h4 property='description'></h4>
+            <span class="activeState" boolproperty='active'></span>
+        </div>
+        <div class="block">
+          <label>Start:</label><input type="time" step="1" property="ontime">
+          <span style="width:2rem"></span>
+          <label>End:</label><input type="time" step="1" property="offtime">
+          <label>out:</label><span property='value'></span>
         </div>
       </div>
 

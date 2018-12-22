@@ -31,7 +31,7 @@ function loadAsync(url, mime, loadCallback, errorCallback) {
 } // loadAsync()
 
 function toBool(s) {
-  if (! s) return(false);
+  if (!s) return (false);
   switch (s.toLowerCase().trim()) {
     case "true":
     case "yes":
@@ -174,15 +174,21 @@ var MicroJCL = function () {
   } // load()
 
 
-  // attach all behaviours
+  // attach the behaviour specified by the "microbehavior" attribute 
+  this.attach = function (obj) {
+    var mb = obj.getAttribute('microbehavior');
+    var bc = this._behaviors[mb];
+    if (mb && bc) {
+      this.LoadBehaviour(obj, bc);
+    }
+  } // attach()
+
+  // attach all behaviours of the element and nested elements
   this.attachAll = function (root) {
-    var elems = root.querySelectorAll("[microbehavior]");
-    for (var n = 0; n < elems.length; n++) {
-      var mb = elems[n].getAttribute('microbehavior');
-      var bc = this._behaviors[mb];
-      if (bc) this.LoadBehaviour(elems[n], bc);
-    } // for
+    this.attach(root);
+    root.querySelectorAll("[microbehavior]").forEach(this.attach.bind(this));
   } // attachAll()
+
 
   this.setProperties = function (obj, props) {
     if (obj.nodeType == 3) {
@@ -309,7 +315,7 @@ function getHashParams(defaults) {
     var pa = p.split('=');
     params[pa[0]] = pa[1];
   });
-  return(params);
+  return (params);
 } // getHashParams()
 
 
