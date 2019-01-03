@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>HomeDing Setup</title>
+
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="application-name" content="Ding">
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon180.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon16.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/favicon192.png">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="mask-icon" href="/favicon.svg" color="#5bbad5">
+  <meta name="msapplication-config" content="/browserconfig.xml" />
+  <meta name="msapplication-TileColor" content="#2b5797">
+  <meta name="msapplication-TileImage" content="/favicon144.png">
+  <meta name="theme-color" content="#ffffff">
+
+  <link Content-Type="text/css" href="iotstyle.css" rel="stylesheet" />
+  <style>
+
+  </style>
+  <script src="polyfill.js"></script>
+  <script src="es6-promise.auto.js"></script>
+  <!-- <script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.auto.js"></script> -->
+  <script src="micro.js"></script>
+
+</head>
+
+<body>
+  <div class="container">
+    <div class="u-header">
+      <a href="/" title="Startpage" ><img class="icon" src="/favicon.svg" /></a>
+      <h1>Setup</h1>
+      <a href="/ding-ide.htm" title="Start IDE"><img class="icon" src="/i/ide.svg" /><span class="hidden-xs">IDE</span></a>
+      <a href="/ding-info.htm" title="Start Config"><img class="icon" src="/i/config.svg" /><span class="hidden-xs">Config</span></a>
+      <a href="/ding-log.htm" title="Logfile"><img class="icon" src="/i/log.svg" /><span class="hidden-xs">Log</span></a>
+    </div>
+
+    <div class="row wrap">
+
+      <div class="col card">
+        <div class="block header">
+          <h2>Connect with passphrase</h2>
+        </div>
+        <div class="block">
+          <label class="fixed">Networks:</label>
+          <select id="conNetworks" style="width:18em"></select>
+        </div>
+        <div class="block">
+          <label class="fixed">Passphrase:</label>
+          <input id="conPass" style="width:18em"></input>
+        </div>
+        <div class="block">
+          <button id="reScan" class="secondary">re-scan</button>
+
+          <button id="connectPass" style="float:right">Connect</button>
+        </div>
+      </div>
+
+      <div class="col card">
+        <div class="block header">
+          <h2>Connect with WPS</h2>
+        </div>
+        <div class="block">
+          <p>Press the WPS button on the WiFi Router and then start connecting.</p>
+        </div>
+        <div class="block">
+          <button style="float:right">Connect</button>
+        </div>
+      </div>
+    </div>
+    <script>
+      var scanDone = 2;
+      var checkTimer = 0;
+
+      function startScan() {
+        if (scanDone == 2) {
+          document.getElementById("conNetworks").innerHTML = "<option selected disabled>scanning...</option>";
+          scanDone = 0;
+          if (!checkTimer)
+            checkTimer = window.setInterval(checkScan, 200);
+        }
+      } // startScan()
+
+      function checkScan() {
+        if (scanDone == 0) {
+          scanDone = 1;
+          loadAsync('/$scan', 'application/json', function (txt) {
+            if ((txt) && (txt.length > 0)) {
+              scanDone = 2;
+              scanResult(JSON.parse(txt));
+            } else {
+              scanDone = 0;
+            }
+          });
+        }
+      } // checkScan()
+
+      function scanResult(netList) {
+        window.clearInterval(checkTimer);
+        checkTimer = 0;
+
+        var selObj = document.getElementById("conNetworks");
+        selObj.innerHTML = "";
+
+        var o = document.createElement('option');
+        o.value = 0;
+        o.text = "select...";
+        o.disabled = true;
+        selObj.options.add(o);
+
+        netList.forEach(function (n) {
+          var o = document.createElement('option');
+          o.value = o.text = n.id;
+          selObj.options.add(o);
+        });
+      } // scanResult()
+
+      // connect using network name and password
+      document.getElementById("connectPass").addEventListener("click", function () {
+        var n = document.getElementById("conNetworks").value;
+        var p = document.getElementById("conPass").value;
+        fetch('/$connect?n=' + n + '&p=' + p)
+          .then(function (result) {
+            debugger;
+          }).catch(function (json) {
+            debugger;
+          });
+      });
+
+      document.getElementById("reScan").addEventListener("click", startScan);
+
+      startScan();
+    </script>
+  </div>
+</body>
