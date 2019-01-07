@@ -139,7 +139,10 @@
       width: 12em;
     }
 
-    img {user-select: none;-ms-user-select: none;
+    img, #panel {
+      user-select: none;
+      -ms-user-select: none;
+    }
   </style>
   <script src="polyfill.js"></script>
   <script src="es6-promise.auto.js"></script>
@@ -151,7 +154,7 @@
 <body>
   <div class="container">
     <div class="u-header">
-      <a href="/" title="Startpage" ><img class="icon" src="/favicon.svg" /></a>
+      <a href="/" title="Start-Page" ><img class="icon" src="/favicon.svg" /></a>
       <h1>Config</h1>
       <a href="/ding-ide.htm" title="Start IDE"><img class="icon" src="/i/ide.svg" /><span class="hidden-xs">IDE</span></a>
       <a href="/ding-info.htm" title="Start Config"><img class="icon" src="/i/config.svg" /><span class="hidden-xs">Config</span></a>
@@ -162,7 +165,7 @@
       <button id="sysButton">sys</button>
     </div>
 
-    <div id="panel" class="row wrap" style="user-select: none;-ms-user-select: none;"></div>
+    <div id="panel" class='row wrap'></div>
 
     <div id="templates" style="border:2px solid green;padding:1rem;display:none">
       <div class='col card' microControl='generic' id='${id}' microBehavior='generic' microID='${id}'>
@@ -216,7 +219,7 @@
         <div class="block" style="font-size: 1.4">
           <div class="form-group">
             <label>Type:</label>
-            <select name="type">
+            <select class="typeSelect">
                 <option disabled selected="selected">Please select...</option>
                 <option value="button">button</option>
               <option>timer</option>
@@ -265,14 +268,39 @@
         var modalObj = document.getElementById('modal');
         var containerObj = document.getElementById('modalContainer');
         modalObj.classList.remove('hidden');
+        var elList;
+        var dlgObj;
 
+        // get implemented elements
+        var p1 = fetch('/$elements')
+          .then(function (result) {
+            return (result.json())
+          }).then(function (json) {
+            elList = json;
+          });
+
+        // open Dialog
         var t = document.querySelector(".card[microControl='modalNewElement'");
-        Promise.resolve(t.outerHTML)
+        var p2 = Promise.resolve(t.outerHTML)
           .then(function (html) {
             containerObj.innerHTML = html;
             containerObj.style.width = containerObj.scrollWidth + "px";
             containerObj.style.height = containerObj.scrollHeight + "px";
+            dlgObj = containerObj.firstElementChild;
           });
+
+        // fill options
+        Promise.all([p1, p2]).then(function () {
+          var sel = dlgObj.querySelector('.typeSelect');
+          sel.innerHTML = '';
+          elList.forEach(function (e) {
+            var opt = document.createElement('option');
+            opt.value = e;
+            opt.textContent = e;
+            sel.appendChild(opt);
+          })
+        });
+
       } // openModal
 
       function closeModal(data) {
