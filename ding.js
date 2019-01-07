@@ -24,7 +24,7 @@ var GenericElementBehavior = {
 
     // flags
     ['span'].forEach(function (elType) {
-      this.querySelectorAll(elType + "[boolproperty='" + key + "']").forEach(function (el) {
+      this.querySelectorAll(elType + "[u-active='" + key + "']").forEach(function (el) {
         var b = toBool(value);
         el.setAttribute('value', (b ? 1 : 0));
         el.title = (b ? 'active' : 'not active');
@@ -34,26 +34,29 @@ var GenericElementBehavior = {
 
     // textContent
     ['h2', 'h4', 'span'].forEach(function (elType) {
-      this.querySelectorAll(elType + "[property='" + key + "']").forEach(function (el) {
+      this.querySelectorAll(elType + "[u-text='" + key + "']").forEach(function (el) {
         el.textContent = value;
-        el.title = value;
       });
     }, this);
 
-    this.querySelectorAll("input[property='" + key + "']").forEach(function (e) {
+    // value
+    this.querySelectorAll("input[u-value='" + key + "']").forEach(function (e) {
       e.value = value;
     });
+
   }, // newData()
 
   onchange: function (e) {
     var src = e.srcElement;
-    dispatch(this.microid, src.getAttribute('property'), e.srcElement.value);
+    dispatch(this.microid, src.getAttribute('u-value'), e.srcElement.value);
     // debugger;
   },
 
   onclick: function (e) {
     var src = e.srcElement;
-    dispatch(this.microid, src.getAttribute('property'), e.srcElement.value);
+    var a = src.getAttribute('u-action');
+    if (a)
+      dispatch(this.microid, a, e.srcElement.value);
   }
 }; // GenericElementBehavior
 

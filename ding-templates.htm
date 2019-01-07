@@ -1,21 +1,21 @@
 <div class='col card' microControl='dht' id='${id}' microID="${id}" microBehavior='generic'>
   <div class="block">
     <img title="${id}" src="/i/dht.svg" style="float: left;height:5rem;margin-right:1rem"/>
-    <span class="activeState" boolproperty='active'></span>
+    <span class="activeState" u-active='active'></span>
     <span class="config"></span>
     <table>
       <tr>
         <td colspan="3">
-          <h4 property="title"></h4>
+          <h4 u-text="title"></h4>
         </td>
       </tr>
       <tr>
-        <td colspan="3"><span property='description'></span></td>
+        <td colspan="3"><span u-text='description'></span></td>
       </tr>
       <tr>
-        <td style="font-size: 2rem"><span  property='temperature'>__.__</span>&deg;C</td>
+        <td style="font-size: 2rem"><span  u-text='temperature'>__.__</span>&deg;C</td>
         <td style="width:2rem"></td>
-        <td style="font-size: 2rem"><span property='humidity'>__.__</span>%</td>
+        <td style="font-size: 2rem"><span u-text='humidity'>__.__</span>%</td>
       </tr>
       <tr>
         <td>Temperature</td>
@@ -29,13 +29,13 @@
 <div class='col card' microControl='timer' id='${id}' microID='${id}' microBehavior='timer'>
   <div class="block header">
     <h2><img src="/i/timer.svg" class='Icon'/>${id}</h2>
-      <h4 property='description'></h4>
-      <span class="activeState" boolproperty='active'></span>
+      <h4 u-text='description'></h4>
+      <span class="activeState" u-active='active'></span>
       <span class="config"></span>
   </div>
   <div class="block">
-    <label>wait:</label><span property='waittime'>.</span>
-    <label>pulse:</label><span property='pulsetime'>.</span>
+    <label>wait:</label><span u-text='waittime'>.</span>
+    <label>pulse:</label><span u-text='pulsetime'>.</span>
   </div>
   <div class="block">
     <div class="u-bar">
@@ -45,9 +45,9 @@
   </div>
   <hr />
   <div class="block">
-    <button property='start' value='1'>Start</button>
-    <button property='next' value='1'>Next</button>
-    <button property='stop' value='1'>Stop</button>
+    <button u-action='start' value='1'>Start</button>
+    <button u-action='next' value='1'>Next</button>
+    <button u-action='stop' value='1'>Stop</button>
   </div>
 </div>
 
@@ -55,8 +55,8 @@
 <div class='col card' microControl='button' id='${id}' microID="${id}" microBehavior='button'>
   <div class="block header">
     <h2><img src="/i/button.svg" class='Icon' >${id}</h2>
-      <h4 property='description'></h4>
-      <span class="activeState" boolproperty='active'></span>
+      <h4 u-text='description'></h4>
+      <span class="activeState" u-active='active'></span>
       <span class="config"></span>
   </div>
   <div class="block">
@@ -67,14 +67,14 @@
 <div class='col card' microControl='digitalout' id='${id}' microID="${id}" microBehavior='generic'>
   <div class="block header">
     <h2><img src="/i/digitalout.svg" class='Icon'/>${id}</h2>
-      <h4 property='description'></h4>
-      <span class="activeState" boolproperty='active'></span>
+      <h4 u-text='description'></h4>
+      <span class="activeState" u-active='active'></span>
       <span class="config"></span>
   </div>
 
   <div class="block">
     <img src="/i/digitalout.svg" style="float: left;height:5rem;margin-right:1rem">
-    <span class="u-bool" boolproperty='value' style="position: absolute;
+    <span class="u-bool" u-active='value' style="position: absolute;
         top: 4.4rem;right: 0.4rem;height: 1.4rem;width: 1.4rem;border-radius: 0.7rem;" ></span>
   </div>
 </div>

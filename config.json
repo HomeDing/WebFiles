@@ -1,77 +1,121 @@
 {
-  "displaytext": {
-    "date": {
-      "type": "TEXT",
-      "x": 0,
-      "y": 0,
-      "description": "show the date"
-    },
-
-    "time": {
-      "type": "TEXT",
-      "x": 0,
-      "y": 16,
-      "fontsize": 16,
-      "description": "show the time"
-    }
-  },
-
-  "rfsend": {
-    "i3": {
-      "pin": "D4",
-      "codeOn": "s_#_###__#_#__#_##_#_###_#__#__#_x",
-      "codeOff": "s_#_###__#_#__#_##_#_###_#_____#_x",
-      "description": "Send out specifc RF signal"
-    }
-  },
-
-  "time": {
+  "serialcmd": {
     "0": {
-      "ondate": "displaytext/date?show=$v",
-      "ontime": "displaytext/time?show=$v"
+      "description": "Listen for commands on the Serial in line"
+    }
+  },
+
+  "displaytext": {
+    "val": {
+      "x": 0,
+      "y": 1,
+      "prefix": "val=",
+      "postfix": "",
+      "description": "Display the value"
     }
   },
 
   "displaydot": {
     "b": {
-      "x": 110,
-      "y": 8,
+      "x": 15,
+      "y": 0,
+      "loglevel": 1,
       "description": "Display a bink"
     }
   },
 
   "dht": {
-    "on": {
-      "description": "Local DHT sensor",
-      "pin": "D4",
-      "type": "DHT22",
-      "readtime": "30s",
-      "resendtime": "2m",
-      "onTemperature": "device/0?log=temp:$v,remote/display-t?show=$v",
-      "T": "displaytext/temp?show=$v,",
-      "onHumidity": "device/0?log=hum:$v%,remote/display-h?show=$v",
-      "H": "displaytext/hum?show=$v,"
+    "lr": {
+      "title": "Livingroom",
+      "pin": ""
     }
   },
 
-  "timer": {
-    "water": {
-      "type": "LOOP",
-      "waittime": "1s",
-      "pulsetime": "4s",
-      "cycletime": "12s",
-      "onon": "digitalout/relais?on,device/0?log=on",
-      "onoff": "digitalout/relais?off,device/0?log=off",
-      "description": "Water timing"
+  "time": {
+    "0": {
+      "onminute": "device/0?log=time:$v"
     }
   },
 
   "schedule": {
     "0": {
-      "onTime": "22:05:00",
-      "offTime": "22:05:30",
-      "onon": "device/0?log=switch on,displaydot/b?show=1",
-      "onoff": "device/0?log=switch off,displaydot/b?show=0"
+      "description": "External lights",
+      "onTime": "16:30:00",
+      "offTime": "22:55:00",
+      "onOn": "value/led?up=1",
+      "onOff": "value/led?up=0"
+    }
+  },
+
+  "analog": {
+    "0": {
+      "loglevel": 2,
+      "pin": "A0",
+      "reference": 500,
+      "onvalue": "pwmout/led?log=analogvalue=$v",
+      "onreference": "device/0?log=analogref=$v"
+    }
+  },
+
+  "rotary": {
+    "0": {
+      "description": "Rotary Input",
+      "pin1": "D5",
+      "pin2": "D6",
+      "value": 10,
+      "step": 10,
+      "onchange": "value/led?up=$v"
+    }
+  },
+
+  "value": {
+    "led": {
+      "value": 20,
+      "min": 0,
+      "max": 255,
+      "onchange": "pwmout/led?value=$v",
+      "description": "a value"
+    }
+  },
+
+  "pwmout": {
+    "led": {
+      "pin": "D4",
+      "range": 255,
+      "value": 0,
+      "inverse": "true",
+      "description": "ESP-12 blue led (D4) can be dimmed"
+    }
+  },
+  "timer": {
+    "blink": {
+      "type": "LOOP",
+      "waittime": "0",
+      "pulsetime": "1",
+      "cycletime": "3",
+      "onon": "digitalout/led?value=1",
+      "onoff": "digitalout/led?value=0",
+      "description": "Timer for testing"
+    }
+  },
+
+  "button": {
+    "in": {
+      "description": "Input button",
+      "pin": "D4",
+      "inverse": 1,
+      "pullup": 1,
+      "type": "toggle",
+      "onvalue": "digitalout/led?value=$v"
+    }
+  },
+
+  "digitalout": {
+    "led": {
+      "pin": "D4",
+      "inverse": "true",
+      "value": "0",
+      "description": "Builtin LED is on Port D0 = GPIO16"
     }
   }
 
