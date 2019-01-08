@@ -2,9 +2,8 @@
 
 var filesObj = document.getElementById("files");
 var contentObj = document.getElementById("content");
-var progressPanelObj = document.getElementById("progressPanel");
-var progressBarObj = document.getElementById("progressBar");
-var progressTextObj = document.getElementById("progressText");
+var progressBar2Obj = document.getElementById("progressBar2");
+
 var activeFileObj = document.getElementById("activeFile");
 var checkerObj = document.getElementById("checker");
 
@@ -129,8 +128,7 @@ function dragHelper(e) {
 
 // start uploading file content
 function startUpload(filename, contentType, content) {
-  progressPanelObj.classList.remove("fadeout");
-  progressTextObj.innerText = "saving...";
+  progressBar2Obj.classList.remove("fadeout");
 
   var objHTTP = new XMLHttpRequest(); // new ActiveXObject("MSXML2.XMLHTTP");
   objHTTP.open("PUT", filename, true);
@@ -138,15 +136,15 @@ function startUpload(filename, contentType, content) {
 
   if (objHTTP.upload) {
     objHTTP.upload.addEventListener('progress', function (e) {
-      progressBarObj.style.width = Math.round(100 * e.loaded / e.total) + "%";
+      progressBar2Obj.max = e.total;
+      progressBar2Obj.value= e.loaded;
     });
   } // if 
 
   objHTTP.addEventListener("readystatechange", function (p) {
     if ((objHTTP.readyState == 4) && (objHTTP.status >= 200) && (objHTTP.status < 300)) {
       window.setTimeout(handleReloadFS, 100);
-      progressTextObj.innerText = "done.";
-      progressPanelObj.classList.add("fadeout");
+      progressBar2Obj.classList.add("fadeout");
       // fade progress
     } // if
   });
@@ -168,7 +166,8 @@ function startPutFile(file, contentType) {
 
 // save file from editor back to server.
 function handleSave() {
-  progressBarObj.style.width = "0";
+  progressBar2Obj.value = 0;
+  progressBar2Obj.max = 1;
   activeFileName = window.prompt("Upload File:", activeFileName);
   if (activeFileName !== undefined)
     startUpload(activeFileName, "text/html", contentObj.innerText);
@@ -178,9 +177,9 @@ function handleSave() {
 
 // files was dropped on dropzone
 function drop(e) {
-  progressPanelObj.classList.remove("fadeout");
-  progressTextObj.innerText = "saving...";
-  progressBarObj.style.width = "0";
+  progressBar2Obj.classList.remove("fadeout");
+  progressBar2Obj.value = 0;
+  progressBar2Obj.max = 1;
   e.stopPropagation();
   e.preventDefault();
 
@@ -195,14 +194,14 @@ function drop(e) {
   var xmlHttp = new XMLHttpRequest();
 
   xmlHttp.upload.addEventListener('progress', function (e) {
-    progressBarObj.style.width = Math.round(100 * e.loaded / e.total) + "%";
+    progressBar2Obj.max = e.total;
+    progressBar2Obj.value = e.loaded;
   });
 
   xmlHttp.addEventListener("readystatechange", function (p) {
     if ((xmlHttp.readyState == 4) && (xmlHttp.status >= 200) && (xmlHttp.status < 300)) {
       window.setTimeout(handleReloadFS, 100);
-      progressTextObj.innerText = "done.";
-      progressPanelObj.classList.add("fadeout");
+      progressBar2Obj.classList.add("fadeout");
       // fade progress
     } // if
   });

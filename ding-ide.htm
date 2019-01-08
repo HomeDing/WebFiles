@@ -65,7 +65,7 @@
       border: 1px dashed black;
     }
 
-    #progressPanel {
+    #progressBar2 {
       position: absolute;
       top: 0.6rem;
       right: 0.1rem;
@@ -77,30 +77,12 @@
       background-color: white;
     }
 
-    #progressPanel.fadeout {
+    #progressBar2.fadeout {
       transition-delay: 2s;
       transition-property: opacity;
       transition-duration: 1s;
       transition-timing-function: linear;
       opacity: 0;
-    }
-
-    #progressBar,
-    #progressText {
-      position: absolute;
-      z-index: 10;
-      overflow-x: visible;
-      word-break: keep-all;
-      width: 12%;
-      height: 100%;
-    }
-
-    #progressBar {
-      background-color: #00A000;
-    }
-
-    #progressText {
-      margin-left: 0.4rem;
     }
 
     #checker {
@@ -135,10 +117,7 @@
 
 <body style="height:100%;">
   <div class="container-fluid" style="display:flex;flex-direction:column;height:100%;overflow:hidden">
-    <div id="progressPanel" class="fadeout">
-      <div id="progressBar"></div>
-      <div id="progressText">saving...</div>
-    </div>
+    <progress id="progressBar2" class="cfadeout" max=4 value=1></progress>
 
     <div class="u-header">
       <a href="/" title="Startpage" ><img class="icon" src="/favicon.svg" /></a>
