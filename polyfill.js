@@ -64,14 +64,22 @@ if (!Object.values) {
   }
 }
 
-
 // polyfill NodeList.prototype.forEach
+
 if (window.NodeList && !NodeList.prototype.forEach) {
   NodeList.prototype.forEach = Array.prototype.forEach;
 }
 
+// polyfill simplified =====
 
-// General Purpose Pomise
+if (!String.prototype.endsWith) {
+  // only String.endsWith using the fist parameter is supported.
+  String.prototype.endsWith = function (str) {
+    return this.length >= str.length && this.substr(this.length - str.length) == str;
+  };
+}
+
+// General Purpose Promise
 
 function DelayPromise(ms) {
   return new Promise(function (resolve, reject) {

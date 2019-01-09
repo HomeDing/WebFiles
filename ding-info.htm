@@ -167,7 +167,7 @@
 
     <div id="panel" class='row wrap'></div>
 
-    <div id="templates" style="border:2px solid green;padding:1rem;display:none">
+    <div id="u-templates" style="border:2px solid green;padding:1rem;display:none">
       <div class='col card' microControl='generic' id='${id}' microBehavior='generic' microID='${id}'>
         <div class="block header">
           <h2><img src="/i/${type}.svg" class='Icon' />${id}</h2>
@@ -249,10 +249,9 @@
       <div id="modalContainer" style="width:60px;height:60px">Hello, this is modal</div>
     </div>
 
-    <script>
+    <script async>
       var eObj = document.getElementById('atype/aname');
       var panelObj = document.getElementById('panel');
-      var tempObj = document.getElementById('templates');
       var addObj = document.getElementById('addButton');
       var sysObj = document.getElementById('sysButton');
 
@@ -358,41 +357,6 @@
       hub.subscribe("/*/*", createElement);
       hub.subscribe("/**/**?**", addValueInfo);
 
-      // get one resource after the other and do not request too much in parallel from the server.
-      // template -> env.json -> config.json
-      var p1 = fetch('/ding-templates.htm')
-        .then(function (result) {
-          return (result.text())
-        }).then(function (html) {
-          tempObj.insertAdjacentHTML('beforeend', html);
-          jcl.loadTemplates(tempObj);
-
-          return (fetch('/env.json'));
-        }).then(function (result) {
-          return (result.json())
-        }).then(function (json) {
-          hub.publishObj(json);
-
-          return (fetch('/config.json'));
-        }).then(function (result) {
-          return (result.json())
-        }).then(function (json) {
-          hub.publishObj(json);
-        });
-
-      var p2 = fetch('/elements.json')
-        .then(function (result) {
-          return (result.json())
-        }).then(function (json) {
-          elementDef = json;
-        });
-
-      Promise.all([p1, p2]).then(function () {
-        console.log("all done.");
-        updateState();
-        window.setInterval(updateState, 800);
-      });
-
       function updateState() {
         fetch('/$board')
           .then(function (result) {
@@ -400,7 +364,39 @@
           }).then(function (json) {
             hub.publishObj(json);
           });
-      }
+      } // updateState()
+
+      function init() {
+        // load element templates from other file.
+        var p0 = jcl.loadFile('/ding-templates.htm');
+        
+        // element definitions -> env.json -> config.json
+        var p1 = fetch('/elements.json')
+          .then(function (result) {
+            return (result.json())
+          }).then(function (json) {
+            elementDef = json;
+
+            return (fetch('/env.json'));
+          }).then(function (result) {
+            return (result.json())
+          }).then(function (json) {
+            hub.publishObj(json);
+
+            return (fetch('/config.json'));
+          }).then(function (result) {
+            return (result.json())
+          }).then(function (json) {
+            hub.publishObj(json);
+          });
+
+        Promise.all([p0, p1]).then(function () {
+          updateState();
+          window.setInterval(updateState, 800);
+        });
+      } // init()
+
+      window.addEventListener('load', init);
     </script>
 
 </body>

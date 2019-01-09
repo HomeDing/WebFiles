@@ -5,31 +5,6 @@
 // See also:
 // http://goessner.net/articles/JsonPath/
 
-// ===== simplified Polyfills for IE11 =====
-
-if (!String.prototype.endsWith) {
-  // only String.endsWith using the fist parameter is supported.
-  String.prototype.endsWith = function (str) {
-    return this.length >= str.length && this.substr(this.length - str.length) == str;
-  };
-}
-
-function loadAsync(url, mime, loadCallback, errorCallback) {
-  var objHTTP = new XMLHttpRequest(); // new ActiveXObject("MSXML2.XMLHTTP");
-  objHTTP.open("GET", url, true);
-  if (mime) objHTTP.overrideMimeType(mime);
-  objHTTP.addEventListener("readystatechange", function (p) {
-    if (objHTTP.readyState == 4) {
-      if ((objHTTP.status >= 200) && (objHTTP.status < 300)) {
-        loadCallback(objHTTP.responseText);
-      } else {
-        if (errorCallback) errorCallback(this);
-      } // if
-    } // if
-  });
-  objHTTP.send();
-} // loadAsync()
-
 function toBool(s) {
   if (!s) return (false);
   switch (s.toLowerCase().trim()) {
@@ -50,7 +25,7 @@ function toBool(s) {
 function dispatch(id, prop, val) {
   if (val != null) {
     var url = "/$board" + id + "?" + prop + "=" + val;
-    loadAsync(url, null, function (txt) {}, function (txt) {})
+    fetch(url);
   }
 } // dispatch()
 
@@ -158,20 +133,40 @@ var hub = new MicroHub();
 window.addEventListener('unload', hub.onunload.bind(hub), false);
 
 var MicroJCL = function () {
+  this._tco; /// {Object} Templates Container Object
   this._templates = {};
   this._behaviors = {};
+
 
   /// A list with all objects that are attached to any behaviour
   this.List = [];
 
-  /** add all defined templates to the list. */
-  this.loadTemplates = function (rootObj) {
-    var all = rootObj.querySelectorAll("[microcontrol]");
-    for (var n = 0; n < all.length; n++) {
-      var t = all[n].getAttribute('microcontrol');
-      this._templates[t] = all[n];
-    } // for
-  } // load()
+  /// Initialize the template and behaviors.
+  this.init = function () {
+    // be sure to have a template container object.
+    this._tco = document.getElementById('u-templates');
+
+    if (!this._tco) {
+      var t = document.createElement('div');
+      t.id = "u-templates";
+      this._tco = document.body.appendChild(t);
+    }
+  }; // init()
+
+
+  /**
+   * @param {string} fName 
+   */
+  this.loadFile = function (fName) {
+    var scope = this;
+    var ret = fetch(fName)
+      .then(function (result) {
+        return (result.text())
+      }).then(function (html) {
+        scope._tco.insertAdjacentHTML('beforeend', html);
+      });
+    return (ret);
+  }; // loadFile()
 
 
   // attach the behaviour specified by the "microbehavior" attribute 
@@ -219,12 +214,18 @@ var MicroJCL = function () {
     }
   } // setProperties
 
+
+  /**
+   * Insert a new control based on a template into the root object.
+   * @param {HTMLObjectElement} root parent object for the new control 
+   * @param {string} controlName 
+   * @param {Object} props 
+   */
   this.insertTemplate = function (root, controlName, props) {
     var e = null;
     if ((root) && (controlName)) {
-      var te = this._templates[controlName];
+      var te = this._tco.querySelector('[microcontrol="' + controlName + '"]');
       if (te) e = te.cloneNode(true);
-
       if (e) {
         this.setProperties(e, props);
         root.appendChild(e);
@@ -301,9 +302,13 @@ var MicroJCL = function () {
     }
   }; // onunload
 
+  window.addEventListener('load', this.init.bind(this));
+
 } // MicroDOMTemplate class
 
+// make sure there is a template container
 var jcl = new MicroJCL();
+// window.addEventListener('load', jcl.init.bind(jcl));
 window.addEventListener('unload', jcl.onunload.bind(jcl), false);
 
 // return actual parameters in hash part of URL as object
