@@ -2,5 +2,6 @@
     <style>
         .segment{stroke:#fff;stroke-width:.2;stroke-opacity:1}
     </style>
+    <g id="panel"></g>
     <script href="/pieChart.js"/>
 </svg>

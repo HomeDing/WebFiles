@@ -49,7 +49,6 @@ var GenericElementBehavior = {
   onchange: function (e) {
     var src = e.srcElement;
     dispatch(this.microid, src.getAttribute('u-value'), e.srcElement.value);
-    // debugger;
   },
 
   onclick: function (e) {
@@ -60,102 +59,6 @@ var GenericElementBehavior = {
   }
 }; // GenericElementBehavior
 
-jcl.registerBehaviour("generic", GenericElementBehavior);
+jcl.registerBehavior("generic", GenericElementBehavior);
 
-
-// === Button ===
-
-var ButtonElementBehavior = {
-  inheritFrom: GenericElementBehavior,
-
-  onpointerdown: function (e) {
-    var src = e.srcElement;
-    if (src.classList.contains('u-button')) {
-      src.classList.add('active');
-      dispatch(this.microid, 'value', 1);
-    } // if
-  },
-  onpointerup: function (e) {
-    var src = e.srcElement;
-    if (src.classList.contains('u-button')) {
-      src.classList.remove('active');
-      dispatch(this.microid, 'value', 0);
-    } // if
-  }
-
-}; // ButtonElementBehavior
-jcl.registerBehaviour("button", ButtonElementBehavior);
-
-
-// === PWMOUT ===
-
-var PwmoutElementBehavior = {
-  inheritFrom: GenericElementBehavior,
-  range: 255,
-  init: function () {
-    hub.subscribe(this.microid + "?*", this.newValue.bind(this));
-  },
-  newValue: function (path, key, value) {
-    if (key == "value") {
-      var o = this.querySelector(".u-level");
-      var h = o.offsetHeight;
-      var bh = h * value / this.range;
-      if (bh > h - 1) bh = h - 1;
-      if (bh < 1) bh = 1;
-      o.style.borderBottomWidth = bh + "px";
-    }
-  }
-}; // PwmoutElementBehavior
-jcl.registerBehaviour("pwmout", PwmoutElementBehavior);
-
-
-// === Timer Behavior ===
-
-var TimerElementBehavior = {
-  inheritFrom: GenericElementBehavior,
-  wt: 0,
-  pt: 0,
-  ct: 0,
-  time: 0,
-
-  _timeToSec: function (v) {
-    v = v.toLowerCase();
-    if (v.endsWith('h')) {
-      v = parseInt(v, 10) * 60 * 60;
-    } else if (v.endsWith('m')) {
-      v = parseInt(v, 10) * 60;
-    } else if (v.endsWith('s')) {
-      v = parseInt(v, 10);
-    } // if
-    return (v);
-  },
-
-  newData: function (path, key, value) {
-    // alert(key);
-    if (key == "waittime") {
-      this.wt = this._timeToSec(value);
-    } else if (key == "pulsetime") {
-      this.pt = this._timeToSec(value);
-    } else if (key == "cycletime") {
-      this.ct = this._timeToSec(value);
-    } else if (key == "time") {
-      this.time = this._timeToSec(value);
-    }
-
-    if (this.ct < 0 + this.wt + this.pt)
-      this.ct = 0 + this.wt + this.pt
-
-    // update bars
-    if (this.ct > 0) {
-      var el = this.querySelector(".u-bar");
-      var f = el.clientWidth / this.ct;
-      var pto = el.querySelector(".pulse");
-      pto.style.left = Math.floor(this.wt * f) + "px";
-      pto.style.width = Math.floor(this.pt * f) + "px";
-      var cto = el.querySelector(".current");
-      cto.style.width = Math.floor(this.time * f) + "px";
-    }
-  } // newData()
-}; // TimerElementBehavior
-
-jcl.registerBehaviour("timer", TimerElementBehavior);
+// End.

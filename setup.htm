@@ -86,17 +86,14 @@
       } // startScan()
 
       function checkScan() {
-        if (scanDone == 0) {
-          scanDone = 1;
-          loadAsync('/$scan', 'application/json', function (txt) {
-            if ((txt) && (txt.length > 0)) {
-              scanDone = 2;
-              scanResult(JSON.parse(txt));
-            } else {
-              scanDone = 0;
-            }
+        fetch('/$scan')
+          .then(function (result) {
+            scanDone = 0;
+            return (result.json());
+          }).then(function (x) {
+            scanDone = 2;
+            scanResult(x);
           });
-        }
       } // checkScan()
 
       function scanResult(netList) {

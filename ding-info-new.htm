@@ -1,0 +1,35 @@
+<div u-control="modalNewElement" u-behavior="createElementDlg" class="card">
+  <div class="block header">
+    <h2>Add a new Element</h2>
+    <div class="modalClose" onclick='closeModal()' style="background-color: red;text-align: center">&#x00D7;</div>
+  </div>
+  <div class="block" style="font-size: 1.4">
+    <div class="form-group">
+      <label>Type:</label>
+      <select class="typeSelect">
+        <option disabled selected="selected">Please select...</option>
+      </select>
+    </div>
+    <div class="form-group" style="margin-bottom: 0.4rem;">
+      <label>ID:</label>
+      <input placeholder="choose a name..." aria-label="theID" name="id">
+    </div>
+    </div>
+
+    <hr />
+    <div class="block">
+      <button style="float:right" >Next</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  var CreateElementDlgBehavior = {
+
+    init: function () {
+      alert(99);
+    } // init()
+  }; // CreateElementDlgBehavior
+
+  jcl.registerBehavior("createElementDlg", CreateElementDlgBehavior);
+</script>

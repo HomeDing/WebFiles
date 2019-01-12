@@ -127,31 +127,33 @@
       var memObj = document.getElementById("meminfo");
 
       memObj.onload = function () {
-        loadAsync('/$sysinfo', 'application/json', function (txt) {
-          var d = JSON.parse(txt);
-          var o = document.getElementById("sysinfo");
-          o.innerText = JSON.stringify(d, null, 2);
+        fetch('/$sysinfo')
+          .then(function (result) {
+            return (result.json());
+          }).then(function (d) {
+            var o = document.getElementById("sysinfo");
+            o.innerText = JSON.stringify(d, null, 2);
 
-          document.getElementById("memTotal").textContent = d["fs-totalBytes"];
-          document.getElementById("memUsed").textContent = d["fs-usedBytes"];
-          document.getElementById("memPart").textContent = Math.floor(Number(d["fs-usedBytes"]) * 100 / Number(d[
-            "fs-totalBytes"]));
+            document.getElementById("memTotal").textContent = d["fs-totalBytes"];
+            document.getElementById("memUsed").textContent = d["fs-usedBytes"];
+            document.getElementById("memPart").textContent = Math.floor(Number(d["fs-usedBytes"]) * 100 / Number(d[
+              "fs-totalBytes"]));
 
-          document.getElementById("hostName").textContent = d["devicename"];
-          document.getElementById("netName").textContent = d["ssid"];
+            document.getElementById("hostName").textContent = d["devicename"];
+            document.getElementById("netName").textContent = d["ssid"];
 
-          var memAPI = memObj.getSVGDocument().api;
-          memAPI.setRange(
-            [{
-                color: "#304878",
-                part: Number(d["fs-usedBytes"])
-              },
-              {
-                color: "#aaaaaa",
-                part: Number(d["fs-totalBytes"]) - Number(d["fs-usedBytes"])
-              }
-            ]);
-        });
+            var memAPI = memObj.getSVGDocument().api;
+            memAPI.setRange(
+              [{
+                  color: "#304878",
+                  part: Number(d["fs-usedBytes"])
+                },
+                {
+                  color: "#aaaaaa",
+                  part: Number(d["fs-totalBytes"]) - Number(d["fs-usedBytes"])
+                }
+              ]);
+          });
       };
     </script>
   </div>

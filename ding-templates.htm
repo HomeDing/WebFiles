@@ -1,4 +1,4 @@
-<div class='col card' microControl='dht' id='${id}' microID="${id}" microBehavior='generic'>
+<div class='col card' u-control='dht' id='${id}' microID="${id}" u-behavior='generic'>
   <div class="block">
     <img title="${id}" src="/i/dht.svg" style="float: left;height:5rem;margin-right:1rem"/>
     <span class="activeState" u-active='active'></span>
@@ -26,7 +26,7 @@
   </div>
 </div>
 
-<div class='col card' microControl='timer' id='${id}' microID='${id}' microBehavior='timer'>
+<div class='col card' u-control='timer' id='${id}' microID='${id}' u-behavior='timer'>
   <div class="block header">
     <h2><img src="/i/timer.svg" class='Icon'/>${id}</h2>
       <h4 u-text='description'></h4>
@@ -51,8 +51,56 @@
   </div>
 </div>
 
+<script>
+  jcl.registerBehavior("timer", {
+    inheritFrom: GenericElementBehavior,
+    wt: 0,
+    pt: 0,
+    ct: 0,
+    time: 0,
 
-<div class='col card' microControl='button' id='${id}' microID="${id}" microBehavior='button'>
+    _timeToSec: function (v) {
+      v = v.toLowerCase();
+      if (v.endsWith('h')) {
+        v = parseInt(v, 10) * 60 * 60;
+      } else if (v.endsWith('m')) {
+        v = parseInt(v, 10) * 60;
+      } else if (v.endsWith('s')) {
+        v = parseInt(v, 10);
+      } // if
+      return (v);
+    },
+
+    newData: function (path, key, value) {
+      // alert(key);
+      if (key == "waittime") {
+        this.wt = this._timeToSec(value);
+      } else if (key == "pulsetime") {
+        this.pt = this._timeToSec(value);
+      } else if (key == "cycletime") {
+        this.ct = this._timeToSec(value);
+      } else if (key == "time") {
+        this.time = this._timeToSec(value);
+      }
+
+      if (this.ct < 0 + this.wt + this.pt)
+        this.ct = 0 + this.wt + this.pt
+
+      // update bars
+      if (this.ct > 0) {
+        var el = this.querySelector(".u-bar");
+        var f = el.clientWidth / this.ct;
+        var pto = el.querySelector(".pulse");
+        pto.style.left = Math.floor(this.wt * f) + "px";
+        pto.style.width = Math.floor(this.pt * f) + "px";
+        var cto = el.querySelector(".current");
+        cto.style.width = Math.floor(this.time * f) + "px";
+      }
+    } // newData()
+  }); // register Timer Element Behavior
+</script>
+
+<div class='col card' u-control='button' id='${id}' microID="${id}" u-behavior='button'>
   <div class="block header">
     <h2><img src="/i/button.svg" class='Icon' >${id}</h2>
       <h4 u-text='description'></h4>
@@ -64,7 +112,28 @@
   </div>
 </div>
 
-<div class='col card' microControl='digitalout' id='${id}' microID="${id}" microBehavior='generic'>
+<script>
+  jcl.registerBehavior("button", {
+    inheritFrom: GenericElementBehavior,
+
+    onpointerdown: function (e) {
+      var src = e.srcElement;
+      if (src.classList.contains('u-button')) {
+        src.classList.add('active');
+        dispatch(this.microid, 'value', 1);
+      } // if
+    },
+    onpointerup: function (e) {
+      var src = e.srcElement;
+      if (src.classList.contains('u-button')) {
+        src.classList.remove('active');
+        dispatch(this.microid, 'value', 0);
+      } // if
+    }
+  }); // register Button Element Behavior
+</script>
+
+<div class='col card' u-control='digitalout' id='${id}' microID="${id}" u-behavior='generic'>
   <div class="block header">
     <h2><img src="/i/digitalout.svg" class='Icon'/>${id}</h2>
       <h4 u-text='description'></h4>
@@ -78,3 +147,38 @@
         top: 4.4rem;right: 0.4rem;height: 1.4rem;width: 1.4rem;border-radius: 0.7rem;" ></span>
   </div>
 </div>
+
+<div class='col card' u-control='pwmout' id='${id}' u-behavior='pwmout' microID='${id}'>
+  <div class="block header">
+    <h2><img src="/i/pwmout.svg" class='Icon' />${id}</h2>
+      <h4 u-text='description'></h4>
+      <span class="activeState" u-active='active'></span>
+      <span class="config"></span>
+  </div>
+  <div class="block" style="position: relative;min-height: 5rem">
+    <span class="u-level" style="position:absolute;right:0.4em;top:0.4em;"></span>
+    <div style="font-size: 2rem">
+      <span u-text="value"></span> / <span u-text="range"></span>
+    </div>
+  </div>
+</div>
+
+<script>
+  jcl.registerBehavior("pwmout", {
+    inheritFrom: GenericElementBehavior,
+    range: 255,
+    init: function () {
+      hub.subscribe(this.microid + "?*", this.newValue.bind(this));
+    },
+    newValue: function (path, key, value) {
+      if (key == "value") {
+        var o = this.querySelector(".u-level");
+        var h = o.offsetHeight;
+        var bh = h * value / this.range;
+        if (bh > h - 1) bh = h - 1;
+        if (bh < 1) bh = 1;
+        o.style.borderBottomWidth = bh + "px";
+      }
+    }
+  }); // register pwmout Element Behavior
+</script>

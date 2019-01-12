@@ -138,7 +138,7 @@ var MicroJCL = function () {
   this._behaviors = {};
 
 
-  /// A list with all objects that are attached to any behaviour
+  /// A list with all objects that are attached to any behavior
   this.List = [];
 
   /// Initialize the template and behaviors.
@@ -163,29 +163,35 @@ var MicroJCL = function () {
       .then(function (result) {
         return (result.text())
       }).then(function (html) {
-        scope._tco.insertAdjacentHTML('beforeend', html);
+        var f = document.createRange().createContextualFragment(html);
+        scope._tco.appendChild(f);
       });
     return (ret);
   }; // loadFile()
 
 
-  // attach the behaviour specified by the "microbehavior" attribute 
+  // attach the behavior specified by the "u-behavior" attribute 
   this.attach = function (obj) {
-    var mb = obj.getAttribute('microbehavior');
+    var mb = obj.getAttribute('u-behavior');
     var bc = this._behaviors[mb];
     if (mb && bc) {
-      this.LoadBehaviour(obj, bc);
+      this.loadBehavior(obj, bc);
     }
   } // attach()
 
-  // attach all behaviours of the element and nested elements
+  // attach all behaviors of the element and nested elements
   this.attachAll = function (root) {
     this.attach(root);
-    root.querySelectorAll("[microbehavior]").forEach(this.attach.bind(this));
+    root.querySelectorAll("[u-behavior]").forEach(this.attach.bind(this));
   } // attachAll()
 
 
-  this.setProperties = function (obj, props) {
+  /**
+   * substitude any placeholder ${name} with the corresponding value in props.
+   * @param {HTMLElement} obj 
+   * @param {Object} props 
+   */
+  this._setPlaceholders = function (obj, props) {
     if (obj.nodeType == 3) {
       // text node
       var v = obj.textContent;
@@ -209,10 +215,10 @@ var MicroJCL = function () {
 
     var n = obj.firstChild;
     while (n) {
-      this.setProperties(n, props);
+      this._setPlaceholders(n, props);
       n = n.nextSibling;
     }
-  } // setProperties
+  } // _setPlaceholders
 
 
   /**
@@ -224,10 +230,10 @@ var MicroJCL = function () {
   this.insertTemplate = function (root, controlName, props) {
     var e = null;
     if ((root) && (controlName)) {
-      var te = this._tco.querySelector('[microcontrol="' + controlName + '"]');
+      var te = this._tco.querySelector('[u-control="' + controlName + '"]');
       if (te) e = te.cloneNode(true);
       if (e) {
-        this.setProperties(e, props);
+        this._setPlaceholders(e, props);
         root.appendChild(e);
         this.attachAll(e);
       } // if
@@ -237,15 +243,15 @@ var MicroJCL = function () {
 
 
   // attach events, methods and default-values to a html object (using the english spelling)
-  this.LoadBehaviour = function (obj, behaviour) {
+  this.loadBehavior = function (obj, behavior) {
     if (obj == null) {
-      alert("LoadBehaviour: obj argument is missing.");
-    } else if (behaviour == null) {
-      alert("LoadBehaviour: behaviour argument is missing.");
+      alert("loadBehavior: obj argument is missing.");
+    } else if (behavior == null) {
+      alert("loadBehavior: behavior argument is missing.");
 
     } else {
-      if (behaviour.inheritFrom) {
-        jcl.LoadBehaviour(obj, behaviour.inheritFrom);
+      if (behavior.inheritFrom) {
+        jcl.loadBehavior(obj, behavior.inheritFrom);
         jcl.List.pop();
       }
 
@@ -256,37 +262,36 @@ var MicroJCL = function () {
             obj[obj.attributes[n].name] = obj.attributes[n].value;
       } // if
 
-      for (var p in behaviour) {
+      for (var p in behavior) {
         if (p.substr(0, 2) == "on") {
-          obj.addEventListener(p.substr(2), behaviour[p].bind(obj), false);
+          obj.addEventListener(p.substr(2), behavior[p].bind(obj), false);
 
-        } else if ((behaviour[p] == null) || (behaviour[p].constructor != Function)) {
+        } else if ((behavior[p] == null) || (behavior[p].constructor != Function)) {
           // set default-value
           if (obj[p] == null)
-            obj[p] = behaviour[p];
+            obj[p] = behavior[p];
 
         } else {
           // attach method
-          obj[p] = behaviour[p];
+          obj[p] = behavior[p];
         } // if
       } // for
 
-      obj._attachedBehaviour = behaviour;
+      obj._attachedBehavior = behavior;
       obj.init();
       this.List.push(obj);
     }
-  }; // LoadBehaviour
+  }; // loadBehavior
 
   /// Find the parent node of a given object that has any behavior attached.
-  this.FindBehaviourElement = function (obj) {
-    while ((obj) && (obj._attachedBehaviour == null))
+  this.FindBehaviorElement = function (obj) {
+    while ((obj) && (obj._attachedBehavior == null))
       obj = obj.parentNode;
     return (obj);
-  }; // FindBehaviourElement
+  }; // FindBehaviorElement
 
-
-  this.registerBehaviour = function (microType, microBehavior) {
-    this._behaviors[microType] = microBehavior;
+  this.registerBehavior = function (microType, behavior) {
+    this._behaviors[microType] = behavior;
   };
 
   this.onunload = function (evt) {
@@ -303,13 +308,11 @@ var MicroJCL = function () {
   }; // onunload
 
   window.addEventListener('load', this.init.bind(this));
+  window.addEventListener('unload', this.onunload.bind(this));
+} // MicroJCL class
 
-} // MicroDOMTemplate class
-
-// make sure there is a template container
-var jcl = new MicroJCL();
-// window.addEventListener('load', jcl.init.bind(jcl));
-window.addEventListener('unload', jcl.onunload.bind(jcl), false);
+var micro = new MicroJCL();
+var jcl = micro;
 
 // return actual parameters in hash part of URL as object
 function getHashParams(defaults) {

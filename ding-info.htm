@@ -168,7 +168,7 @@
     <div id="panel" class='row wrap'></div>
 
     <div id="u-templates" style="border:2px solid green;padding:1rem;display:none">
-      <div class='col card' microControl='generic' id='${id}' microBehavior='generic' microID='${id}'>
+      <div class='col card' u-control='generic' id='${id}' u-behavior='generic' microID='${id}'>
         <div class="block header">
           <h2><img src="/i/${type}.svg" class='Icon' />${id}</h2>
             <h4 u-text='description'></h4>
@@ -179,25 +179,10 @@
         </div>
       </div>
       <hr />
-      <div microControl='kv' class='KV'><span class='Key'>${key}:</span><span class='Value' u-text='${key}'></span></div>
+      <div u-control='kv' class='KV'><span class='Key'>${key}:</span><span class='Value' u-text='${key}'></span></div>
       <hr />
 
-      <div class='col card' microControl='pwmout' id='${id}' microBehavior='pwmout' microID='${id}'>
-        <div class="block header">
-          <h2><img src="/i/pwmout.svg" class='Icon' />${id}</h2>
-            <h4 u-text='description'></h4>
-            <span class="activeState" u-active='active'></span>
-            <span class="config"></span>
-        </div>
-        <div class="block" style="position: relative;min-height: 5rem">
-          <span class="u-level" style="position:absolute;right:0.4em;top:0.4em;"></span>
-          <div style="font-size: 2rem">
-            <span u-text="value"></span> / <span u-text="range"></span>
-          </div>
-        </div>
-      </div>
-
-      <div class='col card' microControl='schedule' id='${id}' microBehavior='generic' microID='${id}'>
+      <div class='col card' u-control='schedule' id='${id}' u-behavior='generic' microID='${id}'>
         <div class="block header">
           <h2><img src="/i/schedule.svg" class='Icon' />${id}</h2>
             <h4 u-text='description'></h4>
@@ -211,36 +196,6 @@
         </div>
       </div>
 
-      <div microControl="modalNewElement" class="card">
-        <div class="block header">
-          <h2>Add a new Element</h2>
-          <div class="modalClose" onclick='closeModal()' style="background-color: red;text-align: center">&#x00D7;</div>
-        </div>
-        <div class="block" style="font-size: 1.4">
-          <div class="form-group">
-            <label>Type:</label>
-            <select class="typeSelect">
-                <option disabled selected="selected">Please select...</option>
-                <option value="button">button</option>
-              <option>timer</option>
-              <option>digitalout</option>
-              <option>4</option>
-              <option>5</option>
-            </select>
-          </div>
-          <div class="form-group" style="margin-bottom: 0.4rem;">
-            <label>ID:</label>
-            <input placeholder="choose a name..." aria-label="theID" name="id">
-          </div>
-          </div>
-
-          <hr />
-          <div class="block">
-            <button style="float:right" >Add</button>
-          </div>
-        </div>
-      </div>
-
     </div>
 
     <div id="modal" class="hidden">
@@ -248,48 +203,38 @@
       <div onclick='closeModal()' style="position:absolute;background-color: cyan;padding:1rem">X</div>
       <div id="modalContainer" style="width:60px;height:60px">Hello, this is modal</div>
     </div>
+  </div>
 
-    <script async>
-      var eObj = document.getElementById('atype/aname');
-      var panelObj = document.getElementById('panel');
-      var addObj = document.getElementById('addButton');
-      var sysObj = document.getElementById('sysButton');
+  <script async>
+    var eObj = document.getElementById('atype/aname');
+    var panelObj = document.getElementById('panel');
+    var addObj = document.getElementById('addButton');
+    var sysObj = document.getElementById('sysButton');
 
-      var elementDef;
-      var params = getHashParams({
-        sys: false
-      });
-      window.addEventListener("hashchange", function () {
-        window.location.reload();
-      });
+    var elementDef;
+    var params = getHashParams({
+      sys: false
+    });
+    window.addEventListener("hashchange", function () {
+      window.location.reload();
+    });
 
-      function openModal(url, data) {
-        var modalObj = document.getElementById('modal');
-        var containerObj = document.getElementById('modalContainer');
-        modalObj.classList.remove('hidden');
-        var elList;
-        var dlgObj;
+    function openModal(url, data) {
+      var modalObj = document.getElementById('modal');
+      var containerObj = document.getElementById('modalContainer');
+      modalObj.classList.remove('hidden');
 
-        // get implemented elements
-        var p1 = fetch('/$elements')
-          .then(function (result) {
-            return (result.json())
-          }).then(function (json) {
-            elList = json;
-          });
+      // open Dialog
+      var dlgObj = jcl.insertTemplate(containerObj, 'modalNewElement');
+      jcl.attach(dlgObj);
 
-        // open Dialog
-        var t = document.querySelector(".card[microControl='modalNewElement'");
-        var p2 = Promise.resolve(t.outerHTML)
-          .then(function (html) {
-            containerObj.innerHTML = html;
-            containerObj.style.width = containerObj.scrollWidth + "px";
-            containerObj.style.height = containerObj.scrollHeight + "px";
-            dlgObj = containerObj.firstElementChild;
-          });
+      // get implemented elements
+      var p1 = fetch('/$elements')
+        .then(function (result) {
+          return (result.json())
 
-        // fill options
-        Promise.all([p1, p2]).then(function () {
+        }).then(function (elList) {
+          // fill options
           var sel = dlgObj.querySelector('.typeSelect');
           sel.innerHTML = '';
           elList.forEach(function (e) {
@@ -299,105 +244,109 @@
             sel.appendChild(opt);
           })
         });
+    } // openModal
 
-      } // openModal
-
-      function closeModal(data) {
-        var modalObj = document.getElementById('modal');
-        var containerObj = document.getElementById('modalContainer');
-        modalObj.classList.add('hidden');
-      }
-
-      sysObj.addEventListener("click", function (evt) {
-        params.sys = !toBool(params.sys);
-        window.location.hash = "sys=" + params.sys;
-      });
-
-      addObj.addEventListener("click", function (evt) {
-        openModal();
-      });
+    function closeModal(data) {
+      var modalObj = document.getElementById('modal');
+      var containerObj = document.getElementById('modalContainer');
+      modalObj.classList.add('hidden');
+      containerObj.innerHTML = '';
+    } // closeModal()
 
 
-      function createElement(path, key, value) {
+    sysObj.addEventListener("click", function (evt) {
+      params.sys = !toBool(params.sys);
+      window.location.hash = "sys=" + params.sys;
+    });
+
+    addObj.addEventListener("click", function (evt) {
+      openModal();
+    });
+
+
+    function createElement(path, key, value) {
+      var hElem = document.getElementById(path);
+      if (!hElem) {
+        var t = path.split('/')[1];
+        var p = {
+          id: path,
+          type: t
+        };
+
+        if (toBool(params.sys) || (!elementDef[t]) || (toBool(elementDef[t].sys) == false)) {
+          var e = jcl.insertTemplate(panelObj, t, p);
+          if (!e)
+            var e = jcl.insertTemplate(panelObj, "generic", p);
+        } // if
+      } // if
+    } // createElement()
+
+    function addValueInfo(path, key, value) {
+      var hText;
+      if ((key) && (key != 'active') && (path.match(/^\/.*\/.*/))) {
         var hElem = document.getElementById(path);
-        if (!hElem) {
-          var t = path.split('/')[1];
-          var p = {
-            id: path,
-            type: t
-          };
-
-          if (toBool(params.sys) || (!elementDef[t]) || (toBool(elementDef[t].sys) == false)) {
-            var e = jcl.insertTemplate(panelObj, t, p);
-            if (!e)
-              var e = jcl.insertTemplate(panelObj, "generic", p);
+        if (hElem) {
+          var elem = hElem.querySelector("[u-text='" + key + "']");
+          if (!elem) {
+            hElem = hElem.querySelector(".Element");
+            if (hElem) {
+              var p = {
+                key: key
+              };
+              jcl.insertTemplate(hElem, "kv", p);
+            }
           } // if
         } // if
-      } // createElement()
+      } // if
+    } // addValueInfo
 
-      function addValueInfo(path, key, value) {
-        var hText;
-        if ((key) && (key != 'active') && (path.match(/^\/.*\/.*/))) {
-          var hElem = document.getElementById(path);
-          if (hElem) {
-            var elem = hElem.querySelector("[u-text='" + key + "']");
-            if (!elem) {
-              hElem = hElem.querySelector(".Element");
-              if (hElem) {
-                var p = {
-                  key: key
-                };
-                jcl.insertTemplate(hElem, "kv", p);
-              }
-            } // if
-          } // if
-        } // if
-      } // addValueInfo
+    hub.subscribe("/*/*", createElement);
+    hub.subscribe("/**/**?**", addValueInfo);
 
-      hub.subscribe("/*/*", createElement);
-      hub.subscribe("/**/**?**", addValueInfo);
-
-      function updateState() {
-        fetch('/$board')
-          .then(function (result) {
-            return (result.json())
-          }).then(function (json) {
-            hub.publishObj(json);
-          });
-      } // updateState()
-
-      function init() {
-        // load element templates from other file.
-        var p0 = jcl.loadFile('/ding-templates.htm');
-        
-        // element definitions -> env.json -> config.json
-        var p1 = fetch('/elements.json')
-          .then(function (result) {
-            return (result.json())
-          }).then(function (json) {
-            elementDef = json;
-
-            return (fetch('/env.json'));
-          }).then(function (result) {
-            return (result.json())
-          }).then(function (json) {
-            hub.publishObj(json);
-
-            return (fetch('/config.json'));
-          }).then(function (result) {
-            return (result.json())
-          }).then(function (json) {
-            hub.publishObj(json);
-          });
-
-        Promise.all([p0, p1]).then(function () {
-          updateState();
-          window.setInterval(updateState, 800);
+    function updateState() {
+      fetch('/$board')
+        .then(function (result) {
+          return (result.json())
+        }).then(function (json) {
+          hub.publishObj(json);
         });
-      } // init()
+    } // updateState()
 
-      window.addEventListener('load', init);
-    </script>
+    function init() {
+      // load templates from other file.
+      var p0 = Promise.all([
+        jcl.loadFile('/ding-templates.htm'),
+        jcl.loadFile('/ding-info-new.htm')
+      ]);
+
+      // element definitions -> env.json -> config.json
+      var p1 = fetch('/elements.json')
+        .then(function (result) {
+          return (result.json())
+        }).then(function (json) {
+          elementDef = json;
+
+          return (fetch('/env.json'));
+        }).then(function (result) {
+          return (result.json())
+        }).then(function (json) {
+          hub.publishObj(json);
+
+          return (fetch('/config.json'));
+        }).then(function (result) {
+          return (result.json())
+        }).then(function (json) {
+          hub.publishObj(json);
+        });
+
+      Promise.all([p0, p1]).then(function () {
+        updateState();
+        window.setInterval(updateState, 800);
+      });
+    } // init()
+
+    window.addEventListener('load', init);
+  </script>
 
 </body>
 
