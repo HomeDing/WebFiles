@@ -19,7 +19,7 @@ var GenericElementBehavior = {
     this.data[key] = value;
     var ic = this.querySelector("img");
     if (ic) {
-      ic.title = JSON.stringify(this.data, null, 2);
+      ic.title = JSON.stringify(this.data, null, 1).replace('{\n', '').replace('\n}', '');
     }
 
     // flags
@@ -56,6 +56,9 @@ var GenericElementBehavior = {
     var a = src.getAttribute('u-action');
     if (a)
       dispatch(this.microid, a, e.srcElement.value);
+    if (src.classList.contains("setconfig")) {
+      this.classList.toggle("configmode");
+    }
   }
 }; // GenericElementBehavior
 

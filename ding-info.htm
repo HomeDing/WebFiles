@@ -36,32 +36,6 @@
       text-align: right;
     }
 
-    .u-bar {
-      position: relative;
-      height: 1.4em;
-      width: 100%;
-      background-color: #aaaaaa;
-    }
-
-    .u-bar>.pulse,
-    .u-bar>.current {
-      display: inline-block;
-      position: absolute;
-    }
-
-    .u-bar>.pulse {
-      top: 0;
-      left: 0;
-      height: 1.4em;
-      background-color: green
-    }
-
-    .u-bar>.current {
-      top: 0.3em;
-      height: 0.8em;
-      background-color: red;
-    }
-
     .activeState {
       position: absolute;
       top: 0.4rem;
@@ -77,7 +51,7 @@
       background-size: 1.4rem;
     }
 
-    .config {
+    span.setconfig {
       position: absolute;
       top: 0.4rem;
       right: 2.2rem;
@@ -87,9 +61,9 @@
       background-size: 1.4rem;
     }
 
-      #modal {
+    #modal {
       position: fixed;
-      top: 0px;
+      top: 0;
       left: 0;
       width: 100%;
       height: 100%;
@@ -105,9 +79,9 @@
 
     #modalContainer {
       position: absolute;
-      top: 0px;
+      top: 0;
       bottom: 0;
-      left: 0px;
+      left: 0;
       right: 0;
       margin: auto;
       opacity: 1;
@@ -122,27 +96,19 @@
       font-size: 1.6rem;
     }
 
-
-    .form-group {
-      margin-bottom: 0.4em
-    }
-
-    .form-group>label {
-      display: inline-block;
-      text-align: right;
-      margin-bottom: 0.2rem;
-      width: 8em;
-    }
-
-    .form-group>input,
-    .form-group>select {
-      width: 12em;
-    }
-
     img, #panel {
       user-select: none;
       -ms-user-select: none;
     }
+
+    div[u-control] div.block.config {
+      display: none;
+    }
+
+    div[u-control].configmode div.block.config {
+      display: block;
+    }
+
   </style>
   <script src="polyfill.js"></script>
   <script src="es6-promise.auto.js"></script>
@@ -173,18 +139,18 @@
           <h2><img src="/i/${type}.svg" class='Icon' />${id}</h2>
             <h4 u-text='description'></h4>
             <span class="activeState" u-active='active'></span>
-            <span class="config"></span>
+            <span class="setconfig"></span>
         </div>
         <div class="block Element">
         </div>
       </div>
-      <hr />
+
       <div u-control='kv' class='KV'><span class='Key'>${key}:</span><span class='Value' u-text='${key}'></span></div>
-      <hr />
 
       <div class='col card' u-control='schedule' id='${id}' u-behavior='generic' microID='${id}'>
         <div class="block header">
-          <h2><img src="/i/schedule.svg" class='Icon' />${id}</h2>
+          <h2><img src="/i/schedule.svg" class='Icon' >${id}</h2>
+            <p></p>
             <h4 u-text='description'></h4>
             <span class="activeState" u-active='active'></span>
         </div>
@@ -196,157 +162,166 @@
         </div>
       </div>
 
+      <div class='col card' u-control='dstime' id='${id}' u-behavior='generic' microID='${id}'>
+        <div class="block header">
+          <h2><img src="/i/time.svg" class='Icon' />${id}</h2>
+            <h4 u-text='description'></h4>
+            <span class="activeState" u-active='active'></span>
+            <span class="setconfig"></span>
+        </div>
+        <div class="block">
+          <div>
+            <label class="fixed">ReadTime:</label>
+            <input u-value="readtime" type="time" step="1">
+          </div>
+            <div>
+              <label class="fixed">Now:</label>
+              <span u-text="now"></span>
+            </div>
+          </div>
+          <div class="block config active">
+            <button style="float:right">set</button>
+          </div>
+        </div>
+      </div>
     </div>
+
+
 
     <div id="modal" class="hidden">
       <div id="modalBack"></div>
       <div onclick='closeModal()' style="position:absolute;background-color: cyan;padding:1rem">X</div>
-      <div id="modalContainer" style="width:60px;height:60px">Hello, this is modal</div>
+      <div id="modalContainer" style="width:260px;height:260px">Hello, this is modal</div>
     </div>
-  </div>
 
-  <script async>
-    var eObj = document.getElementById('atype/aname');
-    var panelObj = document.getElementById('panel');
-    var addObj = document.getElementById('addButton');
-    var sysObj = document.getElementById('sysButton');
+    <script async>
+      var eObj = document.getElementById('atype/aname');
+      var panelObj = document.getElementById('panel');
+      var addObj = document.getElementById('addButton');
+      var sysObj = document.getElementById('sysButton');
 
-    var elementDef;
-    var params = getHashParams({
-      sys: false
-    });
-    window.addEventListener("hashchange", function () {
-      window.location.reload();
-    });
+      var elementDef;
+      var params = getHashParams({
+        sys: false
+      });
+      window.addEventListener("hashchange", function () {
+        window.location.reload();
+      });
 
-    function openModal(url, data) {
-      var modalObj = document.getElementById('modal');
-      var containerObj = document.getElementById('modalContainer');
-      modalObj.classList.remove('hidden');
+      function openModal(tmplName, data) {
+        var modalObj = document.getElementById('modal');
+        var containerObj = document.getElementById('modalContainer');
 
-      // open Dialog
-      var dlgObj = jcl.insertTemplate(containerObj, 'modalNewElement');
-      jcl.attach(dlgObj);
+        // open Dialog, replace existing.
+        containerObj.innerHTML = "";
+        var dlgObj /*:HTMLDivElement*/ = micro.insertTemplate(containerObj, tmplName);
+        modalObj.classList.remove('hidden');
+        containerObj.style.width = dlgObj.scrollWidth + "px";
+        containerObj.style.height = dlgObj.scrollHeight + "px";
 
-      // get implemented elements
-      var p1 = fetch('/$elements')
-        .then(function (result) {
-          return (result.json())
+      } // openModal
 
-        }).then(function (elList) {
-          // fill options
-          var sel = dlgObj.querySelector('.typeSelect');
-          sel.innerHTML = '';
-          elList.forEach(function (e) {
-            var opt = document.createElement('option');
-            opt.value = e;
-            opt.textContent = e;
-            sel.appendChild(opt);
-          })
-        });
-    } // openModal
-
-    function closeModal(data) {
-      var modalObj = document.getElementById('modal');
-      var containerObj = document.getElementById('modalContainer');
-      modalObj.classList.add('hidden');
-      containerObj.innerHTML = '';
-    } // closeModal()
+      function closeModal(data) {
+        var modalObj = document.getElementById('modal');
+        var containerObj = document.getElementById('modalContainer');
+        modalObj.classList.add('hidden');
+        containerObj.innerHTML = '';
+      } // closeModal()
 
 
-    sysObj.addEventListener("click", function (evt) {
-      params.sys = !toBool(params.sys);
-      window.location.hash = "sys=" + params.sys;
-    });
+      sysObj.addEventListener("click", function (evt) {
+        params.sys = !toBool(params.sys);
+        window.location.hash = "sys=" + params.sys;
+      });
 
-    addObj.addEventListener("click", function (evt) {
-      openModal();
-    });
+      addObj.addEventListener("click", function (evt) {
+        openModal('modalNewElement');
+      });
 
 
-    function createElement(path, key, value) {
-      var hElem = document.getElementById(path);
-      if (!hElem) {
-        var t = path.split('/')[1];
-        var p = {
-          id: path,
-          type: t
-        };
-
-        if (toBool(params.sys) || (!elementDef[t]) || (toBool(elementDef[t].sys) == false)) {
-          var e = jcl.insertTemplate(panelObj, t, p);
-          if (!e)
-            var e = jcl.insertTemplate(panelObj, "generic", p);
-        } // if
-      } // if
-    } // createElement()
-
-    function addValueInfo(path, key, value) {
-      var hText;
-      if ((key) && (key != 'active') && (path.match(/^\/.*\/.*/))) {
+      function createElement(path, key, value) {
         var hElem = document.getElementById(path);
-        if (hElem) {
-          var elem = hElem.querySelector("[u-text='" + key + "']");
-          if (!elem) {
-            hElem = hElem.querySelector(".Element");
-            if (hElem) {
-              var p = {
-                key: key
-              };
-              jcl.insertTemplate(hElem, "kv", p);
-            }
+        if (!hElem) {
+          var t = path.split('/')[1];
+          var p = {
+            id: path,
+            type: t
+          };
+
+          if (toBool(params.sys) || (!elementDef[t]) || (toBool(elementDef[t].sys) == false)) {
+            var e = jcl.insertTemplate(panelObj, t, p);
+            if (!e)
+              var e = jcl.insertTemplate(panelObj, "generic", p);
           } // if
         } // if
-      } // if
-    } // addValueInfo
+      } // createElement()
 
-    hub.subscribe("/*/*", createElement);
-    hub.subscribe("/**/**?**", addValueInfo);
+      function addValueInfo(path, key, value) {
+        var hText;
+        if ((key) && (key != 'active') && (path.match(/^\/.*\/.*/))) {
+          var hElem = document.getElementById(path);
+          if (hElem) {
+            var elem = hElem.querySelector("[u-text='" + key + "']");
+            if (!elem) {
+              hElem = hElem.querySelector(".Element");
+              if (hElem) {
+                var p = {
+                  key: key
+                };
+                jcl.insertTemplate(hElem, "kv", p);
+              }
+            } // if
+          } // if
+        } // if
+      } // addValueInfo
 
-    function updateState() {
-      fetch('/$board')
-        .then(function (result) {
-          return (result.json())
-        }).then(function (json) {
-          hub.publishObj(json);
+      hub.subscribe("/*/*", createElement);
+      hub.subscribe("/**/**?**", addValueInfo);
+
+      function updateState() {
+        fetch('/$board')
+          .then(function (result) {
+            return (result.json())
+          }).then(function (json) {
+            hub.publishObj(json);
+          });
+      } // updateState()
+
+      function init() {
+        // load templates from other file.
+        var p0 = Promise.all([
+          jcl.loadFile('/ding-templates.htm'),
+          jcl.loadFile('/ding-info-new.htm')
+        ]);
+
+        // element definitions -> env.json -> config.json
+        var p1 = fetch('/elements.json')
+          .then(function (result) {
+            return (result.json())
+          }).then(function (json) {
+            elementDef = json;
+
+            return (fetch('/env.json'));
+          }).then(function (result) {
+            return (result.json())
+          }).then(function (json) {
+            hub.publishObj(json);
+
+            return (fetch('/config.json'));
+          }).then(function (result) {
+            return (result.json())
+          }).then(function (json) {
+            hub.publishObj(json);
+          });
+
+        Promise.all([p0, p1]).then(function () {
+          updateState();
+          window.setInterval(updateState, 800);
         });
-    } // updateState()
+      } // init()
 
-    function init() {
-      // load templates from other file.
-      var p0 = Promise.all([
-        jcl.loadFile('/ding-templates.htm'),
-        jcl.loadFile('/ding-info-new.htm')
-      ]);
-
-      // element definitions -> env.json -> config.json
-      var p1 = fetch('/elements.json')
-        .then(function (result) {
-          return (result.json())
-        }).then(function (json) {
-          elementDef = json;
-
-          return (fetch('/env.json'));
-        }).then(function (result) {
-          return (result.json())
-        }).then(function (json) {
-          hub.publishObj(json);
-
-          return (fetch('/config.json'));
-        }).then(function (result) {
-          return (result.json())
-        }).then(function (json) {
-          hub.publishObj(json);
-        });
-
-      Promise.all([p0, p1]).then(function () {
-        updateState();
-        window.setInterval(updateState, 800);
-      });
-    } // init()
-
-    window.addEventListener('load', init);
-  </script>
+      window.addEventListener('load', init);
+    </script>
 
 </body>
 

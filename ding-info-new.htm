@@ -10,25 +10,58 @@
         <option disabled selected="selected">Please select...</option>
       </select>
     </div>
-    <div class="form-group" style="margin-bottom: 0.4rem;">
+    <div class="form-group">
       <label>ID:</label>
-      <input placeholder="choose a name..." aria-label="theID" name="id">
+      <input placeholder="choose a name..." aria-label="theID" class="newID">
     </div>
     </div>
 
     <hr />
     <div class="block">
-      <button style="float:right" >Next</button>
+      <button class="next" style="float:right">Next</button>
     </div>
   </div>
 </div>
 
 <script>
   var CreateElementDlgBehavior = {
+    objType: null,
+    objID: null,
 
     init: function () {
-      alert(99);
-    } // init()
+      var scope = this;
+
+      this.objType = scope.querySelector('.typeSelect');
+      this.objID = scope.querySelector('.newID');
+
+      // get implemented elements and populate the dropdown
+      fetch('/$elements')
+        .then(function (result) {
+          return (result.json())
+
+        }).then(function (elList) {
+          // fill options
+          var sel = scope.objType;
+          sel.innerHTML = '';
+          elList.forEach(function (e) {
+            var opt = document.createElement('option');
+            opt.value = e;
+            opt.textContent = e;
+            sel.appendChild(opt);
+          })
+        });
+    }, // init()
+
+    onclick: function (evt /*:PointerEvent*/) {
+      var src = evt.srcElement;
+      if (src.classList.contains("next")) {
+        if (this.objID.value === "") {
+          alert('Please specify a name');
+        } else {
+          openModal('modalNewElement', {});
+        }
+      }
+    }
   }; // CreateElementDlgBehavior
 
   jcl.registerBehavior("createElementDlg", CreateElementDlgBehavior);
