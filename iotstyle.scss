@@ -302,13 +302,6 @@ button+label {
   margin-left: 1.25rem;
 }
 
-label.fixed {
-  display: inline-block;
-  text-align: right;
-  width: 8em;
-  margin-right: 0.5em;
-}
-
 button {
   font-size: 1.6em;
   border: 0.1rem solid $u-primary;
@@ -340,6 +333,29 @@ button.active {
 button.secondary {
   background-color: #777777;
   border-color: #777777
+}
+
+.form-group {
+  margin-bottom: 0.2rem;
+
+  >label {
+    display: inline-block;
+    text-align: right;
+    margin-right: 0.5em;
+    width: 8em;
+  }
+
+  >input,
+  >select {
+    width: 12em;
+  }
+}
+
+
+label.fixed {
+  display: inline-block;
+  text-align: right;
+  width: 8em;
 }
 
 /* === element Icons === */
@@ -410,6 +426,35 @@ button.secondary {
   width: 32px;
   height: 64px;
 }
+
+// Timer-bar
+
+.u-bar {
+  position: relative;
+  height: 1.4em;
+  width: 100%;
+  background-color: #aaaaaa;
+}
+
+.u-bar>.pulse,
+.u-bar>.current {
+  display: inline-block;
+  position: absolute;
+}
+
+.u-bar>.pulse {
+  top: 0;
+  left: 0;
+  height: 1.4em;
+  background-color: green
+}
+
+.u-bar>.current {
+  top: 0.4em;
+  height: 0.6em;
+  background-color: red;
+}
+
 
 /* === SWITCH === */
 

@@ -24,7 +24,7 @@ function toBool(s) {
 
 function dispatch(id, prop, val) {
   if (val != null) {
-    var url = "/$board" + id + "?" + prop + "=" + val;
+    var url = "/$board" + id + "?" + prop + "=" + encodeURI(val);
     fetch(url);
   }
 } // dispatch()
@@ -222,7 +222,7 @@ var MicroJCL = function () {
 
 
   /**
-   * Insert a new control based on a template into the root object.
+   * Insert a new control based on a template into the root object and activate behavior.
    * @param {HTMLObjectElement} root parent object for the new control 
    * @param {string} controlName 
    * @param {Object} props 
