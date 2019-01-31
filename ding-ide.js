@@ -2,7 +2,7 @@
 
 var filesObj = document.getElementById("files");
 var contentObj = document.getElementById("content");
-var progressBar2Obj = document.getElementById("progressBar2");
+var progressObj = document.getElementById("progressBar2");
 
 var activeFileObj = document.getElementById("activeFile");
 var checkerObj = document.getElementById("checker");
@@ -28,9 +28,13 @@ function handleLoadFile(e) {
   var s = e.target.innerText;
   activeFileName = s.split(' ')[0];
   activeFileObj.innerText = activeFileName;
-  loadAsync(activeFileName, null, function (txt) {
-    contentObj.innerText = txt
-  });
+
+  fetch(activeFileName)
+    .then(function (result) {
+      return (result.text());
+    }).then(function (txt) {
+      contentObj.innerText = txt;
+    });
 } // handleLoadFile()
 
 
@@ -98,27 +102,25 @@ function listFiles(fileList) {
 
 
 function handleReloadFS() {
-  loadAsync('/$list', "application/json", function (result) {
-    var x = JSON.parse(result);
-    x.sort(function (a, b) {
-      var an = a.name.toLowerCase();
-      var bn = b.name.toLowerCase();
-      if (an < bn) {
-        return -1;
-      }
-      if (an > bn) {
-        return 1;
-      }
-      return 0;
+  fetch('/$list')
+    .then(function (result) {
+      return (result.json());
+    }).then(function (x) {
+      x.sort(function (a, b) {
+        var an = a.name.toLowerCase();
+        var bn = b.name.toLowerCase();
+        if (an < bn) {
+          return -1;
+        }
+        if (an > bn) {
+          return 1;
+        }
+        return 0;
+      });
+      listFiles(x);
     });
-    listFiles(x);
-  });
 } // handleReloadFS()
 
-var uploadfilelist = []; // Ein Array, das alle hochzuladenden Files enthält
-var totalSize = 0; // Enthält die Gesamtgröße aller hochzuladenden Dateien
-var totalProgress = 0; // Enthält den aktuellen Gesamtfortschritt
-var currentUpload = null; // Enthält die Datei, die aktuell hochgeladen wird
 
 // some drag events need to call stopPropagation and preventDefault to allow custom interactions
 function dragHelper(e) {
@@ -126,60 +128,52 @@ function dragHelper(e) {
   e.preventDefault();
 } // dragHelper()
 
+
 // start uploading file content
 function startUpload(filename, contentType, content) {
-  progressBar2Obj.classList.remove("fadeout");
+  progressObj.classList.remove("fadeout");
+
+  var formData = new FormData();
+  var blob = new Blob([content], {
+    type: contentType
+  });
+  formData.append(filename, blob, filename);
 
   var objHTTP = new XMLHttpRequest(); // new ActiveXObject("MSXML2.XMLHTTP");
-  objHTTP.open("PUT", filename, true);
-  objHTTP.setRequestHeader("Content-Type", contentType + "; charset=utf-8");
+  objHTTP.open('POST', '/');
 
   if (objHTTP.upload) {
     objHTTP.upload.addEventListener('progress', function (e) {
-      progressBar2Obj.max = e.total;
-      progressBar2Obj.value= e.loaded;
+      progressObj.max = e.total;
+      progressObj.value = e.loaded;
     });
   } // if 
 
   objHTTP.addEventListener("readystatechange", function (p) {
     if ((objHTTP.readyState == 4) && (objHTTP.status >= 200) && (objHTTP.status < 300)) {
-      window.setTimeout(handleReloadFS, 100);
-      progressBar2Obj.classList.add("fadeout");
-      // fade progress
+      window.setTimeout(handleReloadFS, 200);
+      progressObj.classList.add("fadeout");
     } // if
   });
-  objHTTP.send(content);
+  objHTTP.send(formData);
 }
 
-function startPutFile(file, contentType) {
-  var filename = file.name;
-  var reader = new FileReader();
-
-  // show progress
-
-  reader.onload = function (evt) {
-    startUpload("/" + file.name, contentType, evt.target.result);
-  }; // onload
-
-  reader.readAsText(file); // ,"UTF-8"
-} // startPutFile()
 
 // save file from editor back to server.
 function handleSave() {
-  progressBar2Obj.value = 0;
-  progressBar2Obj.max = 1;
+  progressObj.value = 0;
+  progressObj.max = 1;
   activeFileName = window.prompt("Upload File:", activeFileName);
   if (activeFileName !== undefined)
     startUpload(activeFileName, "text/html", contentObj.innerText);
 } // handleSave()
 
-// http://html5doctor.com/drag-and-drop-to-server/
 
 // files was dropped on dropzone
 function drop(e) {
-  progressBar2Obj.classList.remove("fadeout");
-  progressBar2Obj.value = 0;
-  progressBar2Obj.max = 1;
+  progressObj.classList.remove("fadeout");
+  progressObj.value = 0;
+  progressObj.max = 1;
   e.stopPropagation();
   e.preventDefault();
 
@@ -194,14 +188,14 @@ function drop(e) {
   var xmlHttp = new XMLHttpRequest();
 
   xmlHttp.upload.addEventListener('progress', function (e) {
-    progressBar2Obj.max = e.total;
-    progressBar2Obj.value = e.loaded;
+    progressObj.max = e.total;
+    progressObj.value = e.loaded;
   });
 
   xmlHttp.addEventListener("readystatechange", function (p) {
     if ((xmlHttp.readyState == 4) && (xmlHttp.status >= 200) && (xmlHttp.status < 300)) {
       window.setTimeout(handleReloadFS, 100);
-      progressBar2Obj.classList.add("fadeout");
+      progressObj.classList.add("fadeout");
       // fade progress
     } // if
   });
