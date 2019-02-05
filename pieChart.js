@@ -7,16 +7,6 @@ function piePoint(alpha, r) {
   return (s);
 }
 
-function createSVGNode(parentNode, tagName, properties) {
-  var n = document.createElementNS("http://www.w3.org/2000/svg", tagName);
-  for (var p in properties) {
-    n.setAttribute(p, properties[p]);
-  }
-  parentNode.appendChild(n);
-  return (n);
-} // createSVGNode()
-
-
 function addPiePart(start, part, color) {
   var alpha = 2 * Math.PI * start;
   var beta = 2 * Math.PI * (start + part);
