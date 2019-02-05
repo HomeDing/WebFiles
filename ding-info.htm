@@ -102,6 +102,7 @@
     }
 
     div[u-control] div.block.config {
+      background-color: yellow;
       display: none;
     }
 
@@ -162,7 +163,7 @@
         </div>
       </div>
 
-      <div class='col card' u-control='dstime' id='${id}' u-behavior='generic' microID='${id}'>
+      <div class='col card' u-control='dstime' id='${id}' u-behavior='dstime' microID='${id}'>
         <div class="block header">
           <h2><img src="/i/time.svg" class='Icon' />${id}</h2>
             <h4 u-text='description'></h4>
@@ -179,8 +180,10 @@
               <span u-text="now"></span>
             </div>
           </div>
-          <div class="block config active">
-            <button style="float:right">set</button>
+          <div class="block config">
+            <label class="fixed">set Time:</label>
+            <span class="now"></span>
+            <button class="setnow" style="min-width: 0;">set</button>
           </div>
         </div>
       </div>
@@ -321,6 +324,36 @@
       } // init()
 
       window.addEventListener('load', init);
+
+      jcl.registerBehavior("dstime", {
+        inheritFrom: GenericElementBehavior,
+
+        isoDate: function () {
+          function pad02(num) {
+            return (((num < 10) ? '0' : '') + num);
+          };
+
+          var d = new Date();
+          var ds = d.getFullYear() + '-' + pad02(d.getMonth() + 1) + '-' + pad02(d.getDate()) +
+            ' ' + pad02(d.getHours()) + ':' + pad02(d.getMinutes()) + ':' + pad02(d.getSeconds());
+          return (ds);
+        },
+
+        init: function (e) {
+          GenericElementBehavior.init.call(this);
+          this._nowObj = this.querySelector(".now");
+          window.setInterval(function () {
+            this._nowObj.textContent = this.isoDate();
+          }.bind(this), 200);
+        },
+
+        onclick: function (e) {
+          var src = e.srcElement;
+          if (src.classList.contains("setnow")) {
+            dispatch(this.id, "time", this.isoDate())
+          }
+        }
+      }); // register dstime Element Behavior
     </script>
 
 </body>
