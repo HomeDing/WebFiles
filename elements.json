@@ -1,83 +1,106 @@
 {
   "device": {
     "sys": "true",
-    "properties": ["description", "room"]
+    "properties": ["description", "room", "led", "reboottime"],
+    "events": ["log", "loglevel"]
   },
 
   "ota": {
-    "sys": "true"
+    "sys": "true",
+    "properties": ["port", "passwd"]
   },
   "ssdp": {
-    "sys": "true"
+    "sys": "true",
+    "properties": ["Manufacturer", "ManufacturerURL", "ModelURL", "ModelNumber"]
   },
+
   "ntptime": {
+    "sys": "true",
+    "properties": ["ntpserver", "zone", "readtime"]
+  },
+
+  "dstime": {
+    "sys": "true",
+    "properties": ["address", "time", "readtime"]
+  },
+
+  "displayadapterlcd": {
     "sys": "true"
   },
-  "displaylcd": {
+  "displayadapterssd1306": {
     "sys": "true"
   },
-  "displayssd1306": {
+  "displayadaptersh1106": {
     "sys": "true"
   },
 
+  "displaytext": {
+    "sys": "false",
+    "properties": ["description", "loglevel", "x", "y", "fontsize", "prefix", "postfix"],
+    "events": ["value", "clear"],
+    "actions": []
+  },
+
+  "displaydot": {
+    "sys": "true",
+    "properties": ["description", "loglevel", "x", "y"],
+    "events": ["value", "clear"],
+    "actions": []
+  },
+
+  "time": {
+    "sys": "true",
+    "properties": ["description", "loglevel"],
+    "events": [],
+    "actions": ["onminute", "ontimestamp", "ontime", "ondate"]
+  },
+
   "analog": {
-    "properties": ["description", "readtime", "hysteresis", "reference"],
-    "actions": [],
-    "events": ["value", "reference"]
+    "properties": ["description", "loglevel", "readtime", "hysteresis", "reference"],
+    "events": [],
+    "actions": ["onvalue", "onreference"]
   },
 
   "button": {
     "properties": ["description", "pin", "type", "inverse", "pullup"],
-    "actions": ["value", "on", "off"],
-    "events": ["value"]
-  },
-
-  "displaytext": {
-    "properties": ["description", "x", "y", "fontsize", "prefix", "postfix"],
-    "actions": ["value", "show", "clear"],
-    "events": []
-  },
-
-  "displaydot": {
-    "properties": ["description", "x", "y"],
-    "actions": ["value", "show", "clear"],
-    "events": []
-  },
-
-  "time": {
-    "properties": ["description"],
-    "actions": [],
-    "events": ["minute", "timestamp", "time", "date"]
+    "events": ["value"],
+    "actions": ["onvalue", "onon", "onoff"]
   },
 
   "rotary": {
     "properties": ["description", "pin1", "pin2", "step", "value"],
-    "actions": [],
-    "events": ["change"]
+    "events": [],
+    "actions": ["onchange"]
   },
 
   "serialcmd": {
     "properties": ["description"],
-    "actions": [],
-    "events": ["preset0", "preset1", "preset2", "preset3"]
+    "events": [],
+    "actions": ["preset0", "preset1", "preset2", "preset3"]
   },
 
   "timer": {
     "properties": ["description", "type", "waittime", "pulsetime", "cycletime"],
-    "actions": ["start", "stop", "next"],
-    "events": ["on", "off", "value"]
+    "events": ["start", "stop", "next"],
+    "actions": ["onon", "onoff", "onvalue"]
   },
 
   "digitalout": {
     "properties": ["description", "value", "pin", "inverse"],
-    "actions": ["on", "off", "value"],
-    "events": []
+    "events": ["on", "off", "value"],
+    "actions": []
   },
 
   "pwmout": {
     "properties": ["description", "value", "range", "pin", "inverse"],
-    "actions": ["on", "off", "value"],
-    "events": []
+    "events": ["on", "off", "value"],
+    "actions": []
+  },
+
+  "schedule": {
+    "properties": ["description", "loglevel", "ontime", "offtime"],
+    "events": [],
+    "actions": ["onon", "onoff", "onvalue"]
   }
 
 }

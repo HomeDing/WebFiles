@@ -93,6 +93,19 @@
       </div>
 
       <div class="col card">
+        <div class="block">
+          <label class="fixed">Element Type:</label>
+          <select id="elemsel" style="width:17em">
+            <option disabled>select...</option>
+          </select>
+        </div>
+        <div class="block">
+          <object id="elemsvg" data="element.svg" type="image/svg+xml" style="background-color: yellow"></object>
+        </div>
+      </div>
+
+
+      <div class="col card">
         <div class="block header">
           <h2>File System Memory</h2>
         </div>
@@ -133,6 +146,10 @@
 
   <script>
     var memObj = document.getElementById("meminfo");
+    var elementsData;
+    var selObj = document.getElementById("elemsel");
+    var elemsvgObj = document.getElementById("elemsvg");
+
 
     memObj.onload = function () {
       fetch('/$sysinfo')
@@ -162,6 +179,29 @@
               }
             ]);
         });
+
+      function elemChange() {
+        var d = elementsData[selObj.value];
+        d.name = selObj.value;
+        elemsvgObj.getSVGDocument().api.create(d);
+      }
+
+      fetch('elements.json')
+        .then(function (result) {
+          return (result.json());
+        }).then(function (elList) {
+          elementsData = elList;
+          selObj.innerHTML = '';
+          for (e in elList) {
+            var opt = document.createElement('option');
+            opt.value = e;
+            opt.textContent = e;
+            selObj.appendChild(opt);
+          }
+          elemChange();
+        });
+
+      selObj.addEventListener("change", elemChange);
     };
   </script>
 </body>
