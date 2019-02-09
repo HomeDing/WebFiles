@@ -279,11 +279,11 @@
             nodesObj.appendChild(obj);
             // disable outgoing pin ?
             if (ed) {
-              if ((ed.actions) && (ed.actions.length == 0)) {
+              if ((ed.events) && (ed.events.length == 0)) {
                 var pin = obj.querySelector('[pin="in"]');
                 if (pin) pin.style.display = "none";
               }
-              if ((ed.events) && (ed.events.length == 0)) {
+              if ((ed.actions) && (ed.actions.length == 0)) {
                 var pin = obj.querySelector('[pin="out"]');
                 if (pin) pin.style.display = "none";
               }

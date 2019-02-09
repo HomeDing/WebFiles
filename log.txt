@@ -1,0 +1,41 @@
+20:18:10 ntptime/on:e:got time: 1543436290
+00:00:27 sys:e:sketch setup done.
+00:00:27 sys:e:Registered Libraries: ssdp ota device time remote ntptime serialcmd my value button timer schedule digitalout pwmout displaytext displaydot displayLCD displayS
+00:00:00 sys:e:sketch setup done.
+00:00:00 sys:e:Registered Libraries: ssdp ota device time remote ntptime serialcmd my value button timer schedule digitalout pwmout displaytext displaydot displayLCD displayS
+00:00:00 sys:e:devicename=lcddevice
+20:21:43 ntptime/on:e:got time: 1543436503
+00:00:27 sys:e:sketch setup done.
+00:00:27 sys:e:Registered Libraries: ssdp ota device time remote ntptime serialcmd my value button timer schedule digitalout pwmout displaytext displaydot displayLCD displayS
+00:00:27 sys:e:devicename=lcddevice
+00:00:00 sys:e:sketch setup done.
+00:00:00 sys:e:Registered Libraries: ssdp ota device time remote ntptime serialcmd my value button timer schedule digitalout pwmout displaytext displaydot displayLCD displayS
+00:00:00 sys:e:devicename=lcddevice
+20:35:35 ntptime/on:e:got time: 1543437335
+00:00:00 sys:e:sketch setup done.
+00:00:00 sys:e:Registered Libraries: ssdp ota device time remote ntptime serialcmd my value button timer schedule digitalout pwmout displaytext displaydot displayLCD displayS
+00:00:00 sys:e:sketch setup done.
+00:00:00 sys:e:Registered Libraries: ssdp ota device time remote ntptime serialcmd my value button timer schedule digitalout pwmout displaytext displaydot displayLCD displayS
+00:00:00 sys:e:devicename=lcddevice
+20:38:05 ntptime/on:e:got time: 1543523885
+20:55:58 button/in:i:cannot set property null:
+20:55:58 button/in:i:cannot set property null:
+20:56:01 button/in:i:cannot set property null:
+20:56:01 button/in:i:cannot set property null:
+20:56:07 button/in:i:cannot set property null:
+20:56:08 button/in:i:cannot set property null:
+20:56:08 button/in:i:cannot set property null:
+20:56:09 button/in:i:cannot set property null:
+20:56:30 button/in:i:cannot set property null:
+20:56:31 button/in:i:cannot set property null:
+20:56:31 button/in:i:cannot set property null:
+20:56:32 button/in:i:cannot set property null:
+22:38:05 ntptime/on:e:got time: 1543531085
+00:00:00 sys:e:sketch setup done.
+00:00:00 sys:e:Registered Libraries: ssdp ota device time remote ntptime serialcmd my value button timer schedule digitalout pwmout displaytext displaydot displayLCD displayS
+00:00:00 sys:e:devicename=lcddevice
+16:25:18 ntptime/on:e:got time: 1543595118
+00:00:00 sys:e:sketch setup done.
+00:00:00 sys:e:Registered Libraries: ssdp ota device time remote ntptime serialcmd my value button timer schedule digitalout pwmout displaytext displaydot displayLCD displayS
+00:00:00 sys:e:devicename=lcddevice
+16:25:32 ntptime/on:e:got time: 1543595132

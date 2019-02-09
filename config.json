@@ -93,20 +93,27 @@
       "waittime": "0",
       "pulsetime": "1",
       "cycletime": "3",
-      "onon": "digitalout/led?value=1",
-      "onoff": "digitalout/led?value=0",
+      "onon": "digitalout/led2?value=1",
+      "onoff": "digitalout/led2?value=0",
       "description": "Timer for testing"
     }
   },
 
-  "button": {
+  "digitalin": {
     "in": {
-      "description": "Input button",
-      "pin": "D4",
+      "description": "Input momentary button",
+      "pin": "D7",
       "inverse": 1,
       "pullup": 1,
-      "type": "toggle",
-      "onvalue": "digitalout/led?value=$v"
+      "onLow": "switch/light?toggle=1"
+    }
+  },
+
+  "switch": {
+    "light": {
+      "description": "Control light level",
+      "value": 0,
+      "onValue": "digitalout/led?value=$v"
     }
   },
 
@@ -116,7 +123,42 @@
       "inverse": "true",
       "value": "0",
       "description": "Builtin LED is on Port D0 = GPIO16"
+    },
+
+    "led2": {
+      "pin": "D4",
+      "inverse": "true",
+      "value": "0",
+      "description": "Builtin LED is on Port D0 = GPIO16"
+    }
+  },
+
+  "rfsend": {
+    "a1": {
+      "codeOn": "s_##__##__#__####____##__#__#____x",
+      "codeOff": "s_##__##__#__####____##__#_______x",
+      "description": "Stern aussen"
+    },
+
+    "a2": {
+      "codeOn": "s_##__##__#__####____##__#__#___#x",
+      "codeOff": "s_##__##__#__####____##__#______#x",
+      "description": "Balcony Light"
+    },
+    "a3": {
+      "codeOn": "s_##__##__#__####____##__#__#__#_x",
+      "codeOff": "s_##__##__#__####____##__#_____#_x",
+      "description": "spare"
+    },
+    "aa": {
+      "codeOn": "s_##__##__#__####____##__#_#_____x",
+      "description": "All off outside"
+    },
+
+    "d1": {
+      "codeOn": "BFF000F000FFFB",
+      "codeOff": "BFF000F000FF0B",
+      "description": "Dampfabzugshaube"
     }
   }
-
 }

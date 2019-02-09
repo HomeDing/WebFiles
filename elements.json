@@ -85,6 +85,18 @@
     "actions": ["onon", "onoff", "onvalue"]
   },
 
+  "digitalin": {
+    "properties": ["description", "pin", "inverse", "pullup"],
+    "events": [],
+    "actions": ["onValue", "onHigh", "onLow"]
+  },
+
+  "switch": {
+    "properties": ["description"],
+    "events": ["value", "toggle"],
+    "actions": ["onValue", "onHigh", "onLow"]
+  },
+
   "digitalout": {
     "properties": ["description", "value", "pin", "inverse"],
     "events": ["on", "off", "value"],

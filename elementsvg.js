@@ -33,13 +33,13 @@ function create(def) {
     def.properties.forEach(function (e) {
       createBox("property", e);
     });
-  if (def.actions)
-    def.actions.forEach(function (e) {
-      createBox("action", e);
-    });
   if (def.events)
     def.events.forEach(function (e) {
       createBox("event", e);
+    });
+  if (def.actions)
+    def.actions.forEach(function (e) {
+      createBox("action", e);
     });
 };
 

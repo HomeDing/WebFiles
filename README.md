@@ -70,6 +70,8 @@ http://192.168.2.170/$list
 4. add result into "bootpage.h" replacing the existing text.
 
 
+Promise Implementation for IE:
+ https://raw.githubusercontent.com/stefanpenner/es6-promise/master/LICENSE
 
 <!-- 
 More to read:
