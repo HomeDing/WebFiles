@@ -2,21 +2,22 @@ var express = require("express");
 var app = express();
 
 const fs = require("fs");
-const debug = require("debug")("iot:server:");
+const debugIoT = require("debug")("iot:server");
+const debugSend = require("debug")("iot:send");
 
 // enable to add X-Respose-Time to http header
 // var responseTime = require('response-time');
 // app.use(responseTime());
 
-debug("This processor architecture is " + process.arch);
-debug("This platform is " + process.platform);
+debugIoT("This processor architecture is " + process.arch);
+debugIoT("This platform is " + process.platform);
 
 // a middleware with no mount path; gets executed for every request to the app
 app.use(function (req, res, next) {
-  var startTime = process.hrtime.bigint();
+  var startTime = process.hrtime();
   next();
-  var endTime = process.hrtime.bigint();
-  debug(`url: ${req.originalUrl} time: ${endTime - startTime} nsec.`);
+  var duration = process.hrtime(startTime);
+  debugSend(`url=${req.originalUrl} time=${duration}`);
 });
 
 // ----- enable favicon requests -----
@@ -25,7 +26,10 @@ app.use(function (req, res, next) {
 
 // app.use('/api/fileUpload', require('./files/fileUpload'));
 
-function nocache(req, res, next) {
+/**
+ * Express middleware that adds header to avoid caching
+ */
+function noCache(req, res, next) {
   res.header("Cache-Control", "private, no-cache, no-store, must-revalidate");
   res.header("Expires", "-1");
   res.header("Pragma", "no-cache");
@@ -34,7 +38,7 @@ function nocache(req, res, next) {
 
 // ----- enable start page redirect -----
 app.get("/", function (req, res, next) {
-  debug("redirect...");
+  debugIoT("redirect...");
   res.redirect("/index.htm");
   // next();
 });
@@ -42,7 +46,23 @@ app.get("/", function (req, res, next) {
 
 // ----- handle listing of all existing files -----
 
-app.get(/^\/\$list$/, nocache, function (req, res, next) {
+/* // npm i multer --save
+
+const express = require('express');
+const multer = require('multer');
+const upload = multer({ dest: 'uploads/' })
+
+// set up the router required to hook up our service to the portal
+const apiRouter = express.Router();
+
+// test uploading files, use a file upload folder to avoid overwriting local files
+apiRouter.post('/upload', upload.array('files'), function (req, res) {
+  req.originalUrl;
+  res.send("");
+});
+ */
+
+app.get(/^\/\$list$/, noCache, function (req, res, next) {
   var fl = [];
   var files = fs.readdirSync(__dirname);
   for (var i in files) {
@@ -58,49 +78,153 @@ app.get(/^\/\$list$/, nocache, function (req, res, next) {
 });
 
 
-app.get(/^\/\$sysinfo$/, nocache, function (req, res, next) {
+app.get(/^\/\$sysinfo$/, noCache, function (req, res, next) {
   var fl = {
+    "devicename": "nodejsding",
     "build": "Dec  1 2018",
-    "free heap":31168,
-    "flash-size":4194304,
-    "flash-real-size":4194304,
-    "fs-totalBytes":957314,
-    "fs-usedBytes":218872,
-    "ssid":"localWLAN",
-    "bssid":"74:DA:11:22:33:44"
+    "free heap": 31168,
+    "flash-size": 4194304,
+    // "flash-real-size":4194304,
+    "fs-totalBytes": 957314,
+    "fs-usedBytes": 218872,
+    "ssid": "devnet"
+    // "bssid":"74:DA:11:22:33:44"
   };
   res.type('application/json');
-  res.send(JSON.stringify(fl, '', 2));
+  res.send(JSON.stringify(fl, null, 2));
 });
 
 
 // ----- handle uploading a file using the PUT method -----
 
-app.put("/:fn", function (req, res, next) {
-  var filename = req.params.fn;
-  debug("PUT: %s started", filename);
+// app.put("/:fn", function (req, res, next) {
+//   var filename = req.params.fn;
+//   debugIoT("PUT: %s started", filename);
 
-  var writer = fs.createWriteStream(filename); // "output.txt");
+//   var writer = fs.createWriteStream(filename); // "output.txt");
 
-  req.setEncoding("utf8");
-  req.on("data", function (chunk) {
-    writer.write(chunk);
-    debug("PUT: got %d bytes", chunk.length);
-  });
+//   req.setEncoding("utf8");
+//   req.on("data", function (chunk) {
+//     writer.write(chunk);
+//     debugIoT("PUT: got %d bytes", chunk.length);
+//   });
 
-  req.on("end", function () {
-    writer.close();
-    debug("PUT: end.");
-    next();
-  });
+//   req.on("end", function () {
+//     writer.close();
+//     debugIoT("PUT: end.");
+//     next();
+//   });
 
-  res.send("this is an update");
+//   res.send("this is an update");
+// });
+
+function isoDate() {
+  function pad02(num) {
+    return (((num < 10) ? '0' : '') + num);
+  };
+
+  var d = new Date();
+  var ds = d.getFullYear() + '-' + pad02(d.getMonth() + 1) + '-' + pad02(d.getDate()) +
+    ' ' + pad02(d.getHours()) + ':' + pad02(d.getMinutes()) + ':' + pad02(d.getSeconds());
+  return (ds);
+}
+
+
+// ===== mocking elements
+
+// 2 collections of functions:
+let mockGetStatus = {}; // return current status
+let mockSetAction = {}; // set an Property of process an action
+
+function addElementMock(id, fGet, fSet) {
+  if (fGet)
+    mockGetStatus[id] = fGet;
+  if (fSet)
+    mockSetAction[id] = fSet;
+};
+
+
+addElementMock('dstime/0', function (state) {
+  state.now = isoDate();
+  return (state);
+}, null);
+
+addElementMock('switch/sam', function (state) {
+  if (!state) {
+    state = {
+      active: 1,
+      value: 0
+    };
+  }
+  return (state);
+}, function (state, query) {
+  if (query.value != null)
+    state.value = query.value;
+  if (query.toggle != null)
+    state.value = (state.value ? 0 : 1);
+  return (state);
 });
+
+// ===== serving /$board status
+
+const boardFileName = '$board';
+let boardStatus = null;
+
+let switchValue = 1;
+
+fs.watch(boardFileName, function (eventName, filename) {
+  boardStatus = null;
+});
+
+app.get('/\\$board/:type/:id', noCache, function (req, res, next) {
+  if (!boardStatus) {
+    boardStatus = JSON.parse(fs.readFileSync(boardFileName, 'utf8'));
+    for (let id in mockGetStatus) {
+      boardStatus[id] = mockGetStatus[id](boardStatus[id]);
+    }
+  }
+
+  let id = req.params.type + '/' + req.params.id;
+
+  if (Object.keys(req.query).length > 0) {
+    // incoming action
+    if (mockSetAction[id])
+      boardStatus[id] = mockSetAction[id](boardStatus[id], req.query);
+    debugIoT(boardStatus[id]);
+    res.send();
+
+  } else {
+    if (mockGetStatus[id])
+      boardStatus[id] = mockGetStatus[id](boardStatus[id]);
+    debugIoT(boardStatus[id]);
+    res.type('application/json');
+    res.send(JSON.stringify(boardStatus[id], null, 2));
+  }
+  // next();
+});
+
+
+app.get(/^\/\$board$/, noCache, function (req, res, next) {
+  if (!boardStatus)
+    boardStatus = JSON.parse(fs.readFileSync(boardFileName, 'utf8'));
+
+  for (let id in mockGetStatus) {
+    boardStatus[id] = mockGetStatus[id](boardStatus[id]);
+  }
+
+  // debugIoT(boardStatus);
+  res.type('application/json');
+  res.send(JSON.stringify(boardStatus, null, 2));
+});
+
+
+// ===== serving file system 
+
 
 app.delete("/:fn", function (req, res, next) {
   var filename = req.params.fn;
-  debug("DELETE: %s", filename);
-  debug("DELETE: not implemented.");
+  debugIoT("DELETE: %s", filename);
+  debugIoT("DELETE: not implemented.");
   res.send("done");
 });
 
@@ -112,17 +236,16 @@ app.use(express.static(__dirname, {
 
 // ----- enable error reports -----
 app.use(function (err, req, res, next) {
-  debug(err.stack);
+  debugIoT(err.stack);
   res.status(500).send("Something broke!");
 });
 
 // // ----- enable 404 responses -----
 // app.use(function(req, res, next) {
-//   debug("server.js: 404 request occured.");
+//   debugIoT("server.js: 404 request occured.");
 //   res.status(404).send("Sorry cant find that!");
 // });
 
 app.listen(3123, () => {
-  debug("IoT server is listening on port 3123!");
-  debug("open http://localhost:3123/");
+  debugIoT("open http://localhost:3123/");
 });
