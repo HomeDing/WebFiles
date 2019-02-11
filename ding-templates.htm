@@ -142,10 +142,29 @@
   </div>
 
   <div class="block">
-    <img src="/i/digitalout.svg" style="float: left;height:5rem;margin-right:1rem">
-    <span class="u-bool" u-active='value' style="position: absolute;
-        top: 4.4rem;right: 0.4rem;height: 1.4rem;width: 1.4rem;border-radius: 0.7rem;" ></span>
+    <img src="/i/digitalout.svg" style="float:left;height:4rem;margin-right:1rem">
+    <span class="u-bool" u-active='value' style="position: absolute;top:4rem;right:0.4rem;" ></span>
   </div>
+</div>
+
+<div class='col card' u-control='displaydot' id='${id}' microID="${id}" u-behavior='generic'>
+  <div class="block header">
+    <h2><img src="/i/digitalout.svg" class='Icon'/>${id}</h2>
+      <h4 u-text='description'></h4>
+      <span class="activeState" u-active='active'></span>
+      <span class="setconfig"></span>
+  </div>
+
+  <div class="block xElement">
+    <div><label class="fixed">value:</label><span class='Value' u-text='value'></span></div>
+    <span class="u-bool" u-active='value' style="position: absolute;top:4rem;right:0.4rem;" ></span>
+  </div>
+  <div class="block config">
+    <div><label class="fixed">x:</label><span class='Value' u-text='x'></span></div>
+    <div><label class="fixed">y:</label><span class='Value' u-text='y'></span></div>
+    <div><label class="fixed">loglevel:</label><span class='Value' u-text='loglevel'></span></div>
+  </div>
+
 </div>
 
 <div class='col card' u-control='pwmout' id='${id}' u-behavior='pwmout' microID='${id}'>
@@ -184,13 +203,13 @@
 </script>
 
 <div class='col card' u-control='value' id='${id}' u-behavior='generic' microID='${id}'>
-    <div class="block header">
-      <h2><img src="/i/${type}.svg" class='Icon' />${id}</h2>
-        <h4 u-text='description'></h4>
-        <span class="activeState" u-active='active'></span>
-        <span class="setconfig"></span>
-    </div>
-    <div class="block Element">
-      <span u-text="value" style="position:absolute;font-size:2rem;width:3em;text-align: right;height:1em;right:0.4em"></span>
-    </div>
+  <div class="block header">
+    <h2><img src="/i/${type}.svg" class='Icon' />${id}</h2>
+      <h4 u-text='description'></h4>
+      <span class="activeState" u-active='active'></span>
+      <span class="setconfig"></span>
   </div>
+  <div class="block Element">
+    <span u-text="value" style="position:absolute;font-size:2rem;width:3em;text-align: right;height:1em;right:0.4em"></span>
+  </div>
+</div>

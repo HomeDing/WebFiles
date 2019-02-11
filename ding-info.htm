@@ -22,20 +22,6 @@
       height: 1.5em;
     }
 
-    .Element .Key,
-    .Element .Value {
-      display: inline-block;
-      height: 1.4em;
-      white-space: nowrap;
-      overflow: hidden;
-    }
-
-    .Element .Key {
-      width: 5.2rem;
-      margin-right: 0.1rem;
-      text-align: right;
-    }
-
     .activeState {
       position: absolute;
       top: 0.4rem;
@@ -146,7 +132,8 @@
         </div>
       </div>
 
-      <div u-control='kv' class='KV'><span class='Key'>${key}:</span><span class='Value' u-text='${key}'></span></div>
+      <div u-control='xkv' class='KV'><span class='Key'>${key}:</span><span class='Value' u-text='${key}'></span></div>
+      <div u-control='kv' class="KV"><label class="fixed">${key}:</label><span u-text='${key}'></span></div>
 
       <div class='col card' u-control='schedule' id='${id}' u-behavior='generic' microID='${id}'>
         <div class="block header">
@@ -202,6 +189,7 @@
               </div>
               <label value="1">on</label>
             </div>
+            <span class="u-bool" u-active='value' style="position: absolute;top:4.4rem;right:0.4rem;" ></span>
 
           </div>
         </div>
