@@ -186,7 +186,27 @@
             <button class="setnow" style="min-width: 0;">set</button>
           </div>
         </div>
+
+        <div class='col card' u-control='switch' id='${id}' u-behavior='switch' microID='${id}'>
+          <div class="block header">
+            <h2><img src="/i/switch.svg" class='Icon' />${id}</h2>
+              <h4 u-text='description'></h4>
+              <span class="activeState" u-active='active'></span>
+              <span class="setconfig"></span>
+          </div>
+          <div class="block">
+            <div id="us" class="u-switch" u-active='value'>
+              <label value="0">off</label>
+              <div class="box">
+                <div class="handle"></div>
+              </div>
+              <label value="1">on</label>
+            </div>
+
+          </div>
+        </div>
       </div>
+
     </div>
 
 
@@ -354,6 +374,25 @@
           }
         }
       }); // register dstime Element Behavior
+
+
+      jcl.registerBehavior("switch", {
+        inheritFrom: GenericElementBehavior,
+
+        init: function (e) {
+          GenericElementBehavior.init.call(this);
+          this._switchObj = this.querySelector(".u-switch");
+        },
+
+        onclick: function (e) {
+          var src = e.srcElement;
+          while ((src != null) && (src != this) && (src != this._switchObj))
+            src = src.parentElement;
+          if (src == this._switchObj) {
+            dispatch(this.id, "toggle", 1);
+          }
+        }
+      }); // register switch Element Behavior
     </script>
 
 </body>

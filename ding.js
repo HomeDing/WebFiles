@@ -23,7 +23,7 @@ var GenericElementBehavior = {
     }
 
     // flags
-    ['span'].forEach(function (elType) {
+    ['span','div'].forEach(function (elType) {
       this.querySelectorAll(elType + "[u-active='" + key + "']").forEach(function (el) {
         var b = toBool(value);
         el.setAttribute('value', (b ? 1 : 0));
