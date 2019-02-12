@@ -42,7 +42,7 @@
   },
 
   "displaydot": {
-    "sys": "true",
+    "sys": "false",
     "properties": ["description", "loglevel", "x", "y"],
     "events": ["value", "clear"],
     "actions": []
