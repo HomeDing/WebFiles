@@ -1,7 +1,7 @@
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="126" height="200" >
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="256" height="400" >
     <style>
         #panel { font: 9px sans-serif } #templates { display:none} rect.block {stroke:black; stroke-width:1px} .header { fill:white} .prop { fill:#eeeeee }
-        .event { fill:#eeeeee } .action { fill:#FFdddd } .in, .out {fill:rgb(255,0,0);stroke:none}
+        .event { fill:#eeeeee } .action { fill:#ddFFdd } .in, .out {fill:rgb(0,128,0);stroke:none}
     </style>
     <g id="templates">
         <g id="propertyTemplate" class="block" transform="translate(0,12)">
@@ -19,7 +19,7 @@
             <text width="112" height="12" x="3" y="9"/>
         </g>
     </g>
-    <g id="panel" transform="translate(8,8)">
+    <g id="panel" transform="translate(8,8) scale(2)">
         <g id="header">
             <rect width="12" height="12" class="header block"/>
             <image xlink:href="i/dht.svg" height="10" width="10" x="1" y="1"/>
