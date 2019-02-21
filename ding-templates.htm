@@ -1,4 +1,4 @@
-<div class='col card' u-control='dht' id='${id}' microID="${id}" u-behavior='generic'>
+<div class='col card' u-control='dht' id='${id}' microID="${id}" u-is='generic'>
   <div class="block">
     <img title="${id}" src="/i/dht.svg" style="float: left;height:5rem;margin-right:1rem"/>
     <span class="activeState" u-active='active'></span>
@@ -26,7 +26,7 @@
   </div>
 </div>
 
-<div class='col card' u-control='timer' id='${id}' microID='${id}' u-behavior='timer'>
+<div class='col card' u-control='timer' id='${id}' microID='${id}' u-is='timer'>
   <div class="block header">
     <h2><img src="/i/timer.svg" class='Icon'/>${id}</h2>
       <h4 u-text='description'></h4>
@@ -100,7 +100,7 @@
   }); // register Timer Element Behavior
 </script>
 
-<div class='col card' u-control='button' id='${id}' microID="${id}" u-behavior='button'>
+<div class='col card' u-control='button' id='${id}' microID="${id}" u-is='button'>
   <div class="block header">
     <h2><img src="/i/button.svg" class='Icon' >${id}</h2>
       <h4 u-text='description'></h4>
@@ -133,7 +133,7 @@
   }); // register Button Element Behavior
 </script>
 
-<div class='col card' u-control='digitalout' id='${id}' microID="${id}" u-behavior='generic'>
+<div class='col card' u-control='digitalout' id='${id}' microID="${id}" u-is='generic'>
   <div class="block header">
     <h2><img src="/i/digitalout.svg" class='Icon'/>${id}</h2>
       <h4 u-text='description'></h4>
@@ -147,7 +147,7 @@
   </div>
 </div>
 
-<div class='col card' u-control='displaydot' id='${id}' microID="${id}" u-behavior='generic'>
+<div class='col card' u-control='displaydot' id='${id}' microID="${id}" u-is='generic'>
   <div class="block header">
     <h2><img src="/i/digitalout.svg" class='Icon'/>${id}</h2>
       <h4 u-text='description'></h4>
@@ -167,7 +167,7 @@
 
 </div>
 
-<div class='col card' u-control='pwmout' id='${id}' u-behavior='pwmout' microID='${id}'>
+<div class='col card' u-control='pwmout' id='${id}' u-is='pwmout' microID='${id}'>
   <div class="block header">
     <h2><img src="/i/pwmout.svg" class='Icon' />${id}</h2>
       <h4 u-text='description'></h4>
@@ -202,7 +202,7 @@
   }); // register pwmout Element Behavior
 </script>
 
-<div class='col card' u-control='value' id='${id}' u-behavior='generic' microID='${id}'>
+<div class='col card' u-control='value' id='${id}' u-is='generic' microID='${id}'>
   <div class="block header">
     <h2><img src="/i/${type}.svg" class='Icon' />${id}</h2>
       <h4 u-text='description'></h4>

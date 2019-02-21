@@ -170,19 +170,20 @@ var MicroJCL = function () {
   }; // loadFile()
 
 
-  // attach the behavior specified by the "u-behavior" attribute 
-  this.attach = function (obj) {
-    var mb = obj.getAttribute('u-behavior');
+  // extend the element by the registered behavior mixin.
+  // The "u-is" attribute specifies what mixin should be used.
+  this.attach = function (elem) {
+    var mb = elem.getAttribute('u-is');
     var bc = this._behaviors[mb];
-    if (mb && bc) {
-      this.loadBehavior(obj, bc);
+    if (bc) {
+      this.loadBehavior(elem, bc);
     }
   } // attach()
 
   // attach all behaviors of the element and nested elements
   this.attachAll = function (root) {
     this.attach(root);
-    root.querySelectorAll("[u-behavior]").forEach(this.attach.bind(this));
+    root.querySelectorAll("[u-is]").forEach(this.attach.bind(this));
   } // attachAll()
 
 
@@ -213,10 +214,10 @@ var MicroJCL = function () {
       } // if
     }
 
-    var n = obj.firstChild;
-    while (n) {
-      this._setPlaceholders(n, props);
-      n = n.nextSibling;
+    var c = obj.firstElementChild;
+    while (c) {
+      this._setPlaceholders(c, props);
+      c = c.nextElementSibling;
     }
   } // _setPlaceholders
 
@@ -293,6 +294,10 @@ var MicroJCL = function () {
   this.registerBehavior = function (microType, behavior) {
     this._behaviors[microType] = behavior;
   };
+
+  this.define = function (name, mixin) {
+    this._behaviors[name] = mixin;
+  }
 
   this.onunload = function (evt) {
     for (var n in this.List) {
