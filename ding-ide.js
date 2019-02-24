@@ -215,8 +215,10 @@ window.addEventListener("load", function () {
 function jsonCheck() {
   var fName = activeFileObj.innerText;
   if (!fName.toLowerCase().endsWith(".json")) {
-    checkerObj.innerText = "--";
-    checkerObj.className = "";
+    if (checkerObj.textContent != "--") {
+      checkerObj.textContent = "--";
+      checkerObj.className = "";
+    }
 
   } else {
     var t = contentObj.innerText;
@@ -230,12 +232,12 @@ function jsonCheck() {
         o = null;
       } // if
     } catch (e) {
-      checkerObj.innerText = e.message;
+      checkerObj.textContent = e.message;
       checkerObj.className = "invalid";
     }
 
     if (o !== null) {
-      checkerObj.innerText = "valid";
+      checkerObj.textContent = "valid";
       checkerObj.className = "valid";
     } else {
       // checkerObj.innerText = "invalid";

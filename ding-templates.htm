@@ -51,55 +51,6 @@
   </div>
 </div>
 
-<script>
-  jcl.registerBehavior("timer", {
-    inheritFrom: GenericElementBehavior,
-    wt: 0,
-    pt: 0,
-    ct: 0,
-    time: 0,
-
-    _timeToSec: function (v) {
-      v = v.toLowerCase();
-      if (v.endsWith('h')) {
-        v = parseInt(v, 10) * 60 * 60;
-      } else if (v.endsWith('m')) {
-        v = parseInt(v, 10) * 60;
-      } else if (v.endsWith('s')) {
-        v = parseInt(v, 10);
-      } // if
-      return (v);
-    },
-
-    newData: function (path, key, value) {
-      // alert(key);
-      if (key == "waittime") {
-        this.wt = this._timeToSec(value);
-      } else if (key == "pulsetime") {
-        this.pt = this._timeToSec(value);
-      } else if (key == "cycletime") {
-        this.ct = this._timeToSec(value);
-      } else if (key == "time") {
-        this.time = this._timeToSec(value);
-      }
-
-      if (this.ct < 0 + this.wt + this.pt)
-        this.ct = 0 + this.wt + this.pt
-
-      // update bars
-      if (this.ct > 0) {
-        var el = this.querySelector(".u-bar");
-        var f = el.clientWidth / this.ct;
-        var pto = el.querySelector(".pulse");
-        pto.style.left = Math.floor(this.wt * f) + "px";
-        pto.style.width = Math.floor(this.pt * f) + "px";
-        var cto = el.querySelector(".current");
-        cto.style.width = Math.floor(this.time * f) + "px";
-      }
-    } // newData()
-  }); // register Timer Element Behavior
-</script>
-
 <div class='col card' u-control='button' id='${id}' microID="${id}" u-is='button'>
   <div class="block header">
     <h2><img src="/i/button.svg" class='Icon' >${id}</h2>
@@ -112,26 +63,6 @@
   </div>
 </div>
 
-<script>
-  jcl.registerBehavior("button", {
-    inheritFrom: GenericElementBehavior,
-
-    onpointerdown: function (e) {
-      var src = e.srcElement;
-      if (src.classList.contains('u-button')) {
-        src.classList.add('active');
-        dispatch(this.microid, 'value', 1);
-      } // if
-    },
-    onpointerup: function (e) {
-      var src = e.srcElement;
-      if (src.classList.contains('u-button')) {
-        src.classList.remove('active');
-        dispatch(this.microid, 'value', 0);
-      } // if
-    }
-  }); // register Button Element Behavior
-</script>
 
 <div class='col card' u-control='digitalout' id='${id}' microID="${id}" u-is='generic'>
   <div class="block header">
@@ -181,26 +112,6 @@
     </div>
   </div>
 </div>
-
-<script>
-  jcl.registerBehavior("pwmout", {
-    inheritFrom: GenericElementBehavior,
-    range: 255,
-    init: function () {
-      hub.subscribe(this.microid + "?*", this.newValue.bind(this));
-    },
-    newValue: function (path, key, value) {
-      if (key == "value") {
-        var o = this.querySelector(".u-level");
-        var h = o.offsetHeight;
-        var bh = h * value / this.range;
-        if (bh > h - 1) bh = h - 1;
-        if (bh < 1) bh = 1;
-        o.style.borderBottomWidth = bh + "px";
-      }
-    }
-  }); // register pwmout Element Behavior
-</script>
 
 <div class='col card' u-control='value' id='${id}' u-is='generic' microID='${id}'>
   <div class="block header">

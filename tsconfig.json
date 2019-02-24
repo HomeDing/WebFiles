@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "outDir": "dist",
+    "outFile": "micro.js",
+    "allowJs": true,
+    "experimentalDecorators": true,
+    "lib": [
+      "es6",
+      "dom",
+      "dom.iterable"
+    ],
+
+    "sourceMap": true,
+    "newLine": "LF"
+
+  },
+  "include": [
+    "src/*.ts"
+  ],
+  "exclude": []
+
+}

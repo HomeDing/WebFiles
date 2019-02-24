@@ -55,6 +55,18 @@
     "actions": ["onminute", "ontimestamp", "ontime", "ondate"]
   },
 
+  "dht": {
+    "properties": ["description", "loglevel", "type", "pin", "readtime", "resendtime"],
+    "events": [],
+    "actions": ["ontemperature", "onhumidity"]
+  },
+
+  "bme680": {
+    "properties": ["description", "loglevel", "address", "readtime"],
+    "events": [],
+    "actions": ["ontemperature", "onhumidity", "onpressure", "ongas"]
+  },
+
   "analog": {
     "properties": ["description", "loglevel", "readtime", "hysteresis", "reference"],
     "events": [],

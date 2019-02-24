@@ -101,7 +101,6 @@
   <script src="es6-promise.auto.js"></script>
   <!-- <script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.auto.js"></script> -->
   <script src="micro.js"></script>
-  <script src="ding.js"></script>
 </head>
 
 <body>
@@ -161,226 +160,178 @@
             <label class="fixed">ReadTime:</label>
             <input u-value="readtime" type="time" step="1">
           </div>
-          <div>
-            <label class="fixed">Now:</label>
-            <span u-text="now"></span>
-          </div>
-        </div>
-        <div class="block config">
-          <label class="fixed">set Time:</label>
-          <span class="now"></span>
-          <button class="setnow" style="min-width: 0;">set</button>
-        </div>
-      </div>
-
-      <div class='col card' u-control='switch' id='${id}' u-is='switch' microID='${id}'>
-        <div class="block header">
-          <h2><img src="/i/switch.svg" class='Icon' />${id}</h2>
-            <h4 u-text='description'></h4>
-            <span class="activeState" u-active='active'></span>
-            <span class="setconfig"></span>
-        </div>
-        <div class="block">
-          <div id="us" class="u-switch" u-active='value'>
-            <label value="0">off</label>
-            <div class="box">
-              <div class="handle"></div>
+            <div>
+              <label class="fixed">Now:</label>
+              <span u-text="now"></span>
             </div>
-            <label value="1">on</label>
           </div>
-          <span class="u-bool" u-active='value' style="position: absolute;top:4.4rem;right:0.4rem;" ></span>
+          <div class="block config">
+            <label class="fixed">set Time:</label>
+            <span class="now"></span>
+            <button class="setnow" style="min-width: 0;">set</button>
+          </div>
+        </div>
 
+        <div class='col card' u-control='switch' id='${id}' u-is='switch' microID='${id}'>
+          <div class="block header">
+            <h2><img src="/i/switch.svg" class='Icon' />${id}</h2>
+              <h4 u-text='description'></h4>
+              <span class="activeState" u-active='active'></span>
+              <span class="setconfig"></span>
+          </div>
+          <div class="block">
+            <div id="us" class="u-switch" u-active='value'>
+              <label value="0">off</label>
+              <div class="box">
+                <div class="handle"></div>
+              </div>
+              <label value="1">on</label>
+            </div>
+            <span class="u-bool" u-active='value' style="position: absolute;top:4.4rem;right:0.4rem;" ></span>
+
+          </div>
         </div>
       </div>
+
     </div>
 
-  </div>
 
 
+    <div id="modal" class="hidden">
+      <div id="modalBack"></div>
+      <div onclick='closeModal()' style="position:absolute;background-color: cyan;padding:1rem">X</div>
+      <div id="modalContainer" style="width:260px;height:260px">Hello, this is modal</div>
+    </div>
 
-  <div id="modal" class="hidden">
-    <div id="modalBack"></div>
-    <div onclick='closeModal()' style="position:absolute;background-color: cyan;padding:1rem">X</div>
-    <div id="modalContainer" style="width:260px;height:260px">Hello, this is modal</div>
-  </div>
+    <script>
+      var eObj = document.getElementById('atype/aname');
+      var panelObj = document.getElementById('panel');
+      var addObj = document.getElementById('addButton');
+      var sysObj = document.getElementById('sysButton');
 
-  <script>
-    var eObj = document.getElementById('atype/aname');
-    var panelObj = document.getElementById('panel');
-    var addObj = document.getElementById('addButton');
-    var sysObj = document.getElementById('sysButton');
+      var elementDef;
+      var params = getHashParams({
+        sys: false
+      });
+      window.addEventListener("hashchange", function () {
+        window.location.reload();
+      });
 
-    var elementDef;
-    var params = getHashParams({
-      sys: false
-    });
-    window.addEventListener("hashchange", function () {
-      window.location.reload();
-    });
+      function openModal(tmplName, data) {
+        var modalObj = document.getElementById('modal');
+        var containerObj = document.getElementById('modalContainer');
 
-    function openModal(tmplName, data) {
-      var modalObj = document.getElementById('modal');
-      var containerObj = document.getElementById('modalContainer');
+        // open Dialog, replace existing.
+        containerObj.innerHTML = "";
+        var dlgObj /*:HTMLDivElement*/ = micro.insertTemplate(containerObj, tmplName);
+        modalObj.classList.remove('hidden');
+        containerObj.style.width = dlgObj.scrollWidth + "px";
+        containerObj.style.height = dlgObj.scrollHeight + "px";
 
-      // open Dialog, replace existing.
-      containerObj.innerHTML = "";
-      var dlgObj /*:HTMLDivElement*/ = micro.insertTemplate(containerObj, tmplName);
-      modalObj.classList.remove('hidden');
-      containerObj.style.width = dlgObj.scrollWidth + "px";
-      containerObj.style.height = dlgObj.scrollHeight + "px";
+      } // openModal
 
-    } // openModal
-
-    function closeModal(data) {
-      var modalObj = document.getElementById('modal');
-      var containerObj = document.getElementById('modalContainer');
-      modalObj.classList.add('hidden');
-      containerObj.innerHTML = '';
-    } // closeModal()
-
-
-    sysObj.addEventListener("click", function (evt) {
-      params.sys = !toBool(params.sys);
-      window.location.hash = "sys=" + params.sys;
-    });
-
-    addObj.addEventListener("click", function (evt) {
-      openModal('modalNewElement');
-    });
+      function closeModal(data) {
+        var modalObj = document.getElementById('modal');
+        var containerObj = document.getElementById('modalContainer');
+        modalObj.classList.add('hidden');
+        containerObj.innerHTML = '';
+      } // closeModal()
 
 
-    function createElement(path, key, value) {
-      var hElem = document.getElementById(path);
-      if (!hElem) {
-        var t = path.split('/')[1];
-        var p = {
-          id: path,
-          type: t
-        };
+      sysObj.addEventListener("click", function (evt) {
+        params.sys = !toBool(params.sys);
+        window.location.hash = "sys=" + params.sys;
+      });
 
-        if (toBool(params.sys) || (!elementDef[t]) || (toBool(elementDef[t].sys) == false)) {
-          var e = jcl.insertTemplate(panelObj, t, p);
-          if (!e)
-            var e = jcl.insertTemplate(panelObj, "generic", p);
-        } // if
-      } // if
-    } // createElement()
+      addObj.addEventListener("click", function (evt) {
+        openModal('modalNewElement');
+      });
 
-    function addValueInfo(path, key, value) {
-      var hText;
-      if ((key) && (key != 'active') && (path.match(/^\/.*\/.*/))) {
+
+      function createElement(path, key, value) {
         var hElem = document.getElementById(path);
-        if (hElem) {
-          var elem = hElem.querySelector("[u-text='" + key + "']");
-          if (!elem) {
-            hElem = hElem.querySelector(".Element");
-            if (hElem) {
-              var p = {
-                key: key
-              };
-              jcl.insertTemplate(hElem, "kv", p);
-            }
+        if (!hElem) {
+          var t = path.split('/')[1];
+          var p = {
+            id: path,
+            type: t
+          };
+
+          if (toBool(params.sys) || (!elementDef[t]) || (toBool(elementDef[t].sys) == false)) {
+            var e = micro.insertTemplate(panelObj, t, p);
+            if (!e)
+              var e = micro.insertTemplate(panelObj, "generic", p);
           } // if
         } // if
-      } // if
-    } // addValueInfo
+      } // createElement()
 
-    hub.subscribe("/*/*", createElement);
-    hub.subscribe("/**/**?**", addValueInfo);
+      function addValueInfo(path, key, value) {
+        var hText;
+        if ((key) && (key != 'active') && (path.match(/^\/.*\/.*/))) {
+          var hElem = document.getElementById(path);
+          if (hElem) {
+            var elem = hElem.querySelector("[u-text='" + key + "']");
+            if (!elem) {
+              hElem = hElem.querySelector(".Element");
+              if (hElem) {
+                var p = {
+                  key: key
+                };
+                micro.insertTemplate(hElem, "kv", p);
+              }
+            } // if
+          } // if
+        } // if
+      } // addValueInfo
 
-    function updateState() {
-      fetch('/$board')
-        .then(function (result) {
-          return (result.json())
-        }).then(function (json) {
-          hub.publishObj(json);
+      hub.subscribe("/*/*", createElement);
+      hub.subscribe("/**/**?**", addValueInfo);
+
+      function updateState() {
+        fetch('/$board')
+          .then(function (result) {
+            return (result.json())
+          }).then(function (json) {
+            hub.publishObj(json);
+          });
+      } // updateState()
+
+      function init() {
+        // load templates from other file.
+        var p0 = Promise.all([
+          micro.loadFile('/ding-templates.htm'),
+          micro.loadFile('/ding-info-new.htm')
+        ]);
+
+        // element definitions -> env.json -> config.json
+        var p1 = fetch('/elements.json')
+          .then(function (result) {
+            return (result.json())
+          }).then(function (json) {
+            elementDef = json;
+
+            return (fetch('/env.json'));
+          }).then(function (result) {
+            return (result.json())
+          }).then(function (json) {
+            hub.publishObj(json);
+
+            return (fetch('/config.json'));
+          }).then(function (result) {
+            return (result.json())
+          }).then(function (json) {
+            hub.publishObj(json);
+          });
+
+        Promise.all([p0, p1]).then(function () {
+          updateState();
+          window.setInterval(updateState, 3800);
         });
-    } // updateState()
+      } // init()
 
-    function init() {
-      // load templates from other file.
-      var p0 = Promise.all([
-        jcl.loadFile('/ding-templates.htm'),
-        jcl.loadFile('/ding-info-new.htm')
-      ]);
+      window.addEventListener('load', init);
 
-      // element definitions -> env.json -> config.json
-      var p1 = fetch('/elements.json')
-        .then(function (result) {
-          return (result.json())
-        }).then(function (json) {
-          elementDef = json;
-
-          return (fetch('/env.json'));
-        }).then(function (result) {
-          return (result.json())
-        }).then(function (json) {
-          hub.publishObj(json);
-
-          return (fetch('/config.json'));
-        }).then(function (result) {
-          return (result.json())
-        }).then(function (json) {
-          hub.publishObj(json);
-        });
-
-      Promise.all([p0, p1]).then(function () {
-        updateState();
-        window.setInterval(updateState, 800);
-      });
-    } // init()
-
-    window.addEventListener('load', init);
-
-    jcl.registerBehavior("dstime", {
-      inheritFrom: GenericElementBehavior,
-
-      isoDate: function () {
-        function pad02(num) {
-          return (((num < 10) ? '0' : '') + num);
-        };
-
-        var d = new Date();
-        var ds = d.getFullYear() + '-' + pad02(d.getMonth() + 1) + '-' + pad02(d.getDate()) +
-          ' ' + pad02(d.getHours()) + ':' + pad02(d.getMinutes()) + ':' + pad02(d.getSeconds());
-        return (ds);
-      },
-
-      init: function (e) {
-        GenericElementBehavior.init.call(this);
-        this._nowObj = this.querySelector(".now");
-        window.setInterval(function () {
-          this._nowObj.textContent = this.isoDate();
-        }.bind(this), 200);
-      },
-
-      onclick: function (e) {
-        var src = e.srcElement;
-        if (src.classList.contains("setnow")) {
-          dispatch(this.id, "time", this.isoDate())
-        }
-      }
-    }); // register dstime Element Behavior
-
-
-    jcl.registerBehavior("switch", {
-      inheritFrom: GenericElementBehavior,
-
-      init: function (e) {
-        GenericElementBehavior.init.call(this);
-        this._switchObj = this.querySelector(".u-switch");
-      },
-
-      onclick: function (e) {
-        var src = e.srcElement;
-        while ((src != null) && (src != this) && (src != this._switchObj))
-          src = src.parentElement;
-        if (src == this._switchObj) {
-          dispatch(this.id, "toggle", 1);
-        }
-      }
-    }); // register switch Element Behavior
-  </script>
+</script>
 
 </body>
 
