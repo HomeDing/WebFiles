@@ -28,6 +28,7 @@ function MicroControl(isSelector: string) {
 // @MicroControl("no-base")
 class MicroBaseControl implements ControlInterface {
   el: HTMLElement;
+  _attachedBehavior: ControlInterface;
   constructor() {}
   connectedCallback(el: HTMLElement): void {
     this.el = el;

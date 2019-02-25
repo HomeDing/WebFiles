@@ -25,66 +25,63 @@ var __assign = (this && this.__assign) || Object.assign || function(t) {
 // micro.js
 // Collection of functions to help managing complex JSON objects.
 // Only works with JSON compatible objects using Arrays, Object, String, Number, Boolean., no functions !
-// See also:
-// http://goessner.net/articles/JsonPath/
-var MicroHub = function () {
-    this._registrations = {};
-    this._registrationsId = 0;
+var MicroHub = (function () {
+    function MicroHub() {
+        this._registrations = {};
+        this._registrationsId = 0;
+    }
     // subscriptions to changes in the Event Data
     /**
      * @param {string} matchPath expression for the registration
-     * @param {*} callback
+     * @param {*} fCallback
      */
-    this.subscribe = function (matchPath, callback) {
+    MicroHub.prototype.subscribe = function (matchPath, fCallback) {
         var h = this._registrationsId;
         // treating upper/lowercase equal is not clearly defined, but true with domain names.
         var rn = matchPath.toLocaleLowerCase();
         // build a regexp pattern that will match the event names
-        rn =
-            "^" +
-                rn
-                    .replace(/(\[|\]|\/|\?)/g, "\\$1")
-                    .replace(/\*\*/g, "\\S{0,}")
-                    .replace(/\*/g, "[^/?]*") +
-                "$";
-        // console.log(matchPath, rn);
+        var re = "^" +
+            rn
+                .replace(/(\[|\]|\/|\?)/g, "\\$1")
+                .replace(/\*\*/g, "\\S{0,}")
+                .replace(/\*/g, "[^/?]*") +
+            "$";
+        // console.log(matchPath, re);
         var newEntry = {
             id: h,
-            match: rn,
-            callback: callback
+            match: RegExp(re),
+            callback: fCallback
         };
         this._registrations[h] = newEntry;
         this._registrationsId++;
         return h;
     }; // subscribe
-    this.unsubscribe = function (h) {
+    MicroHub.prototype.unsubscribe = function (h) {
         this._registrations[h] = null;
     }; // unsubscribe
-    this.publishObj = function (obj) {
-        var _this = this;
+    MicroHub.prototype.publishObj = function (obj) {
         jsonParse(obj, function (path, key, value) {
-            _this.publishValue(path, key ? key.toLowerCase() : null, value);
-        });
+            this.publishValue(path, key ? key.toLowerCase() : null, value);
+        }.bind(this));
     }; // publishObj()
-    this.publishValue = function (path, key, value) {
+    MicroHub.prototype.publishValue = function (path, key, value) {
         var fullPath = path + (key ? "?" + key : "");
         if (fullPath) {
             fullPath = fullPath.toLocaleLowerCase();
-            for (var h in this._registrations) {
-                var r = this._registrations[h];
-                if (r && fullPath.match(r.match)) {
-                    r.callback.call(r.scope, path, key, value);
-                } // if
-            } // for
+            Object.values(this._registrations).forEach(function (r) {
+                if (fullPath.match(r.match))
+                    r.callback(path, key, value);
+            });
         } // if
     }; // publish
-    this.onunload = function (evt) {
+    MicroHub.prototype.onunload = function (evt) {
         for (var n in this._registrations) {
             this._registrations[n].callback = null;
             this._registrations[n] = null;
         }
     }; // onunload
-}; // MicroEvents class
+    return MicroHub;
+}()); // MicroEvents class
 var hub = new MicroHub();
 window.addEventListener("unload", hub.onunload.bind(hub), false);
 var MicroRegistry = (function () {
@@ -220,12 +217,9 @@ var MicroRegistry = (function () {
                 } // if
             } // for
             obj._attachedBehavior = behavior;
-            if (obj.init)
-                obj.init();
-            if (obj.connectedCallback)
-                obj.connectedCallback(obj);
+            obj.connectedCallback(obj);
             this.List.push(obj);
-        }
+        } // if
     }; // loadBehavior
     /// Find the parent node of a given object that has any behavior attached.
     MicroRegistry.prototype.FindBehaviorElement = function (obj) {

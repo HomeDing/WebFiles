@@ -5,79 +5,91 @@
 // See also:
 // http://goessner.net/articles/JsonPath/
 
-var MicroHub = function() {
-  this._registrations = {};
-  this._registrationsId = 0;
+interface HubCallback {
+  (path: string, key: string, value: string): void;
+}
+
+interface HubEntry {
+  id: number;
+  match: RegExp;
+  callback: HubCallback;
+}
+
+interface HubEntryList {
+  [s: number]: HubEntry;
+}
+
+class MicroHub {
+  _registrations: HubEntryList = {};
+  _registrationsId: number = 0;
 
   // subscriptions to changes in the Event Data
   /**
    * @param {string} matchPath expression for the registration
-   * @param {*} callback
+   * @param {*} fCallback
    */
-  this.subscribe = function(matchPath, callback) {
+  subscribe(matchPath: string, fCallback: HubCallback): number {
     var h = this._registrationsId;
 
     // treating upper/lowercase equal is not clearly defined, but true with domain names.
     var rn = matchPath.toLocaleLowerCase();
 
     // build a regexp pattern that will match the event names
-    rn =
+    let re =
       "^" +
       rn
         .replace(/(\[|\]|\/|\?)/g, "\\$1")
         .replace(/\*\*/g, "\\S{0,}")
         .replace(/\*/g, "[^/?]*") +
       "$";
-    // console.log(matchPath, rn);
+    // console.log(matchPath, re);
 
-    var newEntry = {
+    var newEntry: HubEntry = {
       id: h,
-      match: rn,
-      callback: callback
+      match: RegExp(re),
+      callback: fCallback
     };
     this._registrations[h] = newEntry;
 
     this._registrationsId++;
     return h;
-  }; // subscribe
+  } // subscribe
 
-  this.unsubscribe = function(h) {
+  unsubscribe(h: number) {
     this._registrations[h] = null;
-  }; // unsubscribe
+  } // unsubscribe
 
-  this.publishObj = function(obj) {
-    var _this = this;
-    jsonParse(obj, function(path, key, value) {
-      _this.publishValue(path, key ? key.toLowerCase() : null, value);
-    });
-  }; // publishObj()
+  publishObj(obj: any) {
+    jsonParse(
+      obj,
+      function(path: string, key: string, value: string) {
+        this.publishValue(path, key ? key.toLowerCase() : null, value);
+      }.bind(this)
+    );
+  } // publishObj()
 
-  this.publishValue = function(path, key, value) {
+  publishValue(path: string, key: string, value: string) {
     var fullPath = path + (key ? "?" + key : "");
 
     if (fullPath) {
       fullPath = fullPath.toLocaleLowerCase();
 
-      for (var h in this._registrations) {
-        var r = this._registrations[h];
-        if (r && fullPath.match(r.match)) {
-          r.callback.call(r.scope, path, key, value);
-        } // if
-      } // for
+      Object.values(this._registrations).forEach(r => {
+        if (fullPath.match(r.match)) r.callback(path, key, value);
+      });
     } // if
-  }; // publish
+  } // publish
 
-  this.onunload = function(evt) {
+  onunload(evt: Event) {
     for (var n in this._registrations) {
       this._registrations[n].callback = null;
       this._registrations[n] = null;
     }
-  }; // onunload
-}; // MicroEvents class
+  } // onunload
+} // MicroEvents class
 
 var hub = new MicroHub();
 window.addEventListener("unload", hub.onunload.bind(hub), false);
-
 
 class MicroRegistry {
   protected _tco: HTMLElement; // Templates Container Object
@@ -101,7 +113,7 @@ class MicroRegistry {
   /**
    * @param {string} fName
    */
-  loadFile(fName) {
+  loadFile(fName: string): Promise<void> {
     var scope = this;
     var ret = fetch(fName)
       .then(function(result) {
@@ -116,7 +128,7 @@ class MicroRegistry {
 
   // extend the element by the registered behavior mixin.
   // The "u-is" attribute specifies what mixin should be used.
-  attach(elem) {
+  attach(elem: HTMLElement): void {
     var mb = elem.getAttribute("u-is");
     var bc = this._registry[mb];
     if (bc) {
@@ -125,7 +137,7 @@ class MicroRegistry {
   } // attach()
 
   // attach all behaviors of the element and nested elements
-  attachAll(root) {
+  attachAll(root: HTMLElement) {
     this.attach(root);
     root.querySelectorAll("[u-is]").forEach(this.attach.bind(this));
   } // attachAll()
@@ -168,7 +180,11 @@ class MicroRegistry {
    * @param {string} controlName
    * @param {Object} props
    */
-  insertTemplate(root, controlName, props) {
+  insertTemplate(
+    root: HTMLElement,
+    controlName: string,
+    props: Object
+  ): HTMLElement {
     var e = null;
     if (root && controlName) {
       var te = this._tco.querySelector('[u-control="' + controlName + '"]');
@@ -182,13 +198,14 @@ class MicroRegistry {
     return e;
   } // insertTemplate()
 
+
   // attach events, methods and default-values to a html object (using the english spelling)
-  loadBehavior(obj, behavior) {
+  loadBehavior(obj:HTMLElement, behavior) {
     if (obj == null) {
       console.error("loadBehavior: obj argument is missing.");
     } else if (behavior == null) {
       console.error("loadBehavior: behavior argument is missing.");
-    } else if (obj._attachedBehavior == behavior) {
+    } else if ((<MicroBaseControl><any>obj)._attachedBehavior == behavior) {
       // already done.
     } else {
       if (behavior.inheritFrom) {
@@ -216,11 +233,10 @@ class MicroRegistry {
         } // if
       } // for
 
-      obj._attachedBehavior = behavior;
-      if (obj.init) obj.init();
-      if (obj.connectedCallback) obj.connectedCallback(obj);
+      (<MicroBaseControl><any>obj)._attachedBehavior = behavior;
+      (<MicroBaseControl><any>obj).connectedCallback(obj);
       this.List.push(obj);
-    }
+    } // if
   } // loadBehavior
 
   /// Find the parent node of a given object that has any behavior attached.
@@ -234,7 +250,7 @@ class MicroRegistry {
     this._registry[name] = mixin;
   }
 
-  onunload(evt) {
+  onunload(evt:Event) {
     for (var n in this.List) {
       var obj = this.List[n];
       if (obj && obj.term) obj.term();
@@ -252,7 +268,6 @@ var micro = new MicroRegistry();
 window.addEventListener("load", micro.init.bind(micro));
 window.addEventListener("unload", micro.onunload.bind(micro));
 
-
 // detect that a new micro control was created using Mutation Observe Callback
 let obs = new MutationObserver(function(
   mutationsList: MutationRecord[],
@@ -261,7 +276,7 @@ let obs = new MutationObserver(function(
   for (let mutation of mutationsList) {
     mutation.addedNodes.forEach(n => {
       if ((<Element>n).getAttribute && (<Element>n).getAttribute("u-is"))
-        micro.attach(n);
+        micro.attach(<HTMLElement>n);
     });
   }
 });

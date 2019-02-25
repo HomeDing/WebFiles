@@ -8,7 +8,7 @@ interface JsonParseCallback {
 
 function jsonParse(obj:any, cbFunc: JsonParseCallback) {
   /** internal function used in recursion */
-  function _jsonParse(path, key, value: any, cbFunc) {
+  function _jsonParse(path:string, key:string, value: any, cbFunc: JsonParseCallback) {
     var path2 = key ? path + "/" + key : path;
     path2 = path2.replace("/[", "[");
 
