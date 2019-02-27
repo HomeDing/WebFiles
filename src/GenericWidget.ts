@@ -12,11 +12,8 @@ class GenericWidgetClass extends MicroBaseControl {
 
   connectedCallback(el: HTMLElement) {
     super.connectedCallback(el);
-    hub.subscribe(this.microid + "?*", this.newData.bind(this));
-    this.newData(this.microid, "id", this.microid);
-    this.data = {
-      id: this.microid
-    };
+    this.data = { id: this.microid };
+    hub.subscribe(this.microid + "?*", this.newData.bind(this), true);
   } // connectedCallback
 
   // visualize any new data for the widget.

@@ -22,20 +22,68 @@ var __assign = (this && this.__assign) || Object.assign || function(t) {
     }
     return t;
 };
+// === recursive JSON object parser
+// Traverse / Scan a complex object and send all nodes with attributes to a receiver function. */
+function jsonParse(obj, cbFunc) {
+    /** internal function used in recursion */
+    function _jsonParse(path, key, value, cbFunc) {
+        var path2 = key ? path + "/" + key : path;
+        path2 = path2.replace("/[", "[");
+        if (Array.isArray(value)) {
+            // traverse all entries in the array
+            for (var n = 0; n < value.length; n++) {
+                _jsonParse(path2, "[" + n + "]", value[n], cbFunc);
+            } // for
+        }
+        else if (typeof value == "object") {
+            // this is an attribute for the receiver function
+            cbFunc(path2, null, null);
+            // traverse all entries in the object
+            for (var n_1 in value) {
+                _jsonParse(path2, n_1, value[n_1], cbFunc);
+            } // for
+        }
+        else {
+            // this is an attribute for the receiver function
+            cbFunc(path, key, String(value));
+        } // if
+    } // _jsonParse()
+    // start with root and scan recursively.
+    _jsonParse("", "", obj, cbFunc);
+} // jsonParse()
+// End. 
 // micro.js
 // Collection of functions to help managing complex JSON objects.
 // Only works with JSON compatible objects using Arrays, Object, String, Number, Boolean., no functions !
+/// <reference path="JsonParse.ts" />
 var MicroHub = (function () {
     function MicroHub() {
         this._registrations = {};
         this._registrationsId = 0;
+        this._store = {};
     }
+    MicroHub.prototype._findStoreObject = function (path) {
+        var p = this._store;
+        var steps = path.substr(1).split("/");
+        // use existing objects.
+        while (steps.length > 0 && p[steps[0]]) {
+            p = p[steps[0]];
+            steps.shift();
+        } // while
+        // create new objects.
+        while (steps.length > 0) {
+            p = p[steps[0]] = {};
+            steps.shift();
+        } // while
+        return p;
+    }; // _findPathObject
     // subscriptions to changes in the Event Data
     /**
      * @param {string} matchPath expression for the registration
      * @param {*} fCallback
      */
-    MicroHub.prototype.subscribe = function (matchPath, fCallback) {
+    MicroHub.prototype.subscribe = function (matchPath, fCallback, replay) {
+        if (replay === void 0) { replay = false; }
         var h = this._registrationsId;
         // treating upper/lowercase equal is not clearly defined, but true with domain names.
         var rn = matchPath.toLocaleLowerCase();
@@ -54,6 +102,16 @@ var MicroHub = (function () {
         };
         this._registrations[h] = newEntry;
         this._registrationsId++;
+        if (replay) {
+            jsonParse(this._store, function (path, key, value) {
+                var fullPath = path + (key ? "?" + key : "");
+                if (fullPath) {
+                    fullPath = fullPath.toLocaleLowerCase();
+                    if (fullPath.match(newEntry.match))
+                        newEntry.callback(path, key ? key.toLowerCase() : null, value);
+                } // if
+            }.bind(this));
+        }
         return h;
     }; // subscribe
     MicroHub.prototype.unsubscribe = function (h) {
@@ -64,9 +122,15 @@ var MicroHub = (function () {
             this.publishValue(path, key ? key.toLowerCase() : null, value);
         }.bind(this));
     }; // publishObj()
+    // a new value for the store and all registered listeners
     MicroHub.prototype.publishValue = function (path, key, value) {
         var fullPath = path + (key ? "?" + key : "");
         if (fullPath) {
+            if (key) {
+                // save to store
+                var p = this._findStoreObject(path);
+                p[key] = value;
+            } // if
             fullPath = fullPath.toLocaleLowerCase();
             Object.values(this._registrations).forEach(function (r) {
                 if (fullPath.match(r.match))
@@ -125,10 +189,10 @@ var MicroRegistry = (function () {
         }
     }; // attach()
     // attach all behaviors of the element and nested elements
-    MicroRegistry.prototype.attachAll = function (root) {
-        this.attach(root);
-        root.querySelectorAll("[u-is]").forEach(this.attach.bind(this));
-    }; // attachAll()
+    // attachAll(root: HTMLElement) {
+    //   this.attach(root);
+    //   root.querySelectorAll("[u-is]").forEach(this.attach.bind(this));
+    // } // attachAll()
     /**
      * replace placeholders like ${name} with the corresponding value in text nodes and attributes.
      * @param {Node} obj
@@ -174,7 +238,6 @@ var MicroRegistry = (function () {
             if (e) {
                 this._setPlaceholders(e, props);
                 root.appendChild(e);
-                this.attachAll(e);
             } // if
         } // if
         return e;
@@ -296,11 +359,8 @@ var GenericWidgetClass = (function (_super) {
     }
     GenericWidgetClass.prototype.connectedCallback = function (el) {
         _super.prototype.connectedCallback.call(this, el);
-        hub.subscribe(this.microid + "?*", this.newData.bind(this));
-        this.newData(this.microid, "id", this.microid);
-        this.data = {
-            id: this.microid
-        };
+        this.data = { id: this.microid };
+        hub.subscribe(this.microid + "?*", this.newData.bind(this), true);
     }; // connectedCallback
     // visualize any new data for the widget.
     GenericWidgetClass.prototype.newData = function (path, key, value) {
@@ -436,36 +496,6 @@ var DSTimeClass = (function (_super) {
 DSTimeClass = __decorate([
     MicroControl("dstime")
 ], DSTimeClass);
-// End. 
-// === recursive JSON object parser
-// Traverse / Scan a complex object and send all nodes with attributes to a receiver function. */
-function jsonParse(obj, cbFunc) {
-    /** internal function used in recursion */
-    function _jsonParse(path, key, value, cbFunc) {
-        var path2 = key ? path + "/" + key : path;
-        path2 = path2.replace("/[", "[");
-        if (Array.isArray(value)) {
-            // traverse all entries in the array
-            for (var n = 0; n < value.length; n++) {
-                _jsonParse(path2, "[" + n + "]", value[n], cbFunc);
-            } // for
-        }
-        else if (typeof value == "object") {
-            // this is an attribute for the receiver function
-            cbFunc(path2, null, null);
-            // traverse all entries in the object
-            for (var n_1 in value) {
-                _jsonParse(path2, n_1, value[n_1], cbFunc);
-            } // for
-        }
-        else {
-            // this is an attribute for the receiver function
-            cbFunc(path, key, String(value));
-        } // if
-    } // _jsonParse()
-    // start with root and scan recursively.
-    _jsonParse("", "", obj, cbFunc);
-} // jsonParse()
 // End. 
 // SwitchWidget.ts: Widget Behavior implementation for PWMOut Elements
 // This file is part of the Widget implementation for the HomDing Library

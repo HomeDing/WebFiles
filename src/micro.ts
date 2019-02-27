@@ -2,17 +2,12 @@
 // Collection of functions to help managing complex JSON objects.
 // Only works with JSON compatible objects using Arrays, Object, String, Number, Boolean., no functions !
 
-// See also:
-// http://goessner.net/articles/JsonPath/
-
-interface HubCallback {
-  (path: string, key: string, value: string): void;
-}
+/// <reference path="JsonParse.ts" />
 
 interface HubEntry {
   id: number;
   match: RegExp;
-  callback: HubCallback;
+  callback: JsonParseCallback;
 }
 
 interface HubEntryList {
@@ -22,13 +17,32 @@ interface HubEntryList {
 class MicroHub {
   _registrations: HubEntryList = {};
   _registrationsId: number = 0;
+  _store: object = {};
+
+  protected _findStoreObject(path: string): object {
+    let p: object = this._store;
+    let steps = path.substr(1).split("/");
+
+    // use existing objects.
+    while (steps.length > 0 && p[steps[0]]) {
+      p = p[steps[0]];
+      steps.shift();
+    } // while
+
+    // create new objects.
+    while (steps.length > 0) {
+      p = p[steps[0]] = {};
+      steps.shift();
+    } // while
+    return p;
+  } // _findPathObject
 
   // subscriptions to changes in the Event Data
   /**
    * @param {string} matchPath expression for the registration
    * @param {*} fCallback
    */
-  subscribe(matchPath: string, fCallback: HubCallback): number {
+  subscribe(matchPath: string, fCallback: JsonParseCallback, replay:boolean = false): number {
     var h = this._registrationsId;
 
     // treating upper/lowercase equal is not clearly defined, but true with domain names.
@@ -52,6 +66,19 @@ class MicroHub {
     this._registrations[h] = newEntry;
 
     this._registrationsId++;
+
+    if (replay) {
+      jsonParse(
+        this._store, function(path: string, key: string, value: string) {
+          let fullPath: string = path + (key ? "?" + key : "");
+          if (fullPath) {
+            fullPath = fullPath.toLocaleLowerCase();
+            if (fullPath.match(newEntry.match)) newEntry.callback(path, key ? key.toLowerCase() : null, value);
+          } // if
+        }.bind(this)
+      );
+    }
+
     return h;
   } // subscribe
 
@@ -68,10 +95,17 @@ class MicroHub {
     );
   } // publishObj()
 
+  // a new value for the store and all registered listeners
   publishValue(path: string, key: string, value: string) {
-    var fullPath = path + (key ? "?" + key : "");
+    let fullPath: string = path + (key ? "?" + key : "");
 
     if (fullPath) {
+      if (key) {
+        // save to store
+        let p: object = this._findStoreObject(path);
+        p[key] = value;
+      } // if
+
       fullPath = fullPath.toLocaleLowerCase();
 
       Object.values(this._registrations).forEach(r => {
@@ -137,10 +171,10 @@ class MicroRegistry {
   } // attach()
 
   // attach all behaviors of the element and nested elements
-  attachAll(root: HTMLElement) {
-    this.attach(root);
-    root.querySelectorAll("[u-is]").forEach(this.attach.bind(this));
-  } // attachAll()
+  // attachAll(root: HTMLElement) {
+  //   this.attach(root);
+  //   root.querySelectorAll("[u-is]").forEach(this.attach.bind(this));
+  // } // attachAll()
 
   /**
    * replace placeholders like ${name} with the corresponding value in text nodes and attributes.
@@ -192,20 +226,18 @@ class MicroRegistry {
       if (e) {
         this._setPlaceholders(e, props);
         root.appendChild(e);
-        this.attachAll(e);
       } // if
     } // if
     return e;
   } // insertTemplate()
 
-
   // attach events, methods and default-values to a html object (using the english spelling)
-  loadBehavior(obj:HTMLElement, behavior) {
+  loadBehavior(obj: HTMLElement, behavior) {
     if (obj == null) {
       console.error("loadBehavior: obj argument is missing.");
     } else if (behavior == null) {
       console.error("loadBehavior: behavior argument is missing.");
-    } else if ((<MicroBaseControl><any>obj)._attachedBehavior == behavior) {
+    } else if ((<MicroBaseControl>(<any>obj))._attachedBehavior == behavior) {
       // already done.
     } else {
       if (behavior.inheritFrom) {
@@ -233,8 +265,8 @@ class MicroRegistry {
         } // if
       } // for
 
-      (<MicroBaseControl><any>obj)._attachedBehavior = behavior;
-      (<MicroBaseControl><any>obj).connectedCallback(obj);
+      (<MicroBaseControl>(<any>obj))._attachedBehavior = behavior;
+      (<MicroBaseControl>(<any>obj)).connectedCallback(obj);
       this.List.push(obj);
     } // if
   } // loadBehavior
@@ -250,7 +282,7 @@ class MicroRegistry {
     this._registry[name] = mixin;
   }
 
-  onunload(evt:Event) {
+  onunload(evt: Event) {
     for (var n in this.List) {
       var obj = this.List[n];
       if (obj && obj.term) obj.term();
