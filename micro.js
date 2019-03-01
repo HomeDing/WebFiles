@@ -56,6 +56,9 @@ function jsonParse(obj, cbFunc) {
 // Collection of functions to help managing complex JSON objects.
 // Only works with JSON compatible objects using Arrays, Object, String, Number, Boolean., no functions !
 /// <reference path="JsonParse.ts" />
+/**
+ *
+ */
 var MicroHub = (function () {
     function MicroHub() {
         this._registrations = {};
@@ -64,7 +67,7 @@ var MicroHub = (function () {
     }
     MicroHub.prototype._findStoreObject = function (path) {
         var p = this._store;
-        var steps = path.substr(1).split("/");
+        var steps = path.substr(1).split('/');
         // use existing objects.
         while (steps.length > 0 && p[steps[0]]) {
             p = p[steps[0]];
@@ -76,11 +79,13 @@ var MicroHub = (function () {
             steps.shift();
         } // while
         return p;
-    }; // _findPathObject
-    // subscriptions to changes in the Event Data
+    }; // _findStoreObject
     /**
+     * Subscribe to changes in the store using a path expression
      * @param {string} matchPath expression for the registration
-     * @param {*} fCallback
+     * @param {JsonParseCallback} fCallback
+     * @param {boolean} replay
+     * @returns {number} number of registration
      */
     MicroHub.prototype.subscribe = function (matchPath, fCallback, replay) {
         if (replay === void 0) { replay = false; }
@@ -88,12 +93,12 @@ var MicroHub = (function () {
         // treating upper/lowercase equal is not clearly defined, but true with domain names.
         var rn = matchPath.toLocaleLowerCase();
         // build a regexp pattern that will match the event names
-        var re = "^" +
+        var re = '^' +
             rn
-                .replace(/(\[|\]|\/|\?)/g, "\\$1")
-                .replace(/\*\*/g, "\\S{0,}")
-                .replace(/\*/g, "[^/?]*") +
-            "$";
+                .replace(/(\[|\]|\/|\?)/g, '\\$1')
+                .replace(/\*\*/g, '\\S{0,}')
+                .replace(/\*/g, '[^/?]*') +
+            '$';
         // console.log(matchPath, re);
         var newEntry = {
             id: h,
@@ -104,7 +109,7 @@ var MicroHub = (function () {
         this._registrationsId++;
         if (replay) {
             jsonParse(this._store, function (path, key, value) {
-                var fullPath = path + (key ? "?" + key : "");
+                var fullPath = path + (key ? '?' + key : '');
                 if (fullPath) {
                     fullPath = fullPath.toLocaleLowerCase();
                     if (fullPath.match(newEntry.match))
@@ -114,17 +119,47 @@ var MicroHub = (function () {
         }
         return h;
     }; // subscribe
+    /**
+     * Cancel a subscription.
+     * @param h subscription registration id.
+     */
     MicroHub.prototype.unsubscribe = function (h) {
         this._registrations[h] = null;
     }; // unsubscribe
+    /**
+     * Replay the store data for a specific registration.
+     * @param h subscription registration id.
+     */
+    MicroHub.prototype.replay = function (h) {
+        var e = this._registrations[h];
+        if (e) {
+            jsonParse(this._store, function (path, key, value) {
+                var fullPath = path + (key ? '?' + key : '');
+                if (fullPath) {
+                    fullPath = fullPath.toLocaleLowerCase();
+                    if (fullPath.match(e.match))
+                        e.callback(path, key ? key.toLowerCase() : null, value);
+                } // if
+            }.bind(this));
+        }
+    }; // replay
+    /**
+     * Publish new structured data from an object.
+     * @param obj
+     */
     MicroHub.prototype.publishObj = function (obj) {
         jsonParse(obj, function (path, key, value) {
             this.publishValue(path, key ? key.toLowerCase() : null, value);
         }.bind(this));
     }; // publishObj()
-    // a new value for the store and all registered listeners
+    /**
+     * Publish a single value using.
+     * @param path Path of the value
+     * @param key Key of the property
+     * @param value Value of the property.
+     */
     MicroHub.prototype.publishValue = function (path, key, value) {
-        var fullPath = path + (key ? "?" + key : "");
+        var fullPath = path + (key ? '?' + key : '');
         if (fullPath) {
             if (key) {
                 // save to store
@@ -147,7 +182,7 @@ var MicroHub = (function () {
     return MicroHub;
 }()); // MicroEvents class
 var hub = new MicroHub();
-window.addEventListener("unload", hub.onunload.bind(hub), false);
+window.addEventListener('unload', hub.onunload.bind(hub), false);
 var MicroRegistry = (function () {
     function MicroRegistry() {
         this._registry = {}; // all registered mixins by name.
@@ -157,10 +192,10 @@ var MicroRegistry = (function () {
     /// Initialize the template and behaviors.
     MicroRegistry.prototype.init = function () {
         // be sure to have a template container object.
-        this._tco = document.getElementById("u-templates");
+        this._tco = document.getElementById('u-templates');
         if (!this._tco) {
-            var t = document.createElement("div");
-            t.id = "u-templates";
+            var t = document.createElement('div');
+            t.id = 'u-templates';
             this._tco = document.body.appendChild(t);
         }
     }; // init()
@@ -182,7 +217,7 @@ var MicroRegistry = (function () {
     // extend the element by the registered behavior mixin.
     // The "u-is" attribute specifies what mixin should be used.
     MicroRegistry.prototype.attach = function (elem) {
-        var mb = elem.getAttribute("u-is");
+        var mb = elem.getAttribute('u-is');
         var bc = this._registry[mb];
         if (bc) {
             this.loadBehavior(elem, bc);
@@ -202,7 +237,7 @@ var MicroRegistry = (function () {
         var _this = this;
         function fill(val, props) {
             for (var p in props)
-                val = val.replace(new RegExp("\\$\\{" + p + "\\}", "g"), props[p]);
+                val = val.replace(new RegExp('\\$\\{' + p + '\\}', 'g'), props[p]);
             return val;
         } // fill
         if (obj.nodeType == 3) {
@@ -214,7 +249,7 @@ var MicroRegistry = (function () {
             var el = obj;
             for (var i = 0; i < el.attributes.length; i++) {
                 var v = el.attributes[i].value;
-                if (v.indexOf("${") >= 0) {
+                if (v.indexOf('${') >= 0) {
                     el[el.attributes[i].name] = el.attributes[i].value = fill(v, props);
                 } // if
             } // for
@@ -245,10 +280,10 @@ var MicroRegistry = (function () {
     // attach events, methods and default-values to a html object (using the english spelling)
     MicroRegistry.prototype.loadBehavior = function (obj, behavior) {
         if (obj == null) {
-            console.error("loadBehavior: obj argument is missing.");
+            console.error('loadBehavior: obj argument is missing.');
         }
         else if (behavior == null) {
-            console.error("loadBehavior: behavior argument is missing.");
+            console.error('loadBehavior: behavior argument is missing.');
         }
         else if (obj._attachedBehavior == behavior) {
             // already done.
@@ -266,7 +301,7 @@ var MicroRegistry = (function () {
                         obj[obj.attributes[n].name] = obj.attributes[n].value;
             } // if
             for (var p in behavior) {
-                if (p.substr(0, 2) == "on") {
+                if (p.substr(0, 2) == 'on') {
                     obj.addEventListener(p.substr(2), behavior[p].bind(obj), false);
                 }
                 else if (behavior[p] == null || behavior[p].constructor != Function) {
@@ -309,14 +344,14 @@ var MicroRegistry = (function () {
     return MicroRegistry;
 }()); // MicroJCL class
 var micro = new MicroRegistry();
-window.addEventListener("load", micro.init.bind(micro));
-window.addEventListener("unload", micro.onunload.bind(micro));
+window.addEventListener('load', micro.init.bind(micro));
+window.addEventListener('unload', micro.onunload.bind(micro));
 // detect that a new micro control was created using Mutation Observe Callback
 var obs = new MutationObserver(function (mutationsList, observer) {
     for (var _i = 0, mutationsList_1 = mutationsList; _i < mutationsList_1.length; _i++) {
         var mutation = mutationsList_1[_i];
         mutation.addedNodes.forEach(function (n) {
-            if (n.getAttribute && n.getAttribute("u-is"))
+            if (n.getAttribute && n.getAttribute('u-is'))
                 micro.attach(n);
         });
     }
@@ -353,49 +388,44 @@ var GenericWidgetClass = (function (_super) {
     __extends(GenericWidgetClass, _super);
     function GenericWidgetClass() {
         var _this = _super !== null && _super.apply(this, arguments) || this;
-        _this.microid = "";
+        _this.microid = '';
         _this.data = {};
         return _this;
     }
     GenericWidgetClass.prototype.connectedCallback = function (el) {
         _super.prototype.connectedCallback.call(this, el);
         this.data = { id: this.microid };
-        hub.subscribe(this.microid + "?*", this.newData.bind(this), true);
+        this.subId = hub.subscribe(this.microid + '?*', this.newData.bind(this));
+        hub.replay(this.subId);
     }; // connectedCallback
     // visualize any new data for the widget.
     GenericWidgetClass.prototype.newData = function (path, key, value) {
         // save data to title
         this.data[key] = value;
-        var ic = this.el.querySelector("img");
+        var ic = this.el.querySelector('img');
         if (ic) {
-            setAttribute2(ic, "title", JSON.stringify(this.data, null, 1)
-                .replace("{\n", "")
-                .replace("\n}", ""));
+            setAttr(ic, 'title', JSON.stringify(this.data, null, 1)
+                .replace('{\n', '')
+                .replace('\n}', ''));
         }
-        // u-activ flags
-        ["span", "div"].forEach(function (elType) {
-            this.el
-                .querySelectorAll(elType + "[u-active='" + key + "']")
-                .forEach(function (el) {
+        // u-active flags
+        ['span', 'div'].forEach(function (elType) {
+            this.el.querySelectorAll(elType + ("[u-active='" + key + "']")).forEach(function (el) {
                 var b = toBool(value);
-                setAttribute2(el, "value", b ? "1" : "0");
-                setAttribute2(el, "title", b ? "active" : "not active");
-                el.classList.toggle("active", b);
+                setAttr(el, 'value', b ? '1' : '0');
+                setAttr(el, 'title', b ? 'active' : 'not active');
+                el.classList.toggle('active', b);
             });
         }, this);
         // textContent
-        ["h2", "h4", "span"].forEach(function (elType) {
-            this.el
-                .querySelectorAll(elType + "[u-text='" + key + "']")
-                .forEach(function (el) {
+        ['h2', 'h4', 'span'].forEach(function (elType) {
+            this.el.querySelectorAll(elType + "[u-text='" + key + "']").forEach(function (el) {
                 if (el.textContent != value)
                     el.textContent = value;
             });
         }, this);
         // value of input fields
-        this.el
-            .querySelectorAll("input[u-value='" + key + "']")
-            .forEach(function (el) {
+        this.el.querySelectorAll("input[u-value='" + key + "']").forEach(function (el) {
             if (el.value != value)
                 el.value = value;
         });
@@ -408,23 +438,23 @@ var GenericWidgetClass = (function (_super) {
     // send changed value of property as an action to the board
     GenericWidgetClass.prototype.onchange = function (e) {
         var src = e.srcElement;
-        this.dispatchAction(src.getAttribute("u-value"), e.srcElement.value);
+        this.dispatchAction(src.getAttribute('u-value'), e.srcElement.value);
     };
     // send an action to the board
     // + change config mode
     GenericWidgetClass.prototype.onclick = function (e) {
         var src = e.srcElement;
-        var a = src.getAttribute("u-action");
+        var a = src.getAttribute('u-action');
         if (a)
-            this.dispatchAction(a, e.srcElement["value"]);
-        if (src.classList.contains("setconfig")) {
-            this.el.classList.toggle("configmode");
+            this.dispatchAction(a, e.srcElement['value']);
+        if (src.classList.contains('setconfig')) {
+            this.el.classList.toggle('configmode');
         }
     };
     return GenericWidgetClass;
 }(MicroBaseControl)); // GenericWidgetClass
 GenericWidgetClass = __decorate([
-    MicroControl("generic")
+    MicroControl('generic')
 ], GenericWidgetClass);
 // End.
 // SwitchWidget.ts: Widget Behavior implementation for Button@MicroControl("timer") Elements
@@ -650,10 +680,10 @@ function setTextContent(el, txt) {
     if (el.textContent !== txt)
         el.textContent = txt;
 } // setTextContent
-function setAttribute2(el, name, value) {
+function setAttr(el, name, value) {
     if (el.getAttribute(name) !== value)
         el.setAttribute(name, value);
-} // setAttribute2
+} // setAttr
 // return actual parameters in hash part of URL as object
 function getHashParams(defaults) {
     var params = __assign({}, defaults);

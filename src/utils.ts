@@ -21,9 +21,9 @@ function setTextContent(el:HTMLElement, txt:string) {
   if (el.textContent !== txt) el.textContent = txt;
 } // setTextContent
 
-function setAttribute2(el:HTMLElement, name:string, value:string) {
+function setAttr(el:HTMLElement, name:string, value:string) {
   if (el.getAttribute(name) !== value) el.setAttribute(name, value);
-} // setAttribute2
+} // setAttr
 
 // return actual parameters in hash part of URL as object
 function getHashParams(defaults : object) {
