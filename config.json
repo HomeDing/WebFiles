@@ -27,7 +27,7 @@
   "dht": {
     "lr": {
       "title": "Livingroom",
-      "pin": ""
+      "pin": "12"
     }
   },
 
@@ -105,12 +105,12 @@
       "pin": "D7",
       "inverse": 1,
       "pullup": 1,
-      "onLow": "switch/light?toggle=1"
+      "onLow": "switch/sam?toggle=1"
     }
   },
 
   "switch": {
-    "light": {
+    "sam": {
       "description": "Control light level",
       "value": 0,
       "onValue": "digitalout/led?value=$v"
@@ -123,13 +123,6 @@
       "inverse": "true",
       "value": "0",
       "description": "Builtin LED is on Port D0 = GPIO16"
-    },
-
-    "led2": {
-      "pin": "D4",
-      "inverse": "true",
-      "value": "0",
-      "description": "Builtin LED is on Port D0 = GPIO16"
     }
   },
 
@@ -137,18 +130,7 @@
     "a1": {
       "codeOn": "s_##__##__#__####____##__#__#____x",
       "codeOff": "s_##__##__#__####____##__#_______x",
-      "description": "Stern aussen"
-    },
-
-    "a2": {
-      "codeOn": "s_##__##__#__####____##__#__#___#x",
-      "codeOff": "s_##__##__#__####____##__#______#x",
       "description": "Balcony Light"
-    },
-    "a3": {
-      "codeOn": "s_##__##__#__####____##__#__#__#_x",
-      "codeOff": "s_##__##__#__####____##__#_____#_x",
-      "description": "spare"
     },
     "aa": {
       "codeOn": "s_##__##__#__####____##__#_#_____x",

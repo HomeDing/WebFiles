@@ -1,7 +1,7 @@
-<div class='col card' u-control='dht' id='${id}' microID="${id}" u-is='generic'>
+<div class="col card" u-control="dht" id="${id}" microID="${id}" u-is="generic">
   <div class="block">
-    <img title="${id}" src="/i/dht.svg" style="float: left;height:5rem;margin-right:1rem"/>
-    <span class="activeState" u-active='active'></span>
+    <img title="${id}" src="/i/dht.svg" style="float: left;height:5rem;margin-right:0.8rem" />
+    <span class="activeState" u-active="active"></span>
     <span class="setconfig"></span>
     <table>
       <tr>
@@ -10,12 +10,12 @@
         </td>
       </tr>
       <tr>
-        <td colspan="3"><span u-text='description'></span></td>
+        <td colspan="3"><span u-text="description"></span></td>
       </tr>
       <tr>
-        <td style="font-size: 2rem"><span  u-text='temperature'>__.__</span>&deg;C</td>
-        <td style="width:2rem"></td>
-        <td style="font-size: 2rem"><span u-text='humidity'>__.__</span>%</td>
+        <td style="font-size: 2rem"><span u-text="temperature">__.__</span>&deg;C</td>
+        <td style="width:1rem"></td>
+        <td style="font-size: 2rem"><span u-text="humidity">__.__</span>%</td>
       </tr>
       <tr>
         <td>Temperature</td>
@@ -24,18 +24,19 @@
       </tr>
     </table>
   </div>
+  <div class="block config Element"></div>
 </div>
 
-<div class='col card' u-control='timer' id='${id}' microID='${id}' u-is='timer'>
+<div class="col card" u-control="timer" id="${id}" microID="${id}" u-is="timer">
   <div class="block header">
-    <h2><img src="/i/timer.svg" class='Icon'/>${id}</h2>
-      <h4 u-text='description'></h4>
-      <span class="activeState" u-active='active'></span>
-      <span class="setconfig"></span>
+    <img src="/i/${type}.svg" class="icon" />
+    <h3>${id}</h3>
+    <h4 u-text="description"></h4>
+    <span class="activeState" u-active="active"></span>
+    <span class="setconfig"></span>
   </div>
   <div class="block">
-    <label>wait:</label><span u-text='waittime'>.</span>
-    <label>pulse:</label><span u-text='pulsetime'>.</span>
+    <label>wait:</label><span u-text="waittime">.</span> <label>pulse:</label><span u-text="pulsetime">.</span>
   </div>
   <div class="block">
     <div class="u-bar">
@@ -45,82 +46,116 @@
   </div>
   <hr />
   <div class="block">
-    <button u-action='start' value='1'>Start</button>
-    <button u-action='next' value='1'>Next</button>
-    <button u-action='stop' value='1'>Stop</button>
+    <button u-action="start" value="1">Start</button>
+    <button u-action="next" value="1">Next</button>
+    <button u-action="stop" value="1">Stop</button>
   </div>
 </div>
 
-<div class='col card' u-control='button' id='${id}' microID="${id}" u-is='button'>
+<div class="col card" u-control="rfsend" id="${id}" microID="${id}" u-is="generic">
   <div class="block header">
-    <h2><img src="/i/button.svg" class='Icon' >${id}</h2>
-      <h4 u-text='description'></h4>
-      <span class="activeState" u-active='active'></span>
-      <span class="setconfig"></span>
+    <img src="/i/rfsend.svg" class="icon" />
+    <h3>${id}</h3>
+    <h4 u-text="description"></h4>
+    <span class="activeState" u-active="active"></span>
+    <span class="setconfig"></span>
+  </div>
+  <div class="block Element">
+    <div>
+      <button u-action="value" value="1">On</button>
+      <button u-action="value" value="0">Off</button>
+    </div>
+    <div><label class="fixed">last value:</label><span class="Value" u-text="value"></span></div>
+  </div>
+  <div class="block config">
+    <div><label class="fixed">code on:</label><span class="Value" u-text="codeon"></span></div>
+    <div><label class="fixed">code off:</label><span class="Value" u-text="codeoff"></span></div>
+    <div><label class="fixed">loglevel:</label><span class="Value" u-text="loglevel"></span></div>
+  </div>
+</div>
+
+<div class="col card" u-control="button" id="${id}" microID="${id}" u-is="button">
+  <div class="block header">
+    <img src="/i/button.svg" class="icon" />
+    <h3>${id}</h3>
+    <h4 u-text="description"></h4>
+    <span class="activeState" u-active="active"></span>
+    <span class="setconfig"></span>
   </div>
   <div class="block">
-    <span><img src="/i/button.svg" class="u-button" style="border-radius:3rem; float: left;height:5rem;margin-right:1rem"></span>
+    <span
+      ><img src="/i/button.svg" class="u-button" style="border-radius:3rem; float: left;height:5rem;margin-right:1rem"
+    /></span>
   </div>
 </div>
 
-
-<div class='col card' u-control='digitalout' id='${id}' microID="${id}" u-is='generic'>
+<div class="col card" u-control="digitalout" id="${id}" microID="${id}" u-is="generic">
   <div class="block header">
-    <h2><img src="/i/digitalout.svg" class='Icon'/>${id}</h2>
-      <h4 u-text='description'></h4>
-      <span class="activeState" u-active='active'></span>
-      <span class="setconfig"></span>
+    <img src="/i/digitalout.svg" class="icon" />
+    <h3>${id}</h3>
+    <h4 u-text="description"></h4>
+    <span class="activeState" u-active="active"></span>
+    <span class="setconfig"></span>
   </div>
 
-  <div class="block">
-    <img src="/i/digitalout.svg" style="float:left;height:4rem;margin-right:1rem">
-    <span class="u-bool" u-active='value' style="position: absolute;top:4rem;right:0.4rem;" ></span>
+  <div class="block Element">
+    <img src="/i/digitalout.svg" style="float:left;height:4rem;margin-right:1rem" />
+    <span class="u-bool" u-active="value" style="position: absolute;top:4rem;right:0.4rem;"></span>
+  </div>
+  <div class="block config">
+    <div><label class="fixed">pin:</label><span class="Value" u-text="pin"></span></div>
+    <div><label class="fixed">inverse:</label><span class="Value" u-text="inverse"></span></div>
+    <div><label class="fixed">value:</label><span class="Value" u-text="value"></span></div>
+    <div><label class="fixed">loglevel:</label><span class="Value" u-text="loglevel"></span></div>
   </div>
 </div>
 
-<div class='col card' u-control='displaydot' id='${id}' microID="${id}" u-is='generic'>
+<div class="col card" u-control="displaydot" id="${id}" microID="${id}" u-is="generic">
   <div class="block header">
-    <h2><img src="/i/digitalout.svg" class='Icon'/>${id}</h2>
-      <h4 u-text='description'></h4>
-      <span class="activeState" u-active='active'></span>
-      <span class="setconfig"></span>
+    <img src="/i/displaydot.svg" class="icon" />
+    <h3>${id}</h3>
+    <h4 u-text="description"></h4>
+    <span class="activeState" u-active="active"></span>
+    <span class="setconfig"></span>
   </div>
 
   <div class="block xElement">
-    <div><label class="fixed">value:</label><span class='Value' u-text='value'></span></div>
-    <span class="u-bool" u-active='value' style="position: absolute;top:4rem;right:0.4rem;" ></span>
+    <div><label class="fixed">value:</label><span class="Value" u-text="value"></span></div>
+    <span class="u-bool" u-active="value" style="position: absolute;top:4rem;right:0.4rem;"></span>
   </div>
   <div class="block config">
-    <div><label class="fixed">x:</label><span class='Value' u-text='x'></span></div>
-    <div><label class="fixed">y:</label><span class='Value' u-text='y'></span></div>
-    <div><label class="fixed">loglevel:</label><span class='Value' u-text='loglevel'></span></div>
+    <div><label class="fixed">x:</label><span class="Value" u-text="x"></span></div>
+    <div><label class="fixed">y:</label><span class="Value" u-text="y"></span></div>
+    <div><label class="fixed">loglevel:</label><span class="Value" u-text="loglevel"></span></div>
   </div>
-
 </div>
 
-<div class='col card' u-control='pwmout' id='${id}' u-is='pwmout' microID='${id}'>
+<div class="col card" u-control="pwmout" id="${id}" u-is="pwmout" microID="${id}">
   <div class="block header">
-    <h2><img src="/i/pwmout.svg" class='Icon' />${id}</h2>
-      <h4 u-text='description'></h4>
-      <span class="activeState" u-active='active'></span>
-      <span class="setconfig"></span>
+    <img src="/i/pwmout.svg" class="icon" />
+    <h3>${id}</h3>
+    <h4 u-text="description"></h4>
+    <span class="activeState" u-active="active"></span>
+    <span class="setconfig"></span>
   </div>
   <div class="block" style="position: relative;min-height: 5rem">
     <span class="u-level" style="position:absolute;right:0.4em;top:0.4em;"></span>
-    <div style="font-size: 2rem">
-      <span u-text="value"></span> / <span u-text="range"></span>
-    </div>
+    <div style="font-size: 2rem"><span u-text="value"></span> / <span u-text="range"></span></div>
   </div>
 </div>
 
-<div class='col card' u-control='value' id='${id}' u-is='generic' microID='${id}'>
+<div class="col card" u-control="value" id="${id}" u-is="generic" microID="${id}">
   <div class="block header">
-    <h2><img src="/i/${type}.svg" class='Icon' />${id}</h2>
-      <h4 u-text='description'></h4>
-      <span class="activeState" u-active='active'></span>
-      <span class="setconfig"></span>
+    <img src="/i/${type}.svg" class="icon" />
+    <h3>${id}</h3>
+    <h4 u-text="description"></h4>
+    <span class="activeState" u-active="active"></span>
+    <span class="setconfig"></span>
   </div>
   <div class="block Element">
-    <span u-text="value" style="position:absolute;font-size:2rem;width:3em;text-align: right;height:1em;right:0.4em"></span>
+    <span
+      u-text="value"
+      style="position:absolute;font-size:2rem;width:3em;text-align: right;height:1em;right:0.4em"
+    ></span>
   </div>
 </div>

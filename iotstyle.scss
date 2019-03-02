@@ -81,7 +81,7 @@ h2 {
 
 // Topic
 h3 {
-  font-size: 1em;
+  font-size: 1.25em;
   font-weight: bold;
 }
 
@@ -251,8 +251,8 @@ svg.button {
   background-color: $u-background;
   border: 0.1rem solid $u-primary;
   border-radius: .4rem;
-  width: 400px;
-  min-width: 400px;
+  width: 360px;
+  min-width: 360px;
 
   img.active {
     background-color: limegreen;
@@ -261,6 +261,7 @@ svg.button {
   >.block {
     flex: 1 1 auto;
     padding: 0.4em;
+    font-size: 0.8em;
 
     &.header {
       background-image: linear-gradient(to bottom, $u-background, darken($u-background, 10%));
@@ -268,6 +269,13 @@ svg.button {
       border-top-left-radius: .4rem;
       min-height: 3.6rem;
 
+      .icon {
+        width: 3rem;
+        height: 3rem;
+        float:left;
+        margin-right: 0.2rem; 
+      }
+    
       >h2,
       >h4 {
         margin: 0
@@ -299,11 +307,11 @@ label+label,
 button+a,
 button+button,
 button+label {
-  margin-left: 1.25rem;
+  margin-left: 0.8rem;
 }
 
 button {
-  font-size: 1.6em;
+  font-size: 1.5em;
   border: 0.1rem solid $u-primary;
   background-color: $u-primary;
   color: white;
