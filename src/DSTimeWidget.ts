@@ -23,7 +23,7 @@ class DSTimeClass extends GenericWidgetClass {
   }
 
   connectedCallback (el:HTMLElement) {
-    super.connectedCallback.call(this, el);
+    super.connectedCallback(el);
     this._nowObj = <HTMLElement>this.el.querySelector(".now");
     window.setInterval(function () {
       setTextContent(this._nowObj, this.isoDate());
@@ -34,6 +34,8 @@ class DSTimeClass extends GenericWidgetClass {
     var src = e.srcElement;
     if (src.classList.contains("setnow")) {
       this.dispatchAction("time", this.isoDate())
+    } else {
+      super.onclick(e);
     }
   }
 }

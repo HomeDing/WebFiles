@@ -5,59 +5,55 @@
 
 // === Generic Widget Behavior ===
 
-@MicroControl("generic")
+@MicroControl('generic')
 class GenericWidgetClass extends MicroBaseControl {
-  microid: string = "";
+  microid: string = '';
   data: Object = {};
+  subId: number;
 
   connectedCallback(el: HTMLElement) {
     super.connectedCallback(el);
     this.data = { id: this.microid };
-    hub.subscribe(this.microid + "?*", this.newData.bind(this), true);
+    this.subId = hub.subscribe(this.microid + '?*', this.newData.bind(this));
+    hub.replay(this.subId);
   } // connectedCallback
 
   // visualize any new data for the widget.
   newData(path: string, key: string, value: string) {
     // save data to title
     this.data[key] = value;
-    var ic = this.el.querySelector("img");
+    var ic = this.el.querySelector('img');
     if (ic) {
-      setAttribute2(
+      setAttr(
         ic,
-        "title",
+        'title',
         JSON.stringify(this.data, null, 1)
-          .replace("{\n", "")
-          .replace("\n}", "")
+          .replace('{\n', '')
+          .replace('\n}', '')
       );
     }
 
-    // u-activ flags
-    ["span", "div"].forEach(function(elType) {
-      this.el
-        .querySelectorAll(elType + "[u-active='" + key + "']")
-        .forEach(function(el: HTMLElement) {
-          var b = toBool(value);
-          setAttribute2(el, "value", b ? "1" : "0");
-          setAttribute2(el, "title", b ? "active" : "not active");
-          el.classList.toggle("active", b);
-        });
+    // u-active flags
+    ['span', 'div'].forEach(function(elType) {
+      this.el.querySelectorAll(elType + `[u-active='${key}']`).forEach(function(el: HTMLElement) {
+        var b = toBool(value);
+        setAttr(el, 'value', b ? '1' : '0');
+        setAttr(el, 'title', b ? 'active' : 'not active');
+        el.classList.toggle('active', b);
+      });
     }, this);
 
     // textContent
-    ["h2", "h4", "span"].forEach(function(elType) {
-      this.el
-        .querySelectorAll(elType + "[u-text='" + key + "']")
-        .forEach(function(el) {
-          if (el.textContent != value) el.textContent = value;
-        });
+    ['h2', 'h4', 'span'].forEach(function(elType) {
+      this.el.querySelectorAll(elType + "[u-text='" + key + "']").forEach(function(el) {
+        if (el.textContent != value) el.textContent = value;
+      });
     }, this);
 
     // value of input fields
-    this.el
-      .querySelectorAll("input[u-value='" + key + "']")
-      .forEach(function(el: HTMLInputElement) {
-        if (el.value != value) el.value = value;
-      });
+    this.el.querySelectorAll("input[u-value='" + key + "']").forEach(function(el: HTMLInputElement) {
+      if (el.value != value) el.value = value;
+    });
   } // newData()
 
   // send an action to the board and dispatch to the element
@@ -68,18 +64,18 @@ class GenericWidgetClass extends MicroBaseControl {
   // send changed value of property as an action to the board
   onchange(e) {
     var src = e.srcElement;
-    this.dispatchAction(src.getAttribute("u-value"), e.srcElement.value);
+    this.dispatchAction(src.getAttribute('u-value'), e.srcElement.value);
   }
 
   // send an action to the board
   // + change config mode
   onclick(e: MouseEvent) {
     var src = e.srcElement;
-    var a = src.getAttribute("u-action");
-    if (a) this.dispatchAction(a, e.srcElement["value"]);
+    var a = src.getAttribute('u-action');
+    if (a) this.dispatchAction(a, e.srcElement['value']);
 
-    if (src.classList.contains("setconfig")) {
-      this.el.classList.toggle("configmode");
+    if (src.classList.contains('setconfig')) {
+      this.el.classList.toggle('configmode');
     }
   }
 } // GenericWidgetClass

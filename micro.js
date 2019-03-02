@@ -520,6 +520,9 @@ var DSTimeClass = (function (_super) {
         if (src.classList.contains("setnow")) {
             this.dispatchAction("time", this.isoDate());
         }
+        else {
+            _super.prototype.onclick.call(this, e);
+        }
     };
     return DSTimeClass;
 }(GenericWidgetClass));
