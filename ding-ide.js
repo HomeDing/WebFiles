@@ -169,6 +169,28 @@ function handleSave() {
 } // handleSave()
 
 
+// Format JSON file, remove ugly characters...
+function handleFmt() {
+  var fName = activeFileObj.innerText;
+  if (fName.toLowerCase().endsWith(".json")) {
+    var t = contentObj.innerText;
+    var o = null;
+
+    // missing comma
+    t = t.replace(/\}\s*/g, "}");
+    t = t.replace(/\}([^,}])/g, "},$1");
+    // trailing comma
+    t = t.replace(/\}\s*,\s*\}/g, "}}");
+
+    try {
+      o = JSON.parse(t);
+      if (o && typeof o === "object")
+      contentObj.innerText = JSON.stringify(o, null, 2);
+    } finally {}// try
+  }
+} // handleSave()
+
+
 // files was dropped on dropzone
 function drop(e) {
   progressObj.classList.remove("fadeout");
@@ -232,15 +254,15 @@ function jsonCheck() {
         o = null;
       } // if
     } catch (e) {
-      checkerObj.textContent = e.message;
-      checkerObj.className = "invalid";
+      checkerObj.title = e.message;
     }
 
     if (o !== null) {
-      checkerObj.textContent = "valid";
+      checkerObj.textContent = "ok";
       checkerObj.className = "valid";
+      checkerObj.title = "";
     } else {
-      // checkerObj.innerText = "invalid";
+      checkerObj.textContent = "no";
       checkerObj.className = "invalid";
     }
     window.status = t.length + "--" + (o !== null);
