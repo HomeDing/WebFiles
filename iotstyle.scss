@@ -1,13 +1,17 @@
 /* Colors */
 
+$u-background: #eeeeee; // active objects
+
 $u-primary: #304878; // active objects
 $u-focus: #4466ee; // active object with focus
 $u-disabled: #808080; // disabled objects
 $u-text: #111111; // any text
 $u-heading: #304878; // any headlines
 $u-connect: #00cc00; // connectivity / net
-$u-background: #d4dced; // connectivity / net
-$u-navbar: #cccccc; // connectivity / net
+$u-cardbackground: #d4dced; // connectivity / net
+$u-navbar: #d4dced;
+
+$u-btn-radius: 0.2em;
 
 $u-on: green;
 $u-off: red;
@@ -23,6 +27,9 @@ body {
   color: $u-text;
 }
 
+body {
+  background-color: $u-background;
+}
 * {
   box-sizing: border-box;
 }
@@ -37,7 +44,7 @@ h3,
 h4 {
   margin: 0 0 0.5em 0;
 
-  >img {
+  > img {
     // assume image in text containers to be inline icons
     height: 1em;
 
@@ -56,7 +63,7 @@ a:visited {
   color: $u-primary;
 }
 
-p>a {
+p > a {
   text-decoration: underline;
 }
 
@@ -92,9 +99,8 @@ h4 {
 }
 
 .hidden {
-  display: none
+  display: none;
 }
-
 
 /* === Grid Design with grid of 6 === */
 
@@ -112,7 +118,6 @@ h4 {
   margin-right: 0;
   margin-left: 0;
 }
-
 
 /* row with 0.5rem gutter */
 
@@ -145,7 +150,7 @@ h4 {
   margin: 0.5rem 0 0 0.5rem;
 }
 
-.row.nogutter>.col {
+.row.nogutter > .col {
   margin: 0;
 }
 
@@ -192,7 +197,6 @@ svg.button {
   }
 }
 
-
 /* === Header === */
 
 // The header in the micro css is used to display the primary icon of the device, the name and links to important pages.
@@ -215,19 +219,19 @@ svg.button {
     vertical-align: middle;
   }
 
-  img+* {
+  img + * {
     margin-left: 0.2rem;
   }
 
-  >*+* {
+  > * + * {
     margin-left: 0.6rem;
   }
 
   .icon {
     width: 3rem;
     height: 3rem;
-    background-color: $u-background;
-    border-radius: 0.2em;
+    background-color: $u-cardbackground;
+    border-radius: $u-btn-radius;
   }
 }
 
@@ -235,9 +239,9 @@ svg.button {
   background-color: $u-navbar;
   padding: 0.4rem;
   margin-bottom: 0.4rem;
-  min-height: 2.8rem;
+  min-height: 2.2rem;
 
-  >button {
+  > button {
     min-width: 2em;
   }
 }
@@ -248,37 +252,37 @@ svg.button {
   position: relative;
   display: flex;
   flex-direction: column;
-  background-color: $u-background;
+  background-color: $u-cardbackground;
   border: 0.1rem solid $u-primary;
-  border-radius: .4rem;
-  width: 360px;
-  min-width: 360px;
+  border-radius: 0.3rem;
+  width: 24em;
+  min-width: 24em;
 
   img.active {
     background-color: limegreen;
   }
 
-  >.block {
+  > .block {
     flex: 1 1 auto;
     padding: 0.4em;
-    font-size: 0.8em;
+    min-height: 2.6em;
 
     &.header {
-      background-image: linear-gradient(to bottom, $u-background, darken($u-background, 10%));
-      border-top-right-radius: .4rem;
-      border-top-left-radius: .4rem;
+      background-image: linear-gradient(to bottom, $u-cardbackground, darken($u-cardbackground, 10%));
+      border-top-right-radius: 0.4rem;
+      border-top-left-radius: 0.4rem;
       min-height: 3.6rem;
 
       .icon {
         width: 3rem;
         height: 3rem;
-        float:left;
-        margin-right: 0.2rem; 
+        float: left;
+        margin-right: 0.2rem;
       }
-    
-      >h2,
-      >h4 {
-        margin: 0
+
+      > h2,
+      > h4 {
+        margin: 0;
       }
     }
 
@@ -289,8 +293,8 @@ svg.button {
     }
   }
 
-  >hr {
-    background-color: rgba(0, 0, 0, .125);
+  > hr {
+    background-color: rgba(0, 0, 0, 0.125);
     border: 0;
     height: 1px;
     padding: 0;
@@ -298,29 +302,43 @@ svg.button {
   }
 }
 
-a+a,
-a+button,
-a+label,
-label+a,
-label+button,
-label+label,
-button+a,
-button+button,
-button+label {
+a + a,
+a + button,
+a + label,
+label + a,
+label + button,
+label + label,
+button + a,
+button + button,
+button + label {
   margin-left: 0.8rem;
 }
 
+button,
+label {
+  display: inline-block;
+  font-size: 1.25em;
+  height: 1.4em;
+  padding: 0 0.4em;
+}
+
 button {
-  font-size: 1.5em;
+  display: inline-block;
+  font-size: 1.25em;
+  min-width: 4em;
+  height: 1.4em;
+  padding: 0 0.4em;
+  border-radius: $u-btn-radius;
   border: 0.1rem solid $u-primary;
   background-color: $u-primary;
   color: white;
-  border-radius: 0.2em;
-  padding: 0 0.4em;
-  min-width: 4em;
   cursor: pointer;
   user-select: none;
   -ms-user-select: none;
+}
+
+label {
+  border: 0.1rem solid transparent;
 }
 
 button:focus {
@@ -340,30 +358,60 @@ button.active {
 
 button.secondary {
   background-color: #777777;
-  border-color: #777777
+  border-color: #777777;
+}
+
+.btn-group {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: flex-start;
+
+  > * {
+    flex: 1 1 auto;
+    margin: 0;
+    border-radius: 0;
+  }
+  > *:first-child {
+    border-top-left-radius: $u-btn-radius;
+    border-bottom-left-radius: $u-btn-radius;
+  }
+  > *:last-child {
+    border-top-right-radius: $u-btn-radius;
+    border-bottom-right-radius: $u-btn-radius;
+  }
 }
 
 .form-group {
   margin-bottom: 0.2rem;
 
-  >label {
+  > label {
     display: inline-block;
     text-align: right;
     margin-right: 0.5em;
     width: 8em;
   }
 
-  >input,
-  >select {
+  > input,
+  > select {
     width: 12em;
   }
 }
-
 
 label.fixed {
   display: inline-block;
   text-align: right;
   width: 8em;
+}
+
+.invalid {
+  border: 2px solid #ff0000 !important;
+  background-color: #ffcccc !important;
+}
+
+.valid {
+  border: 2px solid #00cc00 !important;
+  background-color: #ccffcc !important;
 }
 
 /* === element Icons === */
@@ -379,7 +427,7 @@ label.fixed {
     width: 10rem;
   }
 
-  >img {
+  > img {
     position: relative;
     left: 1rem;
     top: 0.4rem;
@@ -387,7 +435,7 @@ label.fixed {
     width: 4rem;
   }
 
-  >.id {
+  > .id {
     position: absolute;
     display: inline-block;
     bottom: 0.4rem;
@@ -397,7 +445,7 @@ label.fixed {
     text-align: center;
   }
 
-  >.info {
+  > .info {
     position: absolute;
     display: inline-block;
     top: 0.4rem;
@@ -418,11 +466,11 @@ label.fixed {
   background-color: silver;
 }
 
-.u-bool[value="1"] {
+.u-bool[value='1'] {
   background-image: linear-gradient(145deg, lighten($u-on, 30%), $u-on);
 }
 
-.u-bool[value="0"] {
+.u-bool[value='0'] {
   background-image: linear-gradient(145deg, lighten($u-off, 30%), $u-off);
 }
 
@@ -444,25 +492,24 @@ label.fixed {
   background-color: #aaaaaa;
 }
 
-.u-bar>.pulse,
-.u-bar>.current {
+.u-bar > .pulse,
+.u-bar > .current {
   display: inline-block;
   position: absolute;
 }
 
-.u-bar>.pulse {
+.u-bar > .pulse {
   top: 0;
   left: 0;
   height: 1.4em;
-  background-color: green
+  background-color: green;
 }
 
-.u-bar>.current {
+.u-bar > .current {
   top: 0.4em;
   height: 0.6em;
   background-color: red;
 }
-
 
 /* === SWITCH === */
 
@@ -470,26 +517,26 @@ label.fixed {
   display: inline-block;
   width: 100%;
 
-  >label {
+  > label {
     display: inline-block;
-    padding: .4rem 1rem;
+    padding: 0.4rem 1rem;
     margin-bottom: 0.5rem;
     vertical-align: top;
     font-size: 1.4rem;
     cursor: pointer;
   }
 
-  >.box {
+  > .box {
     position: relative;
     cursor: pointer;
     display: inline-block;
     width: 3rem;
     height: 1.6rem;
-    border: 0.1rem solid #C0C0C0;
+    border: 0.1rem solid #c0c0c0;
     border-radius: 1.3rem;
     background-color: #eeeeee;
 
-    >.handle {
+    > .handle {
       position: absolute;
       display: inline-block;
       top: 0.1rem;
@@ -502,16 +549,23 @@ label.fixed {
     }
   }
 
-  &.active>.box>.handle {
+  &.active > .box > .handle {
     left: 1.5rem;
   }
 }
 
-
 /* === Responsive Utilities === */
+
+.display-xs {
+  display: none;
+}
 
 @media (max-width: 767px) {
   .hidden-xs {
-    display: none
+    display: none;
+  }
+
+  .display-xs {
+    display: initial;
   }
 }

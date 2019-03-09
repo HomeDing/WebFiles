@@ -2,6 +2,8 @@
 /* main */
 html, body { padding: 0; margin: 0; font-family: Arial; font-size: 1em; color: #111111; }
 
+body { background-color: #eeeeee; }
+
 * { box-sizing: border-box; }
 
 /* === Text containers === */
@@ -78,18 +80,18 @@ svg.button .connect { fill: #00cc00; fill-opacity: 1; }
 
 .u-header .icon { width: 3rem; height: 3rem; background-color: #d4dced; border-radius: 0.2em; }
 
-.u-navbar { background-color: #cccccc; padding: 0.4rem; margin-bottom: 0.4rem; min-height: 2.8rem; }
+.u-navbar { background-color: #d4dced; padding: 0.4rem; margin-bottom: 0.4rem; min-height: 2.2rem; }
 
 .u-navbar > button { min-width: 2em; }
 
 /* === Cards === */
-.card { position: relative; display: flex; flex-direction: column; background-color: #d4dced; border: 0.1rem solid #304878; border-radius: .4rem; width: 360px; min-width: 360px; }
+.card { position: relative; display: flex; flex-direction: column; background-color: #d4dced; border: 0.1rem solid #304878; border-radius: 0.3rem; width: 24em; min-width: 24em; }
 
 .card img.active { background-color: limegreen; }
 
-.card > .block { flex: 1 1 auto; padding: 0.4em; font-size: 0.8em; }
+.card > .block { flex: 1 1 auto; padding: 0.4em; min-height: 2.6em; }
 
-.card > .block.header { background-image: linear-gradient(to bottom, #d4dced, #b0bfde); border-top-right-radius: .4rem; border-top-left-radius: .4rem; min-height: 3.6rem; }
+.card > .block.header { background-image: linear-gradient(to bottom, #d4dced, #b0bfde); border-top-right-radius: 0.4rem; border-top-left-radius: 0.4rem; min-height: 3.6rem; }
 
 .card > .block.header .icon { width: 3rem; height: 3rem; float: left; margin-right: 0.2rem; }
 
@@ -101,7 +103,11 @@ svg.button .connect { fill: #00cc00; fill-opacity: 1; }
 
 a + a, a + button, a + label, label + a, label + button, label + label, button + a, button + button, button + label { margin-left: 0.8rem; }
 
-button { font-size: 1.5em; border: 0.1rem solid #304878; background-color: #304878; color: white; border-radius: 0.2em; padding: 0 0.4em; min-width: 4em; cursor: pointer; user-select: none; -ms-user-select: none; }
+button, label { display: inline-block; font-size: 1.25em; height: 1.4em; padding: 0 0.4em; }
+
+button { display: inline-block; font-size: 1.25em; min-width: 4em; height: 1.4em; padding: 0 0.4em; border-radius: 0.2em; border: 0.1rem solid #304878; background-color: #304878; color: white; cursor: pointer; user-select: none; -ms-user-select: none; }
+
+label { border: 0.1rem solid transparent; }
 
 button:focus { border: 0.1rem solid #4466ee; background-color: #4466ee; }
 
@@ -111,6 +117,14 @@ button.active { background-color: #acc1e4 !important; border-color: #203050 !imp
 
 button.secondary { background-color: #777777; border-color: #777777; }
 
+.btn-group { display: flex; flex-direction: row; flex-wrap: nowrap; align-items: flex-start; }
+
+.btn-group > * { flex: 1 1 auto; margin: 0; border-radius: 0; }
+
+.btn-group > *:first-child { border-top-left-radius: 0.2em; border-bottom-left-radius: 0.2em; }
+
+.btn-group > *:last-child { border-top-right-radius: 0.2em; border-bottom-right-radius: 0.2em; }
+
 .form-group { margin-bottom: 0.2rem; }
 
 .form-group > label { display: inline-block; text-align: right; margin-right: 0.5em; width: 8em; }
@@ -118,6 +132,10 @@ button.secondary { background-color: #777777; border-color: #777777; }
 .form-group > input, .form-group > select { width: 12em; }
 
 label.fixed { display: inline-block; text-align: right; width: 8em; }
+
+.invalid { border: 2px solid #ff0000 !important; background-color: #ffcccc !important; }
+
+.valid { border: 2px solid #00cc00 !important; background-color: #ccffcc !important; }
 
 /* === element Icons === */
 .element { position: relative; display: inline-block; height: 6rem; width: 6rem; margin: 0.6rem; }
@@ -133,9 +151,9 @@ label.fixed { display: inline-block; text-align: right; width: 8em; }
 /* === Value indicators all kind of === */
 .u-bool { display: inline-block; height: 1.4rem; width: 1.4rem; border-radius: 0.7rem; text-align: center; background-color: silver; }
 
-.u-bool[value="1"] { background-image: linear-gradient(145deg, #1aff1a, green); }
+.u-bool[value='1'] { background-image: linear-gradient(145deg, #1aff1a, green); }
 
-.u-bool[value="0"] { background-image: linear-gradient(145deg, #ff9999, red); }
+.u-bool[value='0'] { background-image: linear-gradient(145deg, #ff9999, red); }
 
 .u-level { display: inline-block; border-color: #304878; border-style: solid; border-width: 1px; width: 32px; height: 64px; }
 
@@ -150,13 +168,16 @@ label.fixed { display: inline-block; text-align: right; width: 8em; }
 /* === SWITCH === */
 .u-switch { display: inline-block; width: 100%; }
 
-.u-switch > label { display: inline-block; padding: .4rem 1rem; margin-bottom: 0.5rem; vertical-align: top; font-size: 1.4rem; cursor: pointer; }
+.u-switch > label { display: inline-block; padding: 0.4rem 1rem; margin-bottom: 0.5rem; vertical-align: top; font-size: 1.4rem; cursor: pointer; }
 
-.u-switch > .box { position: relative; cursor: pointer; display: inline-block; width: 3rem; height: 1.6rem; border: 0.1rem solid #C0C0C0; border-radius: 1.3rem; background-color: #eeeeee; }
+.u-switch > .box { position: relative; cursor: pointer; display: inline-block; width: 3rem; height: 1.6rem; border: 0.1rem solid #c0c0c0; border-radius: 1.3rem; background-color: #eeeeee; }
 
 .u-switch > .box > .handle { position: absolute; display: inline-block; top: 0.1rem; left: 0.1rem; height: 1.2rem; width: 1.2rem; border-radius: 1.2rem; background-color: #203050; transition: left 0.2s cubic-bezier(0.25, 0.1, 0.25, 1); }
 
 .u-switch.active > .box > .handle { left: 1.5rem; }
 
 /* === Responsive Utilities === */
-@media (max-width: 767px) { .hidden-xs { display: none; } }
+.display-xs { display: none; }
+
+@media (max-width: 767px) { .hidden-xs { display: none; }
+  .display-xs { display: initial; } }
