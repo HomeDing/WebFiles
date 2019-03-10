@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="360" height="120" viewBox="0 0 144 48" style="background-color:#eeeeee" >
+  <style>
+      #axis line {stroke:#008800;stroke-width:.4}
+      #panel path, #panel polyline {stroke:#000088;stroke-width:0.4;fill:none}
+  </style>
+
+  <defs>
+      <marker id="arrow" markerWidth="10" markerHeight="10" refX="0" refY="3" orient="auto" markerUnits="strokeWidth" viewBox="0 0 20 20">
+        <path d="M0,0 L0,6 L9,3 z" fill="#f00" />
+      </marker>
+      <marker id="circle" markerWidth="4" markerHeight="4" refX="2" refY="2">
+        <circle cx="2" cy="2" r="2" stroke="none" fill="#f00"/>
+      </marker>
+  </defs>
+
+  <g id="background" transform="matrix(1,0,0,-1,4,44)">
+    <rect width="136" height="40" fill="#ffffff" />
+  </g>
+
+  <g id="axis" transform="matrix(1,0,0,-1,0,48)">
+    <line x1="4" y1="0" x2="4" y2="44" xstyle="stroke:rgb(255,0,0);stroke-width:1" />
+    <line x1="0" y1="4" x2="140" y2="4" xstyle="stroke:rgb(255,0,0);stroke-width:1" />
+  </g>
+
+  <!-- region for the linechart is 136*40 starting in 0/0 -->
+  <g id="panel" transform="matrix(1,0,0,-1,4,44)">
+  </g>
+
+  <script href="microsvg.js" ></script>
+  <script href="lineChart.js" ></script>
+</svg>
