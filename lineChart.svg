@@ -1,7 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="360" height="120" viewBox="0 0 144 48" style="background-color:#eeeeee" >
   <style>
-      #axis line {stroke:#008800;stroke-width:.4}
-      #panel path, #panel polyline {stroke:#000088;stroke-width:0.4;fill:none}
+      #axis line {stroke:#008800;stroke-width:.1;}
+      #panel path, #panel polyline {stroke:black;stroke-width:0.1;fill:none;}
+      #v-labels text {transform:scale(1, -1);text-anchor:end;font-size:4px;)
+      #v-labels line {stroke:#008800;stroke-width:.1;}
   </style>
 
   <defs>
@@ -13,17 +15,26 @@
       </marker>
   </defs>
 
-  <g id="background" transform="matrix(1,0,0,-1,4,44)">
-    <rect width="136" height="40" fill="#ffffff" />
+  <g id="background" transform="matrix(1,0,0,-1,0,48)">
+    <rect width="144" height="48" fill="#ffffff" />
+    <rect x="12" y="8" width="128" height="36" fill="#f2f0f2" />
   </g>
 
   <g id="axis" transform="matrix(1,0,0,-1,0,48)">
-    <line x1="4" y1="0" x2="4" y2="44" xstyle="stroke:rgb(255,0,0);stroke-width:1" />
-    <line x1="0" y1="4" x2="140" y2="4" xstyle="stroke:rgb(255,0,0);stroke-width:1" />
+    <line x1="12" y1="4" x2="12" y2="44" />
+    <line x1="8" y1="8" x2="140" y2="8" />
+  </g>
+
+  <g id="v-labels" transform="matrix(1,0,0,-1,0,41)">
+    <text x="11" y="0">0-</text>
+    <text x="11" y="-4.4">44-</text>
+    <text x="11" y="-11.2">112-</text>
   </g>
 
   <!-- region for the linechart is 136*40 starting in 0/0 -->
-  <g id="panel" transform="matrix(1,0,0,-1,4,44)">
+  <g id="panel" transform="matrix(1,0,0,-1,12,40)">
+    <!-- <rect width="128" height="36" fill="#f2f0f2" /> -->
+
   </g>
 
   <script href="microsvg.js" ></script>
