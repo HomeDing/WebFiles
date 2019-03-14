@@ -25,11 +25,7 @@
     <line x1="8" y1="8" x2="140" y2="8" />
   </g>
 
-  <g id="v-labels" transform="matrix(1,0,0,-1,0,41)">
-    <text x="11" y="0">0-</text>
-    <text x="11" y="-4.4">44-</text>
-    <text x="11" y="-11.2">112-</text>
-  </g>
+  <g id="v-labels" transform="matrix(1,0,0,-1,0,41)"></g>
 
   <!-- region for the linechart is 136*40 starting in 0/0 -->
   <g id="panel" transform="matrix(1,0,0,-1,12,40)">
