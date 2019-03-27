@@ -1,9 +1,15 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="360" height="120" viewBox="0 0 144 48" style="background-color:#eeeeee" >
   <style>
-      #axis line {stroke:#008800;stroke-width:.1;}
-      #panel path, #panel polyline {stroke:black;stroke-width:0.1;fill:none;}
-      #v-labels text {transform:scale(1, -1);text-anchor:end;font-size:4px;)
-      #v-labels line {stroke:#008800;stroke-width:.1;}
+    #axis line {stroke:#008800;stroke-width:.1;}
+    #panel path, #panel line, #panel polyline {stroke:black;stroke-width:0.1;fill:none;}
+    .panel-back {fill:#f4f2f4}
+    #v-labels text {transform:scale(1, -1);text-anchor:end;font-size:4px;}
+    #v-labels line {stroke:#008800;stroke-width:.1;}
+    #ind {pointer-events: none;}
+    #ind line {stroke:darkgreen;stroke-width:0.1;}
+    #ind circle {fill:none; stroke:darkgreen;stroke-width:0.1}
+    #ind .info .back {fill:white}
+    #ind text {transform:scale(1, -1);text-anchor:start;font-size:4px;}
   </style>
 
   <defs>
@@ -28,11 +34,22 @@
   <g id="v-labels" transform="matrix(1,0,0,-1,0,41)"></g>
 
   <!-- region for the linechart is 136*40 starting in 0/0 -->
+  <!-- <polyline marker-end="url(#arrow)" marker-start="url(#circle)" marker-mid="url(#circle)" /> -->
   <g id="panel" transform="matrix(1,0,0,-1,12,40)">
-    <!-- <rect width="128" height="36" fill="#f2f0f2" /> -->
+    <rect class="panel-back" width="128" height="36" />
+  </g>
 
+  <g id="ind" transform="matrix(1,0,0,-1,12,40)" style="display:none">
+    <line x1="12" y1="0" x2="12" y2="36" />
+    <circle  cx="12" cy="8" r="1.2" />
+    <g class="info" transform="translate(4, 12)">
+      <rect class="back" width="16" height="9" />
+      <text x="1" y="-5" id="indx"></text>
+      <text x="1" y="-1" id="indV"></text>
+    </g>
   </g>
 
   <script href="microsvg.js" ></script>
   <script href="lineChart.js" ></script>
 </svg>
+
