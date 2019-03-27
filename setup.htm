@@ -3,40 +3,32 @@
 
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>HomeDing Setup</title>
-
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="application-name" content="Ding">
-  <link rel="apple-touch-icon" sizes="180x180" href="/favicon180.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/favicon16.png">
-  <link rel="icon" type="image/png" sizes="192x192" href="/favicon192.png">
-  <link rel="manifest" href="/manifest.json">
-  <link rel="mask-icon" href="/favicon.svg" color="#5bbad5">
-  <meta name="msapplication-config" content="/browserconfig.xml" />
-  <meta name="msapplication-TileColor" content="#2b5797">
-  <meta name="msapplication-TileImage" content="/favicon144.png">
-  <meta name="theme-color" content="#ffffff">
-
+  <title>HomeDing Connect</title>
   <link Content-Type="text/css" href="iotstyle.css" rel="stylesheet" />
-  <style>
-
-  </style>
-  <script src="polyfill.js"></script>
-  <script src="es6-promise.auto.js"></script>
-  <!-- <script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.auto.js"></script> -->
-  <script src="micro.js"></script>
-
+  <script>
+    function loadAsync(url, mime, loadCallback, errorCallback) {
+      var objHTTP = new XMLHttpRequest(); // new ActiveXObject("MSXML2.XMLHTTP");
+      objHTTP.open("GET", url, true);
+      if (mime) objHTTP.overrideMimeType(mime);
+      objHTTP.addEventListener("readystatechange", function (p) {
+        if (objHTTP.readyState == 4) {
+          if ((objHTTP.status >= 200) && (objHTTP.status < 300)) {
+            loadCallback(objHTTP.responseText);
+          } else {
+            if (errorCallback) errorCallback(this);
+          } // if
+        } // if
+      });
+      objHTTP.send();
+    } // loadAsync()
+  </script>
 </head>
 
 <body>
   <div class="container">
     <div class="u-header">
       <a href="/" title="Startpage" ><img class="icon" src="/favicon.svg" /></a>
-      <h1>Setup</h1>
-      <a href="/ding-ide.htm" title="Start IDE"><img class="icon" src="/i/ide.svg" /><span class="hidden-xs">IDE</span></a>
-      <a href="/ding-info.htm" title="Start Config"><img class="icon" src="/i/config.svg" /><span class="hidden-xs">Config</span></a>
-      <a href="/ding-log.htm" title="Logfile"><img class="icon" src="/i/log.svg" /><span class="hidden-xs">Log</span></a>
+      <h1>HomeDing Connect</h1>
     </div>
 
     <div class="row wrap">
@@ -86,14 +78,12 @@
       } // startScan()
 
       function checkScan() {
-        fetch('/$scan')
-          .then(function (result) {
-            scanDone = 0;
-            return (result.json());
-          }).then(function (x) {
+        loadAsync('/$scan', null, function (txt) {
+          if (txt.length > 0) {
             scanDone = 2;
-            scanResult(x);
-          });
+            scanResult(JSON.parse(txt));
+          }
+        }, null);
       } // checkScan()
 
       function scanResult(netList) {
