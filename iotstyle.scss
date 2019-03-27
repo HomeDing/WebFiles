@@ -314,14 +314,6 @@ button + label {
   margin-left: 0.8rem;
 }
 
-button,
-label {
-  display: inline-block;
-  font-size: 1.25em;
-  height: 1.4em;
-  padding: 0 0.4em;
-}
-
 button {
   display: inline-block;
   font-size: 1.25em;
@@ -337,9 +329,6 @@ button {
   -ms-user-select: none;
 }
 
-label {
-  border: 0.1rem solid transparent;
-}
 
 button:focus {
   border: 0.1rem solid $u-focus;
@@ -380,6 +369,15 @@ button.secondary {
     border-top-right-radius: $u-btn-radius;
     border-bottom-right-radius: $u-btn-radius;
   }
+
+  > label {
+    display: inline-block;
+    border: 0.1rem solid transparent;
+    font-size: 1.25em;
+    height: 1.4em;
+    padding: 0 0.4em;
+  }
+  
 }
 
 .form-group {
@@ -401,6 +399,7 @@ button.secondary {
 label.fixed {
   display: inline-block;
   text-align: right;
+  margin-right: 0.2em;
   width: 8em;
 }
 

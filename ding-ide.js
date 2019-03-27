@@ -2,7 +2,7 @@
 
 var filesObj = document.getElementById("files");
 var contentObj = document.getElementById("content");
-var progressObj = document.getElementById("progressBar2");
+var progressObj = document.getElementById("progress");
 
 var activeFileObj = document.getElementById("activeFile");
 var checkerObj = document.getElementById("checker");

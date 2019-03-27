@@ -103,11 +103,7 @@ svg.button .connect { fill: #00cc00; fill-opacity: 1; }
 
 a + a, a + button, a + label, label + a, label + button, label + label, button + a, button + button, button + label { margin-left: 0.8rem; }
 
-button, label { display: inline-block; font-size: 1.25em; height: 1.4em; padding: 0 0.4em; }
-
 button { display: inline-block; font-size: 1.25em; min-width: 4em; height: 1.4em; padding: 0 0.4em; border-radius: 0.2em; border: 0.1rem solid #304878; background-color: #304878; color: white; cursor: pointer; user-select: none; -ms-user-select: none; }
-
-label { border: 0.1rem solid transparent; }
 
 button:focus { border: 0.1rem solid #4466ee; background-color: #4466ee; }
 
@@ -125,13 +121,15 @@ button.secondary { background-color: #777777; border-color: #777777; }
 
 .btn-group > *:last-child { border-top-right-radius: 0.2em; border-bottom-right-radius: 0.2em; }
 
+.btn-group > label { display: inline-block; border: 0.1rem solid transparent; font-size: 1.25em; height: 1.4em; padding: 0 0.4em; }
+
 .form-group { margin-bottom: 0.2rem; }
 
 .form-group > label { display: inline-block; text-align: right; margin-right: 0.5em; width: 8em; }
 
 .form-group > input, .form-group > select { width: 12em; }
 
-label.fixed { display: inline-block; text-align: right; width: 8em; }
+label.fixed { display: inline-block; text-align: right; margin-right: 0.2em; width: 8em; }
 
 .invalid { border: 2px solid #ff0000 !important; background-color: #ffcccc !important; }
 

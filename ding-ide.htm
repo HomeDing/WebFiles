@@ -64,7 +64,7 @@
         border: 1px dashed black;
       }
 
-      #progressBar2 {
+      #progress {
         position: absolute;
         top: 0.6rem;
         right: 0.1rem;
@@ -76,7 +76,7 @@
         background-color: white;
       }
 
-      #progressBar2.fadeout {
+      #progress.fadeout {
         transition-delay: 2s;
         transition-property: opacity;
         transition-duration: 1s;
@@ -104,23 +104,21 @@
 
   <body style="height:100%">
     <div class="container-fluid" style="display:flex;flex-direction:column;height:100%;overflow:hidden">
-      <progress id="progressBar2" class="fadeout" max="1" value="0"></progress>
+      <progress id="progress" class="fadeout" max="1" value="0"></progress>
 
       <div class="u-header">
         <a href="/" title="Startpage"><img class="icon" src="/favicon.svg"/></a>
         <h1>Device</h1>
-        <a href="/ding-ide.htm" title="Start IDE"
-          ><img class="icon" src="/i/ide.svg" /><span class="hidden-xs">IDE</span></a
-        >
-        <a href="/ding-info.htm" title="Start Config"
-          ><img class="icon" src="/i/config.svg" /><span class="hidden-xs">Config</span></a
-        >
-        <a href="/ding-log.htm" title="Logfile"
-          ><img class="icon" src="/i/log.svg" /><span class="hidden-xs">Log</span></a
-        >
+        <a href="/ding-ide.htm" title="Start IDE">
+          <img class="icon" src="/i/ide.svg" /><span class="hidden-xs">IDE</span>
+        </a>
+        <a href="/ding-info.htm" title="Start Config">
+          <img class="icon" src="/i/config.svg" /><span class="hidden-xs">Config</span>
+        </a>
+        <a href="/ding-log.htm" title="Logfile">
+          <img class="icon" src="/i/log.svg" /><span class="hidden-xs">Log</span>
+        </a>
 
-        <!-- <a href="/ding.htm">[UI]</a>
-        <a href="/$sysinfo">[$sysinfo]</a> -->
         <span style="flex-grow: 1"></span>
         <button class="once" id="doReset">reset</button>
         <div id="dropzone">Drop here.</div>
@@ -136,7 +134,7 @@
           <button class="once secondary" style="float: right" onclick="handleFmt()">format</button>
           <span class="btn-group" style="float: right">
             <button class="once" onclick="handleSave()">save</button>
-            <label class="valid" id="checker" style=" ">ok</label>
+            <label class="valid" id="checker">ok</label>
           </span>
         </div>
       </div>
@@ -169,11 +167,12 @@
       function runOnce() {
         var scope = this;
         this.disabled = true;
-        DelayPromise(2000)
+        DelayPromise(200)  // give some time to display progress stuff
           .then(function() {
             return fetch('/$reboot');
-          })
-          .finally(function(result) {
+          }).then(function() {
+            return DelayPromise(200)
+          }).finally(function(result) {
             scope.disabled = false;
           });
       } // runOnce
