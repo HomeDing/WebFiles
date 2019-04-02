@@ -1,0 +1,8 @@
+{
+"digitalin":{"d3":{"description":"Momentary button on GPIO0(D3)","pin":"D3","inverse":1,"pullup":1,"onLow":"switch/0?toggle=1"}},
+"digitalout":{"d4":{"pin":"D4","inverse":"true","value":"0","description":"Builtin LED on Port GPIO2(D4)"}},
+"timer":{"blink":{"type":"LOOP","waittime":"4","pulsetime":"1","cycletime":"10","onon":"digitalout/d4?value=1","onoff":"digitalout/d4?value=0","description":"Timer for testing"}},
+"switch":{"0":{"description":"Control light level","value":0,"onValue":"digitalout/d4?value=$v"}},
+"xdht":{"lr":{"active":0,"title":"Livingroom","pin":"12"}},
+"xschedule":{"0":{"description":"External lights","onTime":"16:30:00","offTime":"22:55:00","onOn":"value/led?up=1","onOff":"value/led?up=0"}}
+}

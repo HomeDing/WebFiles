@@ -1,0 +1,4 @@
+{
+"device": {"0": { "loglevel": 2, "name": "minding", "reboottime": "8h", "description": "Minimal Ding", "led": "2", "button": "0" }},
+"ota": {"0": {"port": 8266,"description": "Listen for 'over the air' OTA Updates"}}
+}
