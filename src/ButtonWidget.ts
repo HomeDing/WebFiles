@@ -8,13 +8,14 @@
 /// <reference path="GenericWidget.ts" />
 
 @MicroControl("button")
-class ButtonBehavior extends GenericWidgetClass {
+class ButtonWidgetClass extends GenericWidgetClass {
   onpointerdown(e: PointerEvent) {
     var src = e.srcElement;
     if (src.classList.contains("u-button")) {
       src.classList.add("active");
       this.dispatchAction("value", 1);
     } // if
+
   }
 
   onpointerup(e: PointerEvent) {

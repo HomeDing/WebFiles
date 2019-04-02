@@ -19,7 +19,7 @@ function MicroControl(isSelector: string) {
   // this is the decorator factory
   return function(target) {
     // this is the decorator class
-    console.info(`MicroControl ${target.name} registered for ${isSelector}`); // only usable in chrome.
+    // console.info(`MicroControl ${target.name} registered for ${isSelector}`); // only usable in chrome.
     micro.define(isSelector, new target());
     return target;
   };

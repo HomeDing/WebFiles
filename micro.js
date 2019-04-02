@@ -365,7 +365,7 @@ function MicroControl(isSelector) {
     // this is the decorator factory
     return function (target) {
         // this is the decorator class
-        console.info("MicroControl " + target.name + " registered for " + isSelector); // only usable in chrome.
+        // console.info(`MicroControl ${target.name} registered for ${isSelector}`); // only usable in chrome.
         micro.define(isSelector, new target());
         return target;
     };
@@ -463,42 +463,42 @@ GenericWidgetClass = __decorate([
 /// <reference path="micro.ts" />
 /// <reference path="microControls.ts" />
 /// <reference path="GenericWidget.ts" />
-var ButtonBehavior = (function (_super) {
-    __extends(ButtonBehavior, _super);
-    function ButtonBehavior() {
+var ButtonWidgetClass = (function (_super) {
+    __extends(ButtonWidgetClass, _super);
+    function ButtonWidgetClass() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    ButtonBehavior.prototype.onpointerdown = function (e) {
+    ButtonWidgetClass.prototype.onpointerdown = function (e) {
         var src = e.srcElement;
         if (src.classList.contains("u-button")) {
             src.classList.add("active");
             this.dispatchAction("value", 1);
         } // if
     };
-    ButtonBehavior.prototype.onpointerup = function (e) {
+    ButtonWidgetClass.prototype.onpointerup = function (e) {
         var src = e.srcElement;
         if (src.classList.contains("u-button")) {
             src.classList.remove("active");
             this.dispatchAction("value", 0);
         } // if
     };
-    return ButtonBehavior;
+    return ButtonWidgetClass;
 }(GenericWidgetClass));
-ButtonBehavior = __decorate([
+ButtonWidgetClass = __decorate([
     MicroControl("button")
-], ButtonBehavior);
+], ButtonWidgetClass);
 // DSTimeWidget.ts: Widget Behavior implementation for DSTime Elements
 // This file is part of the Widget implementation for the HomDing Library
 // implementing the Web UI corresponding to an internal configured element.
 /// <reference path="micro.ts" />
 /// <reference path="microControls.ts" />
 /// <reference path="GenericWidget.ts" />
-var DSTimeClass = (function (_super) {
-    __extends(DSTimeClass, _super);
-    function DSTimeClass() {
+var DSTimeWidgetClass = (function (_super) {
+    __extends(DSTimeWidgetClass, _super);
+    function DSTimeWidgetClass() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    DSTimeClass.prototype.isoDate = function () {
+    DSTimeWidgetClass.prototype.isoDate = function () {
         function pad02(num) {
             return (((num < 10) ? '0' : '') + num);
         }
@@ -508,14 +508,14 @@ var DSTimeClass = (function (_super) {
             ' ' + pad02(d.getHours()) + ':' + pad02(d.getMinutes()) + ':' + pad02(d.getSeconds());
         return (ds);
     };
-    DSTimeClass.prototype.connectedCallback = function (el) {
+    DSTimeWidgetClass.prototype.connectedCallback = function (el) {
         _super.prototype.connectedCallback.call(this, el);
         this._nowObj = this.el.querySelector(".now");
         window.setInterval(function () {
             setTextContent(this._nowObj, this.isoDate());
         }.bind(this), 200);
     };
-    DSTimeClass.prototype.onclick = function (e) {
+    DSTimeWidgetClass.prototype.onclick = function (e) {
         var src = e.srcElement;
         if (src.classList.contains("setnow")) {
             this.dispatchAction("time", this.isoDate());
@@ -524,11 +524,11 @@ var DSTimeClass = (function (_super) {
             _super.prototype.onclick.call(this, e);
         }
     };
-    return DSTimeClass;
+    return DSTimeWidgetClass;
 }(GenericWidgetClass));
-DSTimeClass = __decorate([
+DSTimeWidgetClass = __decorate([
     MicroControl("dstime")
-], DSTimeClass);
+], DSTimeWidgetClass);
 // End. 
 // SwitchWidget.ts: Widget Behavior implementation for PWMOut Elements
 // This file is part of the Widget implementation for the HomDing Library

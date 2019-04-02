@@ -8,7 +8,7 @@
 /// <reference path="GenericWidget.ts" />
 
 @MicroControl("dstime")
-class DSTimeClass extends GenericWidgetClass {
+class DSTimeWidgetClass extends GenericWidgetClass {
   _nowObj:HTMLElement;
 
   isoDate () {
