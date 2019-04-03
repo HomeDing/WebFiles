@@ -1,15 +1,16 @@
 // lineChart.js
 /// <reference path="microsvg.js" />
 
-var panelObj = document.getElementById("panel");
-var backObj = document.getElementById("background");
-var vObj = document.getElementById("v-labels");
-var indObj = document.getElementById("ind");
+var panelObj = document.getElementById('panel');
+var backObj = document.getElementById('background');
+var indObj = document.getElementById('ind');
 
 var redrawTimer = null;
 
 var REGION_WIDTH = 128;
 var REGION_HEIGHT = 36;
+
+var realGraph = -1;
 
 function maxReducer(acc, val) {
   return Math.max(acc, val);
@@ -43,10 +44,18 @@ var minBox = { minX: Infinity, maxX: -Infinity, minY: 0, maxY: 1 };
 var dataBox = minBox;
 var displayBox = minBox;
 
+// Date and Time formatting
+function fmtTime(t) {
+  return new Date(t * 1000).toISOString().replace(/([0-9\-]*)T([0-9\:]*).000Z/, '$2');
+} // fmtTime
+
 // look in all graphs.data for maximum values
 
 /** combine to boxes to a new box covering both. */
 function outerBox(box1, box2) {
+  if (!box2) {
+    return box1;
+  }
   return {
     minX: Math.min(box1.minX, box2.minX),
     maxX: Math.max(box1.maxX, box2.maxX),
@@ -85,7 +94,8 @@ function calcGraphBox(graph) {
 
 function addLineChart(values) {
   var lineID = graphs.length;
-  var g = (graphs[lineID] = { data: values, redraw: true, fDraw: drawLineChart });
+  realGraph = lineID;
+  var g = (graphs[lineID] = { data: values, box: Object.assign({}, minBox), redraw: true, fDraw: drawLineChart });
   calcGraphBox(g);
   setRedraw();
   return lineID;
@@ -99,7 +109,7 @@ function drawLineChart(g) {
   var values = g.data;
   if (values) {
     var scaleX = 128 / (displayBox.maxX - displayBox.minX);
-    var scaleY = 36 / (displayBox.maxY - displayBox.minY);
+    var scaleY = REGION_HEIGHT / (displayBox.maxY - displayBox.minY);
 
     var points = values.map(function(p) {
       return [(p.x - displayBox.minX) * scaleX, (p.y - displayBox.minY) * scaleY].join(',');
@@ -152,7 +162,7 @@ function drawHLine(g) {
     g.svgObj.remove();
   }
 
-  var scaleY = 36 / (displayBox.maxY - displayBox.minY);
+  var scaleY = REGION_HEIGHT / (displayBox.maxY - displayBox.minY);
   var y = (g.data - displayBox.minY) * scaleY;
 
   g.svgObj = createSVGNode(panelObj, 'line', {
@@ -210,17 +220,51 @@ function drawVAxis(g) {
   var low = displayBox.minY;
 
   console.log('y:', high, low);
-  var scaleY = 36 / (high - low);
+  var scaleY = REGION_HEIGHT / (high - low);
 
   var n;
   for (n = low; n <= high; n += g.step) {
-    var txtObj = createSVGNode(vObj, 'text', {
+    var txtObj = createSVGNode(YAxisGroup, 'text', {
       x: 11,
       y: -1 * (n - low) * scaleY
     });
     txtObj.textContent = String(n);
     // <text x="11" y="0">0-</text>
   }
+}
+
+// ===== Horizontal Axis =====
+
+function addHAxis() {
+  var lineID = graphs.length;
+  var g = (graphs[lineID] = { data: [], redraw: true, fDraw: drawHAxis });
+  return lineID;
+}
+
+function drawHAxis(g) {
+  // clear existing x-Axis labels
+  var XAxisGroup = document.getElementById('h-labels');
+  Array.from(XAxisGroup.childNodes).forEach(function(c) {
+    c.remove();
+  });
+
+  var high = displayBox.maxX;
+  var low = displayBox.minX;
+
+  console.log('x:', high, low);
+  var scaleX = REGION_WIDTH / (high - low);
+
+  var n = low + Math.floor((high - low) / 2);
+  // for (n = low; n <= high; n += g.step) {
+  var txtObj = createSVGNode(XAxisGroup, 'text', {
+    x: REGION_WIDTH/2,
+    y: 0
+  });
+  console.log(n, new Date(n*1000).toISOString());
+  txtObj.textContent = fmtTime(n);
+
+  //   // <text x="11" y="0">0-</text>
+  // }
 }
 
 // ===== Redraw =====
@@ -254,32 +298,6 @@ function setRedraw() {
   if (!redrawTimer) redrawTimer = window.setTimeout(redraw, 20);
 }
 
-// =====
-
-// addVAxis();
-
-// var pmValues =
-//   '1552763424,162*1552763444,66*1552763464,84*1552763485,84*1552763504,17*1552763524,1*1552763544,4*1552763565,22*1552763585,34*1552763604,58*1552763624,62*1552763644,55*1552763664,67*1552763685,75*1552763705,79*1552763724,101*1552763745,112*1552763765,96*1552763784,79*1552763804,80*1552763825,80*1552763844,80*1552763864,90*1552763885,81*1552763904,123*1552763924,99*1552763944,119*1552763964,169*1552763984,103*1552764004,86*1552764025,82*1552764045,80*1552764065,79*1552764085,79*1552764105,79*1552764125,79*1552764145,79*1552764165,80*1552764185,79*1552764205,79*1552764225,79*1552764245,78*1552764265,79*1552764285,79*1552764305,79*1552764325,79*1552764345,78*1552764365,79*1552764385,79*1552764405,79*1552764425,79';
-// var pmArray = pmValues.split('*');
-
-// var l1 = addLineChart(
-//   pmArray.map(function(v) {
-//     var p = v.split(',');
-//     return { x: p[0], y: p[1] };
-//   })
-// );
-
-// var l1 = addLineChart([
-//   { x: Date.parse('2019-03-16T12:30:00'), y: 16 },
-//   { x: Date.parse('2019-03-16T12:31:00'), y: 16 },
-//   { x: Date.parse('2019-03-16T12:32:00'), y: 19 },
-//   { x: Date.parse('2019-03-16T12:33:00'), y: 27 },
-//   { x: Date.parse('2019-03-16T12:34:00'), y: 12 },
-//   { x: Date.parse('2019-03-16T12:35:00'), y: 5 }
-// ]);
-
-// ===== Indicator =====
-
 // === to:microsvg.js
 /// calculate a event position using the document units.
 function eventPoint(evt) {
@@ -292,10 +310,10 @@ function eventPoint(evt) {
 
 function setIndicator(box, data) {
   if (box && data) {
-    indObj.style.display = "";
+    indObj.style.display = '';
 
-    var indLine = indObj.querySelector("line");
-    var indcircle = indObj.querySelector("circle");
+    var indLine = indObj.querySelector('line');
+    var indcircle = indObj.querySelector('circle');
 
     var xPos = ((data.x - box.minX) * REGION_WIDTH) / (box.maxX - box.minX);
     var yPos = ((data.y - box.minY) * REGION_HEIGHT) / (box.maxY - box.minY);
@@ -304,40 +322,42 @@ function setIndicator(box, data) {
     indcircle.cx.baseVal.value = xPos;
     indcircle.cy.baseVal.value = yPos;
 
-    var infoObj = indObj.querySelector(".info");
+    var infoObj = indObj.querySelector('.info');
     // calc infobox position
     xPos += xPos < REGION_WIDTH / 2 ? 2 : -18;
     yPos += yPos < REGION_HEIGHT / 2 ? 2 : -12;
-    infoObj.setAttribute("transform", "translate(" + xPos + "," + yPos + ")");
-    var txtObjs = infoObj.querySelectorAll("text");
+    infoObj.setAttribute('transform', 'translate(' + xPos + ',' + yPos + ')');
+    var txtObjs = infoObj.querySelectorAll('text');
     txtObjs[0].textContent = data.y;
-    txtObjs[1].textContent = new Date(data.x*1000).toISOString().replace(/([0-9\-]*)T([0-9\:]*).000Z/, '$2');
-
+    txtObjs[1].textContent = fmtTime(data.x);
   } // if
 } // setIndicator()
 
 function clearIndicator() {
-  indObj.style.display = "none";
+  indObj.style.display = 'none';
 }
 
-panelObj.addEventListener("mouseout", clearIndicator);
-panelObj.addEventListener("mousemove", function(evt) {
+panelObj.addEventListener('mouseout', clearIndicator);
+panelObj.addEventListener('mousemove', function(evt) {
   var p = eventPoint(evt);
+  if (realGraph >= 0) {
+    var g = graphs[realGraph];
+    var data = g.data;
+    if (data && data.length) {
+      var box = g.box;
+      var xData = box.minX + ((p.x - 12) * (box.maxX - box.minX)) / REGION_WIDTH;
 
-  var g = graphs[1];
-  var box = g.box;
-  var data = g.data;
-  var xData = box.minX + ((p.x - 12) * (box.maxX - box.minX)) / REGION_WIDTH;
-
-  // find nearest data by x
-  var n = data.findIndex(function(e) {
-    return e.x > xData;
-  });
-  // check for the n-1 value maybe nearer
-  if (n > 0 && data[n].x - xData > xData - data[n - 1].x) {
-    n = n - 1;
+      // find nearest data by x
+      var n = data.findIndex(function(e) {
+        return e.x > xData;
+      });
+      // check for the n-1 value maybe nearer
+      if (n > 0 && data[n].x - xData > xData - data[n - 1].x) {
+        n = n - 1;
+      }
+      setIndicator(displayBox, data[n]);
+    } // if
   }
-  setIndicator(displayBox, data[n]);
 });
 
 document['api'] = {
@@ -347,6 +367,7 @@ document['api'] = {
 
   addHLine: addHLine,
   addVAxis: addVAxis,
+  addHAxis: addHAxis,
   setMinScale: setMinScale
 };
 
