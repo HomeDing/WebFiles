@@ -1,6 +1,6 @@
 // SwitchWidget.ts: Widget Behavior implementation for Timer Elements
 
-// This file is part of the Widget implementation for the HomDing Library
+// This file is part of the Widget implementation for the HomeDing Library
 // implementing the Web UI corresponding to an internal configured element.
 
 /// <reference path="micro.ts" />

@@ -61,7 +61,6 @@ class MicroHub {
         .replace(/\*\*/g, '\\S{0,}')
         .replace(/\*/g, '[^/?]*') +
       '$';
-    // console.log(matchPath, re);
 
     var newEntry: HubEntry = {
       id: h,
@@ -162,18 +161,33 @@ class MicroHub {
   } // onunload
 } // MicroEvents class
 
-var hub = new MicroHub();
+const hub = new MicroHub();
 window.addEventListener('unload', hub.onunload.bind(hub), false);
+
+enum MicroState {
+  PREP = 1,
+  INIT = 2,
+  LOADED = 3
+}
 
 class MicroRegistry {
   protected _tco: HTMLElement; // Templates Container Object
   protected _registry: { [key: string]: any } = {}; // all registered mixins by name.
+  protected _state: MicroState = MicroState.PREP;
 
   /// A list with all objects that are attached to any behavior
+  protected _unloadedList = [];
   protected List = [];
 
+  constructor() {
+    window.addEventListener('load', this.init.bind(this));
+    window.addEventListener('unload', this.onunload.bind(this));
+  }
+
   /// Initialize the template and behaviors.
-  init() {
+  protected init() {
+    this._state = MicroState.INIT;
+
     // be sure to have a template container object.
     this._tco = document.getElementById('u-templates');
 
@@ -182,7 +196,29 @@ class MicroRegistry {
       t.id = 'u-templates';
       this._tco = document.body.appendChild(t);
     }
+    if (document.readyState === 'complete') {
+      this.init2();
+    } else {
+      document.addEventListener('readystatechange', this.init2);
+    }
   } // init()
+
+
+  // defer init of controls after all is loaded
+  protected init2() {
+    if (document.readyState === 'complete') {
+      this._state = MicroState.LOADED;
+
+      this._unloadedList.forEach(el => {
+        var bc = this._registry[el.getAttribute('u-is')];
+        if (bc) {
+          this.loadBehavior(el, bc);
+        }
+        this.List.push(el);
+      });
+      this._unloadedList = [];
+    }
+  } // init2()
 
   /**
    * @param {string} fName
@@ -203,10 +239,15 @@ class MicroRegistry {
   // extend the element by the registered behavior mixin.
   // The "u-is" attribute specifies what mixin should be used.
   attach(elem: HTMLElement): void {
-    var mb = elem.getAttribute('u-is');
-    var bc = this._registry[mb];
-    if (bc) {
-      this.loadBehavior(elem, bc);
+    if (this._state === MicroState.LOADED) {
+      var mb = elem.getAttribute('u-is');
+      var bc = this._registry[mb];
+      if (bc) {
+        this.loadBehavior(elem, bc);
+      } 
+    }
+    else {
+      this._unloadedList.push(elem);
     }
   } // attach()
 
@@ -272,14 +313,9 @@ class MicroRegistry {
       console.error('loadBehavior: obj argument is missing.');
     } else if (behavior == null) {
       console.error('loadBehavior: behavior argument is missing.');
-    } else if ((<MicroBaseControl>(<any>obj))._attachedBehavior == behavior) {
+    } else if ((<MicroControlClass>(<any>obj))._attachedBehavior == behavior) {
       // already done.
     } else {
-      if (behavior.inheritFrom) {
-        micro.loadBehavior(obj, behavior.inheritFrom);
-        micro.List.pop();
-      }
-
       if (obj.attributes) {
         // IE9 compatible
         // copy all new attributes to properties
@@ -299,8 +335,8 @@ class MicroRegistry {
         } // if
       } // for
 
-      (<MicroBaseControl>(<any>obj))._attachedBehavior = behavior;
-      (<MicroBaseControl>(<any>obj)).connectedCallback(obj);
+      (<MicroControlClass>(<any>obj))._attachedBehavior = behavior;
+      (<MicroControlClass>(<any>obj)).connectedCallback(obj);
       this.List.push(obj);
     } // if
   } // loadBehavior
@@ -326,12 +362,9 @@ class MicroRegistry {
       this.List[n] = null;
     }
   } // onunload
-} // MicroJCL class
+} // MicroRegistry class
 
-var micro = new MicroRegistry();
-
-window.addEventListener('load', micro.init.bind(micro));
-window.addEventListener('unload', micro.onunload.bind(micro));
+const micro = new MicroRegistry();
 
 // detect that a new micro control was created using Mutation Observe Callback
 let obs = new MutationObserver(function(mutationsList: MutationRecord[], observer) {

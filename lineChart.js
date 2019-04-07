@@ -10,8 +10,6 @@ var redrawTimer = null;
 var REGION_WIDTH = 128;
 var REGION_HEIGHT = 36;
 
-var realGraph = -1;
-
 function maxReducer(acc, val) {
   return Math.max(acc, val);
 }
@@ -29,6 +27,7 @@ interface Box {
 }
 
 interface GraphsData {
+  id: number,
   type: "line", "vAxis", "hLine"
   data: Point[];
   box: Box;
@@ -38,7 +37,10 @@ interface GraphsData {
 }
  */
 
+// list of the graphical elements in the chart.
+// real data based charts must come before hLines and axis.
 var graphs = [];
+var graph_cnt = 0;
 
 var minBox = { minX: Infinity, maxX: -Infinity, minY: 0, maxY: 1 };
 var dataBox = minBox;
@@ -93,12 +95,12 @@ function calcGraphBox(graph) {
 // Line Charts
 
 function addLineChart(values) {
-  var lineID = graphs.length;
-  realGraph = lineID;
-  var g = (graphs[lineID] = { data: values, box: Object.assign({}, minBox), redraw: true, fDraw: drawLineChart });
+  var gID = ++graph_cnt;
+  var g = { id: gID, data: values, box: null, redraw: true, fDraw: drawLineChart };
   calcGraphBox(g);
+  graphs.unshift(g); // put data driven graphs in the fist place
   setRedraw();
-  return lineID;
+  return gID;
 } // addLine()
 
 function drawLineChart(g) {
@@ -124,22 +126,29 @@ function drawLineChart(g) {
 }
 
 // add a new data to the data of a line
-function addLineChartData(lineID, values) {
-  var g = graphs[lineID];
-  g.data.push(values);
-  g.redraw = true;
-  calcGraphBox(g);
-  setRedraw();
-  return lineID;
+function addLineChartData(gID, values) {
+  var g = graphs.find(function(e) {
+    return e.id === gID;
+  });
+  if (g) {
+    g.data.push(values);
+    calcGraphBox(g);
+    g.redraw = true;
+    setRedraw();
+  }
 } // addLineChartData()
 
 // Update the values for a line and defer redrawing
-function updateLineChartData(lineID, values) {
-  var g = graphs[lineID];
-  g.data = values;
-  g.redraw = true;
-  setRedraw();
-  calcGraphBox(g);
+function updateLineChartData(gID, values) {
+  var g = graphs.find(function(e) {
+    return e.id === gID;
+  });
+  if (g) {
+    g.data = values;
+    calcGraphBox(g);
+    g.redraw = true;
+    setRedraw();
+  }
 } // updateLineChartData
 
 function setMinScale(bBox) {
@@ -150,11 +159,12 @@ function setMinScale(bBox) {
 // ===== HLine horizontal lines =====
 
 function addHLine(y) {
-  var lineID = graphs.length;
-  var g = (graphs[lineID] = { data: y, redraw: true, fDraw: drawHLine });
+  var gID = ++graph_cnt;
+  var g = { id: gID, data: y, redraw: true, fDraw: drawHLine };
   g.box = Object.assign({}, minBox);
+  graphs.push(g);
   setRedraw();
-  return lineID;
+  return gID;
 }
 
 function drawHLine(g) {
@@ -201,11 +211,12 @@ function _calcVAxisBox(g) {
 }
 
 function addVAxis() {
-  var lineID = graphs.length;
-  var g = (graphs[lineID] = { data: [], redraw: true, fDraw: drawVAxis });
+  var gID = ++graph_cnt;
+  var g = { data: [], redraw: true, fDraw: drawVAxis };
+  graphs.push(g);
   _calcVAxisBox(g);
   setRedraw();
-  return lineID;
+  return gID;
 }
 
 function drawVAxis(g) {
@@ -219,7 +230,6 @@ function drawVAxis(g) {
   var high = displayBox.maxY;
   var low = displayBox.minY;
 
-  console.log('y:', high, low);
   var scaleY = REGION_HEIGHT / (high - low);
 
   var n;
@@ -236,9 +246,10 @@ function drawVAxis(g) {
 // ===== Horizontal Axis =====
 
 function addHAxis() {
-  var lineID = graphs.length;
-  var g = (graphs[lineID] = { data: [], redraw: true, fDraw: drawHAxis });
-  return lineID;
+  var gID = ++graph_cnt;
+  var g = { data: [], redraw: true, fDraw: drawHAxis };
+  graphs.push(g);
+  return gID;
 }
 
 function drawHAxis(g) {
@@ -250,21 +261,20 @@ function drawHAxis(g) {
 
   var high = displayBox.maxX;
   var low = displayBox.minX;
+  if (isFinite(low) && isFinite(high)) {
+    var scaleX = REGION_WIDTH / (high - low);
 
-  console.log('x:', high, low);
-  var scaleX = REGION_WIDTH / (high - low);
+    var n = low + Math.floor((high - low) / 2);
+    // for (n = low; n <= high; n += g.step) {
+    var txtObj = createSVGNode(XAxisGroup, 'text', {
+      x: REGION_WIDTH / 2,
+      y: 0
+    });
+    txtObj.textContent = fmtTime(n);
 
-  var n = low + Math.floor((high - low) / 2);
-  // for (n = low; n <= high; n += g.step) {
-  var txtObj = createSVGNode(XAxisGroup, 'text', {
-    x: REGION_WIDTH/2,
-    y: 0
-  });
-  console.log(n, new Date(n*1000).toISOString());
-  txtObj.textContent = fmtTime(n);
-
-  //   // <text x="11" y="0">0-</text>
-  // }
+    //   // <text x="11" y="0">0-</text>
+    // }
+  } // if
 }
 
 // ===== Redraw =====
@@ -299,6 +309,7 @@ function setRedraw() {
 }
 
 // === to:microsvg.js
+
 /// calculate a event position using the document units.
 function eventPoint(evt) {
   var svg = document.documentElement;
@@ -338,10 +349,11 @@ function clearIndicator() {
 }
 
 panelObj.addEventListener('mouseout', clearIndicator);
+
 panelObj.addEventListener('mousemove', function(evt) {
   var p = eventPoint(evt);
-  if (realGraph >= 0) {
-    var g = graphs[realGraph];
+  var g = graphs[0];
+  if (g) {
     var data = g.data;
     if (data && data.length) {
       var box = g.box;

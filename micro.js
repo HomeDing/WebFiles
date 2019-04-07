@@ -99,7 +99,6 @@ var MicroHub = (function () {
                 .replace(/\*\*/g, '\\S{0,}')
                 .replace(/\*/g, '[^/?]*') +
             '$';
-        // console.log(matchPath, re);
         var newEntry = {
             id: h,
             match: RegExp(re),
@@ -183,14 +182,25 @@ var MicroHub = (function () {
 }()); // MicroEvents class
 var hub = new MicroHub();
 window.addEventListener('unload', hub.onunload.bind(hub), false);
+var MicroState;
+(function (MicroState) {
+    MicroState[MicroState["PREP"] = 1] = "PREP";
+    MicroState[MicroState["INIT"] = 2] = "INIT";
+    MicroState[MicroState["LOADED"] = 3] = "LOADED";
+})(MicroState || (MicroState = {}));
 var MicroRegistry = (function () {
     function MicroRegistry() {
         this._registry = {}; // all registered mixins by name.
+        this._state = MicroState.PREP;
         /// A list with all objects that are attached to any behavior
+        this._unloadedList = [];
         this.List = [];
+        window.addEventListener('load', this.init.bind(this));
+        window.addEventListener('unload', this.onunload.bind(this));
     }
     /// Initialize the template and behaviors.
     MicroRegistry.prototype.init = function () {
+        this._state = MicroState.INIT;
         // be sure to have a template container object.
         this._tco = document.getElementById('u-templates');
         if (!this._tco) {
@@ -198,7 +208,28 @@ var MicroRegistry = (function () {
             t.id = 'u-templates';
             this._tco = document.body.appendChild(t);
         }
+        if (document.readyState === 'complete') {
+            this.init2();
+        }
+        else {
+            document.addEventListener('readystatechange', this.init2);
+        }
     }; // init()
+    // defer init of controls after all is loaded
+    MicroRegistry.prototype.init2 = function () {
+        var _this = this;
+        if (document.readyState === 'complete') {
+            this._state = MicroState.LOADED;
+            this._unloadedList.forEach(function (el) {
+                var bc = _this._registry[el.getAttribute('u-is')];
+                if (bc) {
+                    _this.loadBehavior(el, bc);
+                }
+                _this.List.push(el);
+            });
+            this._unloadedList = [];
+        }
+    }; // init2()
     /**
      * @param {string} fName
      */
@@ -217,10 +248,15 @@ var MicroRegistry = (function () {
     // extend the element by the registered behavior mixin.
     // The "u-is" attribute specifies what mixin should be used.
     MicroRegistry.prototype.attach = function (elem) {
-        var mb = elem.getAttribute('u-is');
-        var bc = this._registry[mb];
-        if (bc) {
-            this.loadBehavior(elem, bc);
+        if (this._state === MicroState.LOADED) {
+            var mb = elem.getAttribute('u-is');
+            var bc = this._registry[mb];
+            if (bc) {
+                this.loadBehavior(elem, bc);
+            }
+        }
+        else {
+            this._unloadedList.push(elem);
         }
     }; // attach()
     // attach all behaviors of the element and nested elements
@@ -289,10 +325,6 @@ var MicroRegistry = (function () {
             // already done.
         }
         else {
-            if (behavior.inheritFrom) {
-                micro.loadBehavior(obj, behavior.inheritFrom);
-                micro.List.pop();
-            }
             if (obj.attributes) {
                 // IE9 compatible
                 // copy all new attributes to properties
@@ -342,10 +374,8 @@ var MicroRegistry = (function () {
         }
     }; // onunload
     return MicroRegistry;
-}()); // MicroJCL class
+}()); // MicroRegistry class
 var micro = new MicroRegistry();
-window.addEventListener('load', micro.init.bind(micro));
-window.addEventListener('unload', micro.onunload.bind(micro));
 // detect that a new micro control was created using Mutation Observe Callback
 var obs = new MutationObserver(function (mutationsList, observer) {
     for (var _i = 0, mutationsList_1 = mutationsList; _i < mutationsList_1.length; _i++) {
@@ -371,14 +401,14 @@ function MicroControl(isSelector) {
     };
 }
 // @MicroControl("no-base")
-var MicroBaseControl = (function () {
-    function MicroBaseControl() {
+var MicroControlClass = (function () {
+    function MicroControlClass() {
     }
-    MicroBaseControl.prototype.connectedCallback = function (el) {
+    MicroControlClass.prototype.connectedCallback = function (el) {
         this.el = el;
     };
-    return MicroBaseControl;
-}()); // class MicroBaseControl
+    return MicroControlClass;
+}()); // class MicroControlClass
 // End.
 // ding.js: Behaviors for Elements
 /// <reference path="micro.ts" />
@@ -452,13 +482,13 @@ var GenericWidgetClass = (function (_super) {
         }
     };
     return GenericWidgetClass;
-}(MicroBaseControl)); // GenericWidgetClass
+}(MicroControlClass)); // GenericWidgetClass
 GenericWidgetClass = __decorate([
     MicroControl('generic')
 ], GenericWidgetClass);
 // End.
 // SwitchWidget.ts: Widget Behavior implementation for Button@MicroControl("timer") Elements
-// This file is part of the Widget implementation for the HomDing Library
+// This file is part of the Widget implementation for the HomeDing Library
 // implementing the Web UI corresponding to an internal configured element.
 /// <reference path="micro.ts" />
 /// <reference path="microControls.ts" />
@@ -488,7 +518,7 @@ ButtonWidgetClass = __decorate([
     MicroControl("button")
 ], ButtonWidgetClass);
 // DSTimeWidget.ts: Widget Behavior implementation for DSTime Elements
-// This file is part of the Widget implementation for the HomDing Library
+// This file is part of the Widget implementation for the HomeDing Library
 // implementing the Web UI corresponding to an internal configured element.
 /// <reference path="micro.ts" />
 /// <reference path="microControls.ts" />
@@ -530,8 +560,72 @@ DSTimeWidgetClass = __decorate([
     MicroControl("dstime")
 ], DSTimeWidgetClass);
 // End. 
+// LogWidget.ts: Widget Behavior implementation for Log Elements
+// This file is part of the Widget implementation for the HomeDing Library
+// implementing the Web UI corresponding to an internal configured element.
+/// <reference path="micro.ts" />
+/// <reference path="microControls.ts" />
+/// <reference path="GenericWidget.ts" />
+var LogWidgetClass = (function (_super) {
+    __extends(LogWidgetClass, _super);
+    function LogWidgetClass() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.filename = null;
+        return _this;
+    }
+    LogWidgetClass.prototype.connectedCallback = function (el) {
+        _super.prototype.connectedCallback.call(this, el);
+        this.lineSVGObj = el.querySelector('object');
+        hub.subscribe(this.microid + '?*', this.newValue.bind(this), true);
+    };
+    LogWidgetClass.prototype.onclick = function (e) {
+        var src = e.srcElement;
+    };
+    LogWidgetClass.prototype.loadData = function () {
+        fetch('/pmlog.txt')
+            .then(function (result) {
+            return result.text();
+        })
+            .then(function (pmValues) {
+            var re = /^\d{2,},\d+/;
+            var pmArray = pmValues.split('\n').filter(function (e) {
+                return e.match(re);
+            });
+            this.linesApi.updateLineChartData(this.lChart, pmArray.map(function (v) {
+                var p = v.split(',');
+                return { x: p[0], y: p[1] };
+            }));
+        }.bind(this));
+    }; // loadData()
+    LogWidgetClass.prototype.load = function () {
+        if (this.lineSVGObj.readyState !== 4) {
+            window.setTimeout(this.load.bind(this), 20);
+        }
+        else {
+            // now setup
+            this.linesApi = this.lineSVGObj.getSVGDocument()['api'];
+            this.lChart = this.linesApi.addLineChart();
+            this.linesApi.addVAxis();
+            this.linesApi.addHAxis();
+            this.loadData();
+        }
+    }; // load()
+    LogWidgetClass.prototype.newValue = function (path, key, value) {
+        if (key === 'filename') {
+            //
+            this.filename = value;
+            this.load();
+            // alert(value);
+        }
+    };
+    return LogWidgetClass;
+}(GenericWidgetClass));
+LogWidgetClass = __decorate([
+    MicroControl('log')
+], LogWidgetClass);
+// End.
 // SwitchWidget.ts: Widget Behavior implementation for PWMOut Elements
-// This file is part of the Widget implementation for the HomDing Library
+// This file is part of the Widget implementation for the HomeDing Library
 // implementing the Web UI corresponding to an internal configured element.
 /// <reference path="micro.ts" />
 /// <reference path="microControls.ts" />
@@ -572,7 +666,7 @@ PWMOutWidgetClass = __decorate([
 ], PWMOutWidgetClass);
 // End.
 // SwitchWidget.ts: Widget Behavior implementation for Switch Elements
-// This file is part of the Widget implementation for the HomDing Library
+// This file is part of the Widget implementation for the HomeDing Library
 // implementing the Web UI corresponding to an internal configured element.
 /// <reference path="micro.ts" />
 /// <reference path="microControls.ts" />
@@ -597,7 +691,7 @@ SwitchWidgetClass = __decorate([
 ], SwitchWidgetClass);
 // End.
 // SwitchWidget.ts: Widget Behavior implementation for Timer Elements
-// This file is part of the Widget implementation for the HomDing Library
+// This file is part of the Widget implementation for the HomeDing Library
 // implementing the Web UI corresponding to an internal configured element.
 /// <reference path="micro.ts" />
 /// <reference path="microControls.ts" />

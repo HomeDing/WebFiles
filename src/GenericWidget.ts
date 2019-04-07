@@ -6,7 +6,7 @@
 // === Generic Widget Behavior ===
 
 @MicroControl('generic')
-class GenericWidgetClass extends MicroBaseControl {
+class GenericWidgetClass extends MicroControlClass {
   microid: string = '';
   data: Object = {};
   subId: number;
