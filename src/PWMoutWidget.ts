@@ -17,7 +17,7 @@ class PWMOutWidgetClass extends GenericWidgetClass {
     hub.subscribe(this.microid + "?*", this.newValue.bind(this));
   }
 
-  newValue(path: string, key: string, value: string) {
+  newValue(_path: string, key: string, value: string) {
     if (key == "range") {
       this.range = Number(value);
     } else if (key == "value") {

@@ -9,8 +9,8 @@
 
 @MicroControl('log')
 class LogWidgetClass extends GenericWidgetClass {
-  filename: string = null;
-  lineSVGObj: HTMLObjectElement;
+  filename: string | null = null;
+  lineSVGObj: HTMLObjectElement | null = null;
   linesApi: any;
   lChart: any;
 
@@ -20,37 +20,37 @@ class LogWidgetClass extends GenericWidgetClass {
     hub.subscribe(this.microid + '?*', this.newValue.bind(this), true);
   }
 
-  onclick(e: MouseEvent) {
-    var src: HTMLElement = <HTMLElement>e.srcElement;
-  }
-
   loadData() {
-    fetch('/pmlog.txt')
+    fetch(this.filename as string)
       .then(function(result) {
         return result.text();
       })
-      .then(function(pmValues) {
-        var re = /^\d{2,},\d+/;
-        var pmArray = pmValues.split('\n').filter(function(e) {
-          return e.match(re);
-        });
+      .then(
+        function(this: LogWidgetClass, pmValues: string) {
+          var re = /^\d{2,},\d+/;
+          var pmArray = pmValues.split('\n').filter(function(e) {
+            return e.match(re);
+          });
 
-        this.linesApi.updateLineChartData(
-          this.lChart,
-          pmArray.map(function(v) {
-            var p = v.split(',');
-            return { x: p[0], y: p[1] };
-          })
-        );
-      }.bind(this));
+          this.linesApi.updateLineChartData(
+            this.lChart,
+            pmArray.map(function(v) {
+              var p = v.split(',');
+              return { x: p[0], y: p[1] };
+            })
+          );
+        }.bind(this)
+      );
   } // loadData()
 
   load() {
-    if (this.lineSVGObj.readyState !== 4) {
+    if (!this.lineSVGObj || !this.lineSVGObj.getSVGDocument() || !(this.lineSVGObj.getSVGDocument() as any).api) {
       window.setTimeout(this.load.bind(this), 20);
+      // alert("0:" + this.lineSVGObj.getSVGDocument()['api']);
     } else {
+      // alert("0+s" + this.lineSVGObj.getSVGDocument['api']);
       // now setup
-      this.linesApi = this.lineSVGObj.getSVGDocument()['api'];
+      this.linesApi = (this.lineSVGObj.getSVGDocument() as any).api;
       this.lChart = this.linesApi.addLineChart();
       this.linesApi.addVAxis();
       this.linesApi.addHAxis();
@@ -58,14 +58,12 @@ class LogWidgetClass extends GenericWidgetClass {
     }
   } // load()
 
-  newValue(path: string, key: string, value: string) {
+  newValue(_path: string, key: string | null, value: string | null) {
     if (key === 'filename') {
-      //
       this.filename = value;
       this.load();
-      // alert(value);
     }
-  }
+  } // newValue()
 }
 
 // End.

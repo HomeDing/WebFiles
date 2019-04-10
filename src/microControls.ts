@@ -11,16 +11,18 @@
 interface ControlInterface {
   el: HTMLElement;
   connectedCallback(el: HTMLElement): void;
+  init?() : void;
+  term?() : void;
 }
 
 // Decorator for micro-controls.
 // Extend all DOM elements with the behavior specified by the target class.
 function MicroControl(isSelector: string) {
   // this is the decorator factory
-  return function(target) {
+  return function(target:any) {
     // this is the decorator class
     // console.info(`MicroControl ${target.name} registered for ${isSelector}`); // only usable in chrome.
-    micro.define(isSelector, new target());
+    micro.define(isSelector, new target() as GenericWidgetClass);
     return target;
   };
 }

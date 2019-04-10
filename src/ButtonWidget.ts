@@ -10,19 +10,19 @@
 @MicroControl("button")
 class ButtonWidgetClass extends GenericWidgetClass {
   onpointerdown(e: PointerEvent) {
-    var src = e.srcElement;
-    if (src.classList.contains("u-button")) {
+    const src = e.target as HTMLElement;
+    if ((src) && (src.classList.contains("u-button"))) {
       src.classList.add("active");
-      this.dispatchAction("value", 1);
+      this.dispatchAction("value", '1');
     } // if
 
   }
 
   onpointerup(e: PointerEvent) {
-    var src = e.srcElement;
+    const src = e.target as HTMLElement;
     if (src.classList.contains("u-button")) {
       src.classList.remove("active");
-      this.dispatchAction("value", 0);
+      this.dispatchAction("value", '0');
     } // if
   }
 }

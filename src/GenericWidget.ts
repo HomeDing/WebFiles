@@ -8,8 +8,8 @@
 @MicroControl('generic')
 class GenericWidgetClass extends MicroControlClass {
   microid: string = '';
-  data: Object = {};
-  subId: number;
+  data: any = {};
+  subId: number = 0;
 
   connectedCallback(el: HTMLElement) {
     super.connectedCallback(el);
@@ -19,7 +19,7 @@ class GenericWidgetClass extends MicroControlClass {
   } // connectedCallback
 
   // visualize any new data for the widget.
-  newData(path: string, key: string, value: string) {
+  newData(_path: string, key: string, value: string) {
     // save data to title
     this.data[key] = value;
     var ic = this.el.querySelector('img');
@@ -57,22 +57,22 @@ class GenericWidgetClass extends MicroControlClass {
   } // newData()
 
   // send an action to the board and dispatch to the element
-  dispatchAction(prop, val) {
-    if (val != null) fetch(`/$board${this.microid}?${prop}=${encodeURI(val)}`);
+  dispatchAction(prop: string | null, val: string | null) {
+    if (prop !== null && val !== null) fetch(`/$board${this.microid}?${prop}=${encodeURI(val)}`);
   } // dispatchAction()
 
   // send changed value of property as an action to the board
-  onchange(e) {
-    var src = e.srcElement;
-    this.dispatchAction(src.getAttribute('u-value'), e.srcElement.value);
+  onchange(e: Event) {
+    var src = e.target as HTMLInputElement;
+    this.dispatchAction(src.getAttribute('u-value'), src.value);
   }
 
   // send an action to the board
   // + change config mode
   onclick(e: MouseEvent) {
-    var src = e.srcElement;
+    var src = e.target as HTMLElement;
     var a = src.getAttribute('u-action');
-    if (a) this.dispatchAction(a, e.srcElement['value']);
+    if ((src) && (a)) this.dispatchAction(a, (<any>src)['value']);
 
     if (src.classList.contains('setconfig')) {
       this.el.classList.toggle('configmode');
