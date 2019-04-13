@@ -331,6 +331,10 @@
       } // init()
 
       window.addEventListener('load', init);
+
+      window.addEventListener('error', function(err) {
+        alert(err);
+      })
     </script>
   </body>
 </html>

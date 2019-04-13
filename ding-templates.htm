@@ -144,6 +144,19 @@
   </div>
 </div>
 
+<div class="col card" u-control="log" id="${id}" u-is="log" microID="${id}">
+  <div class="block header">
+    <img src="/i/log.svg" class="icon" />
+    <h3>${id}</h3>
+    <h4 u-text="description"></h4>
+    <span class="activeState" u-active="active"></span>
+    <span class="setconfig"></span>
+  </div>
+  <div class="block" style="position: relative;min-height: 5rem">
+    <object data="lineChart.svg" type="image/svg+xml" style="width:360px;height:144px"></object>
+  </div>
+</div>
+
 <div class="col card" u-control="value" id="${id}" u-is="generic" microID="${id}">
   <div class="block header">
     <img src="/i/${type}.svg" class="icon" />
