@@ -2,15 +2,19 @@ var express = require("express");
 var app = express();
 
 const fs = require("fs");
-const debugIoT = require("debug")("iot:server");
+const logInfo = require("debug")("iot:info");
+logInfo.log = console.log.bind(console);
+const logError = require("debug")("iot:error");
+logError.log = console.error.bind(console);
+
 const debugSend = require("debug")("iot:send");
 
 // enable to add X-Respose-Time to http header
 // var responseTime = require('response-time');
 // app.use(responseTime());
 
-debugIoT("This processor architecture is " + process.arch);
-debugIoT("This platform is " + process.platform);
+logInfo("This processor architecture is " + process.arch);
+logInfo("This platform is " + process.platform);
 
 // a middleware with no mount path; gets executed for every request to the app
 app.use(function (req, res, next) {
@@ -38,7 +42,7 @@ function noCache(req, res, next) {
 
 // ----- enable start page redirect -----
 app.get("/", function (req, res, next) {
-  debugIoT("redirect...");
+  logInfo("redirect...");
   res.redirect("/index.htm");
   // next();
 });
@@ -46,9 +50,8 @@ app.get("/", function (req, res, next) {
 
 // ----- handle listing of all existing files -----
 
-/* // npm i multer --save
+// npm i multer --save
 
-const express = require('express');
 const multer = require('multer');
 const upload = multer({ dest: 'uploads/' })
 
@@ -56,11 +59,12 @@ const upload = multer({ dest: 'uploads/' })
 const apiRouter = express.Router();
 
 // test uploading files, use a file upload folder to avoid overwriting local files
-apiRouter.post('/upload', upload.array('files'), function (req, res) {
+app.post('/', upload.any(), function (req, res) {
+  req.files;
   req.originalUrl;
   res.send("");
 });
- */
+/*  */
 
 app.get(/^\/\$list$/, noCache, function (req, res, next) {
   var fl = [];
@@ -149,7 +153,12 @@ addElementMock('dstime/0', function (state) {
   return (state);
 }, null);
 
-addElementMock('switch/sam', function (state) {
+addElementMock('displaytext/pm', function (state) {
+  state.value = Math.floor(Math.random() * 40);
+  return (state);
+}, null);
+
+addElementMock('switch/0', function (state) {
   if (!state) {
     state = {
       active: 1,
@@ -190,15 +199,17 @@ app.get('/\\$board/:type/:id', noCache, function (req, res, next) {
     // incoming action
     if (mockSetAction[id])
       boardStatus[id] = mockSetAction[id](boardStatus[id], req.query);
-    debugIoT(boardStatus[id]);
+    logInfo(boardStatus[id]);
     res.send();
 
   } else {
     if (mockGetStatus[id])
       boardStatus[id] = mockGetStatus[id](boardStatus[id]);
-    debugIoT(boardStatus[id]);
+    logInfo(boardStatus[id]);
     res.type('application/json');
-    res.send(JSON.stringify(boardStatus[id], null, 2));
+    let elementStatus = { };
+    elementStatus[id] =  boardStatus[id];
+    res.send(JSON.stringify(elementStatus, null, 2));
   }
   // next();
 });
@@ -218,13 +229,15 @@ app.get(/^\/\$board$/, noCache, function (req, res, next) {
 });
 
 
+
+
 // ===== serving file system 
 
 
 app.delete("/:fn", function (req, res, next) {
   var filename = req.params.fn;
-  debugIoT("DELETE: %s", filename);
-  debugIoT("DELETE: not implemented.");
+  logInfo("DELETE: %s", filename);
+  logInfo("DELETE: not implemented.");
   res.send("done");
 });
 
@@ -236,16 +249,16 @@ app.use(express.static(__dirname, {
 
 // ----- enable error reports -----
 app.use(function (err, req, res, next) {
-  debugIoT(err.stack);
+  logError(err.stack);
   res.status(500).send("Something broke!");
 });
 
 // // ----- enable 404 responses -----
-// app.use(function(req, res, next) {
-//   debugIoT("server.js: 404 request occured.");
-//   res.status(404).send("Sorry cant find that!");
-// });
+app.use(function(req, res, next) {
+  logError(`could not find ${req.originalUrl}: 404`);
+  res.status(404).send("Sorry cant find that!");
+});
 
 app.listen(3123, () => {
-  debugIoT("open http://localhost:3123/");
+  logInfo("open http://localhost:3123/");
 });

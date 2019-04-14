@@ -3,7 +3,7 @@
     "target": "es5",
     "outDir": "dist",
     "outFile": "micro.js",
-    "allowJs": true,
+    "allowJs": false,
     "experimentalDecorators": true,
     "lib": [
       "es2017",
@@ -12,7 +12,12 @@
     ],
 
     "sourceMap": true,
-    "newLine": "LF"
+    "newLine": "LF",
+    "removeComments": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "allowUnreachableCode": false,
+    "strict": true
 
   },
   "include": [

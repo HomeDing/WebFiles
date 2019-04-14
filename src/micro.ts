@@ -22,9 +22,12 @@ class MicroHub {
   private _registrationsId: number = 0;
   private _store: object = {};
 
-  protected _findStoreObject(path: string): object {
+  protected _findStoreObject(path: string): any {
     let p: any = this._store;
-    let steps = path.substr(1).split('/');
+    if (path[0] === '/') {
+      path = path.substr(1);
+    }
+    let steps = path.split('/');
 
     // use existing objects.
     while (steps.length > 0 && p[steps[0]]) {
@@ -33,12 +36,39 @@ class MicroHub {
     } // while
 
     // create new objects.
-    while (steps.length > 0) {
+    while (steps.length > 0 && steps[0]) {
       p = p[steps[0]] = {};
       steps.shift();
     } // while
     return p;
   } // _findStoreObject
+
+  // return path to parent object
+  private pPath(path: string): string {
+    if (path[0] === '/') {
+      path = path.substr(1);
+    }
+    let steps = path.split('/');
+    let res = steps.slice(0, steps.length - 1).join('/');
+    return res;
+  } // pPath
+
+  // return key in parent object
+  private pKey(path: string): string {
+    let steps = path.split('/');
+    let res = steps[steps.length - 1];
+    return res;
+  }
+
+  read(path: string): any {
+    let o: any = this._findStoreObject(this.pPath(path));
+    return o[this.pKey(path)];
+  }
+
+  write(path: string, value: any) {
+    let o: any = this._findStoreObject(this.pPath(path));
+    o[this.pKey(path)] = value;
+  }
 
   /**
    * Subscribe to changes in the store using a path expression
@@ -105,7 +135,7 @@ class MicroHub {
     if (e) {
       jsonParse(
         this._store,
-        function(path: string, key: string, value: string) {
+        function(path: string, key: string | null, value: string | null) {
           let fullPath: string = path + (key ? '?' + key : '');
           if (fullPath) {
             fullPath = fullPath.toLocaleLowerCase();
@@ -124,7 +154,7 @@ class MicroHub {
     jsonParse(
       obj,
       function(this: MicroHub, path: string, key: string | null, value: string | null) {
-          this.publishValue(path, key ? key.toLowerCase() : '', value ? value : '');
+        this.publishValue(path, key ? key.toLowerCase() : '', value ? value : '');
       }.bind(this)
     );
   } // publishObj()
@@ -267,22 +297,20 @@ class MicroRegistry {
     } // fill
 
     if (obj.nodeType === Node.TEXT_NODE) {
-      if (obj.textContent)  {
+      if (obj.textContent) {
         obj.textContent = fill(obj.textContent, props);
       }
-
     } else if (obj.nodeType == Node.ELEMENT_NODE) {
       // HTMLElement
-      let el = obj as HTMLElement;
-
-      for (var i = 0; i < el.attributes.length; i++) {
-        var v: string = el.attributes[i].value;
+      const attr = (obj as HTMLElement).attributes;
+      for (var i = 0; i < attr.length; i++) {
+        var v: string = attr[i].value;
         if (v.indexOf('${') >= 0) {
-          el[el.attributes[i].name] = el.attributes[i].value = fill(v, props);
+          (obj as any)[attr[i].name] = attr[i].value = fill(v, props);
         } // if
       } // for
 
-      el.childNodes.forEach(c => {
+      obj.childNodes.forEach(c => {
         this._setPlaceholders(c, props);
       });
     }
@@ -294,11 +322,11 @@ class MicroRegistry {
    * @param {string} controlName
    * @param {Object} props
    */
-  insertTemplate(root: HTMLElement, controlName: string, props: Object): HTMLElement {
+  insertTemplate(root: HTMLElement, controlName: string, props: Object): HTMLElement | null {
     var e = null;
-    if (root && controlName) {
+    if (root && controlName && this._tco) {
       var te = this._tco.querySelector('[u-control="' + controlName + '"]');
-      if (te) e = te.cloneNode(true);
+      if (te) e = te.cloneNode(true) as HTMLElement;
       if (e) {
         this._setPlaceholders(e, props);
         root.appendChild(e);
@@ -325,15 +353,16 @@ class MicroRegistry {
         }
       } // if
 
-      for (var p in behavior) {
+      const b = behavior as any;
+      for (var p in b) {
         if (p.substr(0, 2) == 'on') {
-          obj.addEventListener(p.substr(2), behavior[p].bind(obj), false);
-        } else if (behavior[p] == null || behavior[p].constructor != Function) {
+          obj.addEventListener(p.substr(2), b[p].bind(obj), false);
+        } else if (b[p] == null || b[p].constructor != Function) {
           // set default-value
-          if ((<any>obj)[p] === null) (<any>obj)[p] = behavior[p];
+          if ((<any>obj)[p] === null) (<any>obj)[p] = b[p];
         } else {
           // attach method
-          (<any>obj)[p] = behavior[p];
+          (<any>obj)[p] = b[p];
         } // if
       } // for
 

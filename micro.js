@@ -34,8 +34,8 @@ function jsonParse(obj, cbFunc) {
         }
         else if (typeof value == 'object') {
             cbFunc(path2, null, null);
-            for (var n_1 in value) {
-                _jsonParse(path2, n_1, value[n_1], cbFunc);
+            for (var k in value) {
+                _jsonParse(path2, k, value[k], cbFunc);
             }
         }
         else {
@@ -43,6 +43,17 @@ function jsonParse(obj, cbFunc) {
         }
     }
     _jsonParse('', '', obj, cbFunc);
+}
+function jsonFind(obj, path) {
+    if (path[0] === '/') {
+        path = path.substr(1);
+    }
+    var steps = path.split('/');
+    while (obj && steps.length > 0) {
+        obj = obj[steps[0]];
+        steps.shift();
+    }
+    return obj;
 }
 var MicroHub = (function () {
     function MicroHub() {
@@ -52,16 +63,40 @@ var MicroHub = (function () {
     }
     MicroHub.prototype._findStoreObject = function (path) {
         var p = this._store;
-        var steps = path.substr(1).split('/');
+        if (path[0] === '/') {
+            path = path.substr(1);
+        }
+        var steps = path.split('/');
         while (steps.length > 0 && p[steps[0]]) {
             p = p[steps[0]];
             steps.shift();
         }
-        while (steps.length > 0) {
+        while (steps.length > 0 && steps[0]) {
             p = p[steps[0]] = {};
             steps.shift();
         }
         return p;
+    };
+    MicroHub.prototype.pPath = function (path) {
+        if (path[0] === '/') {
+            path = path.substr(1);
+        }
+        var steps = path.split('/');
+        var res = steps.slice(0, steps.length - 1).join('/');
+        return res;
+    };
+    MicroHub.prototype.pKey = function (path) {
+        var steps = path.split('/');
+        var res = steps[steps.length - 1];
+        return res;
+    };
+    MicroHub.prototype.read = function (path) {
+        var o = this._findStoreObject(this.pPath(path));
+        return o[this.pKey(path)];
+    };
+    MicroHub.prototype.write = function (path, value) {
+        var o = this._findStoreObject(this.pPath(path));
+        o[this.pKey(path)] = value;
     };
     MicroHub.prototype.subscribe = function (matchPath, fCallback, replay) {
         if (replay === void 0) { replay = false; }
@@ -225,21 +260,21 @@ var MicroRegistry = (function () {
             }
         }
         else if (obj.nodeType == Node.ELEMENT_NODE) {
-            var el = obj;
-            for (var i = 0; i < el.attributes.length; i++) {
-                var v = el.attributes[i].value;
+            var attr = obj.attributes;
+            for (var i = 0; i < attr.length; i++) {
+                var v = attr[i].value;
                 if (v.indexOf('${') >= 0) {
-                    el[el.attributes[i].name] = el.attributes[i].value = fill(v, props);
+                    obj[attr[i].name] = attr[i].value = fill(v, props);
                 }
             }
-            el.childNodes.forEach(function (c) {
+            obj.childNodes.forEach(function (c) {
                 _this._setPlaceholders(c, props);
             });
         }
     };
     MicroRegistry.prototype.insertTemplate = function (root, controlName, props) {
         var e = null;
-        if (root && controlName) {
+        if (root && controlName && this._tco) {
             var te = this._tco.querySelector('[u-control="' + controlName + '"]');
             if (te)
                 e = te.cloneNode(true);
@@ -267,16 +302,17 @@ var MicroRegistry = (function () {
                         obj[a.name] = a.value;
                 }
             }
-            for (var p in behavior) {
+            var b = behavior;
+            for (var p in b) {
                 if (p.substr(0, 2) == 'on') {
-                    obj.addEventListener(p.substr(2), behavior[p].bind(obj), false);
+                    obj.addEventListener(p.substr(2), b[p].bind(obj), false);
                 }
-                else if (behavior[p] == null || behavior[p].constructor != Function) {
+                else if (b[p] == null || b[p].constructor != Function) {
                     if (obj[p] === null)
-                        obj[p] = behavior[p];
+                        obj[p] = b[p];
                 }
                 else {
-                    obj[p] = behavior[p];
+                    obj[p] = b[p];
                 }
             }
             obj._attachedBehavior = behavior;
@@ -351,23 +387,25 @@ var GenericWidgetClass = (function (_super) {
                 .replace('\n}', ''));
         }
         ['span', 'div'].forEach(function (elType) {
-            this.el.querySelectorAll(elType + ("[u-active='" + key + "']")).forEach(function (el) {
+            this.el.querySelectorAll(elType + ("[u-active='" + key + "']")).forEach(function (elem) {
                 var b = toBool(value);
-                setAttr(el, 'value', b ? '1' : '0');
-                setAttr(el, 'title', b ? 'active' : 'not active');
-                el.classList.toggle('active', b);
+                setAttr(elem, 'value', b ? '1' : '0');
+                setAttr(elem, 'title', b ? 'active' : 'not active');
+                elem.classList.toggle('active', b);
             });
         }, this);
         ['h2', 'h4', 'span'].forEach(function (elType) {
-            this.el.querySelectorAll(elType + "[u-text='" + key + "']").forEach(function (el) {
-                if (el.textContent != value)
-                    el.textContent = value;
+            this.el.querySelectorAll(elType + "[u-text='" + key + "']").forEach(function (elem) {
+                if (elem.textContent != value)
+                    elem.textContent = value;
             });
         }, this);
-        this.el.querySelectorAll("input[u-value='" + key + "']").forEach(function (el) {
-            if (el.value != value)
-                el.value = value;
-        });
+        ['input', 'select'].forEach(function (elType) {
+            this.el.querySelectorAll(elType + "[u-value='" + key + "']").forEach(function (elem) {
+                if (elem.value != value)
+                    elem.value = value;
+            });
+        }, this);
     };
     GenericWidgetClass.prototype.dispatchAction = function (prop, val) {
         if (prop !== null && val !== null)
@@ -380,7 +418,7 @@ var GenericWidgetClass = (function (_super) {
     GenericWidgetClass.prototype.onclick = function (e) {
         var src = e.target;
         var a = src.getAttribute('u-action');
-        if ((src) && (a))
+        if (src && a)
             this.dispatchAction(a, src['value']);
         if (src.classList.contains('setconfig')) {
             this.el.classList.toggle('configmode');
@@ -555,6 +593,32 @@ var SwitchWidgetClass = (function (_super) {
 SwitchWidgetClass = __decorate([
     MicroControl("switch")
 ], SwitchWidgetClass);
+function upload(filename, content) {
+    var formData = new FormData();
+    var blob = new Blob([content], {
+        type: 'text/html'
+    });
+    formData.append(filename, blob, filename);
+    var objHTTP = new XMLHttpRequest();
+    objHTTP.open('POST', '/');
+    objHTTP.addEventListener('readystatechange', function (p) {
+        if (objHTTP.readyState == 4 && objHTTP.status >= 200 && objHTTP.status < 300) {
+            alert('saved.');
+        }
+    });
+    objHTTP.send(formData);
+}
+function changeConfig(id, newConfig) {
+    console.log(id, newConfig);
+    debugger;
+    var c = JSON.parse(hub.read('config'));
+    var node = jsonFind(c, id);
+    for (var n in newConfig) {
+        node[n] = newConfig[n];
+    }
+    console.log(c);
+    upload('config2.json', JSON.stringify(c));
+}
 var TimerWidgetClass = (function (_super) {
     __extends(TimerWidgetClass, _super);
     function TimerWidgetClass() {
@@ -568,13 +632,13 @@ var TimerWidgetClass = (function (_super) {
     TimerWidgetClass.prototype._timeToSec = function (v) {
         var ret = 0;
         v = v.toLowerCase();
-        if (v.endsWith("h")) {
+        if (v.endsWith('h')) {
             ret = parseInt(v, 10) * 60 * 60;
         }
-        else if (v.endsWith("m")) {
+        else if (v.endsWith('m')) {
             ret = parseInt(v, 10) * 60;
         }
-        else if (v.endsWith("s")) {
+        else if (v.endsWith('s')) {
             ret = parseInt(v, 10);
         }
         else {
@@ -584,34 +648,47 @@ var TimerWidgetClass = (function (_super) {
     };
     TimerWidgetClass.prototype.newData = function (path, key, value) {
         _super.prototype.newData.call(this, path, key, value);
-        if (key == "waittime") {
+        if (key == 'waittime') {
             this.wt = this._timeToSec(value);
         }
-        else if (key == "pulsetime") {
+        else if (key == 'pulsetime') {
             this.pt = this._timeToSec(value);
         }
-        else if (key == "cycletime") {
+        else if (key == 'cycletime') {
             this.ct = this._timeToSec(value);
         }
-        else if (key == "time") {
+        else if (key == 'time') {
             this.time = this._timeToSec(value);
         }
         if (this.ct < this.wt + this.pt)
             this.ct = this.wt + this.pt;
         if (this.ct > 0) {
-            var el = this.el.querySelector(".u-bar");
+            var el = this.el.querySelector('.u-bar');
             var f = el.clientWidth / this.ct;
-            var pto = el.querySelector(".pulse");
-            pto.style.left = Math.floor(this.wt * f) + "px";
-            pto.style.width = Math.floor(this.pt * f) + "px";
-            var cto = el.querySelector(".current");
-            cto.style.width = Math.floor(this.time * f) + "px";
+            var pto = el.querySelector('.pulse');
+            pto.style.left = Math.floor(this.wt * f) + 'px';
+            pto.style.width = Math.floor(this.pt * f) + 'px';
+            var cto = el.querySelector('.current');
+            cto.style.width = Math.floor(this.time * f) + 'px';
         }
+    };
+    TimerWidgetClass.prototype.onclick = function (evt) {
+        var tar = evt.target;
+        if (tar.classList.contains('save')) {
+            var d_1 = {};
+            this.el.querySelectorAll('[u-value]').forEach(function (elem) {
+                var n = elem.getAttribute('u-value');
+                if (n)
+                    d_1[n] = elem.value;
+            });
+            changeConfig(this.microid, d_1);
+        }
+        _super.prototype.onclick.call(this, evt);
     };
     return TimerWidgetClass;
 }(GenericWidgetClass));
 TimerWidgetClass = __decorate([
-    MicroControl("timer")
+    MicroControl('timer')
 ], TimerWidgetClass);
 function toBool(s) {
     if (!s)

@@ -24,8 +24,8 @@ function jsonParse(obj: any, cbFunc: JsonParseCallback) {
       cbFunc(path2, null, null);
 
       // traverse all entries in the object
-      for (let n in value) {
-        _jsonParse(path2, n, value[n], cbFunc);
+      for (let k in value) {
+        _jsonParse(path2, k, value[k], cbFunc);
       } // for
     } else {
       // this is an attribute for the receiver function
@@ -36,5 +36,19 @@ function jsonParse(obj: any, cbFunc: JsonParseCallback) {
   // start with root and scan recursively.
   _jsonParse('', '', obj, cbFunc);
 } // jsonParse()
+
+function jsonFind(obj: any, path: string): any {
+  if (path[0] === '/') {
+    path = path.substr(1);
+  }
+  let steps = path.split('/');
+
+  // use existing objects.
+  while (obj && steps.length > 0) {
+    obj = obj[steps[0]];
+    steps.shift();
+  } // while
+  return obj;
+} // jsonFind
 
 // End.
