@@ -10,7 +10,7 @@
 @MicroControl("pwmout")
 class PWMOutWidgetClass extends GenericWidgetClass {
   range: number = 255;
-  lastValue: string;
+  lastValue: string = "";
 
   connectedCallback(el: HTMLElement) {
     super.connectedCallback(el);

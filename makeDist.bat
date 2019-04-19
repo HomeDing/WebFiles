@@ -31,6 +31,7 @@ copy *.svg dist
 copy favicon*.png dist
 
 copy index.htm dist
+copy setup.htm dist
 copy iotstyle.css dist
 
 copy ding-*.htm dist
