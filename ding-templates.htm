@@ -36,6 +36,7 @@
     <span class="setconfig"></span>
   </div>
   <div class="block">
+    <span class="u-bool" u-active="value" style="position: absolute;top:0.5rem;right:0.5rem"></span>
     <label>wait:</label><span u-text="waittime">.</span> <label>pulse:</label><span u-text="pulsetime">.</span>
   </div>
   <div class="block">
@@ -49,6 +50,23 @@
     <button u-action="start" value="1">Start</button>
     <button u-action="next" value="1">Next</button>
     <button u-action="stop" value="1">Stop</button>
+  </div>
+  <div class="block config">
+    <div class="form-group">
+      <label for="bx">type:</label>
+      <select id="bx" u-value="type">
+        <option value="LOOP">LOOP</option>
+        <option value="once">once</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>waittime:</label>
+      <input u-value="waittime" class="text-right" /></div>
+    <div class="form-group"><label>pulsetime:</label>
+      <input u-value="pulsetime" class="text-right" /></div>
+    <div class="form-group"><label>cycletime:</label>
+      <input u-value="cycletime" class="text-right" /></div>
+    <button class="save" style="float: right" u-save="1">Save</button>
   </div>
 </div>
 
@@ -65,12 +83,12 @@
       <button u-action="value" value="1">On</button>
       <button u-action="value" value="0">Off</button>
     </div>
-    <div><label class="fixed">last value:</label><span class="Value" u-text="value"></span></div>
+    <div class="form-group"><label>last value:</label><span class="Value" u-text="value"></span></div>
   </div>
   <div class="block config">
-    <div><label class="fixed">code on:</label><span class="Value" u-text="codeon"></span></div>
-    <div><label class="fixed">code off:</label><span class="Value" u-text="codeoff"></span></div>
-    <div><label class="fixed">loglevel:</label><span class="Value" u-text="loglevel"></span></div>
+    <div class="form-group"><label>code on:</label><span class="Value" u-text="codeon"></span></div>
+    <div class="form-group"><label>code off:</label><span class="Value" u-text="codeoff"></span></div>
+    <div class="form-group"><label>loglevel:</label><span class="Value" u-text="loglevel"></span></div>
   </div>
 </div>
 
@@ -83,9 +101,8 @@
     <span class="setconfig"></span>
   </div>
   <div class="block">
-    <span
-      ><img src="/i/button.svg" class="u-button" style="border-radius:3rem; float: left;height:5rem;margin-right:1rem"
-    /></span>
+    <span><img src="/i/button.svg" class="u-button"
+        style="border-radius:3rem; float: left;height:5rem;margin-right:1rem" /></span>
   </div>
 </div>
 
@@ -100,13 +117,13 @@
 
   <div class="block Element">
     <img src="/i/digitalout.svg" style="float:left;height:4rem;margin-right:1rem" />
-    <span class="u-bool" u-active="value" style="position: absolute;top:4rem;right:0.4rem;"></span>
+    <span class="u-bool" u-active="value" style="position: absolute;top:0.5rem;right:0.5rem"></span>
   </div>
   <div class="block config">
-    <div><label class="fixed">pin:</label><span class="Value" u-text="pin"></span></div>
-    <div><label class="fixed">inverse:</label><span class="Value" u-text="inverse"></span></div>
-    <div><label class="fixed">value:</label><span class="Value" u-text="value"></span></div>
-    <div><label class="fixed">loglevel:</label><span class="Value" u-text="loglevel"></span></div>
+    <div class="form-group"><label>pin:</label><span class="Value" u-text="pin"></span></div>
+    <div class="form-group"><label>inverse:</label><span class="Value" u-text="inverse"></span></div>
+    <div class="form-group"><label>value:</label><span class="Value" u-text="value"></span></div>
+    <div class="form-group"><label>loglevel:</label><span class="Value" u-text="loglevel"></span></div>
   </div>
 </div>
 
@@ -119,14 +136,14 @@
     <span class="setconfig"></span>
   </div>
 
-  <div class="block xElement">
-    <div><label class="fixed">value:</label><span class="Value" u-text="value"></span></div>
-    <span class="u-bool" u-active="value" style="position: absolute;top:4rem;right:0.4rem;"></span>
+  <div class="block">
+    <span class="u-bool" u-active="value" style="position: absolute;top:0.5rem;right:0.5rem"></span>
+    <div class="form-group"><label >value:</label><span class="Value" u-text="value"></span></div>
   </div>
   <div class="block config">
-    <div><label class="fixed">x:</label><span class="Value" u-text="x"></span></div>
-    <div><label class="fixed">y:</label><span class="Value" u-text="y"></span></div>
-    <div><label class="fixed">loglevel:</label><span class="Value" u-text="loglevel"></span></div>
+    <div class="form-group"><label >x:</label><span class="Value" u-text="x"></span></div>
+    <div class="form-group"><label >y:</label><span class="Value" u-text="y"></span></div>
+    <div class="form-group"><label >loglevel:</label><span class="Value" u-text="loglevel"></span></div>
   </div>
 </div>
 
@@ -139,7 +156,7 @@
     <span class="setconfig"></span>
   </div>
   <div class="block" style="position: relative;min-height: 5rem">
-    <span class="u-level" style="position:absolute;right:0.4em;top:0.4em;"></span>
+    <span class="u-level" style="position:absolute;right:0.4em;top:0.4em"></span>
     <div style="font-size: 2rem"><span u-text="value"></span> / <span u-text="range"></span></div>
   </div>
 </div>
@@ -166,9 +183,7 @@
     <span class="setconfig"></span>
   </div>
   <div class="block Element">
-    <span
-      u-text="value"
-      style="position:absolute;font-size:2rem;width:3em;text-align: right;height:1em;right:0.4em"
-    ></span>
+    <span u-text="value"
+      style="position:absolute;font-size:2rem;width:3em;text-align: right;height:1em;right:0.4em"></span>
   </div>
 </div>

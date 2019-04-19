@@ -1,340 +1,348 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Elements</title>
-    <link Content-Type="text/css" href="/iotstyle.css" rel="stylesheet" />
 
-    <style>
-      .card img.active {
-        background-color: limegreen;
-      }
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Elements</title>
+  <link Content-Type="text/css" href="/iotstyle.css" rel="stylesheet" />
 
-      .Element .KV {
-        display: block;
-        clear: both;
-        height: 1.5em;
-      }
+  <style>
+    .card img.active {
+      background-color: limegreen;
+    }
 
-      .activeState {
-        position: absolute;
-        top: 0.4rem;
-        right: 0.4rem;
-        height: 1.4rem;
-        width: 1.4rem;
-        background-image: url(/i/stop.svg);
-        background-size: 1.4rem;
-      }
+    .Element .KV {
+      display: block;
+      clear: both;
+      height: 1.5em;
+    }
 
-      .activeState.active {
-        background-image: url(/i/start.svg);
-        background-size: 1.4rem;
-      }
+    .activeState {
+      position: absolute;
+      top: 0.5rem;
+      right: 0.5rem;
+      height: 1.4rem;
+      width: 1.4rem;
+      background-image: url(/i/stop.svg);
+      background-size: 1.4rem;
+    }
 
-      span.setconfig {
-        position: absolute;
-        top: 0.4rem;
-        right: 2.2rem;
-        height: 1.4rem;
-        width: 1.4rem;
-        background-image: url(/i/config.svg);
-        background-size: 1.4rem;
-      }
+    .activeState.active {
+      background-image: url(/i/start.svg);
+      background-size: 1.4rem;
+    }
 
-      #modal {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-      }
+    span.setconfig {
+      position: absolute;
+      top: 0.4rem;
+      right: 2.2rem;
+      height: 1.4rem;
+      width: 1.4rem;
+      background-image: url(/i/config.svg);
+      background-size: 1.4rem;
+    }
 
-      #modalBack {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        background-color: silver;
-        opacity: 0.8;
-      }
+    #modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
 
-      #modalContainer {
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        margin: auto;
-        opacity: 1;
-      }
+    #modalBack {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background-color: silver;
+      opacity: 0.8;
+    }
 
-      .modalClose {
-        position: absolute;
-        top: 0.4rem;
-        right: 0.4rem;
-        height: 1.8rem;
-        width: 1.8rem;
-        font-size: 1.6rem;
-      }
+    #modalContainer {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      margin: auto;
+      opacity: 1;
+    }
 
-      img, #panel {
-        user-select: none;
-        -ms-user-select: none;
-      }
+    .modalClose {
+      position: absolute;
+      top: 0.4rem;
+      right: 0.4rem;
+      height: 1.8rem;
+      width: 1.8rem;
+      font-size: 1.6rem;
+    }
 
-      div[u-control] div.block.config {
-        background-color: yellow;
-        display: none;
-      }
+    img,
+    #panel {
+      user-select: none;
+      -ms-user-select: none;
+    }
 
-      div[u-control].configmode div.block.config {
-        display: block;
-      }
-      
-    </style>
-    <script src="polyfill.js"></script>
-    <script src="es6-promise.auto.js"></script>
-    <!-- <script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.auto.js"></script> -->
-    <script src="micro.js"></script>
-  </head>
+    div[u-control] div.block.config {
+      background-color: yellow;
+      display: none;
+    }
 
-  <body>
-    <div class="container">
-      <div class="u-header">
-        <a href="/" title="Start-Page"><img class="icon" src="/favicon.svg"/></a>
-        <h1>Config</h1>
-        <a href="/ding-ide.htm" title="Start IDE"
-          ><img class="icon" src="/i/ide.svg" /><span class="hidden-xs">IDE</span></a
-        >
-        <a href="/ding-info.htm" title="Start Config"
-          ><img class="icon" src="/i/config.svg" /><span class="hidden-xs">Config</span></a
-        >
-        <a href="/ding-log.htm" title="Logfile"
-          ><img class="icon" src="/i/log.svg" /><span class="hidden-xs">Log</span></a
-        >
+    div[u-control].configmode div.block {
+      display: none;
+    }
+
+    div[u-control].configmode div.block.config,
+    div[u-control].configmode div.block.header {
+      display: block;
+    }
+  </style>
+  <script src="polyfill.js"></script>
+  <script src="es6-promise.auto.js"></script>
+  <!-- <script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.auto.js"></script> -->
+  <script src="micro.js"></script>
+</head>
+
+<body>
+  <div class="container">
+    <div class="u-header">
+      <a href="/" title="Start-Page"><img class="icon" src="/favicon.svg" /></a>
+      <h1>Config</h1>
+      <a href="/ding-ide.htm" title="Start IDE"><img class="icon" src="/i/ide.svg" /><span
+          class="hidden-xs">IDE</span></a>
+      <a href="/ding-info.htm" title="Start Config"><img class="icon" src="/i/config.svg" /><span
+          class="hidden-xs">Config</span></a>
+      <a href="/ding-log.htm" title="Logfile"><img class="icon" src="/i/log.svg" /><span
+          class="hidden-xs">Log</span></a>
+    </div>
+    <div class="u-navbar">
+      <button id="addButton">+</button>
+      <button id="sysButton">sys</button>
+    </div>
+
+    <div id="panel" class="row wrap"></div>
+
+    <div id="u-templates" style="border:2px solid green;padding:1rem;display:none">
+      <div class="col card" u-control="generic" id="${id}" u-is="generic" microID="${id}">
+        <div class="block header">
+          <img src="/i/${type}.svg" class="icon" />
+          <h3>${id}</h3>
+          <h4 u-text="description"></h4>
+          <span class="activeState" u-active="active"></span>
+          <span class="setconfig"></span>
+        </div>
+        <div class="block Element"></div>
+        <div class="block config">
+          <div class="form-group"><label>loglevel:</label><span class="Value" u-text="loglevel"></span></div>
+        </div>
       </div>
-      <div class="u-navbar">
-        <button id="addButton">+</button>
-        <button id="sysButton">sys</button>
+
+      <div u-control="kv" class="form-group KV"><label>${key}:</label><span u-text="${key}"></span></div>
+
+      <div class="col card" u-control="schedule" id="${id}" u-is="generic" microID="${id}">
+        <div class="block header">
+          <img src="/i/${type}.svg" class="icon" />
+          <h3>${id}</h3>
+          <span class="activeState" u-active="active"></span>
+          <span class="setconfig"></span>
+        </div>
+        <div class="block">
+          <label>Start:</label><input u-value="ontime" type="time" step="1" />
+          <span style="width:2rem"></span>
+          <label>End:</label><input u-value="offtime" type="time" step="1" /> <label>out:</label><span
+            u-text="value"></span>
+        </div>
+        <div class="block config Element"></div>
       </div>
 
-      <div id="panel" class="row wrap"></div>
-
-      <div id="u-templates" style="border:2px solid green;padding:1rem;display:none">
-        <div class="col card" u-control="generic" id="${id}" u-is="generic" microID="${id}">
-          <div class="block header">
-            <img src="/i/${type}.svg" class="icon" />
-            <h3>${id}</h3>
-            <h4 u-text="description"></h4>
-            <span class="activeState" u-active="active"></span>
-            <span class="setconfig"></span>
+      <div class="col card" u-control="dstime" id="${id}" u-is="dstime" microID="${id}">
+        <div class="block header">
+          <img src="/i/time.svg" class="icon" />
+          <h3>${id}</h3>
+          <h4 u-text="description"></h4>
+          <span class="activeState" u-active="active"></span>
+          <span class="setconfig"></span>
+        </div>
+        <div class="block">
+          <div class="form-group">
+            <label>ReadTime:</label>
+            <input u-value="readtime" type="time" step="1" />
           </div>
-          <div class="block Element"></div>
-          <div class="block config">
-            <div><label class="fixed">loglevel:</label><span class="Value" u-text="loglevel"></span></div>
+          <div class="form-group">
+            <label>Now:</label>
+            <span u-text="now"></span>
           </div>
         </div>
-
-        <div u-control="kv" class="KV"><label class="fixed">${key}:</label><span u-text="${key}"></span></div>
-
-        <div class="col card" u-control="schedule" id="${id}" u-is="generic" microID="${id}">
-          <div class="block header">
-            <img src="/i/${type}.svg" class="icon" />
-            <h3>${id}</h3>
-            <span class="activeState" u-active="active"></span>
-            <span class="setconfig"></span>
-          </div>
-          <div class="block">
-            <label>Start:</label><input u-value="ontime" type="time" step="1" />
-            <span style="width:2rem"></span>
-            <label>End:</label><input u-value="offtime" type="time" step="1" /> <label>out:</label
-            ><span u-text="value"></span>
-          </div>
-          <div class="block config Element"></div>
-        </div>
-
-        <div class="col card" u-control="dstime" id="${id}" u-is="dstime" microID="${id}">
-          <div class="block header">
-            <img src="/i/time.svg" class="icon" />
-            <h3>${id}</h3>
-            <h4 u-text="description"></h4>
-            <span class="activeState" u-active="active"></span>
-            <span class="setconfig"></span>
-          </div>
-          <div class="block">
-            <div>
-              <label class="fixed">ReadTime:</label>
-              <input u-value="readtime" type="time" step="1" />
-            </div>
-            <div>
-              <label class="fixed">Now:</label>
-              <span u-text="now"></span>
-            </div>
-          </div>
-          <div class="block config">
-            <label class="fixed">set Time:</label>
+        <div class="block config">
+          <div class="form-group">
+            <label>set Time:</label>
             <span class="now"></span>
-            <button class="setnow" style="min-width: 0;">set</button>
           </div>
+          <button class="setnow" style="float:right">set</button>
         </div>
+      </div>
 
-        <div class="col card" u-control="switch" id="${id}" u-is="switch" microID="${id}">
-          <div class="block header">
-            <img src="/i/${type}.svg" class="icon" />
-            <h3>${id}</h3>
-            <h4 u-text="description"></h4>
-            <span class="activeState" u-active="active"></span>
-            <span class="setconfig"></span>
-          </div>
-          <div class="block">
-            <div id="us" class="u-switch" u-active="value">
-              <label value="0">off</label>
-              <div class="box">
-                <div class="handle"></div>
-              </div>
-              <label value="1">on</label>
+      <div class="col card" u-control="switch" id="${id}" u-is="switch" microID="${id}">
+        <div class="block header">
+          <img src="/i/${type}.svg" class="icon" />
+          <h3>${id}</h3>
+          <h4 u-text="description"></h4>
+          <span class="activeState" u-active="active"></span>
+          <span class="setconfig"></span>
+        </div>
+        <div class="block" style="position: relative;">
+          <span class="u-bool" u-active="value" style="position: absolute;top:0.5rem;right:0.5rem"></span>
+          <div id="us" class="u-switch" u-active="value">
+            <label value="0">off</label>
+            <div class="box">
+              <div class="handle"></div>
             </div>
-            <span class="u-bool" u-active="value" style="position: absolute;top:4.4rem;right:0.4rem;"></span>
+            <label value="1">on</label>
           </div>
         </div>
       </div>
     </div>
+  </div>
 
-    <div id="modal" class="hidden">
-      <div id="modalBack"></div>
-      <div onclick="closeModal()" style="position:absolute;background-color: cyan;padding:1rem">X</div>
-      <div id="modalContainer" style="width:260px;height:260px">Hello, this is modal</div>
-    </div>
+  <div id="modal" class="hidden">
+    <div id="modalBack"></div>
+    <div onclick="closeModal()" style="position:absolute;background-color: cyan;padding:1rem">X</div>
+    <div id="modalContainer" style="width:260px;height:260px">Hello, this is modal</div>
+  </div>
 
-    <script>
-      var panelObj = document.getElementById('panel');
-      var addObj = document.getElementById('addButton');
-      var sysObj = document.getElementById('sysButton');
+  <script>
+    var panelObj = document.getElementById('panel');
+    var addObj = document.getElementById('addButton');
+    var sysObj = document.getElementById('sysButton');
 
-      var elementDef;
-      var params = getHashParams({
-        sys: false
-      });
-      window.addEventListener('hashchange', function() {
-        window.location.reload();
-      });
+    var elementDef;
+    var params = getHashParams({
+      sys: false
+    });
+    window.addEventListener('hashchange', function () {
+      window.location.reload();
+    });
 
-      function openModal(tmplName, data) {
-        var modalObj = document.getElementById('modal');
-        var containerObj = document.getElementById('modalContainer');
+    function openModal(tmplName, data) {
+      var modalObj = document.getElementById('modal');
+      var containerObj = document.getElementById('modalContainer');
 
-        // open Dialog, replace existing.
-        containerObj.innerHTML = '';
-        var dlgObj /*:HTMLDivElement*/ = micro.insertTemplate(containerObj, tmplName);
-        modalObj.classList.remove('hidden');
-        containerObj.style.width = dlgObj.scrollWidth + 'px';
-        containerObj.style.height = dlgObj.scrollHeight + 'px';
-      } // openModal
+      // open Dialog, replace existing.
+      containerObj.innerHTML = '';
+      var dlgObj /*:HTMLDivElement*/ = micro.insertTemplate(containerObj, tmplName);
+      modalObj.classList.remove('hidden');
+      containerObj.style.width = dlgObj.scrollWidth + 'px';
+      containerObj.style.height = dlgObj.scrollHeight + 'px';
+    } // openModal
 
-      function closeModal(data) {
-        var modalObj = document.getElementById('modal');
-        var containerObj = document.getElementById('modalContainer');
-        modalObj.classList.add('hidden');
-        containerObj.innerHTML = '';
-      } // closeModal()
+    function closeModal(data) {
+      var modalObj = document.getElementById('modal');
+      var containerObj = document.getElementById('modalContainer');
+      modalObj.classList.add('hidden');
+      containerObj.innerHTML = '';
+    } // closeModal()
 
-      sysObj.addEventListener('click', function(evt) {
-        params.sys = !toBool(params.sys);
-        window.location.hash = 'sys=' + params.sys;
-      });
+    sysObj.addEventListener('click', function (evt) {
+      params.sys = !toBool(params.sys);
+      window.location.hash = 'sys=' + params.sys;
+    });
 
-      addObj.addEventListener('click', function(evt) {
-        openModal('modalNewElement');
-      });
+    addObj.addEventListener('click', function (evt) {
+      openModal('modalNewElement');
+    });
 
-      function createElement(path, key, value) {
+    function createElement(path, key, value) {
+      var hElem = document.getElementById(path);
+      if (!hElem) {
+        var t = path.split('/')[1];
+        var p = {
+          id: path,
+          type: t
+        };
+
+        if (toBool(params.sys) || !elementDef[t] || toBool(elementDef[t].sys) == false) {
+          var e = micro.insertTemplate(panelObj, t, p);
+          if (!e) var e = micro.insertTemplate(panelObj, 'generic', p);
+        } // if
+      } // if
+    } // createElement()
+
+    function addValueInfo(path, key, value) {
+      var hText;
+      if (key && key != 'active' && path.match(/^\/.*\/.*/)) {
         var hElem = document.getElementById(path);
-        if (!hElem) {
-          var t = path.split('/')[1];
-          var p = {
-            id: path,
-            type: t
-          };
-
-          if (toBool(params.sys) || !elementDef[t] || toBool(elementDef[t].sys) == false) {
-            var e = micro.insertTemplate(panelObj, t, p);
-            if (!e) var e = micro.insertTemplate(panelObj, 'generic', p);
+        if (hElem) {
+          var elem = hElem.querySelector("[u-text='" + key + "'],[u-value='" + key + "'],[u-active='" + key + "']");
+          if (!elem) {
+            hElem = hElem.querySelector('.Element');
+            if (hElem) {
+              var p = {
+                key: key
+              };
+              micro.insertTemplate(hElem, 'kv', p);
+            }
           } // if
         } // if
-      } // createElement()
+      } // if
+    } // addValueInfo
 
-      function addValueInfo(path, key, value) {
-        var hText;
-        if (key && key != 'active' && path.match(/^\/.*\/.*/)) {
-          var hElem = document.getElementById(path);
-          if (hElem) {
-            var elem = hElem.querySelector("[u-text='" + key + "']");
-            if (!elem) {
-              hElem = hElem.querySelector('.Element');
-              if (hElem) {
-                var p = {
-                  key: key
-                };
-                micro.insertTemplate(hElem, 'kv', p);
-              }
-            } // if
-          } // if
-        } // if
-      } // addValueInfo
+    hub.subscribe('/*/*', createElement);
+    hub.subscribe('/**/**?**', addValueInfo);
 
-      hub.subscribe('/*/*', createElement);
-      hub.subscribe('/**/**?**', addValueInfo);
-
-      function updateState() {
-        fetch('/$board')
-          .then(function(result) {
-            return result.json();
-          })
-          .then(function(json) {
-            hub.publishObj(json);
-          });
-      } // updateState()
-
-      function init() {
-        // load templates from other file.
-        var p0 = Promise.all([micro.loadFile('/ding-templates.htm'), micro.loadFile('/ding-info-new.htm')]);
-
-        // element definitions -> env.json -> config.json
-        var p1 = fetch('/elements.json')
-          .then(function(result) {
-            return result.json();
-          })
-          .then(function(json) {
-            elementDef = json;
-
-            return fetch('/env.json');
-          })
-          .then(function(result) {
-            return result.json();
-          })
-          .then(function(json) {
-            hub.publishObj(json);
-
-            return fetch('/config.json');
-          })
-          .then(function(result) {
-            return result.json();
-          })
-          .then(function(json) {
-            hub.publishObj(json);
-          });
-
-        Promise.all([p0, p1]).then(function() {
-          updateState();
-          window.setInterval(updateState, 3800);
+    function updateState() {
+      fetch('/$board')
+        .then(function (result) {
+          return result.json();
+        })
+        .then(function (json) {
+          hub.publishObj(json);
         });
-      } // init()
+    } // updateState()
 
-      window.addEventListener('load', init);
+    function init() {
+      // load templates from other file.
+      var p0 = Promise.all([micro.loadFile('/ding-templates.htm'), micro.loadFile('/ding-info-new.htm')]);
 
-      window.addEventListener('error', function(err) {
-        alert(err);
-      })
-    </script>
-  </body>
+      // element definitions -> env.json -> config.json
+      var p1 = fetch('/elements.json')
+        .then(function (result) {
+          return result.json();
+        })
+        .then(function (json) {
+          elementDef = json;
+
+          return fetch('/env.json');
+        })
+        .then(function (result) {
+          return result.json();
+        })
+        .then(function (json) {
+          hub.publishObj(json);
+
+          return fetch('/config.json');
+        })
+        .then(function (result) {
+          return result.json();
+        })
+        .then(function (json) {
+          hub.write('config', JSON.stringify(json));
+          hub.write('config2', json);
+          hub.publishObj(json);
+        });
+
+      Promise.all([p0, p1]).then(function () {
+        // updateState();
+        // window.setTimeout(updateState, 2500);
+      });
+    } // init()
+
+    window.addEventListener('load', init);
+
+    window.addEventListener('error', function (err) {
+      alert(err);
+    })
+  </script>
+</body>
+
 </html>

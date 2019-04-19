@@ -1,13 +1,14 @@
 /* Colors */
+/* sizes */
 /* main */
 html, body { padding: 0; margin: 0; font-family: Arial; font-size: 1em; color: #111111; }
 
-body { background-color: #eeeeee; }
+body { background-color: #dddddd; }
 
 * { box-sizing: border-box; }
 
 /* === Text containers === */
-p, pre, h1, h2, h3, h4 { margin: 0 0 0.5em 0; }
+p, pre, h1, h2, h3, h4 { margin: 0 0 1rem 0; }
 
 p > img, pre > img, h1 > img, h2 > img, h3 > img, h4 > img { height: 1em; }
 
@@ -36,10 +37,10 @@ h4 { font-size: 0.8em; min-height: 0.8rem; }
 
 @media (max-width: 720px) { .container { margin-right: 0.6rem; margin-left: 0.6rem; } }
 
-.container-fluid { margin-right: 0; margin-left: 0; }
+.container-fluid { margin-right: 0; margin-left: 0; padding: 1rem; }
 
 /* row with 0.5rem gutter */
-.row { display: flex; flex-direction: row; flex-wrap: nowrap; align-items: flex-start; margin: -0.5rem 0.1rem 0.5rem -0.5rem; clear: both; padding: 0px; }
+.row { display: flex; flex-direction: row; flex-wrap: nowrap; align-items: flex-start; margin: -0.5rem 0.1rem 0rem; clear: both; padding: 0px; }
 
 .row.wrap { flex-wrap: wrap; }
 
@@ -78,20 +79,24 @@ svg.button .connect { fill: #00cc00; fill-opacity: 1; }
 
 .u-header > * + * { margin-left: 0.6rem; }
 
-.u-header .icon { width: 3rem; height: 3rem; background-color: #d4dced; border-radius: 0.2em; }
+.u-header .icon { width: 3rem; height: 3rem; background-color: white; border-radius: 0.2em; }
 
-.u-navbar { background-color: #d4dced; padding: 0.4rem; margin-bottom: 0.4rem; min-height: 2.2rem; }
+.u-navbar { background-color: #304878; padding: 1rem; margin-bottom: 0.5rem; min-height: 2.2rem; }
 
 .u-navbar > button { min-width: 2em; }
 
+.u-navbar > a { color: white; }
+
+.u-navbar > a > .icon { width: 2rem; height: 2rem; background-color: white; border-radius: 0.2em; }
+
 /* === Cards === */
-.card { position: relative; display: flex; flex-direction: column; background-color: #d4dced; border: 0.1rem solid #304878; border-radius: 0.3rem; width: 24em; min-width: 24em; }
+.card { position: relative; display: flex; flex-direction: column; background-color: white; border: none; border-radius: 0; width: 24em; min-width: 24em; }
 
 .card img.active { background-color: limegreen; }
 
-.card > .block { flex: 1 1 auto; padding: 0.4em; min-height: 2.6em; }
+.card > .block { position: relative; flex: 1 1 auto; padding: 1rem; min-height: 2.6em; }
 
-.card > .block.header { background-image: linear-gradient(to bottom, #d4dced, #b0bfde); border-top-right-radius: 0.4rem; border-top-left-radius: 0.4rem; min-height: 3.6rem; }
+.card > .block.header { background-image: linear-gradient(to bottom, white, #e6e6e6); border-top-right-radius: 0; border-top-left-radius: 0; min-height: 3.6rem; }
 
 .card > .block.header .icon { width: 3rem; height: 3rem; float: left; margin-right: 0.2rem; }
 
@@ -123,13 +128,15 @@ button.secondary { background-color: #777777; border-color: #777777; }
 
 .btn-group > label { display: inline-block; border: 0.1rem solid transparent; font-size: 1.25em; height: 1.4em; padding: 0 0.4em; }
 
-.form-group { margin-bottom: 0.2rem; }
+.form-group { margin-bottom: 0.5rem; display: flex; }
 
-.form-group > label { display: inline-block; text-align: right; margin-right: 0.5em; width: 8em; }
+.form-group > label { display: inline-block; text-align: right; margin-right: 0.5rem; width: 8em; }
 
-.form-group > input, .form-group > select { width: 12em; }
+.form-group > input, .form-group > span, .form-group > select { display: inline-block; width: 12em; font-size: 1em; }
 
-label.fixed { display: inline-block; text-align: right; margin-right: 0.2em; width: 8em; }
+.form-group > input, .form-group > select { border: 0.1rem solid #304878; }
+
+.form-group > span { border: 0.1rem solid transparent; }
 
 .invalid { border: 2px solid #ff0000 !important; background-color: #ffcccc !important; }
 
@@ -173,6 +180,8 @@ label.fixed { display: inline-block; text-align: right; margin-right: 0.2em; wid
 .u-switch > .box > .handle { position: absolute; display: inline-block; top: 0.1rem; left: 0.1rem; height: 1.2rem; width: 1.2rem; border-radius: 1.2rem; background-color: #203050; transition: left 0.2s cubic-bezier(0.25, 0.1, 0.25, 1); }
 
 .u-switch.active > .box > .handle { left: 1.5rem; }
+
+.text-right { text-align: right; }
 
 /* === Responsive Utilities === */
 .display-xs { display: none; }

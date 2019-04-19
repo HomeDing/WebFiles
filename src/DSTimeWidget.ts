@@ -9,7 +9,7 @@
 
 @MicroControl("dstime")
 class DSTimeWidgetClass extends GenericWidgetClass {
-  _nowObj:HTMLElement;
+  _nowObj:HTMLElement = <HTMLElement>this.el.querySelector(".now");
 
   isoDate () {
     function pad02(num: number) {
@@ -24,9 +24,8 @@ class DSTimeWidgetClass extends GenericWidgetClass {
 
   connectedCallback (this: DSTimeWidgetClass, el:HTMLElement) {
     super.connectedCallback(el);
-    this._nowObj = <HTMLElement>this.el.querySelector(".now");
     window.setInterval(function (this: DSTimeWidgetClass) {
-      setTextContent(this._nowObj, this.isoDate());
+    setTextContent(this._nowObj, this.isoDate());
     }.bind(this), 200);
   }
 

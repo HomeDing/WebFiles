@@ -8,10 +8,8 @@
   <link Content-Type="text/css" href="iotstyle.css" rel="stylesheet" />
 
   <style>
-    div.c {
+    div.c .col {
       border: 1px solid grey;
-      padding: 0.4rem;
-      margin-bottom: 0.4rem;
     }
 
     /* unfinished */
@@ -29,38 +27,51 @@
   <div class="container">
     <div class="u-header">
       <a href="/" title="Go to Startpage"><img class="icon" src="/favicon.svg" /></a>
-      <h1>Style</h1>
-      <a href="/ding-ide.htm" title="Start IDE"><img class="icon" 
-        src="/i/ide.svg" /><span class="hidden-xs">IDE</span></a>
-      <a href="/ding-info.htm" title="Start Config"><img class="icon" 
-          src="/i/config.svg" /><span class="hidden-xs">Config</span></a>
+      <h1>Style demo page</h1>
     </div>
 
-    <div class="c">
-      <h2>Header</h2>
-      <ul>
-        <li>The height of text is adjusted to <code>2rem</code>. Keep text short.</li>
-        <li>Place the <code>&lt;h1&gt;</code> element inside for page title.</li>
-        <li>Use <code>&lt;a&gt;</code> elements inside for navigation.</li>
-        <li>Use <code>class="hidden-xs"</code> to hide text elements.</li>
-      </ul>
-    </div>
-    <div class="c">
-      <h2>Typo</h2>
-      <blockquote>
-        <h2>Chapter headings h2</h2>
-        <h3>Topic headings h3</h3>
-        <h4>Subtitles h4</h4>
-        <p>Normal floating text with <a href="#">links</a>.</p>
-      </blockquote>
+    <div class="u-navbar">
+      <a href="/index.htm">Home</a>
+      <a href="/ding-ide.htm" title="Start IDE"><img class="icon" src="/i/ide.svg" /><span
+          class="hidden-xs">IDE</span></a>
     </div>
 
-    <div class="c">
-      <h2>Cards</h2>
-      <div class="card">
+
+    <div class="row">
+      <div class="col">
+        <h2>Header</h2>
+        <ul>
+          <li>The height of text is adjusted to <code>2rem</code>. Keep text short.</li>
+          <li>Place the <code>&lt;h1&gt;</code> element inside for page title.</li>
+          <li>Use <code>&lt;a&gt;</code> elements inside for navigation.</li>
+          <li>Use <code>class="hidden-xs"</code> to hide text elements.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col">
+        <h2>Typo</h2>
+        <blockquote>
+          <h2>Chapter headings h2</h2>
+          <h3>Topic headings h3</h3>
+          <h4>Subtitles h4</h4>
+          <p>Normal floating text with <a href="#">links</a>.</p>
+        </blockquote>
+      </div>
+    </div>
+
+
+    <div class="row">
+      <div class="col">
+        <h2>Cards</h2>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col card">
         <div class="block header">
           <h2><img src="/i/home.svg" />Heading-h2</h2>
-            <h4>Sub-Heading-h4</h4>
+          <h4>Sub-Heading-h4</h4>
         </div>
         <div class="block">
           <p><a href="ding.htm">Links</a></p>
@@ -68,10 +79,30 @@
           <button>action</button><button disabled>disabled</button>
         </div>
       </div>
+
+      <div class="col card">
+        <div class="block header">
+          <h2><img src="/i/home.svg" />Heading-h2</h2>
+          <h4>Sub-Heading-h4</h4>
+        </div>
+        <div class="block">
+          <div class="form-group"><label>Hostname:</label><span 
+              id="hostName">homeding.github.io</span></div>
+          <div class="form-group"><label>Field-label:</label><input  id="hostName2"
+              value="homeding.github.io"></div>
+          <div class="form-group"><label>Select-label:</label><select  id="hostName3"
+              value="homeding.github.io"><option value="homeding.github.io">homeding.github.io</option></select></div>
+        </div>
+      </div>
     </div>
-    <hr>
-    <p>Elements will have 2 cards each. The first one is for inspecting the current state of the element and triggering
-      actions. The second one is for changing the configuration of an element.</p>
+
+    <div class="row">
+      <div class="col">
+        <p>Elements will have 2 cards each. The first one is for inspecting the current state of the element and
+          triggering
+          actions. The second one is for changing the configuration of an element.</p>
+      </div>
+    </div>
 
     <div class="c">
       <h2>Element Icons</h2>
