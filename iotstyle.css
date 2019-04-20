@@ -1,13 +1,9 @@
-/* Colors */
-/* sizes */
-/* main */
 html, body { padding: 0; margin: 0; font-family: Arial; font-size: 1em; color: #111111; }
 
 body { background-color: #dddddd; }
 
 * { box-sizing: border-box; }
 
-/* === Text containers === */
 p, pre, h1, h2, h3, h4 { margin: 0 0 1rem 0; }
 
 p > img, pre > img, h1 > img, h2 > img, h3 > img, h4 > img { height: 1em; }
@@ -32,14 +28,12 @@ h4 { font-size: 0.8em; min-height: 0.8rem; }
 
 .hidden { display: none; }
 
-/* === Grid Design with grid of 6 === */
 .container { margin-right: 2rem; margin-left: 2rem; }
 
 @media (max-width: 720px) { .container { margin-right: 0.6rem; margin-left: 0.6rem; } }
 
 .container-fluid { margin-right: 0; margin-left: 0; padding: 1rem; }
 
-/* row with 0.5rem gutter */
 .row { display: flex; flex-direction: row; flex-wrap: nowrap; align-items: flex-start; margin: -0.5rem 0.1rem 0rem; clear: both; padding: 0px; }
 
 .row.wrap { flex-wrap: wrap; }
@@ -70,7 +64,6 @@ svg.button .object { fill: #304878; fill-opacity: 1; }
 
 svg.button .connect { fill: #00cc00; fill-opacity: 1; }
 
-/* === Header === */
 .u-header { display: flex; padding: 0.4rem; flex-direction: row; flex-wrap: nowrap; align-items: flex-start; }
 
 .u-header a, .u-header h1, .u-header img, .u-header span { font-size: 2rem; align-self: center; margin-top: 0; margin-bottom: 0; padding: 0; vertical-align: middle; }
@@ -81,15 +74,14 @@ svg.button .connect { fill: #00cc00; fill-opacity: 1; }
 
 .u-header .icon { width: 3rem; height: 3rem; background-color: white; border-radius: 0.2em; }
 
-.u-navbar { background-color: #304878; padding: 1rem; margin-bottom: 0.5rem; min-height: 2.2rem; }
+.u-navbar { background-color: #304878; padding: 0.5rem 1rem; margin-bottom: 0.5rem; min-height: 2.2rem; }
 
 .u-navbar > button { min-width: 2em; }
 
-.u-navbar > a { color: white; }
+.u-navbar > button:hover { border-color: #4466ee; background-color: #4466ee; }
 
-.u-navbar > a > .icon { width: 2rem; height: 2rem; background-color: white; border-radius: 0.2em; }
+.u-navbar > button.func { float: right; }
 
-/* === Cards === */
 .card { position: relative; display: flex; flex-direction: column; background-color: white; border: none; border-radius: 0; width: 24em; min-width: 24em; }
 
 .card img.active { background-color: limegreen; }
@@ -98,19 +90,21 @@ svg.button .connect { fill: #00cc00; fill-opacity: 1; }
 
 .card > .block.header { background-image: linear-gradient(to bottom, white, #e6e6e6); border-top-right-radius: 0; border-top-left-radius: 0; min-height: 3.6rem; }
 
-.card > .block.header .icon { width: 3rem; height: 3rem; float: left; margin-right: 0.2rem; }
+.card > .block.header .icon { width: 3rem; height: 3rem; float: left; margin-right: 0.5rem; }
 
-.card > .block.header > h2, .card > .block.header > h4 { margin: 0; }
+.card > .block.header > h3 { margin: 0 0 0.5rem 0; }
+
+.card > .block.header > h4 { margin: 0; }
 
 .card > .block.action { background-color: limegreen; padding-top: 0; padding-bottom: 0; }
 
 .card > hr { background-color: rgba(0, 0, 0, 0.125); border: 0; height: 1px; padding: 0; margin: 0; }
 
-a + a, a + button, a + label, label + a, label + button, label + label, button + a, button + button, button + label { margin-left: 0.8rem; }
+a + a, a + button, a + label, label + a, label + button, label + label, button + a, button + button, button + label { margin-left: 0.5rem; }
 
 button { display: inline-block; font-size: 1.25em; min-width: 4em; height: 1.4em; padding: 0 0.4em; border-radius: 0.2em; border: 0.1rem solid #304878; background-color: #304878; color: white; cursor: pointer; user-select: none; -ms-user-select: none; }
 
-button:focus { border: 0.1rem solid #4466ee; background-color: #4466ee; }
+button:focus { border-color: #4466ee; background-color: #4466ee; }
 
 button:disabled { border: 0.1rem solid #808080; background-color: #808080; }
 
@@ -142,7 +136,6 @@ button.secondary { background-color: #777777; border-color: #777777; }
 
 .valid { border: 2px solid #00cc00 !important; background-color: #ccffcc !important; }
 
-/* === element Icons === */
 .element { position: relative; display: inline-block; height: 6rem; width: 6rem; margin: 0.6rem; }
 
 .element.wide { width: 10rem; }
@@ -153,14 +146,15 @@ button.secondary { background-color: #777777; border-color: #777777; }
 
 .element > .info { position: absolute; display: inline-block; top: 0.4rem; right: 0; height: 5.2rem; width: 4rem; }
 
-/* === Value indicators all kind of === */
 .u-bool { display: inline-block; height: 1.4rem; width: 1.4rem; border-radius: 0.7rem; text-align: center; background-color: silver; }
 
 .u-bool[value='1'] { background-image: linear-gradient(145deg, #1aff1a, green); }
 
 .u-bool[value='0'] { background-image: linear-gradient(145deg, #ff9999, red); }
 
-.u-level { display: inline-block; border-color: #304878; border-style: solid; border-width: 1px; width: 32px; height: 64px; }
+.ux-levelbar { display: inline-block; border-color: #304878; border-style: solid; border-width: 1px; width: 32px; height: 64px; }
+
+.ux-value { position: absolute; right: 0.5rem; top: 0.5rem; }
 
 .u-bar { position: relative; height: 1.4em; width: 100%; background-color: #aaaaaa; }
 

@@ -105,20 +105,18 @@
 </head>
 
 <body>
-  <div class="container">
+  <div class="container-fluid">
     <div class="u-header">
-      <a href="/" title="Start-Page"><img class="icon" src="/favicon.svg" /></a>
+      <a href="/" title="Start-Page"><img class="icon" src="/i/default.svg" /></a>
       <h1>Config</h1>
-      <a href="/ding-ide.htm" title="Start IDE"><img class="icon" src="/i/ide.svg" /><span
-          class="hidden-xs">IDE</span></a>
-      <a href="/ding-info.htm" title="Start Config"><img class="icon" src="/i/config.svg" /><span
-          class="hidden-xs">Config</span></a>
-      <a href="/ding-log.htm" title="Logfile"><img class="icon" src="/i/log.svg" /><span
-          class="hidden-xs">Log</span></a>
     </div>
     <div class="u-navbar">
-      <button id="addButton">+</button>
-      <button id="sysButton">sys</button>
+      <button onclick="window.location='/'">Home</button>
+      <button onclick="window.location='/ding-ide.htm'">IDE</button>
+      <button onclick="window.location='/ding-info.htm'">Config</button>
+      <button onclick="window.location='/ding-log.htm'">Log</button>
+      <button id="sysButton" class="func">sys</button>
+      <button id="addButton" class="func">+</button>
     </div>
 
     <div id="panel" class="row wrap"></div>
@@ -179,7 +177,7 @@
             <label>set Time:</label>
             <span class="now"></span>
           </div>
-          <button class="setnow" style="float:right">set</button>
+          <button class=" " style="float:right">set</button>
         </div>
       </div>
 
@@ -192,7 +190,7 @@
           <span class="setconfig"></span>
         </div>
         <div class="block" style="position: relative;">
-          <span class="u-bool" u-active="value" style="position: absolute;top:0.5rem;right:0.5rem"></span>
+          <span class="u-bool ux-value" u-active="value"></span>
           <div id="us" class="u-switch" u-active="value">
             <label value="0">off</label>
             <div class="box">
@@ -332,8 +330,8 @@
         });
 
       Promise.all([p0, p1]).then(function () {
-        // updateState();
-        // window.setTimeout(updateState, 2500);
+        updateState();
+        window.setTimeout(updateState, 4000);
       });
     } // init()
 

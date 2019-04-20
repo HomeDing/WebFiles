@@ -1,4 +1,6 @@
-/* Colors */
+// file: iotstyle.scss
+
+// ===== Colors =====
 
 $u-background: #dddddd; 
 
@@ -19,7 +21,7 @@ $u-navbar-text: white;
 $u-on: green;
 $u-off: red;
 
-/* sizes */
+// ===== Sizes =====
 
 $white-space: 1rem;
 $gutter: 0.5rem;
@@ -29,7 +31,7 @@ $u-input-border: 0.1rem solid #304878;
 $u-output-border: 0.1rem solid transparent;
 
 
-/* main */
+// ===== main =====
 
 html,
 body {
@@ -43,12 +45,12 @@ body {
 body {
   background-color: $u-background;
 }
+
 * {
   box-sizing: border-box;
 }
 
-/* === Text containers === */
-
+// ===== Text containers =====
 p,
 pre,
 h1,
@@ -115,7 +117,7 @@ h4 {
   display: none;
 }
 
-/* === Grid Design with grid of 6 === */
+// ===== Grid Design with grid of 6 =====
 
 .container {
   margin-right: 2rem;
@@ -132,8 +134,6 @@ h4 {
   margin-left: 0;
   padding:$white-space;
 }
-
-/* row with 0.5rem gutter */
 
 .row {
   display: flex;
@@ -211,9 +211,10 @@ svg.button {
   }
 }
 
-/* === Header === */
+// ===== Header =====
 
 // The header in the micro css is used to display the primary icon of the device, the name and links to important pages.
+
 .u-header {
   display: flex;
   padding: 0.4rem;
@@ -251,7 +252,7 @@ svg.button {
 
 .u-navbar {
   background-color: $u-navbar;
-  padding: $white-space;
+  padding: $gutter $white-space ;
   margin-bottom: $gutter;
   min-height: 2.2rem;
 
@@ -259,19 +260,19 @@ svg.button {
     min-width: 2em;
   }
 
-  > a {color: $u-navbar-text}
+  > button:hover {
+    border-color: $u-focus;
+    background-color: $u-focus;
+  }
 
-  > a >.icon {
-    width: 2rem;
-    height: 2rem;
-    background-color: $u-cardbackground;
-    border-radius: $u-btn-radius;
+  > button.func {
+    float: right;
   }
 
 }
 
 
-/* === Cards === */
+// ===== Cards =====
 
 .card {
   position: relative;
@@ -303,10 +304,12 @@ svg.button {
         width: 3rem;
         height: 3rem;
         float: left;
-        margin-right: 0.2rem;
+        margin-right: $gutter;
       }
 
-      > h2,
+      > h3 {
+        margin: 0 0 $gutter 0;
+      }
       > h4 {
         margin: 0;
       }
@@ -337,7 +340,7 @@ label + label,
 button + a,
 button + button,
 button + label {
-  margin-left: 0.8rem;
+  margin-left: $gutter;
 }
 
 button {
@@ -357,7 +360,7 @@ button {
 
 
 button:focus {
-  border: 0.1rem solid $u-focus;
+  border-color: $u-focus;
   background-color: $u-focus;
 }
 
@@ -445,7 +448,7 @@ button.secondary {
   background-color: #ccffcc !important;
 }
 
-/* === element Icons === */
+// ===== element Icons =====
 
 .element {
   position: relative;
@@ -486,7 +489,8 @@ button.secondary {
   }
 }
 
-/* === Value indicators all kind of === */
+// ===== Value indicators for the web UI =====
+// using ux- prefix.
 
 .u-bool {
   display: inline-block;
@@ -505,13 +509,20 @@ button.secondary {
   background-image: linear-gradient(145deg, lighten($u-off, 30%), $u-off);
 }
 
-.u-level {
+// visualizing the output level 0...max
+.ux-levelbar {
   display: inline-block;
   border-color: $u-primary;
   border-style: solid;
   border-width: 1px;
   width: 32px;
   height: 64px;
+}
+
+// show something on the right side of the card vizualizing the actual value of the element
+
+.ux-value {
+  position:absolute;right:0.5rem;top:0.5rem
 }
 
 // Timer-bar

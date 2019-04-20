@@ -26,14 +26,15 @@
 <body>
   <div class="container">
     <div class="u-header">
-      <a href="/" title="Go to Startpage"><img class="icon" src="/favicon.svg" /></a>
+      <a href="/" title="Go to Startpage"><img class="icon" src="/i/default.svg" /></a>
       <h1>Style demo page</h1>
     </div>
 
     <div class="u-navbar">
-      <a href="/index.htm">Home</a>
-      <a href="/ding-ide.htm" title="Start IDE"><img class="icon" src="/i/ide.svg" /><span
-          class="hidden-xs">IDE</span></a>
+      <button onclick="window.location='/'">Home</button>
+      <button onclick="window.location='/ding-ide.htm'">IDE</button>
+      <button onclick="window.location='/ding-info.htm'">Config</button>
+      <button onclick="window.location='/ding-log.htm'">Log</button>
     </div>
 
 
@@ -70,7 +71,8 @@
     <div class="row">
       <div class="col card">
         <div class="block header">
-          <h2><img src="/i/home.svg" />Heading-h2</h2>
+          <img src="/i/home.svg" class="icon" />
+          <h3>Heading-h3</h3>
           <h4>Sub-Heading-h4</h4>
         </div>
         <div class="block">
@@ -82,9 +84,10 @@
 
       <div class="col card">
         <div class="block header">
-          <h2><img src="/i/home.svg" />Heading-h2</h2>
-          <h4>Sub-Heading-h4</h4>
-        </div>
+            <img src="/i/device.svg" class="icon" />
+            <h3>Heading-h3</h3>
+            <h4>Sub-Heading-h4</h4>
+          </div>
         <div class="block">
           <div class="form-group"><label>Hostname:</label><span 
               id="hostName">homeding.github.io</span></div>

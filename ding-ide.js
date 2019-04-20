@@ -139,7 +139,7 @@ function startUpload(filename, contentType, content) {
   });
   formData.append(filename, blob, filename);
 
-  var objHTTP = new XMLHttpRequest(); // new ActiveXObject("MSXML2.XMLHTTP");
+  var objHTTP = new XMLHttpRequest();
   objHTTP.open('POST', '/');
 
   if (objHTTP.upload) {
