@@ -29,154 +29,6 @@ var __assign = (this && this.__assign) || function () {
     };
     return __assign.apply(this, arguments);
 };
-function jsonParse(obj, cbFunc) {
-    function _jsonParse(path, key, value, cbFunc) {
-        var path2 = key ? path + '/' + key : path;
-        path2 = path2.replace('/[', '[');
-        if (Array.isArray(value)) {
-            for (var n = 0; n < value.length; n++) {
-                _jsonParse(path2, '[' + n + ']', value[n], cbFunc);
-            }
-        }
-        else if (typeof value == 'object') {
-            cbFunc(path2, null, null);
-            for (var k in value) {
-                _jsonParse(path2, k, value[k], cbFunc);
-            }
-        }
-        else {
-            cbFunc(path, key, String(value));
-        }
-    }
-    _jsonParse('', '', obj, cbFunc);
-}
-function jsonFind(obj, path) {
-    if (path[0] === '/') {
-        path = path.substr(1);
-    }
-    var steps = path.split('/');
-    while (obj && steps.length > 0) {
-        obj = obj[steps[0]];
-        steps.shift();
-    }
-    return obj;
-}
-var MicroHub = (function () {
-    function MicroHub() {
-        this._registrations = {};
-        this._registrationsId = 0;
-        this._store = {};
-    }
-    MicroHub.prototype._findStoreObject = function (path) {
-        var p = this._store;
-        if (path[0] === '/') {
-            path = path.substr(1);
-        }
-        var steps = path.split('/');
-        while (steps.length > 0 && p[steps[0]]) {
-            p = p[steps[0]];
-            steps.shift();
-        }
-        while (steps.length > 0 && steps[0]) {
-            p = p[steps[0]] = {};
-            steps.shift();
-        }
-        return p;
-    };
-    MicroHub.prototype.pPath = function (path) {
-        if (path[0] === '/') {
-            path = path.substr(1);
-        }
-        var steps = path.split('/');
-        var res = steps.slice(0, steps.length - 1).join('/');
-        return res;
-    };
-    MicroHub.prototype.pKey = function (path) {
-        var steps = path.split('/');
-        var res = steps[steps.length - 1];
-        return res;
-    };
-    MicroHub.prototype.read = function (path) {
-        var o = this._findStoreObject(this.pPath(path));
-        return o[this.pKey(path)];
-    };
-    MicroHub.prototype.write = function (path, value) {
-        var o = this._findStoreObject(this.pPath(path));
-        o[this.pKey(path)] = value;
-    };
-    MicroHub.prototype.subscribe = function (matchPath, fCallback, replay) {
-        if (replay === void 0) { replay = false; }
-        var h = this._registrationsId;
-        var rn = matchPath.toLocaleLowerCase();
-        var re = '^' +
-            rn
-                .replace(/(\[|\]|\/|\?)/g, '\\$1')
-                .replace(/\*\*/g, '\\S{0,}')
-                .replace(/\*/g, '[^/?]*') +
-            '$';
-        var newEntry = {
-            id: h,
-            match: RegExp(re),
-            callback: fCallback
-        };
-        this._registrations[h] = newEntry;
-        this._registrationsId++;
-        if (replay) {
-            jsonParse(this._store, function (path, key, value) {
-                var fullPath = path + (key ? '?' + key : '');
-                if (fullPath) {
-                    fullPath = fullPath.toLocaleLowerCase();
-                    if (fullPath.match(newEntry.match))
-                        newEntry.callback(path, key ? key.toLowerCase() : null, value);
-                }
-            }.bind(this));
-        }
-        return h;
-    };
-    MicroHub.prototype.unsubscribe = function (h) {
-        delete this._registrations[h];
-    };
-    MicroHub.prototype.replay = function (h) {
-        var e = this._registrations[h];
-        if (e) {
-            jsonParse(this._store, function (path, key, value) {
-                var fullPath = path + (key ? '?' + key : '');
-                if (fullPath) {
-                    fullPath = fullPath.toLocaleLowerCase();
-                    if (fullPath.match(e.match))
-                        e.callback(path, key ? key.toLowerCase() : null, value);
-                }
-            }.bind(this));
-        }
-    };
-    MicroHub.prototype.publishObj = function (obj) {
-        jsonParse(obj, function (path, key, value) {
-            this.publishValue(path, key ? key.toLowerCase() : '', value ? value : '');
-        }.bind(this));
-    };
-    MicroHub.prototype.publishValue = function (path, key, value) {
-        var fullPath = path + (key ? '?' + key : '');
-        if (fullPath) {
-            if (key) {
-                var p = this._findStoreObject(path);
-                p[key] = value;
-            }
-            fullPath = fullPath.toLocaleLowerCase();
-            Object.values(this._registrations).forEach(function (r) {
-                if (fullPath.match(r.match))
-                    r.callback(path, key, value);
-            });
-        }
-    };
-    MicroHub.prototype.onunload = function (_evt) {
-        for (var n in this._registrations) {
-            delete this._registrations[n];
-        }
-    };
-    return MicroHub;
-}());
-var hub = new MicroHub();
-window.addEventListener('unload', hub.onunload.bind(hub), false);
 var MicroState;
 (function (MicroState) {
     MicroState[MicroState["PREP"] = 1] = "PREP";
@@ -506,6 +358,38 @@ var DSTimeWidgetClass = (function (_super) {
     ], DSTimeWidgetClass);
     return DSTimeWidgetClass;
 }(GenericWidgetClass));
+function jsonParse(obj, cbFunc) {
+    function _jsonParse(path, key, value, cbFunc) {
+        var path2 = key ? path + '/' + key : path;
+        path2 = path2.replace('/[', '[');
+        if (Array.isArray(value)) {
+            for (var n = 0; n < value.length; n++) {
+                _jsonParse(path2, '[' + n + ']', value[n], cbFunc);
+            }
+        }
+        else if (typeof value == 'object') {
+            cbFunc(path2, null, null);
+            for (var k in value) {
+                _jsonParse(path2, k, value[k], cbFunc);
+            }
+        }
+        else {
+            cbFunc(path, key, String(value));
+        }
+    }
+    _jsonParse('', '', obj, cbFunc);
+}
+function jsonFind(obj, path) {
+    if (path[0] === '/') {
+        path = path.substr(1);
+    }
+    var steps = path.split('/');
+    while (obj && steps.length > 0) {
+        obj = obj[steps[0]];
+        steps.shift();
+    }
+    return obj;
+}
 var LogWidgetClass = (function (_super) {
     __extends(LogWidgetClass, _super);
     function LogWidgetClass() {
@@ -709,6 +593,122 @@ var TimerWidgetClass = (function (_super) {
     ], TimerWidgetClass);
     return TimerWidgetClass;
 }(GenericWidgetClass));
+var MicroHub = (function () {
+    function MicroHub() {
+        this._registrations = {};
+        this._registrationsId = 0;
+        this._store = {};
+    }
+    MicroHub.prototype._findStoreObject = function (path) {
+        var p = this._store;
+        if (path[0] === '/') {
+            path = path.substr(1);
+        }
+        var steps = path.split('/');
+        while (steps.length > 0 && p[steps[0]]) {
+            p = p[steps[0]];
+            steps.shift();
+        }
+        while (steps.length > 0 && steps[0]) {
+            p = p[steps[0]] = {};
+            steps.shift();
+        }
+        return p;
+    };
+    MicroHub.prototype.pPath = function (path) {
+        if (path[0] === '/') {
+            path = path.substr(1);
+        }
+        var steps = path.split('/');
+        var res = steps.slice(0, steps.length - 1).join('/');
+        return res;
+    };
+    MicroHub.prototype.pKey = function (path) {
+        var steps = path.split('/');
+        var res = steps[steps.length - 1];
+        return res;
+    };
+    MicroHub.prototype.read = function (path) {
+        var o = this._findStoreObject(this.pPath(path));
+        return o[this.pKey(path)];
+    };
+    MicroHub.prototype.write = function (path, value) {
+        var o = this._findStoreObject(this.pPath(path));
+        o[this.pKey(path)] = value;
+    };
+    MicroHub.prototype.subscribe = function (matchPath, fCallback, replay) {
+        if (replay === void 0) { replay = false; }
+        var h = this._registrationsId;
+        var rn = matchPath.toLocaleLowerCase();
+        var re = '^' +
+            rn
+                .replace(/(\[|\]|\/|\?)/g, '\\$1')
+                .replace(/\*\*/g, '\\S{0,}')
+                .replace(/\*/g, '[^/?]*') +
+            '$';
+        var newEntry = {
+            id: h,
+            match: RegExp(re),
+            callback: fCallback
+        };
+        this._registrations[h] = newEntry;
+        this._registrationsId++;
+        if (replay) {
+            jsonParse(this._store, function (path, key, value) {
+                var fullPath = path + (key ? '?' + key : '');
+                if (fullPath) {
+                    fullPath = fullPath.toLocaleLowerCase();
+                    if (fullPath.match(newEntry.match))
+                        newEntry.callback(path, key ? key.toLowerCase() : null, value);
+                }
+            }.bind(this));
+        }
+        return h;
+    };
+    MicroHub.prototype.unsubscribe = function (h) {
+        delete this._registrations[h];
+    };
+    MicroHub.prototype.replay = function (h) {
+        var e = this._registrations[h];
+        if (e) {
+            jsonParse(this._store, function (path, key, value) {
+                var fullPath = path + (key ? '?' + key : '');
+                if (fullPath) {
+                    fullPath = fullPath.toLocaleLowerCase();
+                    if (fullPath.match(e.match))
+                        e.callback(path, key ? key.toLowerCase() : null, value);
+                }
+            }.bind(this));
+        }
+    };
+    MicroHub.prototype.publishObj = function (obj) {
+        jsonParse(obj, function (path, key, value) {
+            this.publishValue(path, key ? key.toLowerCase() : '', value ? value : '');
+        }.bind(this));
+    };
+    MicroHub.prototype.publishValue = function (path, key, value) {
+        var fullPath = path + (key ? '?' + key : '');
+        if (fullPath) {
+            if (key) {
+                var p = this._findStoreObject(path);
+                p[key] = value;
+            }
+            fullPath = fullPath.toLocaleLowerCase();
+            Object.values(this._registrations).forEach(function (r) {
+                if (fullPath.match(r.match))
+                    r.callback(path, key, value);
+            });
+        }
+    };
+    MicroHub.prototype.onunload = function (_evt) {
+        for (var n in this._registrations) {
+            delete this._registrations[n];
+        }
+    };
+    return MicroHub;
+}());
+var hub = new MicroHub();
+window.addEventListener('unload', hub.onunload.bind(hub), false);
 function toBool(s) {
     if (!s)
         return false;
