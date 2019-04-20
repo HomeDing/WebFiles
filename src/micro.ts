@@ -104,7 +104,7 @@ class MicroHub {
     if (replay) {
       jsonParse(
         this._store,
-        function(path: string, key: string | null, value: string | null) {
+        function (path: string, key: string | null, value: string | null) {
           let fullPath: string = path + (key ? '?' + key : '');
           if (fullPath) {
             fullPath = fullPath.toLocaleLowerCase();
@@ -135,7 +135,7 @@ class MicroHub {
     if (e) {
       jsonParse(
         this._store,
-        function(path: string, key: string | null, value: string | null) {
+        function (path: string, key: string | null, value: string | null) {
           let fullPath: string = path + (key ? '?' + key : '');
           if (fullPath) {
             fullPath = fullPath.toLocaleLowerCase();
@@ -153,7 +153,7 @@ class MicroHub {
   publishObj(obj: any) {
     jsonParse(
       obj,
-      function(this: MicroHub, path: string, key: string | null, value: string | null) {
+      function (this: MicroHub, path: string, key: string | null, value: string | null) {
         this.publishValue(path, key ? key.toLowerCase() : '', value ? value : '');
       }.bind(this)
     );
@@ -257,10 +257,10 @@ class MicroRegistry {
   loadFile(fName: string): Promise<void> {
     var scope = this;
     var ret = fetch(fName)
-      .then(function(result) {
+      .then(function (result) {
         return result.text();
       })
-      .then(function(html) {
+      .then(function (html) {
         var f = document.createRange().createContextualFragment(html);
         if (scope._tco) {
           scope._tco.appendChild(f);
@@ -337,37 +337,40 @@ class MicroRegistry {
 
   // attach events, methods and default-values to a html object (using the english spelling)
   loadBehavior(obj: HTMLElement, behavior: GenericWidgetClass) {
-    if (obj == null) {
+    const b = behavior as any;
+    const o = obj as any;
+
+    if (!obj) {
       console.error('loadBehavior: obj argument is missing.');
-    } else if (behavior == null) {
+    } else if (!behavior) {
       console.error('loadBehavior: behavior argument is missing.');
-    } else if ((<MicroControlClass>(<any>obj))._attachedBehavior == behavior) {
+    } else if ((<MicroControlClass>o)._attachedBehavior == behavior) {
       // already done.
     } else {
+
       if (obj.attributes) {
         // IE9 compatible
         // copy all new attributes to properties
         for (var n = 0; n < obj.attributes.length; n++) {
           var a: Attr = obj.attributes[n];
-          if ((<any>obj)[a.name] === null) (<any>obj)[a.name] = a.value;
+          if (!o[a.name]) o[a.name] = a.value;
         }
       } // if
 
-      const b = behavior as any;
       for (var p in b) {
         if (p.substr(0, 2) == 'on') {
           obj.addEventListener(p.substr(2), b[p].bind(obj), false);
         } else if (b[p] == null || b[p].constructor != Function) {
           // set default-value
-          if ((<any>obj)[p] === null) (<any>obj)[p] = b[p];
+          if (!o[p]) o[p] = b[p];
         } else {
           // attach method
-          (<any>obj)[p] = b[p];
+          o[p] = b[p];
         } // if
       } // for
 
-      (<MicroControlClass>(<any>obj))._attachedBehavior = behavior;
-      (<MicroControlClass>(<any>obj)).connectedCallback(obj);
+      (<MicroControlClass>o)._attachedBehavior = behavior;
+      (<MicroControlClass>o).connectedCallback(obj);
       this.List.push(obj);
     } // if
   } // loadBehavior
@@ -393,7 +396,7 @@ class MicroRegistry {
 const micro = new MicroRegistry();
 
 // detect that a new micro control was created using Mutation Observe Callback
-let obs = new MutationObserver(function(mutationsList: MutationRecord[], _observer) {
+let obs = new MutationObserver(function (mutationsList: MutationRecord[], _observer) {
   for (let mutation of mutationsList) {
     mutation.addedNodes.forEach(n => {
       if ((<Element>n).getAttribute && (<Element>n).getAttribute('u-is')) micro.attach(<HTMLElement>n);

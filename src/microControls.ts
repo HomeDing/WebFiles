@@ -9,7 +9,7 @@
 // https://www.typescriptlang.org/docs/handbook/decorators.html
 
 interface ControlInterface {
-  el: HTMLElement;
+  el: HTMLElement | undefined;
   connectedCallback(el: HTMLElement): void;
   init?() : void;
   term?() : void;
@@ -29,9 +29,8 @@ function MicroControl(isSelector: string) {
 
 // @MicroControl("no-base")
 class MicroControlClass implements ControlInterface {
-  el: HTMLElement;
-  _attachedBehavior: ControlInterface;
-  constructor() {}
+  el: HTMLElement | undefined;
+  _attachedBehavior: ControlInterface | undefined;
   connectedCallback(el: HTMLElement): void {
     this.el = el;
   }

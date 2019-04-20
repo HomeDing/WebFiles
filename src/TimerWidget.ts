@@ -24,8 +24,8 @@ function upload(filename: string, content: string) {
   //   });
   // } // if
 
-  objHTTP.addEventListener('readystatechange', function(p) {
-    if (objHTTP.readyState == 4 && objHTTP.status >= 200 && objHTTP.status < 300) {
+  objHTTP.addEventListener('readystatechange', function() {
+    if (this.readyState == 4 && this.status >= 200 && this.status < 300) {
       alert('saved.');
     } // if
   });
@@ -34,7 +34,7 @@ function upload(filename: string, content: string) {
 
 function changeConfig(id: string, newConfig: any) {
   console.log(id, newConfig);
-  debugger;
+  // debugger;
   var c = JSON.parse(hub.read('config'));
   var node = jsonFind(c, id);
   for (let n in newConfig) {
@@ -81,7 +81,7 @@ class TimerWidgetClass extends GenericWidgetClass {
     if (this.ct < this.wt + this.pt) this.ct = this.wt + this.pt;
 
     // update bars
-    if (this.ct > 0) {
+    if (this.el && this.ct > 0) {
       var el = <HTMLElement>this.el.querySelector('.u-bar');
       var f = el.clientWidth / this.ct;
 
@@ -96,7 +96,7 @@ class TimerWidgetClass extends GenericWidgetClass {
 
   onclick(evt: MouseEvent) {
     const tar: HTMLElement = evt.target as HTMLElement;
-    if (tar.classList.contains('save')) {
+    if (this.el && tar.classList.contains('save')) {
       const d: any = {};
       this.el.querySelectorAll('[u-value]').forEach(function(elem) {
         const n = elem.getAttribute('u-value');

@@ -1,8 +1,11 @@
 "use strict";
 var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -15,13 +18,16 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-var __assign = (this && this.__assign) || Object.assign || function(t) {
-    for (var s, i = 1, n = arguments.length; i < n; i++) {
-        s = arguments[i];
-        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-            t[p] = s[p];
-    }
-    return t;
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
 };
 function jsonParse(obj, cbFunc) {
     function _jsonParse(path, key, value, cbFunc) {
@@ -286,37 +292,38 @@ var MicroRegistry = (function () {
         return e;
     };
     MicroRegistry.prototype.loadBehavior = function (obj, behavior) {
-        if (obj == null) {
+        var b = behavior;
+        var o = obj;
+        if (!obj) {
             console.error('loadBehavior: obj argument is missing.');
         }
-        else if (behavior == null) {
+        else if (!behavior) {
             console.error('loadBehavior: behavior argument is missing.');
         }
-        else if (obj._attachedBehavior == behavior) {
+        else if (o._attachedBehavior == behavior) {
         }
         else {
             if (obj.attributes) {
                 for (var n = 0; n < obj.attributes.length; n++) {
                     var a = obj.attributes[n];
-                    if (obj[a.name] === null)
-                        obj[a.name] = a.value;
+                    if (!o[a.name])
+                        o[a.name] = a.value;
                 }
             }
-            var b = behavior;
             for (var p in b) {
                 if (p.substr(0, 2) == 'on') {
                     obj.addEventListener(p.substr(2), b[p].bind(obj), false);
                 }
                 else if (b[p] == null || b[p].constructor != Function) {
-                    if (obj[p] === null)
-                        obj[p] = b[p];
+                    if (!o[p])
+                        o[p] = b[p];
                 }
                 else {
-                    obj[p] = b[p];
+                    o[p] = b[p];
                 }
             }
-            obj._attachedBehavior = behavior;
-            obj.connectedCallback(obj);
+            o._attachedBehavior = behavior;
+            o.connectedCallback(obj);
             this.List.push(obj);
         }
     };
@@ -379,32 +386,40 @@ var GenericWidgetClass = (function (_super) {
         hub.replay(this.subId);
     };
     GenericWidgetClass.prototype.newData = function (_path, key, value) {
-        this.data[key] = value;
-        var ic = this.el.querySelector('img');
-        if (ic) {
-            setAttr(ic, 'title', JSON.stringify(this.data, null, 1)
-                .replace('{\n', '')
-                .replace('\n}', ''));
+        if (this.el && key && value) {
+            this.data[key] = value;
+            var ic = this.el.querySelector('img');
+            if (ic) {
+                setAttr(ic, 'title', JSON.stringify(this.data, null, 1)
+                    .replace('{\n', '')
+                    .replace('\n}', ''));
+            }
         }
         ['span', 'div'].forEach(function (elType) {
-            this.el.querySelectorAll(elType + ("[u-active='" + key + "']")).forEach(function (elem) {
-                var b = toBool(value);
-                setAttr(elem, 'value', b ? '1' : '0');
-                setAttr(elem, 'title', b ? 'active' : 'not active');
-                elem.classList.toggle('active', b);
-            });
+            if (this.el) {
+                this.el.querySelectorAll(elType + ("[u-active='" + key + "']")).forEach(function (elem) {
+                    var b = toBool(value);
+                    setAttr(elem, 'value', b ? '1' : '0');
+                    setAttr(elem, 'title', b ? 'active' : 'not active');
+                    elem.classList.toggle('active', b);
+                });
+            }
         }, this);
         ['h2', 'h4', 'span'].forEach(function (elType) {
-            this.el.querySelectorAll(elType + "[u-text='" + key + "']").forEach(function (elem) {
-                if (elem.textContent != value)
-                    elem.textContent = value;
-            });
+            if (this.el) {
+                this.el.querySelectorAll(elType + "[u-text='" + key + "']").forEach(function (elem) {
+                    if (elem.textContent != value)
+                        elem.textContent = value;
+                });
+            }
         }, this);
         ['input', 'select'].forEach(function (elType) {
-            this.el.querySelectorAll(elType + "[u-value='" + key + "']").forEach(function (elem) {
-                if (elem.value != value)
-                    elem.value = value;
-            });
+            if (this.el) {
+                this.el.querySelectorAll(elType + "[u-value='" + key + "']").forEach(function (elem) {
+                    if (elem.value != value)
+                        elem.value = value ? value : "";
+                });
+            }
         }, this);
     };
     GenericWidgetClass.prototype.dispatchAction = function (prop, val) {
@@ -420,15 +435,15 @@ var GenericWidgetClass = (function (_super) {
         var a = src.getAttribute('u-action');
         if (src && a)
             this.dispatchAction(a, src['value']);
-        if (src.classList.contains('setconfig')) {
+        if (this.el && src.classList.contains('setconfig')) {
             this.el.classList.toggle('configmode');
         }
     };
+    GenericWidgetClass = __decorate([
+        MicroControl('generic')
+    ], GenericWidgetClass);
     return GenericWidgetClass;
 }(MicroControlClass));
-GenericWidgetClass = __decorate([
-    MicroControl('generic')
-], GenericWidgetClass);
 var ButtonWidgetClass = (function (_super) {
     __extends(ButtonWidgetClass, _super);
     function ButtonWidgetClass() {
@@ -448,11 +463,11 @@ var ButtonWidgetClass = (function (_super) {
             this.dispatchAction("value", '0');
         }
     };
+    ButtonWidgetClass = __decorate([
+        MicroControl("button")
+    ], ButtonWidgetClass);
     return ButtonWidgetClass;
 }(GenericWidgetClass));
-ButtonWidgetClass = __decorate([
-    MicroControl("button")
-], ButtonWidgetClass);
 var DSTimeWidgetClass = (function (_super) {
     __extends(DSTimeWidgetClass, _super);
     function DSTimeWidgetClass() {
@@ -470,9 +485,11 @@ var DSTimeWidgetClass = (function (_super) {
     };
     DSTimeWidgetClass.prototype.connectedCallback = function (el) {
         _super.prototype.connectedCallback.call(this, el);
-        this._nowObj = this.el.querySelector(".now");
+        this._nowObj = el.querySelector(".setnow");
         window.setInterval(function () {
-            setTextContent(this._nowObj, this.isoDate());
+            if (this._nowObj) {
+                setTextContent(this._nowObj, this.isoDate());
+            }
         }.bind(this), 200);
     };
     DSTimeWidgetClass.prototype.onclick = function (e) {
@@ -484,11 +501,11 @@ var DSTimeWidgetClass = (function (_super) {
             _super.prototype.onclick.call(this, e);
         }
     };
+    DSTimeWidgetClass = __decorate([
+        MicroControl("dstime")
+    ], DSTimeWidgetClass);
     return DSTimeWidgetClass;
 }(GenericWidgetClass));
-DSTimeWidgetClass = __decorate([
-    MicroControl("dstime")
-], DSTimeWidgetClass);
 var LogWidgetClass = (function (_super) {
     __extends(LogWidgetClass, _super);
     function LogWidgetClass() {
@@ -536,16 +553,17 @@ var LogWidgetClass = (function (_super) {
             this.load();
         }
     };
+    LogWidgetClass = __decorate([
+        MicroControl('log')
+    ], LogWidgetClass);
     return LogWidgetClass;
 }(GenericWidgetClass));
-LogWidgetClass = __decorate([
-    MicroControl('log')
-], LogWidgetClass);
 var PWMOutWidgetClass = (function (_super) {
     __extends(PWMOutWidgetClass, _super);
     function PWMOutWidgetClass() {
         var _this = _super !== null && _super.apply(this, arguments) || this;
-        _this.range = 255;
+        _this._range = 255;
+        _this.lastValue = null;
         return _this;
     }
     PWMOutWidgetClass.prototype.connectedCallback = function (el) {
@@ -554,13 +572,13 @@ var PWMOutWidgetClass = (function (_super) {
     };
     PWMOutWidgetClass.prototype.newValue = function (_path, key, value) {
         if (key == "range") {
-            this.range = Number(value);
+            this._range = Number(value);
         }
         else if (key == "value") {
-            if (this.lastValue !== value) {
-                var o = this.el.querySelector(".u-level");
+            if (this.el && this.lastValue !== value) {
+                var o = this.el.querySelector(".ux-levelbar");
                 var h = o.offsetHeight;
-                var bh = (h * Number(value)) / this.range;
+                var bh = (h * Number(value)) / this._range;
                 if (bh > h - 1)
                     bh = h - 1;
                 if (bh < 1)
@@ -570,29 +588,31 @@ var PWMOutWidgetClass = (function (_super) {
             }
         }
     };
+    PWMOutWidgetClass = __decorate([
+        MicroControl("pwmout")
+    ], PWMOutWidgetClass);
     return PWMOutWidgetClass;
 }(GenericWidgetClass));
-PWMOutWidgetClass = __decorate([
-    MicroControl("pwmout")
-], PWMOutWidgetClass);
 var SwitchWidgetClass = (function (_super) {
     __extends(SwitchWidgetClass, _super);
     function SwitchWidgetClass() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
     SwitchWidgetClass.prototype.onclick = function (e) {
-        var o = this.el.querySelector(".u-switch");
-        var src = e.srcElement;
-        while (src != null && src != this.el && src != o)
-            src = src.parentElement;
-        if (src == o)
-            this.dispatchAction('toggle', '1');
+        if (this.el) {
+            var o = this.el.querySelector(".u-switch");
+            var src = e.srcElement;
+            while (src != null && src != this.el && src != o)
+                src = src.parentElement;
+            if (src == o)
+                this.dispatchAction('toggle', '1');
+        }
     };
+    SwitchWidgetClass = __decorate([
+        MicroControl("switch")
+    ], SwitchWidgetClass);
     return SwitchWidgetClass;
 }(GenericWidgetClass));
-SwitchWidgetClass = __decorate([
-    MicroControl("switch")
-], SwitchWidgetClass);
 function upload(filename, content) {
     var formData = new FormData();
     var blob = new Blob([content], {
@@ -601,8 +621,8 @@ function upload(filename, content) {
     formData.append(filename, blob, filename);
     var objHTTP = new XMLHttpRequest();
     objHTTP.open('POST', '/');
-    objHTTP.addEventListener('readystatechange', function (p) {
-        if (objHTTP.readyState == 4 && objHTTP.status >= 200 && objHTTP.status < 300) {
+    objHTTP.addEventListener('readystatechange', function () {
+        if (this.readyState == 4 && this.status >= 200 && this.status < 300) {
             alert('saved.');
         }
     });
@@ -610,7 +630,6 @@ function upload(filename, content) {
 }
 function changeConfig(id, newConfig) {
     console.log(id, newConfig);
-    debugger;
     var c = JSON.parse(hub.read('config'));
     var node = jsonFind(c, id);
     for (var n in newConfig) {
@@ -662,7 +681,7 @@ var TimerWidgetClass = (function (_super) {
         }
         if (this.ct < this.wt + this.pt)
             this.ct = this.wt + this.pt;
-        if (this.ct > 0) {
+        if (this.el && this.ct > 0) {
             var el = this.el.querySelector('.u-bar');
             var f = el.clientWidth / this.ct;
             var pto = el.querySelector('.pulse');
@@ -674,7 +693,7 @@ var TimerWidgetClass = (function (_super) {
     };
     TimerWidgetClass.prototype.onclick = function (evt) {
         var tar = evt.target;
-        if (tar.classList.contains('save')) {
+        if (this.el && tar.classList.contains('save')) {
             var d_1 = {};
             this.el.querySelectorAll('[u-value]').forEach(function (elem) {
                 var n = elem.getAttribute('u-value');
@@ -685,11 +704,11 @@ var TimerWidgetClass = (function (_super) {
         }
         _super.prototype.onclick.call(this, evt);
     };
+    TimerWidgetClass = __decorate([
+        MicroControl('timer')
+    ], TimerWidgetClass);
     return TimerWidgetClass;
 }(GenericWidgetClass));
-TimerWidgetClass = __decorate([
-    MicroControl('timer')
-], TimerWidgetClass);
 function toBool(s) {
     if (!s)
         return false;

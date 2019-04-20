@@ -19,42 +19,48 @@ class GenericWidgetClass extends MicroControlClass {
   } // connectedCallback
 
   // visualize any new data for the widget.
-  newData(_path: string, key: string, value: string) {
+  newData(_path: string, key: string | null, value: string | null) {
     // save data to title
-    this.data[key] = value;
-    var ic = this.el.querySelector('img');
-    if (ic) {
-      setAttr(
-        ic,
-        'title',
-        JSON.stringify(this.data, null, 1)
-          .replace('{\n', '')
-          .replace('\n}', '')
-      );
+    if (this.el && key && value) {
+      this.data[key] = value;
+      var ic = this.el.querySelector('img');
+      if (ic) {
+        setAttr(ic, 'title',
+          JSON.stringify(this.data, null, 1)
+            .replace('{\n', '')
+            .replace('\n}', '')
+        );
+      }
     }
 
     // u-active flags
-    ['span', 'div'].forEach(function(this:GenericWidgetClass, elType) {
-      this.el.querySelectorAll(elType + `[u-active='${key}']`).forEach(function(elem) {
-        var b = toBool(value);
-        setAttr(elem as HTMLElement, 'value', b ? '1' : '0');
-        setAttr(elem as HTMLElement, 'title', b ? 'active' : 'not active');
-        elem.classList.toggle('active', b);
-      });
+    ['span', 'div'].forEach(function (this: GenericWidgetClass, elType) {
+      if (this.el) {
+        this.el.querySelectorAll(elType + `[u-active='${key}']`).forEach(function (elem) {
+          var b = toBool(value);
+          setAttr(elem as HTMLElement, 'value', b ? '1' : '0');
+          setAttr(elem as HTMLElement, 'title', b ? 'active' : 'not active');
+          elem.classList.toggle('active', b);
+        });
+      }
     }, this);
 
     // textContent
-    ['h2', 'h4', 'span'].forEach(function(this:GenericWidgetClass, elType) {
-      this.el.querySelectorAll(elType + "[u-text='" + key + "']").forEach(function(elem) {
-        if (elem.textContent != value) elem.textContent = value;
-      });
+    ['h2', 'h4', 'span'].forEach(function (this: GenericWidgetClass, elType) {
+      if (this.el) {
+        this.el.querySelectorAll(elType + "[u-text='" + key + "']").forEach(function (elem) {
+          if (elem.textContent != value) elem.textContent = value;
+        });
+      }
     }, this);
 
     // value of input and select fields
-    ['input', 'select'].forEach(function(this:GenericWidgetClass, elType) {
-      this.el.querySelectorAll(elType + "[u-value='" + key + "']").forEach(function(elem) {
-        if ((elem as HTMLInputElement).value != value) (elem as HTMLInputElement).value = value;
-      });
+    ['input', 'select'].forEach(function (this: GenericWidgetClass, elType) {
+      if (this.el) {
+        this.el.querySelectorAll(elType + "[u-value='" + key + "']").forEach(function (elem) {
+          if ((elem as HTMLInputElement).value != value) (elem as HTMLInputElement).value = value ? value : "";
+        });
+      }
     }, this);
   } // newData()
 
@@ -76,7 +82,7 @@ class GenericWidgetClass extends MicroControlClass {
     var a = src.getAttribute('u-action');
     if (src && a) this.dispatchAction(a, (<any>src)['value']);
 
-    if (src.classList.contains('setconfig')) {
+    if (this.el && src.classList.contains('setconfig')) {
       this.el.classList.toggle('configmode');
     }
   }

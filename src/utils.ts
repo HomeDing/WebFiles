@@ -1,6 +1,6 @@
 // some utils
 
-function toBool(s: string) {
+function toBool(s: string | null) {
   if (!s) return false;
   switch (s.toLowerCase().trim()) {
     case 'true':
