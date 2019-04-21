@@ -27,7 +27,7 @@
   <div class="block config Element"></div>
 </div>
 
-<div class="col card" u-control="timer" id="${id}" microID="${id}" u-is="timer">
+<div class="col card" u-control="timer" microID="${id}" u-is="timer">
   <div class="block header">
     <img src="/i/${type}.svg" class="icon" />
     <h3>${id}</h3>
@@ -70,7 +70,7 @@
   </div>
 </div>
 
-<div class="col card" u-control="rfsend" id="${id}" microID="${id}" u-is="generic">
+<div class="col card" u-control="rfsend" microID="${id}" u-is="generic">
   <div class="block header">
     <img src="/i/rfsend.svg" class="icon" />
     <h3>${id}</h3>
@@ -83,16 +83,16 @@
       <button u-action="value" value="1">On</button>
       <button u-action="value" value="0">Off</button>
     </div>
-    <div class="form-group"><label>last value:</label><span class="Value" u-text="value"></span></div>
+    <div class="form-group"><label>last value:</label><span u-text="value"></span></div>
   </div>
   <div class="block config">
-    <div class="form-group"><label>code on:</label><span class="Value" u-text="codeon"></span></div>
-    <div class="form-group"><label>code off:</label><span class="Value" u-text="codeoff"></span></div>
-    <div class="form-group"><label>loglevel:</label><span class="Value" u-text="loglevel"></span></div>
+    <div class="form-group"><label>code on:</label><span u-text="codeon"></span></div>
+    <div class="form-group"><label>code off:</label><span u-text="codeoff"></span></div>
+    <div class="form-group"><label>loglevel:</label><span u-text="loglevel"></span></div>
   </div>
 </div>
 
-<div class="col card" u-control="button" id="${id}" microID="${id}" u-is="button">
+<div class="col card" u-control="button" microID="${id}" u-is="button">
   <div class="block header">
     <img src="/i/button.svg" class="icon" />
     <h3>${id}</h3>
@@ -106,7 +106,7 @@
   </div>
 </div>
 
-<div class="col card" u-control="digitalout" id="${id}" microID="${id}" u-is="generic">
+<div class="col card" u-control="digitalout" microID="${id}" u-is="generic">
   <div class="block header">
     <img src="/i/digitalout.svg" class="icon" />
     <h3>${id}</h3>
@@ -120,14 +120,14 @@
     <span class="u-bool ux-value" u-active="value" style="position: absolute;top:0.5rem;right:0.5rem"></span>
   </div>
   <div class="block config">
-    <div class="form-group"><label>pin:</label><span class="Value" u-text="pin"></span></div>
-    <div class="form-group"><label>inverse:</label><span class="Value" u-text="inverse"></span></div>
-    <div class="form-group"><label>value:</label><span class="Value" u-text="value"></span></div>
-    <div class="form-group"><label>loglevel:</label><span class="Value" u-text="loglevel"></span></div>
+    <div class="form-group"><label>pin:</label><span u-text="pin"></span></div>
+    <div class="form-group"><label>inverse:</label><span u-text="inverse"></span></div>
+    <div class="form-group"><label>value:</label><span u-text="value"></span></div>
+    <div class="form-group"><label>loglevel:</label><span u-text="loglevel"></span></div>
   </div>
 </div>
 
-<div class="col card" u-control="displaydot" id="${id}" microID="${id}" u-is="generic">
+<div class="col card" u-control="displaydot" microID="${id}" u-is="generic">
   <div class="block header">
     <img src="/i/displaydot.svg" class="icon" />
     <h3>${id}</h3>
@@ -138,16 +138,32 @@
 
   <div class="block">
     <span class="u-bool ux-value" u-active="value" style="position: absolute;top:0.5rem;right:0.5rem"></span>
-    <div class="form-group"><label>value:</label><span class="Value" u-text="value"></span></div>
+    <div class="form-group"><label>value:</label><span u-text="value"></span></div>
   </div>
-  <div class="block config">
-    <div class="form-group"><label>x:</label><span class="Value" u-text="x"></span></div>
-    <div class="form-group"><label>y:</label><span class="Value" u-text="y"></span></div>
-    <div class="form-group"><label>loglevel:</label><span class="Value" u-text="loglevel"></span></div>
+  <div class="block config Element" style="position: relative;min-height: 5rem">
+    <div class="form-group"><label>loglevel:</label><input u-value="loglevel" /></div>
   </div>
 </div>
 
-<div class="col card" u-control="pwmout" id="${id}" u-is="pwmout" microID="${id}">
+<div class="col card" u-control="displaytext" microID="${id}" u-is="generic">
+  <div class="block header">
+    <img src="/i/displaytext.svg" class="icon" />
+    <h3>${id}</h3>
+    <h4 u-text="description"></h4>
+    <span class="activeState" u-active="active"></span>
+    <span class="setconfig"></span>
+  </div>
+
+  <div class="block">
+    <span u-text="prefix"></span><span u-text="value"></span><span u-text="postfix"></span>
+    <!-- <div class="form-group"><label>value:</label><span u-text="value"></span></div> -->
+  </div>
+  <div class="block config Element" style="position: relative;min-height: 5rem">
+    <div class="form-group"><label>loglevel:</label><input u-value="loglevel" /></div>
+  </div>
+</div>
+
+<div class="col card" u-control="pwmout" u-is="pwmout" microID="${id}">
   <div class="block header">
     <img src="/i/pwmout.svg" class="icon" />
     <h3>${id}</h3>
@@ -159,9 +175,12 @@
     <span class="ux-levelbar ux-value"></span>
     <div style="font-size: 2rem"><span u-text="value"></span> / <span u-text="range"></span></div>
   </div>
+  <div class="block config Element" style="position: relative;min-height: 5rem">
+    <div class="form-group"><label>loglevel:</label><input u-value="loglevel" /></div>
+  </div>
 </div>
 
-<div class="col card" u-control="log" id="${id}" u-is="log" microID="${id}">
+<div class="col card" u-control="log" u-is="log" microID="${id}">
   <div class="block header">
     <img src="/i/log.svg" class="icon" />
     <h3>${id}</h3>
@@ -169,12 +188,15 @@
     <span class="activeState" u-active="active"></span>
     <span class="setconfig"></span>
   </div>
-  <div class="block" style="position: relative;min-height: 5rem">
-    <object data="lineChart.svg" type="image/svg+xml" style="width:360px;height:144px"></object>
+  <div class="block">
+    <object data="lineChart.svg" type="image/svg+xml" style="width:360px;height:136px"></object>
+  </div>
+  <div class="block config Element" style="position: relative;min-height: 5rem">
+    <div class="form-group"><label>loglevel:</label><input u-value="loglevel" /></div>
   </div>
 </div>
 
-<div class="col card" u-control="value" id="${id}" u-is="generic" microID="${id}">
+<div class="col card" u-control="value" u-is="generic" microID="${id}">
   <div class="block header">
     <img src="/i/${type}.svg" class="icon" />
     <h3>${id}</h3>
@@ -182,8 +204,9 @@
     <span class="activeState" u-active="active"></span>
     <span class="setconfig"></span>
   </div>
-  <div class="block Element">
-    <span u-text="value"
-      style="position:absolute;font-size:2rem;width:3em;text-align: right;height:1em;right:0.4em"></span>
+  <div class="block">
+    <div class="form-group"><label>value:</label><span u-text="value"></span></div>
+  </div>
+  <div class="block config Element">
   </div>
 </div>

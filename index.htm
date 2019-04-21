@@ -27,121 +27,111 @@
 </head>
 
 <body>
-  <div class="container-flex">
+  <div class="container-fluid">
     <div class="u-header">
-      <a href="/" title="Startpage"><img class="icon" src="/favicon.svg" /></a>
+      <a href="/" title="Startpage"><img class="icon" src="/i/device.svg" /></a>
       <h1>Device</h1>
-      <a href="/ding-ide.htm" title="Start IDE"><img class="icon" src="/i/ide.svg" /><span
-          class="hidden-xs">IDE</span></a>
-      <a href="/ding-info.htm" title="Start Config"><img class="icon" src="/i/config.svg" /><span
-          class="hidden-xs">Config</span></a>
-      <a href="/ding-log.htm" title="Logfile"><img class="icon" src="/i/log.svg" /><span
-          class="hidden-xs">Log</span></a>
     </div>
-    <div class="u-navbar"> </div>
-  </div>
 
-  <div class="container-flex">
-    <div class="row wrap">
-      <div class="col card">
-        <div class="block header">
-          <h2><img style="margin-right:0.4em;height:1em" src="/i/home.svg" />Device Pages</h2>
-          <h4>Collection for use-cases</h4>
-        </div>
-        <!-- <div class="block">
+    <div class="u-navbar">
+      <button onclick="window.location='/'">Home</button>
+      <button onclick="window.location='/ding-ide.htm'">IDE</button>
+      <button onclick="window.location='/ding-info.htm'">Config</button>
+      <button onclick="window.location='/ding-log.htm'">Log</button>
+    </div>
+
+    <div class="container-flex">
+      <div class="row wrap">
+        <div class="col card">
+          <div class="block header">
+            <h2><img style="margin-right:0.4em;height:1em" src="/i/home.svg" />Device Pages</h2>
+            <h4>Collection for use-cases</h4>
+          </div>
+          <!-- <div class="block">
             <p><a href="ding.htm">Current configured Device Page</a></p>
             <p><a href="ding-timer.htm">Timer</a>: Visualization and actions for a timer.</p>
             <p><a href="ding-rfsend.htm">RFSend</a>: Sending defined RF commands.</p>
           </div> -->
-        <div class="block">
-          <p><a href="setup.htm">Network setup</a></p>
-          <p><a href="ding-log.htm">Log output</a></p>
-          <p><a href="panel.htm">Panel</a></p>
+          <div class="block">
+            <p><a href="setup.htm">Network setup</a></p>
+            <p><a href="ding-log.htm">Log output</a></p>
+            <p><a href="panel.htm">Panel</a></p>
+          </div>
         </div>
-      </div>
 
-      <!-- <div class="col card">
+        <div class="col card">
           <div class="block header">
-            <h2>PM25</h2>
+            <h2>Insights</h2>
           </div>
 
           <div class="block">
-            <object id="linechart" data="lineChart.svg" type="image/svg+xml" style="width:360px;height:144px"></object>
-          </div>
-        </div> -->
+            <p><a href="/env.json">Env file</a></p>
+            <p><a href="/config.json">Config file</a></p>
+            <p><a href="/$board">State of elements</a></p>
 
-      <div class="col card">
-        <div class="block header">
-          <h2>Insights</h2>
-        </div>
+            <p><a href="/$desc.xml">SSDP description</a></p>
 
-        <div class="block">
-          <p><a href="/env.json">Env file</a></p>
-          <p><a href="/config.json">Config file</a></p>
-          <p><a href="/$board">State of elements</a></p>
-
-          <p><a href="/$desc.xml">SSDP description</a></p>
-
-          <p><a href="/$list">current files</a></p>
-          <p><a href="/$reboot">reboot</a></p>
-        </div>
-      </div>
-
-      <div class="col card">
-        <div class="block">
-          <p><a href="/$board/display/temp?show=00.00">display/info?show=Hello</a></p>
-          <p><a href="/$board/remote/display-t?show=88.88">remote/display?show=8888</a></p>
-
-          <hr />
-          <p><a href="/$upload">upload root files</a></p>
-          <p><a href="/$upload#ft">upload file type icons</a></p>
-          <p><a href="/$upload#i">upload element icons</a></p>
-        </div>
-      </div>
-
-      <div class="col card">
-        <div class="block header">
-          <h2>File System Memory</h2>
-        </div>
-
-        <div class="block">
-          <object id="meminfo" data="pieChart.svg" type="image/svg+xml"
-            style="float:left;width:120px;height:120px;"></object>
-          <p><span id="memTotal"></span> bytes available.</p>
-          <p><span id="memUsed"></span> bytes (<span id="memPart"></span>%) in use</p>
-        </div>
-      </div>
-
-      <div class="col card">
-        <div class="block header">
-          <h2>Network</h2>
-        </div>
-        <div class="block">
-          <div class="form-group"><label>Hostname:</label><span id="hostName"></span></div>
-          <div class="form-group"><label>WiFi:</label> <span id="netName"></span></div>
-        </div>
-      </div>
-
-      <div class="col card">
-        <div class="block header">
-          <h2>SysInfo</h2>
-        </div>
-        <div class="block">
-          <pre id="sysinfo"></pre>
-        </div>
-      </div>
-
-      <div class="col card">
-        <div class="block">
-          <div class="form-group">
-            <label for="elemsel">Element Type:</label>
-            <select id="elemsel">
-              <option disabled>select...</option>
-            </select>
+            <p><a href="/$list">current files</a></p>
+            <p><a href="/$reboot">reboot</a></p>
           </div>
         </div>
-        <div class="block">
-          <object id="elemsvg" data="element.svg" type="image/svg+xml" style="height:320px; width:800px"></object>
+
+        <div class="col card">
+          <div class="block">
+            <p><a href="/$board/display/temp?show=00.00">display/info?show=Hello</a></p>
+            <p><a href="/$board/remote/display-t?show=88.88">remote/display?show=8888</a></p>
+
+            <hr />
+            <p><a href="/$upload">upload root files</a></p>
+            <p><a href="/$upload#ft">upload file type icons</a></p>
+            <p><a href="/$upload#i">upload element icons</a></p>
+          </div>
+        </div>
+
+        <div class="col card">
+          <div class="block header">
+            <h2>File System Memory</h2>
+          </div>
+
+          <div class="block">
+            <object id="meminfo" data="pieChart.svg" type="image/svg+xml"
+              style="float:left;width:120px;height:120px;"></object>
+            <p><span id="memTotal"></span> bytes available.</p>
+            <p><span id="memUsed"></span> bytes (<span id="memPart"></span>%) in use</p>
+          </div>
+        </div>
+
+        <div class="col card">
+          <div class="block header">
+            <h2>Network</h2>
+          </div>
+          <div class="block">
+            <div class="form-group"><label>Hostname:</label><span id="hostName"></span></div>
+            <div class="form-group"><label>WiFi:</label> <span id="netName"></span></div>
+          </div>
+        </div>
+
+        <div class="col card">
+          <div class="block header">
+            <h2>SysInfo</h2>
+          </div>
+          <div class="block">
+            <pre id="sysinfo"></pre>
+          </div>
+        </div>
+
+        <div class="col card">
+          <div class="block">
+            <div class="form-group">
+              <label for="elemsel">Element Type:</label>
+              <select id="elemsel">
+                <option disabled>select...</option>
+              </select>
+            </div>
+          </div>
+          <div class="block">
+            <object id="elemsvg" data="element.svg" type="image/svg+xml" style="height:320px; width:800px"></object>
+          </div>
         </div>
       </div>
     </div>

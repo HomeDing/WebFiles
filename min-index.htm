@@ -64,19 +64,15 @@
 <body>
   <div class="container">
     <div class="u-header">
-      <a href="/" title="Start-Page"><img class="icon" src="/favicon.svg" /></a>
+      <a href="/" title="Start-Page"><img class="icon" src="/i/device.svg" /></a>
       <h1>Elements</h1>
     </div>
 
     <div id="panel" class="row wrap">
-      <div class="col card" u-control="switch" id="/switch/0" u-is="switch" microID="/switch/0">
-        <div class="block header">
-          <img src="/i/default.svg" class="icon" />
-          <h3>Switch</h3>
+      <div class="col card" u-control="switch" u-is="switch" microID="/switch/0">
+        <div class="block">
           <h4 u-text="description"></h4>
           <span class="activeState" u-active="active"></span>
-        </div>
-        <div class="block">
           <div id="us" class="u-switch" u-active="value">
             <label value="0">off</label>
             <div class="box">
@@ -84,53 +80,41 @@
             </div>
             <label value="1">on</label>
           </div>
-          <span class="u-bool" u-active="value" style="position: absolute;top:0.5rem;right:0.5rem"></span>
+          <span class="u-bool ux-value" u-active="value"></span>
         </div>
       </div>
 
-      <div class="col card" u-control="schedule" id="${id}" u-is="generic" microID="${id}">
-        <div class="block header">
-          <img src="/i/default.svg" class="icon" />
-          <h3>Schedule</h3>
-          <span class="activeState" u-active="active"></span>
-        </div>
+      <div class="col card" u-control="schedule" u-is="generic" microID="/schedule/0">
         <div class="block">
-          <label>Start:</label><input u-value="ontime" type="time" step="1" />
-          <span style="width:2rem"></span>
-          <label>End:</label><input u-value="offtime" type="time" step="1" /> <label>out:</label><span
-            u-text="value"></span>
+          <h4 u-text="description"></h4>
+          <span class="activeState" u-active="active"></span>
+          <div class="form-group">
+            <label>Start:</label>
+            <span u-text="ontime">..</span>
+          </div>
+          <div class="form-group">
+            <label>End:</label>
+            <span u-text="offtime">..</span>
+          </div>
+          <span class="u-bool ux-value" u-active="value"></span>
         </div>
         <div class="block config Element"></div>
       </div>
 
-      <div class="col card" u-control="digitalout" id="${id}" microID="${id}" u-is="generic">
-        <div class="block header">
-          <img src="/i/default.svg" class="icon" />
-          <h3>${id}</h3>
+      <div class="col card" u-control="digitalout" microID="/digitalout/led" u-is="generic">
+        <div class="block">
           <h4 u-text="description"></h4>
           <span class="activeState" u-active="active"></span>
-        </div>
-
-        <div class="block Element">
-          <img src="/i/default.svg" style="float:left;height:4rem;margin-right:1rem" />
-          <span class="u-bool" u-active="value" style="position: absolute;top:0.5rem;right:0.5rem"></span>
+          <span class="u-bool ux-value" u-active="value"></span>
         </div>
       </div>
 
-      <div class="col card" id="/dht/lr" u-control="dht" microid="/dht/lr" u-is="generic">
+      <div class="col card" u-control="dht" microid="/dht/lr" u-is="generic">
         <div class="block">
-          <img style="float: left;height:5rem;margin-right:0.8rem" src="/i/default.svg" />
+          <h4 u-text="title"></h4>
           <span class="activeState" u-active="active"></span>
           <table>
             <tbody>
-              <tr>
-                <td colspan="3">
-                  <h4 u-text="title"></h4>
-                </td>
-              </tr>
-              <tr>
-                <td colspan="3"><span u-text="description"></span></td>
-              </tr>
               <tr>
                 <td style="font-size: 2rem"><span u-text="temperature">16.60</span>°C</td>
                 <td style="width:1rem"></td>
@@ -143,9 +127,6 @@
               </tr>
             </tbody>
           </table>
-        </div>
-        <div class="block config Element">
-          <div class="form-group"><label>pin:</label><span u-text="pin">12</span></div>
         </div>
       </div>
     </div>

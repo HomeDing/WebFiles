@@ -113,12 +113,7 @@
       document.getElementById("connectPass").addEventListener("click", function () {
         var n = document.getElementById("conNetworks").value;
         var p = document.getElementById("conPass").value;
-        fetch('/$connect?n=' + n + '&p=' + p)
-          .then(function (result) {
-            debugger;
-          }).catch(function (json) {
-            debugger;
-          });
+        fetch('/$connect?n=' + n + '&p=' + p);
       });
 
       document.getElementById("reScan").addEventListener("click", startScan);

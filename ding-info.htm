@@ -107,7 +107,7 @@
 <body>
   <div class="container-fluid">
     <div class="u-header">
-      <a href="/" title="Start-Page"><img class="icon" src="/i/default.svg" /></a>
+      <a href="/" title="Start-Page"><img class="icon" src="/i/device.svg" /></a>
       <h1>Config</h1>
     </div>
     <div class="u-navbar">
@@ -122,7 +122,7 @@
     <div id="panel" class="row wrap"></div>
 
     <div id="u-templates" style="border:2px solid green;padding:1rem;display:none">
-      <div class="col card" u-control="generic" id="${id}" u-is="generic" microID="${id}">
+      <div class="col card" u-control="generic" u-is="generic" microID="${id}">
         <div class="block header">
           <img src="/i/${type}.svg" class="icon" />
           <h3>${id}</h3>
@@ -130,28 +130,47 @@
           <span class="activeState" u-active="active"></span>
           <span class="setconfig"></span>
         </div>
-        <div class="block Element"></div>
-        <div class="block config">
-          <div class="form-group"><label>loglevel:</label><span class="Value" u-text="loglevel"></span></div>
+        <div class="block">
+          <div class="form-group"><label>Value:</label><span u-text="value"></span></div>
+        </div>
+        <div class="block config Element">
+          <div class="form-group"><label>loglevel:</label><input u-value="loglevel" /></div>
         </div>
       </div>
 
       <div u-control="kv" class="form-group KV"><label>${key}:</label><span u-text="${key}"></span></div>
+      <div u-control="kve" class="form-group KV"><label>${key}:</label><input u-value="${key}" /></div>
 
       <div class="col card" u-control="schedule" id="${id}" u-is="generic" microID="${id}">
         <div class="block header">
           <img src="/i/${type}.svg" class="icon" />
           <h3>${id}</h3>
+          <h4 u-text="description"></h4>
           <span class="activeState" u-active="active"></span>
           <span class="setconfig"></span>
         </div>
         <div class="block">
-          <label>Start:</label><input u-value="ontime" type="time" step="1" />
-          <span style="width:2rem"></span>
-          <label>End:</label><input u-value="offtime" type="time" step="1" /> <label>out:</label><span
-            u-text="value"></span>
+          <div class="form-group">
+            <label>Start:</label>
+            <span u-text="ontime" />
+          </div>
+          <div class="form-group">
+            <label>End:</label>
+            <span u-text="offtime" />
+          </div>
+          <span class="u-bool ux-value" u-active="value"></span>
         </div>
-        <div class="block config Element"></div>
+
+        <div class="block config Element">
+          <div class="form-group">
+            <label>Start:</label>
+            <input u-value="ontime" type="time" step="60" class="text-right" style="width:6em;padding-right:0.2em" />
+          </div>
+          <div class="form-group">
+            <label>End:</label>
+            <input u-value="offtime" type="time" step="60" class="text-right" style="width:6em;padding-right:0.2em" />
+          </div>
+        </div>
       </div>
 
       <div class="col card" u-control="dstime" id="${id}" u-is="dstime" microID="${id}">
@@ -213,6 +232,7 @@
     var panelObj = document.getElementById('panel');
     var addObj = document.getElementById('addButton');
     var sysObj = document.getElementById('sysButton');
+    var updateTimer;
 
     var elementDef;
     var params = getHashParams({
@@ -251,17 +271,19 @@
     });
 
     function createElement(path, key, value) {
-      var hElem = document.getElementById(path);
-      if (!hElem) {
-        var t = path.split('/')[1];
-        var p = {
-          id: path,
-          type: t
-        };
+      if (path) {
+        var hElem = document.querySelector("[microID='" + path + "']");
+        if (!hElem) {
+          var t = path.split('/')[1];
+          var p = {
+            id: path,
+            type: t
+          };
 
-        if (toBool(params.sys) || !elementDef[t] || toBool(elementDef[t].sys) == false) {
-          var e = micro.insertTemplate(panelObj, t, p);
-          if (!e) var e = micro.insertTemplate(panelObj, 'generic', p);
+          if (toBool(params.sys) || !elementDef[t] || toBool(elementDef[t].sys) == false) {
+            var e = micro.insertTemplate(panelObj, t, p);
+            if (!e) { micro.insertTemplate(panelObj, 'generic', p); }
+          } // if
         } // if
       } // if
     } // createElement()
@@ -269,16 +291,15 @@
     function addValueInfo(path, key, value) {
       var hText;
       if (key && key != 'active' && path.match(/^\/.*\/.*/)) {
-        var hElem = document.getElementById(path);
+        var hElem = document.querySelector("[microID='" + path + "']");
         if (hElem) {
           var elem = hElem.querySelector("[u-text='" + key + "'],[u-value='" + key + "'],[u-active='" + key + "']");
           if (!elem) {
             hElem = hElem.querySelector('.Element');
             if (hElem) {
-              var p = {
-                key: key
-              };
-              micro.insertTemplate(hElem, 'kv', p);
+              micro.insertTemplate(hElem,
+                hElem.classList.contains('config') ? 'kve' : 'kv',
+                { key: key });
             }
           } // if
         } // if
@@ -288,13 +309,27 @@
     hub.subscribe('/*/*', createElement);
     hub.subscribe('/**/**?**', addValueInfo);
 
-    function updateState() {
+    function updateAsap(ev) {
+      if (updateTimer)
+        window.clearTimeout(updateTimer);
+      updateTimer = null;
+      updateTimer = window.setTimeout(updateState, 20);
+    }
+
+    function updateState(ev) {
+      if (updateTimer)
+        window.clearTimeout(updateTimer);
+      updateTimer = null;
+
       fetch('/$board')
         .then(function (result) {
           return result.json();
         })
         .then(function (json) {
           hub.publishObj(json);
+        })
+        .then(function (json) {
+          updateTimer = window.setTimeout(updateState, 4000);
         });
     } // updateState()
 
@@ -331,7 +366,7 @@
 
       Promise.all([p0, p1]).then(function () {
         updateState();
-        window.setTimeout(updateState, 4000);
+        // window.setTimeout(updateState, 4000);
       });
     } // init()
 
