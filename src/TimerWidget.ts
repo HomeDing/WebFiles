@@ -33,15 +33,12 @@ function upload(filename: string, content: string) {
 } // upload
 
 function changeConfig(id: string, newConfig: any) {
-  console.log(id, newConfig);
-  // debugger;
   var c = JSON.parse(hub.read('config'));
   var node = jsonFind(c, id);
   for (let n in newConfig) {
     node[n] = newConfig[n];
   }
-  console.log(c);
-  upload('config2.json', JSON.stringify(c));
+  upload('/config.json', JSON.stringify(c));
 } // changeConfig()
 
 @MicroControl('timer')

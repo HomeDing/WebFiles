@@ -275,8 +275,12 @@ var GenericWidgetClass = (function (_super) {
         }, this);
     };
     GenericWidgetClass.prototype.dispatchAction = function (prop, val) {
-        if (prop !== null && val !== null)
-            fetch("/$board" + this.microid + "?" + prop + "=" + encodeURI(val));
+        if (prop !== null && val !== null) {
+            fetch("/$board" + this.microid + "?" + prop + "=" + encodeURI(val)).then(function () {
+                if (updateAsap)
+                    updateAsap();
+            });
+        }
     };
     GenericWidgetClass.prototype.onchange = function (e) {
         var src = e.target;
@@ -513,14 +517,12 @@ function upload(filename, content) {
     objHTTP.send(formData);
 }
 function changeConfig(id, newConfig) {
-    console.log(id, newConfig);
     var c = JSON.parse(hub.read('config'));
     var node = jsonFind(c, id);
     for (var n in newConfig) {
         node[n] = newConfig[n];
     }
-    console.log(c);
-    upload('config2.json', JSON.stringify(c));
+    upload('/config.json', JSON.stringify(c));
 }
 var TimerWidgetClass = (function (_super) {
     __extends(TimerWidgetClass, _super);
