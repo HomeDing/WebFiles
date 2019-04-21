@@ -292,7 +292,7 @@ svg.button {
     position:relative;
     flex: 1 1 auto;
     padding: $white-space;
-    min-height: 2.6em;
+    min-height: 3em;
 
     &.header {
       background-image: linear-gradient(to bottom, $u-cardbackground, darken($u-cardbackground, 10%));
@@ -315,10 +315,12 @@ svg.button {
       }
     }
 
-    &.action {
-      background-color: limegreen;
-      padding-top: 0;
-      padding-bottom: 0;
+    &:not(:first-child) {
+      padding-top: $gutter;
+    }
+  
+    &:not(:last-child) {
+      padding-bottom: $gutter;
     }
   }
 
@@ -348,7 +350,7 @@ button {
   font-size: 1.25em;
   min-width: 4em;
   height: 1.4em;
-  padding: 0 0.4em;
+  padding: 0 0.25em;
   border-radius: $u-btn-radius;
   border: 0.1rem solid $u-primary;
   background-color: $u-primary;
@@ -410,7 +412,7 @@ button.secondary {
 }
 
 .form-group {
-  margin-bottom: $gutter;
+  // margin-bottom: $gutter;
   display:flex;
 
   > label {
@@ -433,9 +435,17 @@ button.secondary {
     border: $u-input-border;
   }
 
+  > input {
+    padding: 0 0.1em;
+  }
+
   > span {
     border: $u-output-border;
   }
+}
+
+.form-group:not(:last-child) {
+  margin-bottom: $gutter;
 }
 
 .invalid {
@@ -607,6 +617,10 @@ button.secondary {
 }
 
 @media (max-width: 767px) {
+  .container-fluid {
+    padding:0;
+  }
+  
   .hidden-xs {
     display: none;
   }

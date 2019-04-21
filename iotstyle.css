@@ -86,7 +86,7 @@ svg.button .connect { fill: #00cc00; fill-opacity: 1; }
 
 .card img.active { background-color: limegreen; }
 
-.card > .block { position: relative; flex: 1 1 auto; padding: 1rem; min-height: 2.6em; }
+.card > .block { position: relative; flex: 1 1 auto; padding: 1rem; min-height: 3em; }
 
 .card > .block.header { background-image: linear-gradient(to bottom, white, #e6e6e6); border-top-right-radius: 0; border-top-left-radius: 0; min-height: 3.6rem; }
 
@@ -96,13 +96,15 @@ svg.button .connect { fill: #00cc00; fill-opacity: 1; }
 
 .card > .block.header > h4 { margin: 0; }
 
-.card > .block.action { background-color: limegreen; padding-top: 0; padding-bottom: 0; }
+.card > .block:not(:first-child) { padding-top: 0.5rem; }
+
+.card > .block:not(:last-child) { padding-bottom: 0.5rem; }
 
 .card > hr { background-color: rgba(0, 0, 0, 0.125); border: 0; height: 1px; padding: 0; margin: 0; }
 
 a + a, a + button, a + label, label + a, label + button, label + label, button + a, button + button, button + label { margin-left: 0.5rem; }
 
-button { display: inline-block; font-size: 1.25em; min-width: 4em; height: 1.4em; padding: 0 0.4em; border-radius: 0.2em; border: 0.1rem solid #304878; background-color: #304878; color: white; cursor: pointer; user-select: none; -ms-user-select: none; }
+button { display: inline-block; font-size: 1.25em; min-width: 4em; height: 1.4em; padding: 0 0.25em; border-radius: 0.2em; border: 0.1rem solid #304878; background-color: #304878; color: white; cursor: pointer; user-select: none; -ms-user-select: none; }
 
 button:focus { border-color: #4466ee; background-color: #4466ee; }
 
@@ -122,7 +124,7 @@ button.secondary { background-color: #777777; border-color: #777777; }
 
 .btn-group > label { display: inline-block; border: 0.1rem solid transparent; font-size: 1.25em; height: 1.4em; padding: 0 0.4em; }
 
-.form-group { margin-bottom: 0.5rem; display: flex; }
+.form-group { display: flex; }
 
 .form-group > label { display: inline-block; text-align: right; margin-right: 0.5rem; width: 8em; }
 
@@ -130,7 +132,11 @@ button.secondary { background-color: #777777; border-color: #777777; }
 
 .form-group > input, .form-group > select { border: 0.1rem solid #304878; }
 
+.form-group > input { padding: 0 0.1em; }
+
 .form-group > span { border: 0.1rem solid transparent; }
+
+.form-group:not(:last-child) { margin-bottom: 0.5rem; }
 
 .invalid { border: 2px solid #ff0000 !important; background-color: #ffcccc !important; }
 
@@ -180,5 +186,6 @@ button.secondary { background-color: #777777; border-color: #777777; }
 /* === Responsive Utilities === */
 .display-xs { display: none; }
 
-@media (max-width: 767px) { .hidden-xs { display: none; }
+@media (max-width: 767px) { .container-fluid { padding: 0; }
+  .hidden-xs { display: none; }
   .display-xs { display: initial; } }
