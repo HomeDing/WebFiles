@@ -66,10 +66,12 @@ class GenericWidgetClass extends MicroControlClass {
 
   // send an action to the board and dispatch to the element
   dispatchAction(prop: string | null, val: string | null) {
-    if (prop !== null && val !== null)
-    { fetch(`/$board${this.microid}?${prop}=${encodeURI(val)}`).then(()=>{
-      if (updateAsap) updateAsap();
-    });}
+    if (prop !== null && val !== null) {
+      fetch(`/$board${this.microid}?${prop}=${encodeURI(val)}`).then(() => {
+        // @ts-ignore
+        if (updateAsap) updateAsap();
+      });
+    }
   } // dispatchAction()
 
   // send changed value of property as an action to the board
