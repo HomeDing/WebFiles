@@ -158,6 +158,12 @@ addElementMock('displaytext/pm', function (state) {
   return (state);
 }, null);
 
+addElementMock('displaydot/b', function (state) {
+  var d = new Date();
+  state.value = Math.floor(d.getSeconds() / 8) % 2;
+  return (state);
+}, null);
+
 addElementMock('switch/0', function (state) {
   if (!state) {
     state = {
