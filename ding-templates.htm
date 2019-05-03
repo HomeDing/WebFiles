@@ -127,42 +127,6 @@
   </div>
 </div>
 
-<div class="col card" u-control="displaydot" microID="${id}" u-is="generic">
-  <div class="block header">
-    <img src="/i/displaydot.svg" class="icon" />
-    <h3>${id}</h3>
-    <h4 u-text="description"></h4>
-    <span class="activeState" u-active="active"></span>
-    <span class="setconfig"></span>
-  </div>
-
-  <div class="block">
-    <span class="u-bool ux-value" u-active="value" style="position: absolute;top:0.5rem;right:0.5rem"></span>
-    <div class="form-group"><label>value:</label><span u-text="value"></span></div>
-  </div>
-  <div class="block config Element" style="position: relative;min-height: 5rem">
-    <div class="form-group"><label>loglevel:</label><input u-value="loglevel" /></div>
-  </div>
-</div>
-
-<div class="col card" u-control="displaytext" microID="${id}" u-is="generic">
-  <div class="block header">
-    <img src="/i/displaytext.svg" class="icon" />
-    <h3>${id}</h3>
-    <h4 u-text="description"></h4>
-    <span class="activeState" u-active="active"></span>
-    <span class="setconfig"></span>
-  </div>
-
-  <div class="block">
-    <span u-text="prefix"></span><span u-text="value"></span><span u-text="postfix"></span>
-    <!-- <div class="form-group"><label>value:</label><span u-text="value"></span></div> -->
-  </div>
-  <div class="block config Element" style="position: relative;min-height: 5rem">
-    <div class="form-group"><label>loglevel:</label><input u-value="loglevel" /></div>
-  </div>
-</div>
-
 <div class="col card" u-control="pwmout" u-is="pwmout" microID="${id}">
   <div class="block header">
     <img src="/i/pwmout.svg" class="icon" />
@@ -210,3 +174,55 @@
   <div class="block config Element">
   </div>
 </div>
+
+<!-- Display -->
+
+<div class="col card" u-control="displaysh1106" u-is="generic" microID="${id}">
+  <div class="block header">
+    <img src="/i/displaysh1106.svg" class="icon" />
+    <h3>${id}</h3>
+    <h4 u-text="description"></h4>
+    <span class="activeState" u-active="active"></span>
+    <span class="setconfig"></span>
+  </div>
+  <div class="block">
+    <div id="display">
+    </div>
+  </div>
+  <div class="block config Element">
+    <div class="form-group"><label>loglevel:</label><input u-value="loglevel" /></div>
+  </div>
+</div>
+
+<div class="col card hidden" u-control="displaytext" u-is="displaytext" microID="${id}">
+  <div class="block header">
+    <img src="/i/${type}.svg" class="icon" />
+    <h3>${id}</h3>
+    <h4 u-text="description"></h4>
+    <span class="activeState" u-active="active"></span>
+    <span class="setconfig"></span>
+  </div>
+  <div class="block">
+    <div class="form-group"><label>Value:</label><span u-text="value"></span></div>
+  </div>
+  <div class="block config Element">
+    <div class="form-group"><label>loglevel:</label><input u-value="loglevel" /></div>
+  </div>
+</div>
+
+<div class="col card hidden" u-control="displaydot" u-is="displaydot" microID="${id}">
+  <div class="block header">
+    <img src="/i/${type}.svg" class="icon" />
+    <h3>${id}</h3>
+    <h4 u-text="description"></h4>
+    <span class="activeState" u-active="active"></span>
+    <span class="setconfig"></span>
+  </div>
+  <div class="block">
+    <div class="form-group"><label>Value:</label><span u-text="value"></span></div>
+  </div>
+  <div class="block config Element">
+    <div class="form-group"><label>loglevel:</label><input u-value="loglevel" /></div>
+  </div>
+</div>
+

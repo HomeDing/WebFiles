@@ -26,7 +26,7 @@ h3 { font-size: 1.25em; font-weight: bold; }
 
 h4 { font-size: 0.8em; min-height: 0.8rem; }
 
-.hidden { display: none; }
+.hidden { display: none !important; }
 
 .container { margin-right: 2rem; margin-left: 2rem; }
 
@@ -154,9 +154,9 @@ button.secondary { background-color: #777777; border-color: #777777; }
 
 .u-bool { display: inline-block; height: 1.4rem; width: 1.4rem; border-radius: 0.7rem; text-align: center; background-color: silver; }
 
-.u-bool[value='1'] { background-image: linear-gradient(145deg, #1aff1a, green); }
+.u-bool[value="1"] { background-image: linear-gradient(145deg, #1aff1a, green); }
 
-.u-bool[value='0'] { background-image: linear-gradient(145deg, #ff9999, red); }
+.u-bool[value="0"] { background-image: linear-gradient(145deg, #ff9999, red); }
 
 .ux-levelbar { display: inline-block; border-color: #304878; border-style: solid; border-width: 1px; width: 32px; height: 64px; }
 
@@ -182,6 +182,17 @@ button.secondary { background-color: #777777; border-color: #777777; }
 .u-switch.active > .box > .handle { left: 1.5rem; }
 
 .text-right { text-align: right; }
+
+/* === Display Element === */
+#display { position: relative; box-sizing: content-box; background-color: #dddddd; margin: auto; width: 128px; height: 64px; border: 2px solid #666666; zoom: 2; }
+
+#display > span { box-sizing: border-box; display: inline-block; position: absolute; top: 0px; left: 0px; height: 10px; overflow: hidden; background-color: transparent; }
+
+#display > span.text { font-family: sans-serif; font-size: 10px; line-height: 10px; }
+
+#display > span.dot { height: 10px; width: 10px; border-radius: 50%; }
+
+#display > span.dot.active { background-color: green; }
 
 /* === Responsive Utilities === */
 .display-xs { display: none; }

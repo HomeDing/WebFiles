@@ -2,7 +2,7 @@
 
 // ===== Colors =====
 
-$u-background: #dddddd; 
+$u-background: #dddddd;
 
 $u-primary: #304878; // active objects
 $u-focus: #4466ee; // active object with focus
@@ -11,7 +11,7 @@ $u-text: #111111; // any text
 $u-heading: #304878; // any headlines
 $u-connect: #00cc00; // connectivity / net
 
-$u-cardbackground: white;// #d4dced; // connectivity / net
+$u-cardbackground: white; // #d4dced; // connectivity / net
 $u-card-border: none; // 0.1rem solid $u-primary;
 $u-card-radius: 0; // 0.4rem;
 
@@ -29,7 +29,6 @@ $gutter: 0.5rem;
 $u-btn-radius: 0.2em;
 $u-input-border: 0.1rem solid #304878;
 $u-output-border: 0.1rem solid transparent;
-
 
 // ===== main =====
 
@@ -114,7 +113,7 @@ h4 {
 }
 
 .hidden {
-  display: none;
+  display: none !important;
 }
 
 // ===== Grid Design with grid of 6 =====
@@ -132,7 +131,7 @@ h4 {
 .container-fluid {
   margin-right: 0;
   margin-left: 0;
-  padding:$white-space;
+  padding: $white-space;
 }
 
 .row {
@@ -252,7 +251,7 @@ svg.button {
 
 .u-navbar {
   background-color: $u-navbar;
-  padding: $gutter $white-space ;
+  padding: $gutter $white-space;
   margin-bottom: $gutter;
   min-height: 2.2rem;
 
@@ -268,9 +267,7 @@ svg.button {
   > button.func {
     float: right;
   }
-
 }
-
 
 // ===== Cards =====
 
@@ -289,13 +286,17 @@ svg.button {
   }
 
   > .block {
-    position:relative;
+    position: relative;
     flex: 1 1 auto;
     padding: $white-space;
     min-height: 3em;
 
     &.header {
-      background-image: linear-gradient(to bottom, $u-cardbackground, darken($u-cardbackground, 10%));
+      background-image: linear-gradient(
+        to bottom,
+        $u-cardbackground,
+        darken($u-cardbackground, 10%)
+      );
       border-top-right-radius: $u-card-radius;
       border-top-left-radius: $u-card-radius;
       min-height: 3.6rem;
@@ -318,7 +319,7 @@ svg.button {
     &:not(:first-child) {
       padding-top: $gutter;
     }
-  
+
     &:not(:last-child) {
       padding-bottom: $gutter;
     }
@@ -359,7 +360,6 @@ button {
   user-select: none;
   -ms-user-select: none;
 }
-
 
 button:focus {
   border-color: $u-focus;
@@ -408,12 +408,11 @@ button.secondary {
     height: 1.4em;
     padding: 0 0.4em;
   }
-  
 }
 
 .form-group {
   // margin-bottom: $gutter;
-  display:flex;
+  display: flex;
 
   > label {
     display: inline-block;
@@ -511,11 +510,11 @@ button.secondary {
   background-color: silver;
 }
 
-.u-bool[value='1'] {
+.u-bool[value="1"] {
   background-image: linear-gradient(145deg, lighten($u-on, 30%), $u-on);
 }
 
-.u-bool[value='0'] {
+.u-bool[value="0"] {
   background-image: linear-gradient(145deg, lighten($u-off, 30%), $u-off);
 }
 
@@ -532,7 +531,9 @@ button.secondary {
 // show something on the right side of the card vizualizing the actual value of the element
 
 .ux-value {
-  position:absolute;right:0.5rem;top:0.5rem
+  position: absolute;
+  right: 0.5rem;
+  top: 0.5rem;
 }
 
 // Timer-bar
@@ -610,6 +611,45 @@ button.secondary {
   text-align: right;
 }
 
+/* === Display Element === */
+#display {
+  position: relative;
+  box-sizing: content-box;
+  background-color: #dddddd;
+  margin: auto;
+  width: 128px;
+  height: 64px;
+  border: 2px solid #666666;
+  zoom: 2;
+
+  > span {
+    box-sizing: border-box;
+    display: inline-block;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    height: 10px;
+    overflow: hidden;
+    background-color: transparent;
+    // background-color: yellow;
+  }
+  > span.text {
+    font-family: sans-serif;
+    // monospace; font-weight: 300;
+    font-size: 10px;
+    line-height: 10px;
+  }
+  > span.dot {
+    height: 10px;
+    width: 10px;
+    // border: 1px solid green;
+    border-radius: 50%;
+  }
+  > span.dot.active {
+    background-color: green;
+  }
+} // #display
+
 /* === Responsive Utilities === */
 
 .display-xs {
@@ -618,9 +658,9 @@ button.secondary {
 
 @media (max-width: 767px) {
   .container-fluid {
-    padding:0;
+    padding: 0;
   }
-  
+
   .hidden-xs {
     display: none;
   }
