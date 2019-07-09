@@ -1,130 +1,147 @@
 {
   "device": {
     "sys": "true",
-    "properties": ["description", "room", "led", "reboottime"],
-    "events": ["log", "loglevel"]
+    "properties": ["loglevel", "description", "room", "name", "led", "button", "reboottime", "logfile"],
+    "events": ["log"]
+  },
+
+  "element": {
+    "properties": ["loglevel", "description"],
+    "events": ["start", "stop"]
+  },
+
+  "analog": {
+    "properties": ["loglevel", "description", "readtime", "hysteresis", "pin", "reference"],
+    "actions": ["onvalue", "onreference"]
+  },
+
+  "and": {
+    "sys": "false",
+    "properties": ["loglevel", "description"],
+    "events": ["value1", "value2"],
+    "actions": ["onvalue"]
+  },
+
+  "button": {
+    "properties": ["loglevel", "description"],
+    "events": ["value"],
+    "actions": ["onclick", "ondoubleclick", "onpress"]
+  },
+
+  "digitalin": {
+    "properties": ["loglevel", "description", "pin", "inverse", "pullup"],
+    "actions": ["onValue", "onHigh", "onLow"]
+  },
+
+  "digitalout": {
+    "properties": ["loglevel", "description", "pin", "inverse"],
+    "events": ["on", "off", "value"]
+  },
+
+  "displaydot": {
+    "sys": "false",
+    "properties": ["loglevel", "description", "x", "y"],
+    "events": ["value", "clear"]
+  },
+
+  "displaytext": {
+    "sys": "false",
+    "properties": ["loglevel", "description", "x", "y", "fontsize", "prefix", "postfix"],
+    "events": ["value", "clear"]
+  },
+
+  "pwmout": {
+    "properties": ["loglevel", "description", "value", "range", "pin", "inverse"],
+    "events": ["on", "off", "value"]
+  },
+
+  "remote": {
+    "sys": "true",
+    "properties": ["loglevel", "description", "host", "remoteid"],
+    "events": ["..."]
+  },
+
+  "rfsend": {
+    "properties": ["loglevel", "description", "pin", "codeon", "codeoff"],
+    "events": ["value"]
+  },
+
+  "rotary": {
+    "properties": ["loglevel", "description", "pin1", "pin2", "step", "value"],
+    "actions": ["onchange"]
+  },
+
+  "switch": {
+    "properties": ["loglevel", "description"],
+    "events": ["value", "toggle"],
+    "actions": ["onValue", "onHigh", "onLow"]
+  },
+
+  "value": {
+    "properties": ["loglevel", "description", "min", "max"],
+    "events": ["value", "up", "down"],
+    "actions": ["onChange"]
   },
 
   "ota": {
     "sys": "true",
     "properties": ["port", "passwd"]
   },
+
   "ssdp": {
     "sys": "true",
-    "properties": ["Manufacturer", "ManufacturerURL", "ModelURL", "ModelNumber"]
+    "properties": ["loglevel", "description", "Manufacturer", "ManufacturerURL", "ModelURL", "ModelNumber"]
   },
 
-  "ntptime": {
-    "sys": "true",
-    "properties": ["ntpserver", "zone", "readtime"]
+  "displayadapterlcd": { "sys": "true" },
+  
+  "displaysh1106": {  },
+  "displayssd1306": {  },
+
+  "bme680": {
+    "properties": ["loglevel", "description", "address", "readtime"],
+    "actions": ["ontemperature", "onhumidity", "onpressure", "ongas"]
+  },
+
+  "dht": {
+    "properties": ["loglevel", "description", "type", "pin", "readtime", "resendtime"],
+    "actions": ["ontemperature", "onhumidity"]
+  },
+
+  "alarm": {
+    "properties": ["loglevel", "description", "time"],
+    "actions": ["onTime"]
   },
 
   "dstime": {
     "sys": "true",
-    "properties": ["address", "time", "readtime"]
+    "properties": ["loglevel", "description", "address", "time", "readtime"]
   },
 
-  "displayadapterlcd": {
-    "sys": "true"
-  },
-  "displayadapterssd1306": {
-    "sys": "true"
-  },
-  "displayadaptersh1106": {
-    "sys": "true"
+  "ntptime": {
+    "sys": "true",
+    "properties": ["loglevel", "description", "ntpserver", "zone", "readtime"]
   },
 
-  "displaytext": {
-    "sys": "false",
-    "properties": ["description", "loglevel", "x", "y", "fontsize", "prefix", "postfix"],
-    "events": ["value", "clear"],
-    "actions": []
-  },
-
-  "displaydot": {
-    "sys": "false",
-    "properties": ["description", "loglevel", "x", "y"],
-    "events": ["value", "clear"],
-    "actions": []
+  "schedule": {
+    "properties": ["loglevel", "description", "ontime", "offtime"],
+    "actions": ["onon", "onoff", "onvalue"]
   },
 
   "time": {
     "sys": "true",
-    "properties": ["description", "loglevel"],
-    "events": [],
+    "properties": ["loglevel", "description"],
     "actions": ["onminute", "ontimestamp", "ontime", "ondate"]
   },
 
-  "dht": {
-    "properties": ["description", "loglevel", "type", "pin", "readtime", "resendtime"],
-    "events": [],
-    "actions": ["ontemperature", "onhumidity"]
-  },
-
-  "bme680": {
-    "properties": ["description", "loglevel", "address", "readtime"],
-    "events": [],
-    "actions": ["ontemperature", "onhumidity", "onpressure", "ongas"]
-  },
-
-  "analog": {
-    "properties": ["description", "loglevel", "readtime", "hysteresis", "reference"],
-    "events": [],
-    "actions": ["onvalue", "onreference"]
-  },
-
-  "button": {
-    "properties": ["description", "pin", "type", "inverse", "pullup"],
-    "events": ["value"],
-    "actions": ["onvalue", "onon", "onoff"]
-  },
-
-  "rotary": {
-    "properties": ["description", "pin1", "pin2", "step", "value"],
-    "events": [],
-    "actions": ["onchange"]
-  },
-
-  "serialcmd": {
-    "properties": ["description"],
-    "events": [],
-    "actions": ["preset0", "preset1", "preset2", "preset3"]
-  },
-
   "timer": {
-    "properties": ["description", "type", "waittime", "pulsetime", "cycletime"],
+    "properties": ["loglevel", "description", "type", "waittime", "pulsetime", "cycletime"],
     "events": ["start", "stop", "next"],
     "actions": ["onon", "onoff", "onvalue"]
   },
 
-  "digitalin": {
-    "properties": ["description", "pin", "inverse", "pullup"],
-    "events": [],
-    "actions": ["onValue", "onHigh", "onLow"]
-  },
-
-  "switch": {
+  "serialcmd": {
     "properties": ["description"],
-    "events": ["value", "toggle"],
-    "actions": ["onValue", "onHigh", "onLow"]
-  },
-
-  "digitalout": {
-    "properties": ["description", "value", "pin", "inverse"],
-    "events": ["on", "off", "value"],
-    "actions": []
-  },
-
-  "pwmout": {
-    "properties": ["description", "value", "range", "pin", "inverse"],
-    "events": ["on", "off", "value"],
-    "actions": []
-  },
-
-  "schedule": {
-    "properties": ["description", "loglevel", "ontime", "offtime"],
-    "events": [],
-    "actions": ["onon", "onoff", "onvalue"]
+    "actions": ["preset0", "preset1", "preset2", "preset3"]
   }
-
 }
