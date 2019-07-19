@@ -3,5 +3,5 @@
   "analog", "timer", "schedule", "digitalout",
   "pwmout", "displaytext", "displaydot",
   "displayLCD", "displaySSD1306", "dht",
-  "rfsend", "rotary", "alarm"
+  "rfsend", "rotary", "alarm", "and"
 ]

@@ -17,8 +17,8 @@
 
   "and": {
     "sys": "false",
-    "properties": ["loglevel", "description"],
-    "events": ["value1", "value2"],
+    "properties": ["loglevel", "description", "invert"],
+    "events": ["value01", "value02"],
     "actions": ["onvalue"]
   },
 
