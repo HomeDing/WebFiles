@@ -362,6 +362,123 @@ var DSTimeWidgetClass = (function (_super) {
     ], DSTimeWidgetClass);
     return DSTimeWidgetClass;
 }(GenericWidgetClass));
+var DisplayDotWidgetClass = (function (_super) {
+    __extends(DisplayDotWidgetClass, _super);
+    function DisplayDotWidgetClass() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.lastValue = null;
+        _this._dispElem = null;
+        _this._elem = null;
+        _this._x = 0;
+        _this._y = 0;
+        _this._value = false;
+        return _this;
+    }
+    DisplayDotWidgetClass.prototype.connectedCallback = function (el) {
+        _super.prototype.connectedCallback.call(this, el);
+        this._dispElem = document.getElementById("display");
+        hub.subscribe(this.microid + "?*", this.newValue.bind(this), true);
+    };
+    DisplayDotWidgetClass.prototype.updateDisp = function (create) {
+        if (this._dispElem) {
+            if (create && !this._elem) {
+                this._elem = document.createElement("span");
+                this._dispElem.appendChild(this._elem);
+            }
+            if (this._elem) {
+                this._elem.className = "dot";
+                this._elem.style.top = this._y + "px";
+                this._elem.style.left = this._x + "px";
+                this._elem.classList.toggle("active", this._value);
+            }
+        }
+    };
+    DisplayDotWidgetClass.prototype.newValue = function (_path, key, value) {
+        if (key && value) {
+            if (key === "active" && !this._elem) {
+                this.updateDisp(true);
+            }
+            else if (key === "value") {
+                this._value = toBool(value);
+                this.updateDisp(false);
+            }
+            else if (key === "x") {
+                this._x = Number(value);
+                this.updateDisp(false);
+            }
+            else if (key === "y") {
+                this._y = Number(value);
+                this.updateDisp(false);
+            }
+            else {
+                console.log("key", key, value);
+            }
+        }
+    };
+    DisplayDotWidgetClass = __decorate([
+        MicroControl("displaydot")
+    ], DisplayDotWidgetClass);
+    return DisplayDotWidgetClass;
+}(GenericWidgetClass));
+var DisplayTextWidgetClass = (function (_super) {
+    __extends(DisplayTextWidgetClass, _super);
+    function DisplayTextWidgetClass() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.lastValue = null;
+        _this._dispElem = null;
+        _this._dispGrid = 1;
+        _this._elem = null;
+        _this._prefix = '';
+        _this._postfix = '';
+        return _this;
+    }
+    DisplayTextWidgetClass.prototype.connectedCallback = function (el) {
+        _super.prototype.connectedCallback.call(this, el);
+        this._dispElem = document.getElementById('display');
+        if (this._dispElem) {
+            if (this._dispElem.getAttribute('grid'))
+                this._dispGrid = Number(this._dispElem.getAttribute('grid'));
+            var e = this._elem = document.createElement('span');
+            e.className = 'text';
+            e.style.top = '0px';
+            e.style.left = '0px';
+            this._dispElem.appendChild(e);
+        }
+        hub.subscribe(this.microid + "?*", this.newValue.bind(this), true);
+    };
+    DisplayTextWidgetClass.prototype.newValue = function (_path, key, value) {
+        if (key && value && this._elem) {
+            if (key === 'value') {
+                var t = "" + this._prefix + value + this._postfix;
+                this._elem.innerHTML = t.replace(/ /g, '&nbsp;');
+            }
+            else if (key === 'x') {
+                this._elem.style.left = (Number(value) * this._dispGrid * 7 / 10) + 'px';
+            }
+            else if (key === 'y') {
+                this._elem.style.top = (Number(value) * this._dispGrid) + 'px';
+            }
+            else if (key === 'fontsize') {
+                this._elem.style.fontSize = value + 'px';
+                this._elem.style.lineHeight = value + 'px';
+                this._elem.style.height = value + 'px';
+            }
+            else if (key === 'prefix') {
+                this._prefix = value;
+            }
+            else if (key === 'postfix') {
+                this._postfix = value;
+            }
+            else {
+                console.log("key", key, value);
+            }
+        }
+    };
+    DisplayTextWidgetClass = __decorate([
+        MicroControl("displaytext")
+    ], DisplayTextWidgetClass);
+    return DisplayTextWidgetClass;
+}(GenericWidgetClass));
 function jsonParse(obj, cbFunc) {
     function _jsonParse(path, key, value, cbFunc) {
         var path2 = key ? path + '/' + key : path;

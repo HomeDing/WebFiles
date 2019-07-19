@@ -186,7 +186,24 @@
     <span class="setconfig"></span>
   </div>
   <div class="block">
-    <div id="display">
+    <div id="display" style="font-family: sans-serif">
+    </div>
+  </div>
+  <div class="block config Element">
+    <div class="form-group"><label>loglevel:</label><input u-value="loglevel" /></div>
+  </div>
+</div>
+
+<div class="col card" u-control="displaylcd" u-is="generic" microID="${id}">
+  <div class="block header">
+    <img src="/i/displaylcd.svg" class="icon" />
+    <h3>${id}</h3>
+    <h4 u-text="description"></h4>
+    <span class="activeState" u-active="active"></span>
+    <span class="setconfig"></span>
+  </div>
+  <div class="block">
+    <div id="display" grid="10" style="height: 20px;width: 112px;font-family: monospace">
     </div>
   </div>
   <div class="block config Element">

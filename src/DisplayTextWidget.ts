@@ -11,6 +11,7 @@
 class DisplayTextWidgetClass extends GenericWidgetClass {
   lastValue: string | null = null;
   _dispElem: HTMLElement | null = null;
+  _dispGrid: number = 1;
   _elem: HTMLElement | null = null;
   _prefix = '';
   _postfix = '';
@@ -20,6 +21,9 @@ class DisplayTextWidgetClass extends GenericWidgetClass {
 
     this._dispElem = document.getElementById('display');
     if (this._dispElem) {
+      if (this._dispElem.getAttribute('grid'))
+        this._dispGrid = Number(this._dispElem.getAttribute('grid'));
+
       const e: HTMLSpanElement = this._elem = document.createElement('span');
       e.className = 'text';
       e.style.top = '0px';
@@ -34,13 +38,14 @@ class DisplayTextWidgetClass extends GenericWidgetClass {
     if (key && value && this._elem) {
 
       if (key === 'value') {
-        this._elem.innerText = `${this._prefix}${value}${this._postfix}`;
+        const t = `${this._prefix}${value}${this._postfix}`;
+        this._elem.innerHTML = t.replace(/ /g, '&nbsp;');
 
       } else if (key === 'x') {
-        this._elem.style.left = value + 'px';
+        this._elem.style.left = (Number(value) * this._dispGrid * 7 / 10) + 'px';
 
       } else if (key === 'y') {
-        this._elem.style.top = value + 'px';
+        this._elem.style.top = (Number(value) * this._dispGrid) + 'px';
 
       } else if (key === 'fontsize') {
         this._elem.style.fontSize = value + 'px';

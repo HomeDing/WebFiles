@@ -93,10 +93,17 @@
     "properties": ["loglevel", "description", "Manufacturer", "ManufacturerURL", "ModelURL", "ModelNumber"]
   },
 
-  "displayadapterlcd": { "sys": "true" },
-  
-  "displaysh1106": {  },
-  "displayssd1306": {  },
+  "displaylcd": {
+    "properties": ["loglevel", "description", "address", "height"]
+  },
+
+  "displaysh1106": {
+    "properties": ["loglevel", "description", "address", "readtime", "resetpin", "height"]
+  },
+
+  "displayssd1306": {
+    "properties": ["loglevel", "description", "address", "readtime", "resetpin", "height"]
+  },
 
   "bme680": {
     "properties": ["loglevel", "description", "address", "readtime"],
