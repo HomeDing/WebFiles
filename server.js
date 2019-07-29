@@ -2,12 +2,30 @@ var express = require("express");
 var app = express();
 
 const fs = require("fs");
+
 const logInfo = require("debug")("iot:info");
 logInfo.log = console.log.bind(console);
+
 const logError = require("debug")("iot:error");
 logError.log = console.error.bind(console);
 
 const debugSend = require("debug")("iot:send");
+
+// a prefix can be added to the files config.json, env.json and $board 
+const useCase = 'radio/';
+const boardFileName = useCase + '$board';
+
+
+// ===== config information
+let configData = JSON.parse(fs.readFileSync(useCase + 'config.json', 'utf8'));
+
+// ===== /$board status
+let boardStatus = null;
+
+// ===== status mocking functions
+let mockGetStatus = {}; // return current status
+let mockSetAction = {}; // set an Property of process an action
+
 
 // enable to add X-Respose-Time to http header
 // var responseTime = require('response-time');
@@ -98,6 +116,9 @@ app.get(/^\/\$sysinfo$/, noCache, function (req, res, next) {
   res.send(JSON.stringify(fl, null, 2));
 });
 
+app.get(/^\/\xconfig.json$/, noCache, function (req, res, next) {
+
+});
 
 // ----- handle uploading a file using the PUT method -----
 
@@ -136,10 +157,6 @@ function isoDate() {
 
 // ===== mocking elements
 
-// 2 collections of functions:
-let mockGetStatus = {}; // return current status
-let mockSetAction = {}; // set an Property of process an action
-
 function addElementMock(id, fGet, fSet) {
   if (fGet)
     mockGetStatus[id] = fGet;
@@ -164,28 +181,32 @@ addElementMock('displaydot/b', function (state) {
   return (state);
 }, null);
 
-addElementMock('switch/0', function (state) {
-  if (!state) {
-    state = {
-      active: 1,
-      value: 0
-    };
+
+// ===== mocking switch elements
+
+if (configData.switch) {
+  for (e in configData.switch) {
+    addElementMock('switch/' + e, function (state) {
+      if (!state) {
+        state = {
+          active: 1,
+          value: 0
+        };
+      }
+      return (state);
+    }, function (state, query) {
+      if (query.value != null)
+        state.value = query.value;
+      if (query.toggle != null)
+        state.value = (state.value ? 0 : 1);
+      return (state);
+    });
+
+    logInfo(e);
   }
-  return (state);
-}, function (state, query) {
-  if (query.value != null)
-    state.value = query.value;
-  if (query.toggle != null)
-    state.value = (state.value ? 0 : 1);
-  return (state);
-});
+}
 
 // ===== serving /$board status
-
-const boardFileName = '$board';
-let boardStatus = null;
-
-let switchValue = 1;
 
 fs.watch(boardFileName, function (eventName, filename) {
   boardStatus = null;
@@ -213,8 +234,8 @@ app.get('/\\$board/:type/:id', noCache, function (req, res, next) {
       boardStatus[id] = mockGetStatus[id](boardStatus[id]);
     logInfo(boardStatus[id]);
     res.type('application/json');
-    let elementStatus = { };
-    elementStatus[id] =  boardStatus[id];
+    let elementStatus = {};
+    elementStatus[id] = boardStatus[id];
     res.send(JSON.stringify(elementStatus, null, 2));
   }
   // next();
@@ -226,6 +247,9 @@ app.get(/^\/\$board$/, noCache, function (req, res, next) {
     boardStatus = JSON.parse(fs.readFileSync(boardFileName, 'utf8'));
 
   for (let id in mockGetStatus) {
+    if (!boardStatus[id]) {
+      boardStatus[id] = {};
+    }
     boardStatus[id] = mockGetStatus[id](boardStatus[id]);
   }
 
@@ -249,6 +273,11 @@ app.delete("/:fn", function (req, res, next) {
 
 
 // setup serving static files
+
+app.use(express.static(__dirname + '/' + useCase, {
+  index: false
+}));
+
 app.use(express.static(__dirname, {
   index: false
 }));
@@ -260,7 +289,7 @@ app.use(function (err, req, res, next) {
 });
 
 // // ----- enable 404 responses -----
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   logError(`could not find ${req.originalUrl}: 404`);
   res.status(404).send("Sorry cant find that!");
 });
