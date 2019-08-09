@@ -15,7 +15,11 @@
 
   <style>
     #panel {
-      background-color: #f8f8f8;
+      fill:none;
+      background-color: silver;
+      background-image: linear-gradient(to top, rgba(0,0,0,.2) 1px, transparent 1px),
+  linear-gradient(to left, rgba(0,0,0,.2) 1px, transparent 1px);
+  background-size: 72px 72px;
     }
 
     #panel #templates {
@@ -62,31 +66,22 @@
 <body>
   <div class="container">
     <div class="u-header">
-      <a href="/" title="Startpage" ><img class="icon" src="/favicon.svg" /></a>
+      <a href="/" title="Startpage" ><img class="icon" src="/i/device.svg" /></a>
       <h1>Panel</h1>
-      <a href="/ding-ide.htm" title="Start IDE"><img class="icon" src="/i/ide.svg" /><span class="hidden-xs">IDE</span></a>
-      <a href="/ding-info.htm" title="Start Config"><img class="icon" src="/i/config.svg" /><span class="hidden-xs">Config</span></a>
-      <a href="/ding-log.htm" title="Logfile"><img class="icon" src="/i/log.svg" /><span class="hidden-xs">Log</span></a>
     </div>
-    <div class="u-navbar hidden">
-      <button id="moveButton">move</button>
+    <div class="u-navbar">
+      <!-- <button id="moveButton">move</button> -->
     </div>
 
     <svg id="panel">
-      <defs>
-        <pattern id="Grid" height="72" width="72" patternUnits="userSpaceOnUse">
-          <path d="m0,0h8v1h-7v7h-1z" />
-        </pattern>
-      </defs>
-      <rect fill="url(#Grid)" height="100%" width="100%"></rect>
-  
+      <rect height="100%" width="100%"></rect>
         <g id="templates">
           <g dragabble="true" class="node">
             <rect width="64" height="64" rx="8"></rect>
             <image class="icon" x="16" y="4" width="32" height="32" xlink:href="/i/device.svg" />
             <text class="id" x="32" y="56" text-anchor="middle">subtitle</text>
-            <circle pin="in" cx="8" cy="36" r="6"></circle>
-            <circle pin="out" cx="56" cy="36" r="6"></circle>
+            <circle pin="in" cx="8" cy="36" r="5"></circle>
+            <circle pin="out" cx="56" cy="36" r="5"></circle>
           </g>
         </g>
         <g id="viewport">
@@ -97,8 +92,8 @@
 
     <script>
       var PANEL_GRIDSIZE = 72; // px
-      var PANEL_WIDTH = 12;
-      var PANEL_HEIGHT = 8;
+      var PANEL_WIDTH = 16;
+      var PANEL_HEIGHT = 12;
 
       var params = getHashParams({
         sys: false
@@ -296,7 +291,7 @@
             obj.querySelector('.icon').setAttribute("xlink:href", "/i/" + e.icon + ".svg");
           obj.querySelector('.id').firstChild.textContent = nodeId;
 
-          moveSVGGroup(obj, e.xPos * PANEL_GRIDSIZE, e.yPos * PANEL_GRIDSIZE);
+          moveSVGGroup(obj, e.xPos * PANEL_GRIDSIZE+4, e.yPos * PANEL_GRIDSIZE+4);
         } // for
       } // updateNodes()
 
@@ -360,11 +355,13 @@
         updateEdges();
       });
 
-      moveButtonObj.addEventListener("click", function () {
-        moveNodes();
-        updateNodes();
-        updateEdges();
-      })
+      if (moveButtonObj) {
+        moveButtonObj.addEventListener("click", function () {
+          moveNodes();
+          updateNodes();
+          updateEdges();
+        })
+      }
 
       panelObj.addEventListener("mousedown", function (evt) {
         if (!DragObj) {
