@@ -5,31 +5,26 @@
   "main": "server.js",
   "dependencies": {
     "debug": "^4.1.1",
-    "express": "^4.16.2",
-    "multer": "^1.4.1"
+    "express": "^4.17.1",
+    "multer": "^1.4.2"
   },
   "devDependencies": {
-    "concurrently": "^4.1.0",
+    "concurrently": "^4.1.1",
     "html-minifier": "^3.5.21",
-    "node-sass": "^4.10.0",
-    "uglify-js": "^3.4.9"
+    "node-sass": "^4.12.0",
+    "uglify-js": "^3.6.0"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-
     "build:css": "node-sass iotstyle.scss iotstyle.css --output-style compact",
     "build:css-watch": "npm run build:css -- -w",
-
+    "build:css-min": "node-sass iotstyle.scss iotstyle.min.css --output-style compressed",
     "build:ts": "tsc",
     "build:ts-watch": "tsc -w",
-
     "build": "npm run build:ts && npm run build:css",
     "build:watch": "concurrently \"tsc -w\" \"npm run build:css -- -w\"",
-    
     "prestart": "npm run build",
     "start": "node server.js",
-    
-    "css-min": "node-sass iotstyle.scss iotstyle.min.css --output-style compressed",
     "min-upload": "html-minifier --collapse-whitespace --remove-comments --minify-css true --minify-js true --quote-character ' upload.htm -o upload.min.htm",
     "min-setup": "html-minifier --collapse-whitespace --remove-comments --minify-css true --minify-js true --quote-character ' setup.htm -o setup.min.htm",
     "min-index": "html-minifier --collapse-whitespace --remove-comments --minify-css true --minify-js true --quote-character ' min-index.htm -o min-index.min.htm",

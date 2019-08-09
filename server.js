@@ -184,8 +184,39 @@ addElementMock('displaydot/b', function (state) {
 
 // ===== mocking switch elements
 
+if (configData.value) {
+  for (e in configData.value) {
+    const cnf = configData.value[e];
+    // set default value
+    if (!cnf.step)
+      cnf.step = 1;
+
+    // add get and set methods of state
+    addElementMock('value/' + e, function (state) {
+      if (!state) {
+        state = {
+          active: 1,
+          value: 0
+        };
+      }
+      return (state);
+    }, function (state, query) {
+      if (query.value != null)
+        state.value = query.value;
+      if (query.up != null)
+        state.value = Number(state.value) + Number(cnf.step) * Number(query.up);
+      if (query.down != null)
+        state.value = Number(state.value) - Number(cnf.step) * Number(query.down);
+      return (state);
+    });
+
+    logInfo(e);
+  }
+}
+
 if (configData.switch) {
   for (e in configData.switch) {
+    // add get and set methods of state
     addElementMock('switch/' + e, function (state) {
       if (!state) {
         state = {
@@ -201,8 +232,6 @@ if (configData.switch) {
         state.value = (state.value ? 0 : 1);
       return (state);
     });
-
-    logInfo(e);
   }
 }
 
