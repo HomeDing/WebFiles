@@ -56,10 +56,6 @@ class DisplayTextWidgetClass extends GenericWidgetClass {
         this._prefix = value;
       } else if (key === 'postfix') {
         this._postfix = value;
-
-
-      } else {
-        console.log("key", key, value);
       }
     }
   }

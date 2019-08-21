@@ -14,7 +14,7 @@ echo creating fresh folder...
 rd mindist /Q /S
 md mindist
 
-call npm run css-min
+call npm run build:css-min
 move iotstyle.min.css mindist\iotstyle.css
 
 call npm run min-micro
@@ -47,7 +47,10 @@ dir mindist /w
 
 rem https://docs.espressif.com/projects/esp-idf/en/latest/api-reference/storage/spiffs.html
 
-C:\Users\Matthias\AppData\Local\Arduino15\packages\esp8266\tools\mkspiffs\2.5.0-3-20ed2b9\mkspiffs.exe -c mindist -b 4096 -p 256 -s 0x10000 minspiffs.bin
+REM C:\Users\Matthias\AppData\Local\Arduino15\packages\esp8266\tools\mkspiffs\2.5.0-3-20ed2b9\mkspiffs.exe -c mindist -b 4096 -p 256 -s 0x10000 minspiffs.bin
+
+REM C:\Users\Matthias\AppData\Local\Arduino15\packages\esp8266\tools\mkspiffs\2.5.0-3-20ed2b9\mkspiffs.exe -i minspiffs.bin
+
 
 rem https://diyprojects.io/esp-easy-flash-firmware-esptool-py-esp8266/#.XJ5v9ndFyUk
 

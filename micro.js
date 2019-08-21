@@ -469,9 +469,6 @@ var DisplayTextWidgetClass = (function (_super) {
             else if (key === 'postfix') {
                 this._postfix = value;
             }
-            else {
-                console.log("key", key, value);
-            }
         }
     };
     DisplayTextWidgetClass = __decorate([
@@ -597,6 +594,118 @@ var PWMOutWidgetClass = (function (_super) {
         MicroControl("pwmout")
     ], PWMOutWidgetClass);
     return PWMOutWidgetClass;
+}(GenericWidgetClass));
+var SliderWidgetClass = (function (_super) {
+    __extends(SliderWidgetClass, _super);
+    function SliderWidgetClass() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this._handle = null;
+        _this._lastValue = -1;
+        _this._maxright = 100;
+        _this._x = 0;
+        _this._xOffset = 0;
+        _this.unit = 1;
+        _this.minvalue = 0;
+        _this.maxvalue = 255;
+        return _this;
+    }
+    SliderWidgetClass.prototype.connectedCallback = function (el) {
+        _super.prototype.connectedCallback.call(this, el);
+        if (this.el) {
+            this._handle = this.el.querySelector(".handle");
+            var p = this._handle.parentElement;
+            var ps = getComputedStyle(p);
+            this._maxright = p.clientWidth - this._handle.offsetWidth - parseFloat(ps.paddingLeft) - parseFloat(ps.paddingRight);
+        }
+    };
+    SliderWidgetClass.prototype._adjustHandle = function (val) {
+        if (this._handle) {
+            var left = val - this.minvalue;
+            left = Math.round(left * this._maxright / (this.maxvalue - this.minvalue));
+            left = Math.min(this._maxright, Math.max(0, left));
+            this._handle.style.left = left + "px";
+        }
+    };
+    SliderWidgetClass.prototype.newData = function (path, key, value) {
+        _super.prototype.newData.call(this, path, key, value);
+        if (key == 'value') {
+            var v = Number(value);
+            if (v != this._lastValue) {
+                this._adjustHandle(v);
+                this._lastValue = v;
+            }
+        }
+        else if (key == 'min') {
+            this.minvalue = Number(value);
+        }
+        else if (key == 'max') {
+            this.maxvalue = Number(value);
+        }
+        else if (key == 'step') {
+            this.unit = Number(value);
+        }
+    };
+    SliderWidgetClass.prototype.onclick = function (e) {
+        if (this.el) {
+            var src = e.srcElement;
+            while (src != null && src.classList.length == 0)
+                src = src.parentElement;
+            if (src != null) {
+                if (src.classList.contains('up')) {
+                    this.dispatchAction('up', '1');
+                }
+                else if (src.classList.contains('down')) {
+                    this.dispatchAction('down', '1');
+                }
+            }
+        }
+    };
+    SliderWidgetClass.prototype.onmousedown = function (evt) {
+        if (evt.target == this._handle) {
+            this.MoveStart(evt);
+        }
+    };
+    SliderWidgetClass.prototype.MoveStart = function (evt) {
+        this._xOffset = 0;
+        var obj = this._handle.offsetParent;
+        while (obj != null) {
+            this._xOffset += obj.offsetLeft;
+            obj = obj.offsetParent;
+        }
+        this._x = evt.clientX - (this._handle.offsetLeft + this._xOffset);
+        this._moveFunc = this._onmousemove.bind(this);
+        document.addEventListener('mousemove', this._moveFunc, false);
+        this._upFunc = this._onmouseup.bind(this);
+        document.addEventListener('mouseup', this._upFunc, false);
+        evt.cancelBubble = true;
+        evt.returnValue = false;
+    };
+    SliderWidgetClass.prototype._onmousemove = function (evt) {
+        var left = evt.clientX - this._x - this._xOffset;
+        left = Math.min(this._maxright, Math.max(0, left));
+        var val = Math.round(left * (this.maxvalue - this.minvalue) / this._maxright + this.minvalue);
+        val = Math.round(val / this.unit) * this.unit;
+        this._adjustHandle(val);
+        if (val != this._lastValue) {
+            this._lastValue = val;
+            this.dispatchAction('value', String(val));
+        }
+    };
+    SliderWidgetClass.prototype._onmouseup = function (evt) {
+        evt = evt || window.event;
+        document.removeEventListener("mousemove", this._moveFunc);
+        document.removeEventListener("mouseup", this._upFunc);
+    };
+    SliderWidgetClass.prototype.ontouchstart = function (evt) {
+        var t = evt.targetTouches[0].target;
+        if (t == this._handle) {
+            console.log('TouchStart');
+        }
+    };
+    SliderWidgetClass = __decorate([
+        MicroControl("slider")
+    ], SliderWidgetClass);
+    return SliderWidgetClass;
 }(GenericWidgetClass));
 var SwitchWidgetClass = (function (_super) {
     __extends(SwitchWidgetClass, _super);

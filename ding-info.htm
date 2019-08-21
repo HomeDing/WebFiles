@@ -210,13 +210,48 @@
         </div>
         <div class="block">
           <span class="u-bool ux-value" u-active="value"></span>
-          <div id="us" class="u-switch" u-active="value">
+          <div class="u-slider u-switch" u-active="value">
             <label value="0">off</label>
             <div class="box">
               <div class="handle"></div>
             </div>
             <label value="1">on</label>
           </div>
+        </div>
+      </div>
+
+      <div class="col card" u-control="value1" u-is="generic" microID="${id}">
+        <div class="block header">
+          <img src="/i/${type}.svg" class="icon" />
+          <h3>${id}</h3>
+          <h4 u-text="description"></h4>
+          <span class="activeState" u-active="active"></span>
+          <span class="setconfig"></span>
+        </div>
+        <div class="block">
+        </div>
+      </div>
+      
+      
+      <div class="col card" u-control="value" u-is="slider" microID="${id}">
+        <div class="block header">
+          <img src="/i/value.svg" class="icon" />
+          <h3>${id}</h3>
+          <h4 u-text="description"></h4>
+          <span class="activeState" u-active="active"></span>
+          <span class="setconfig"></span>
+        </div>
+        <div class="block">
+          <div class="form-group"><label>value:</label><span u-text="value"></span></div>
+          <div class="u-slider">
+            <label class="down"><img src="i/minus.svg"></label>
+            <div class="box"  style="width:240px">
+              <div class="handle"></div>
+            </div>
+            <label class="up"><img src="i/plus.svg"></label>
+          </div>
+        </div>
+        <div class="block config Element">
         </div>
       </div>
 

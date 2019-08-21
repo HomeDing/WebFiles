@@ -2,6 +2,9 @@ rem @echo off
 echo.
 echo copying all required files into the dist folder...
 
+rem build all files
+call npm run build
+
 rd dist /Q /S
 md dist
 
@@ -35,6 +38,8 @@ copy setup.htm dist
 copy iotstyle.css dist
 
 copy ding-*.htm dist
+copy ding-ide.js dist
+
 copy panel.* dist
 
 copy browserconfig.xml dist
@@ -47,6 +52,5 @@ rem // when using IDE:
 
 md dist\ft
 copy ft\*.svg dist\ft
-copy ding-ide.js dist
 
 echo done.

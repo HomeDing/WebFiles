@@ -1,0 +1,20 @@
+{
+  "device/0": { "active": "true", "name": "radioding", "description": "IoT Device with Radio and LCD", "nextboot": "28699" },
+  "ota/0": { "active": "true" },
+  "ssdp/0": { "active": "true" },
+  "displaylcd/0": { "active": "true" },
+  "rotary/0": { "active": "true", "value": "-2" },
+  "digitalin/0": { "active": "true", "value": "0" },
+  "value/volume": { "active": "true", "value": "1" },
+  "value/frequency": { "active": "true", "value": "8930" },
+  "switch/mono": { "active": "true", "value": "0" },
+  "switch/mute": { "active": "true", "value": "0" },
+  "switch/bassboost": { "active": "true", "value": "0" },
+  "menu/0": { "active": "true" },
+  "radio/r": { "active": "true", "frequency": "8930", "volume": "1", "stationname": "", "rdstext": "" },
+  "button/HR3": { "active": "true" },
+  "displaytext/f": { "active": "true", "value": "8930" },
+  "displaytext/v": { "active": "true", "value": "1" },
+  "displaytext/rssi": { "active": "true", "value": "31" },
+  "displaytext/text": { "active": "true", "value": "volume:1" }
+}

@@ -6,7 +6,7 @@
 /// <reference path="micro.ts" />
 /// <reference path="microControls.ts" />
 /// <reference path="GenericWidget.ts" />
-
+  
 @MicroControl("switch")
 class SwitchWidgetClass extends GenericWidgetClass {
   onclick(e: MouseEvent) {
