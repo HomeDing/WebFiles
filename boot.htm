@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Check</title>
+  <link href="/style/v0001/style.css" rel="stylesheet" type="text/css" />
+  <style>
+  #log p { font-family: 'Courier New', Courier, monospace; line-height: 1em; margin: 0}
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1>Check</h1>
+
+    <div class="row">
+      <button onclick="document.location.reload()">reload</button> &nbsp;
+      <button id="startIt">start it..</button> &nbsp;
+      <progress id="bar" value=0 max=1></progress>
+    </div>
+    <hr />
+    <div class="xrow" id="log">
+      <p>Log output</p>
+      <p>Log output</p>
+    </div>
+
+  </div>
+  <script>
+    var theRoot = 'https://homeding.github.io/v01/';
+    var theLog = document.querySelector('#log');
+    var theBar = document.querySelector('#bar');
+    var work = { status: 'start', list: null, files: 0, done: 0 };
+    var stepTimer = 0;
+
+    var bObj = document.querySelector('#startIt');
+
+    function logText(aText) {
+      var aLine = theLog.appendChild(document.createElement('p'));
+      aLine.innerText = aText;
+    } // logText
+
+    // fetch list of files
+    function stepStart() {
+      work.status = 'wait';
+
+      var oReq = new XMLHttpRequest();
+      oReq.open("GET", theRoot + 'list.txt', true);
+      oReq.responseType = "text";
+
+      oReq.onload = function (oEvent) {
+        var s = oReq.responseText.replace(/\r?\n/g, ';');
+        s = s.replace(/;$/, '');
+        work.list = s.split(';');
+        work.files = work.list.length;
+        work.status = 'run';
+        logText(s);
+      };
+      oReq.send(null);
+
+    } // stepStart()
+
+
+    // grab next file
+    function stepFile() {
+      work.status = 'wait';
+      var theItem = work.list.shift();
+
+      // set progress
+      work.done++;
+      theBar.max = work.files;
+      theBar.value = work.done;
+
+      var oReq = new XMLHttpRequest();
+      oReq.open("GET", theRoot + theItem, true);
+      oReq.responseType = "arraybuffer";
+
+      oReq.onerror = function (evt) {
+        // logText(evt);
+        logText(theItem + ": error: failed.");
+        work.status = 'run';
+      };
+
+      oReq.onload = function (oEvent) {
+        if (oReq.status != 200) {
+          logText(theItem + ": error: " + oReq.status);
+        } else {
+          var arrayBuffer = oReq.response; // Note: not oReq.responseText
+          if (arrayBuffer) {
+            // debugger;
+            // logText(theItem + ":" + arrayBuffer.byteLength);
+
+            var formData = new FormData();
+            formData.append('file', new Blob([arrayBuffer]), '/' + theItem);
+
+            var xmlHttp = new XMLHttpRequest();
+            xmlHttp.addEventListener('readystatechange', function (p) {
+              if ((xmlHttp.readyState == 4) && (xmlHttp.status >= 200) && (xmlHttp.status < 300)) {
+                logText(theItem + '(' + arrayBuffer.byteLength + ') done.');
+              }
+            });
+            xmlHttp.open('POST', '/');
+            xmlHttp.send(formData);
+
+          }
+        }
+        work.status = (work.list.length == 0 ? 'end' : 'run');
+      };
+      oReq.send(null);
+
+      if (work.list.length == 0)
+        work.status = 'end';
+    } // stepFile()
+
+
+    function step() {
+      if (work.status == 'start') {
+        // fetch file list;
+        stepStart();
+      } else if (work.status == 'run') {
+        stepFile();
+      } else if (work.status == 'end') {
+        if (stepTimer) {
+          window.clearInterval(stepTimer);
+        }
+        stepTimer = 0;
+      }
+    }
+
+    bObj.addEventListener('click', function () {
+      stepTimer = window.setInterval(step, 330);
+    });
+  </script>
+</body>
+
+</html>
