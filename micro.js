@@ -376,7 +376,7 @@ var DisplayDotWidgetClass = (function (_super) {
     }
     DisplayDotWidgetClass.prototype.connectedCallback = function (el) {
         _super.prototype.connectedCallback.call(this, el);
-        this._dispElem = document.getElementById("display");
+        this._dispElem = document.querySelector("#panel .display");
         hub.subscribe(this.microid + "?*", this.newValue.bind(this), true);
     };
     DisplayDotWidgetClass.prototype.updateDisp = function (create) {
@@ -434,7 +434,7 @@ var DisplayTextWidgetClass = (function (_super) {
     }
     DisplayTextWidgetClass.prototype.connectedCallback = function (el) {
         _super.prototype.connectedCallback.call(this, el);
-        this._dispElem = document.getElementById('display');
+        this._dispElem = document.querySelector("#panel .display");
         if (this._dispElem) {
             if (this._dispElem.getAttribute('grid'))
                 this._dispGrid = Number(this._dispElem.getAttribute('grid'));
