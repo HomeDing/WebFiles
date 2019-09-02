@@ -12,7 +12,7 @@ logError.log = console.error.bind(console);
 const debugSend = require("debug")("iot:send");
 
 // a prefix can be added to the files config.json, env.json and $board 
-const useCase = 'radio/';
+const useCase = 'b-ntp/';
 const boardFileName = useCase + '$board';
 
 
@@ -71,12 +71,26 @@ app.get("/", function (req, res, next) {
 // npm i multer --save
 
 const multer = require('multer');
-const upload = multer({ dest: 'uploads/' })
+
+// ----- upload -----
+
+// configure upload storage to save in /uploads and use the filename+date
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, './uploads/')
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.originalname + '-' + Date.now())
+  }
+})
+ 
+const upload = multer({ storage: storage, preservePath:true });
 
 // set up the router required to hook up our service to the portal
 const apiRouter = express.Router();
 
 // test uploading files, use a file upload folder to avoid overwriting local files
+// 
 app.post('/', upload.any(), function (req, res) {
   req.files;
   req.originalUrl;
@@ -166,6 +180,11 @@ function addElementMock(id, fGet, fSet) {
 
 
 addElementMock('dstime/0', function (state) {
+  state.now = isoDate();
+  return (state);
+}, null);
+
+addElementMock('ntptime/on', function (state) {
   state.now = isoDate();
   return (state);
 }, null);
@@ -276,10 +295,14 @@ app.get(/^\/\$board$/, noCache, function (req, res, next) {
     boardStatus = JSON.parse(fs.readFileSync(boardFileName, 'utf8'));
 
   for (let id in mockGetStatus) {
-    if (!boardStatus[id]) {
-      boardStatus[id] = {};
+    // if (!boardStatus[id]) {
+    //   boardStatus[id] = {};
+    // }
+    // boardStatus[id] = mockGetStatus[id](boardStatus[id]);
+    // update mock status when element is known.
+    if (boardStatus[id]) {
+      boardStatus[id] = mockGetStatus[id](boardStatus[id]);
     }
-    boardStatus[id] = mockGetStatus[id](boardStatus[id]);
   }
 
   // debugIoT(boardStatus);
