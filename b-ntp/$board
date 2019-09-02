@@ -1,0 +1,10 @@
+{"device/0": {"active":"true","name":"ntpdevice","description":"HomeDing on WiFi Kit 8","nextboot":"1044"},
+"ota/0": {"active":"true"},
+"ntptime/on": {"active":"true","now":"2019-08-29 16:52:55"},
+"ssdp/0": {"active":"true"},
+"DisplaySSD1306/0": {"active":"true"},
+"displaytext/date": {"active":"true","value":"2019-08-29"},
+"displaytext/time": {"active":"true","value":"16:52:55"},
+"time/on": {"active":"true"},
+"displaydot/b": {"active":"true","value":"0"},
+"schedule/0": {"active":"true","value":"0"}}

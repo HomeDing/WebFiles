@@ -1,0 +1,38 @@
+{
+  "displaytext": {
+    "date": {
+      "type": "TEXT",
+      "x": 0,
+      "y": 0,
+      "description": "show the date."
+    },
+    "time": {
+      "type": "TEXT",
+      "x": 0,
+      "y": 16,
+      "fontsize": 16,
+      "description": "show the time"
+    }
+  },
+  "time": {
+    "on": {
+      "ondate": "displaytext/date?value=$v",
+      "ontime": "displaytext/time?value=$v"
+    }
+  },
+  "displaydot": {
+    "b": {
+      "x": 110,
+      "y": 8,
+      "description": "Display a bink"
+    }
+  },
+  "schedule": {
+    "0": {
+      "onTime": "22:05:00",
+      "offTime": "22:05:30",
+      "onon": "device/0?log=switch on,displaydot/b?value=1",
+      "onoff": "device/0?log=switch off,displaydot/b?value=0"
+    }
+  }
+}
