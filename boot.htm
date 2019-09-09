@@ -2,47 +2,38 @@
 <html lang="en">
 
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Check</title>
-  <link href="/style/v0001/style.css" rel="stylesheet" type="text/css" />
-  <style>
-  #log p { font-family: 'Courier New', Courier, monospace; line-height: 1em; margin: 0}
-  </style>
+  <title>Bootstrap</title>
 </head>
 
 <body>
-  <div class="container">
-    <h1>Check</h1>
-
-    <div class="row">
-      <button onclick="document.location.reload()">reload</button> &nbsp;
-      <button id="startIt">start it..</button> &nbsp;
-      <progress id="bar" value=0 max=1></progress>
-    </div>
-    <hr />
-    <div class="xrow" id="log">
-      <p>Log output</p>
-      <p>Log output</p>
-    </div>
-
-  </div>
+  <h1>Bootstrap</h1>
+  <table>
+    <tr>
+      <td rowspan="2"><button id="startIt">start it..</button></td>
+      <td><progress id="bar" value=0 max=1></progress></td>
+    </tr>
+    <tr><td id='info'>&nbsp;</td></tr>
+  </table>
   <script>
-    var theRoot = 'https://homeding.github.io/v01/';
-    var theLog = document.querySelector('#log');
+    var theRoot = 'https://homeding.github.io/';
+    var bObj = document.querySelector('#startIt');
     var theBar = document.querySelector('#bar');
+    var theInfo = document.querySelector('#info');
     var work = { status: 'start', list: null, files: 0, done: 0 };
     var stepTimer = 0;
 
-    var bObj = document.querySelector('#startIt');
+    if (location.hash) {
+      theRoot += location.hash.substr(1) + '/';
+    } else {
+      theRoot += 'v01/';
+    }
 
     function logText(aText) {
-      var aLine = theLog.appendChild(document.createElement('p'));
-      aLine.innerText = aText;
+      theInfo.innerText = aText;
     } // logText
 
     // fetch list of files
-    function stepStart() {
+    function doStart() {
       work.status = 'wait';
 
       var oReq = new XMLHttpRequest();
@@ -55,15 +46,13 @@
         work.list = s.split(';');
         work.files = work.list.length;
         work.status = 'run';
-        logText(s);
       };
       oReq.send(null);
-
-    } // stepStart()
+    } // doStart()
 
 
     // grab next file
-    function stepFile() {
+    function doFile() {
       work.status = 'wait';
       var theItem = work.list.shift();
 
@@ -77,7 +66,6 @@
       oReq.responseType = "arraybuffer";
 
       oReq.onerror = function (evt) {
-        // logText(evt);
         logText(theItem + ": error: failed.");
         work.status = 'run';
       };
@@ -88,16 +76,13 @@
         } else {
           var arrayBuffer = oReq.response; // Note: not oReq.responseText
           if (arrayBuffer) {
-            // debugger;
-            // logText(theItem + ":" + arrayBuffer.byteLength);
-
             var formData = new FormData();
             formData.append('file', new Blob([arrayBuffer]), '/' + theItem);
 
             var xmlHttp = new XMLHttpRequest();
             xmlHttp.addEventListener('readystatechange', function (p) {
               if ((xmlHttp.readyState == 4) && (xmlHttp.status >= 200) && (xmlHttp.status < 300)) {
-                logText(theItem + '(' + arrayBuffer.byteLength + ') done.');
+                logText(theItem + '(' + arrayBuffer.byteLength + ')');
               }
             });
             xmlHttp.open('POST', '/');
@@ -111,18 +96,20 @@
 
       if (work.list.length == 0)
         work.status = 'end';
-    } // stepFile()
+    } // doFile()
 
 
     function step() {
       if (work.status == 'start') {
         // fetch file list;
-        stepStart();
+        doStart();
       } else if (work.status == 'run') {
-        stepFile();
+        doFile();
       } else if (work.status == 'end') {
         if (stepTimer) {
           window.clearInterval(stepTimer);
+          logText('done');
+          window.location.href = '/';
         }
         stepTimer = 0;
       }

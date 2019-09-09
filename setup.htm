@@ -2,127 +2,83 @@
 <html lang="en">
 
 <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>HomeDing Connect</title>
-  <link Content-Type="text/css" href="iotstyle.css" rel="stylesheet" />
+  <title>HomeDing Setup</title>
+</head>
+
+<body>
+  <h1>HomeDing Setup</h1>
+  <h2>Connect to network</h2>
+  <table>
+    <tr>
+      <td>Network:</td>
+      <td><select id="conNetworks" style="width:18em"></select></td>
+    </tr>
+    <tr>
+      <td>Passphrase:</td>
+      <td><input id="conPass" style="width:18em"></input></td>
+    </tr>
+  </table>
+  <button id="connectPass">Connect</button>
   <script>
-    function loadAsync(url, mime, loadCallback, errorCallback) {
+    var scanDone = 2;
+    var checkTimer = 0;
+    var selObj = document.getElementById("conNetworks");
+
+    function load(url, loadCallback) {
       var objHTTP = new XMLHttpRequest(); // new ActiveXObject("MSXML2.XMLHTTP");
       objHTTP.open("GET", url, true);
-      if (mime) objHTTP.overrideMimeType(mime);
       objHTTP.addEventListener("readystatechange", function (p) {
         if (objHTTP.readyState == 4) {
           if ((objHTTP.status >= 200) && (objHTTP.status < 300)) {
             loadCallback(objHTTP.responseText);
-          } else {
-            if (errorCallback) errorCallback(this);
           } // if
         } // if
       });
       objHTTP.send();
-    } // loadAsync()
-  </script>
-</head>
+    } // load()
 
-<body>
-  <div class="container">
-    <div class="u-header">
-      <a href="/" title="Startpage"><img class="icon" src="/i/device.svg" /></a>
-      <h1>HomeDing Connect</h1>
-    </div>
+    function startScan() {
+      if (scanDone == 2) {
+        selObj.innerHTML = "<option selected disabled>scanning...</option>";
+        scanDone = 0;
+        if (!checkTimer)
+          checkTimer = window.setInterval(checkScan, 200);
+      }
+    } // startScan()
 
-    <div class="u-navbar">
-    </div>
-
-
-    <div class="row wrap">
-
-      <div class="col card">
-        <div class="block header">
-          <h2>Connect with passphrase</h2>
-        </div>
-        <div class="block">
-          <div class="form-group">
-            <label>Networks:</label>
-            <select id="conNetworks" style="width:18em"></select></div>
-        </div>
-        <div class="block">
-          <div class="form-group">
-            <label>Passphrase:</label>
-            <input id="conPass" style="width:18em"></input>
-          </div>
-        </div>
-        <div class="block">
-          <button id="reScan" class="secondary">re-scan</button>
-
-          <button id="connectPass" style="float:right">Connect</button>
-        </div>
-      </div>
-
-      <!-- <div class="col card">
-        <div class="block header">
-          <h2>Connect with WPS</h2>
-        </div>
-        <div class="block">
-          <p>Press the WPS button on the WiFi Router and then start connecting.</p>
-        </div>
-        <div class="block">
-          <button style="float:right">Connect</button>
-        </div>
-      </div> -->
-    </div>
-    <script>
-      var scanDone = 2;
-      var checkTimer = 0;
-
-      function startScan() {
-        if (scanDone == 2) {
-          document.getElementById("conNetworks").innerHTML = "<option selected disabled>scanning...</option>";
-          scanDone = 0;
-          if (!checkTimer)
-            checkTimer = window.setInterval(checkScan, 200);
+    function checkScan() {
+      load('/$scan', function (txt) {
+        if (txt.length > 0) {
+          scanDone = 2;
+          scanResult(JSON.parse(txt));
         }
-      } // startScan()
-
-      function checkScan() {
-        loadAsync('/$scan', null, function (txt) {
-          if (txt.length > 0) {
-            scanDone = 2;
-            scanResult(JSON.parse(txt));
-          }
-        }, null);
-      } // checkScan()
-
-      function scanResult(netList) {
-        window.clearInterval(checkTimer);
-        checkTimer = 0;
-
-        var selObj = document.getElementById("conNetworks");
-        selObj.innerHTML = "";
-
-        var o = document.createElement('option');
-        o.value = 0;
-        o.text = "select...";
-        o.disabled = true;
-        selObj.options.add(o);
-
-        netList.forEach(function (n) {
-          var o = document.createElement('option');
-          o.value = o.text = n.id;
-          selObj.options.add(o);
-        });
-      } // scanResult()
-
-      // connect using network name and password
-      document.getElementById("connectPass").addEventListener("click", function () {
-        var n = document.getElementById("conNetworks").value;
-        var p = document.getElementById("conPass").value;
-        fetch('/$connect?n=' + n + '&p=' + p);
       });
+    } // checkScan()
 
-      document.getElementById("reScan").addEventListener("click", startScan);
+    function scanResult(netList) {
+      window.clearInterval(checkTimer);
+      checkTimer = 0;
 
-      startScan();
-    </script>
-  </div>
+      selObj.innerHTML = "";
+
+      var o = document.createElement('option');
+      o.value = 0;
+      o.text = "select...";
+      o.disabled = true;
+      selObj.options.add(o);
+
+      netList.forEach(function (n) {
+        var o = document.createElement('option');
+        o.value = o.text = n.id;
+        selObj.options.add(o);
+      });
+    } // scanResult()
+
+    // connect using network name and password
+    document.getElementById("connectPass").addEventListener("click", function () {
+      load('/$connect?n=' + selObj.value + '&p=' + document.getElementById("conPass").value,
+      function () {});
+    });
+    startScan();
+  </script>
 </body>
