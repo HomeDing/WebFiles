@@ -19,7 +19,7 @@ class DisplayDotWidgetClass extends GenericWidgetClass {
   connectedCallback(el: HTMLElement) {
     super.connectedCallback(el);
 
-    this._dispElem = document.getElementById("display");
+    this._dispElem = document.querySelector("#panel .display");
     hub.subscribe(this.microid + "?*", this.newValue.bind(this), true);
   } // connectedCallback
 

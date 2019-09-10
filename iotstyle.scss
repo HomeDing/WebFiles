@@ -69,22 +69,19 @@ h4 {
   }
 }
 
-a {
+a,
+a:visited {
   text-decoration: none;
   cursor: pointer;
-}
-
-a:visited {
   color: $u-primary;
-}
+  > a {
+    text-decoration: underline;
+  }
 
-p > a {
-  text-decoration: underline;
-}
-
-a:hover,
-a:focus {
-  color: $u-focus;
+  & :hover,
+  & :focus {
+    color: $u-focus;
+  }
 }
 
 h1,

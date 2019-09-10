@@ -133,7 +133,7 @@ var MicroRegistry = (function () {
     MicroRegistry.prototype.insertTemplate = function (root, controlName, props) {
         var e = null;
         if (root && controlName && this._tco) {
-            var te = this._tco.querySelector('[u-control="' + controlName + '"]');
+            var te = this._tco.querySelector('[u-control="' + controlName.toLowerCase() + '"]');
             if (te)
                 e = te.cloneNode(true);
             if (e) {

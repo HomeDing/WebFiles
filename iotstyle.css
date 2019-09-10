@@ -10,9 +10,7 @@ p > img, pre > img, h1 > img, h2 > img, h3 > img, h4 > img { height: 1em; }
 
 p > img:first-child, pre > img:first-child, h1 > img:first-child, h2 > img:first-child, h3 > img:first-child, h4 > img:first-child { margin-right: 0.2em; }
 
-a { text-decoration: none; cursor: pointer; }
-
-a:visited { color: #304878; }
+a, a:visited, a:hover { text-decoration: none; cursor: pointer; color: #304878; }
 
 p > a { text-decoration: underline; }
 

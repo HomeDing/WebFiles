@@ -135,7 +135,7 @@ class MicroRegistry {
   insertTemplate(root: HTMLElement, controlName: string, props: Object): HTMLElement | null {
     var e = null;
     if (root && controlName && this._tco) {
-      var te = this._tco.querySelector('[u-control="' + controlName + '"]');
+      var te = this._tco.querySelector('[u-control="' + controlName.toLowerCase() + '"]');
       if (te) e = te.cloneNode(true) as HTMLElement;
       if (e) {
         this._setPlaceholders(e, props);

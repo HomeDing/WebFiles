@@ -19,7 +19,7 @@ class DisplayTextWidgetClass extends GenericWidgetClass {
   connectedCallback(el: HTMLElement) {
     super.connectedCallback(el);
 
-    this._dispElem = document.getElementById('display');
+    this._dispElem = document.querySelector("#panel .display");
     if (this._dispElem) {
       if (this._dispElem.getAttribute('grid'))
         this._dispGrid = Number(this._dispElem.getAttribute('grid'));
