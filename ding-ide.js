@@ -185,8 +185,8 @@ function handleFmt() {
     try {
       o = JSON.parse(t);
       if (o && typeof o === "object")
-      contentObj.innerText = JSON.stringify(o, null, 2);
-    } finally {}// try
+        contentObj.innerText = JSON.stringify(o, null, 2);
+    } finally { }// try
   }
 } // handleSave()
 
@@ -243,8 +243,10 @@ function jsonCheck() {
     }
 
   } else {
-    var t = contentObj.innerText;
     var o = null;
+    var t = contentObj.innerText;
+    if (t.indexOf('\xA0') >= 0)
+      contentObj.innerText = t = t.replace(/\u00A0/g, ' ');
 
     try {
       o = JSON.parse(t);
