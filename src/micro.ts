@@ -180,8 +180,11 @@ class MicroRegistry {
       } // for
 
       (<MicroControlClass>o)._attachedBehavior = behavior;
-      (<MicroControlClass>o).connectedCallback(obj);
-      this.List.push(obj);
+      if (obj.parentElement !== this._tco) {
+        // call connectedCallback only if not a template
+        (<MicroControlClass>o).connectedCallback(obj);
+        this.List.push(obj);
+      }
     } // if
   } // loadBehavior
 
