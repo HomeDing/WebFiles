@@ -11,8 +11,8 @@ class GenericWidgetClass extends MicroControlClass {
   data: any = {};
   subId: number = 0;
 
-  connectedCallback(el: HTMLElement) {
-    super.connectedCallback(el);
+  connectedCallback() {
+    super.connectedCallback();
     this.data = { id: this.microid };
     this.subId = hub.subscribe(this.microid + '?*', this.newData.bind(this));
     hub.replay(this.subId);
@@ -88,7 +88,8 @@ class GenericWidgetClass extends MicroControlClass {
     if (src && a) this.dispatchAction(a, (<any>src)['value']);
 
     if (this.el && src.classList.contains('setconfig')) {
-      this.el.classList.toggle('configmode');
+      (<any>window).openModal('configelementdlg', this.data);
+
     }
   }
 } // GenericWidgetClass

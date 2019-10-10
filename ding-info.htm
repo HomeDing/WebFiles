@@ -69,33 +69,25 @@
       opacity: 1;
     }
 
-    .modalClose {
+    .closedlg {
       position: absolute;
       top: 0.4rem;
       right: 0.4rem;
       height: 1.8rem;
       width: 1.8rem;
       font-size: 1.6rem;
+      background-color: red;
+      text-align: center;
     }
+
+    <div onclick="closeModal()" style="position:absolute;background-color: cyan;padding:1rem">X</div>
+    <div class="closedlg" onclick='closeModal()' style="background-color: red;text-align: center">&#x00D7;</div>
+
 
     img,
     #panel {
       user-select: none;
       -ms-user-select: none;
-    }
-
-    div[u-control] div.block.config {
-      background-color: yellow;
-      display: none;
-    }
-
-    div[u-control].configmode div.block {
-      display: none;
-    }
-
-    div[u-control].configmode div.block.config,
-    div[u-control].configmode div.block.header {
-      display: block;
     }
   </style>
   <script src="polyfill.js"></script>
@@ -133,9 +125,6 @@
         <div class="block">
           <div class="form-group"><label>Value:</label><span u-text="value"></span></div>
         </div>
-        <div class="block config Element">
-          <div class="form-group"><label>loglevel:</label><input u-value="loglevel" /></div>
-        </div>
       </div>
 
       <div u-control="kv" class="form-group KV"><label>${key}:</label><span u-text="${key}"></span></div>
@@ -160,17 +149,6 @@
           </div>
           <span class="u-bool ux-value" u-active="value"></span>
         </div>
-
-        <div class="block config Element">
-          <div class="form-group">
-            <label>Start:</label>
-            <input u-value="ontime" type="time" step="60" class="text-right" style="width:6em;padding-right:0.2em" />
-          </div>
-          <div class="form-group">
-            <label>End:</label>
-            <input u-value="offtime" type="time" step="60" class="text-right" style="width:6em;padding-right:0.2em" />
-          </div>
-        </div>
       </div>
 
       <div class="col card" u-control="dstime" id="${id}" u-is="dstime" microID="${id}">
@@ -190,8 +168,6 @@
             <label>Now:</label>
             <span u-text="now"></span>
           </div>
-        </div>
-        <div class="block config">
           <div class="form-group">
             <label>set Time:</label>
             <span class="now"></span>
@@ -251,8 +227,6 @@
             <label class="up"><img src="i/plus.svg"></label>
           </div>
         </div>
-        <div class="block config Element">
-        </div>
       </div>
 
       <div class="col card" u-control="and" id="${id}" u-is="generic" microID="${id}">
@@ -275,7 +249,7 @@
 
   <div id="modal" class="hidden">
     <div id="modalBack"></div>
-    <div onclick="closeModal()" style="position:absolute;background-color: cyan;padding:1rem">X</div>
+    <div class="closedlg" onclick="closeModal()">&#x00D7;</div>
     <div id="modalContainer" style="width:260px;height:260px">Hello, this is modal</div>
   </div>
 
@@ -284,6 +258,7 @@
     var addObj = document.getElementById('addButton');
     var sysObj = document.getElementById('sysButton');
     var updateTimer;
+    var modalParams = null;
 
     var elementDef;
     var params = getHashParams({
@@ -297,15 +272,18 @@
       var modalObj = document.getElementById('modal');
       var containerObj = document.getElementById('modalContainer');
 
+      modalParams = data;
+
       // open Dialog, replace existing.
       containerObj.innerHTML = '';
-      var dlgObj /*:HTMLDivElement*/ = micro.insertTemplate(containerObj, tmplName);
+      /** @type HTMLDivElement */
+      var dlgObj = micro.insertTemplate(containerObj, tmplName, data);
       modalObj.classList.remove('hidden');
       containerObj.style.width = dlgObj.scrollWidth + 'px';
       containerObj.style.height = dlgObj.scrollHeight + 'px';
     } // openModal
 
-    function closeModal(data) {
+    function closeModal() {
       var modalObj = document.getElementById('modal');
       var containerObj = document.getElementById('modalContainer');
       modalObj.classList.add('hidden');
@@ -318,7 +296,7 @@
     });
 
     addObj.addEventListener('click', function (evt) {
-      openModal('modalNewElement');
+      openModal('newelementdlg');
     });
 
     function createElement(path, key, value) {
@@ -423,7 +401,7 @@
 
     window.addEventListener('load', init);
 
-    window.addEventListener('error', function (err) {
+    window.addEventListener('xerror', function (err) {
       alert(err);
     })
   </script>

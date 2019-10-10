@@ -16,8 +16,8 @@ class DisplayTextWidgetClass extends GenericWidgetClass {
   _prefix = '';
   _postfix = '';
 
-  connectedCallback(el: HTMLElement) {
-    super.connectedCallback(el);
+  connectedCallback() {
+    super.connectedCallback();
 
     this._dispElem = document.querySelector("#panel .display");
     if (this._dispElem) {

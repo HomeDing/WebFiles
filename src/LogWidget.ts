@@ -14,27 +14,29 @@ class LogWidgetClass extends GenericWidgetClass {
   linesApi: any;
   lChart: any;
 
-  connectedCallback(el: HTMLElement) {
-    super.connectedCallback(el);
-    this.lineSVGObj = el.querySelector('object');
-    hub.subscribe(this.microid + '?*', this.newValue.bind(this), true);
+  connectedCallback() {
+    super.connectedCallback();
+    if (this.el) {
+      this.lineSVGObj = this.el.querySelector('object');
+      hub.subscribe(this.microid + '?*', this.newValue.bind(this), true);
+    }
   }
 
   loadData() {
     fetch(this.filename as string)
-      .then(function(result) {
+      .then(function (result) {
         return result.text();
       })
       .then(
-        function(this: LogWidgetClass, pmValues: string) {
+        function (this: LogWidgetClass, pmValues: string) {
           var re = /^\d{2,},\d+/;
-          var pmArray = pmValues.split('\n').filter(function(e) {
+          var pmArray = pmValues.split('\n').filter(function (e) {
             return e.match(re);
           });
 
           this.linesApi.updateLineChartData(
             this.lChart,
-            pmArray.map(function(v) {
+            pmArray.map(function (v) {
               var p = v.split(',');
               return { x: p[0], y: p[1] };
             })

@@ -31,8 +31,8 @@ function MicroControl(isSelector: string) {
 class MicroControlClass implements ControlInterface {
   el: HTMLElement | undefined;
   _attachedBehavior: ControlInterface | undefined;
-  connectedCallback(el: HTMLElement): void {
-    this.el = el;
+  connectedCallback(): void {
+    this.el = <HTMLElement><any>this;
   }
 } // class MicroControlClass
 

@@ -14,7 +14,11 @@ class SwitchWidgetClass extends GenericWidgetClass {
       var o: HTMLElement = <HTMLElement>this.el.querySelector(".u-switch");
       var src: HTMLElement | null = e.srcElement as HTMLElement;
       while (src != null && src != this.el && src != o) src = src.parentElement;
-      if (src == o) this.dispatchAction('toggle', '1');
+      if (src == o) {
+        this.dispatchAction('toggle', '1');
+      } else {
+        super.onclick(e);
+      }
     }
   }
 }

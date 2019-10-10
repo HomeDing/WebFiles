@@ -175,8 +175,10 @@ var MicroRegistry = (function () {
                 }
             }
             o._attachedBehavior = behavior;
-            o.connectedCallback(obj);
-            this.List.push(obj);
+            if (obj.parentElement !== this._tco) {
+                o.connectedCallback();
+                this.List.push(obj);
+            }
         }
     };
     MicroRegistry.prototype.define = function (name, mixin) {
@@ -217,8 +219,8 @@ function MicroControl(isSelector) {
 var MicroControlClass = (function () {
     function MicroControlClass() {
     }
-    MicroControlClass.prototype.connectedCallback = function (el) {
-        this.el = el;
+    MicroControlClass.prototype.connectedCallback = function () {
+        this.el = this;
     };
     return MicroControlClass;
 }());
@@ -231,8 +233,8 @@ var GenericWidgetClass = (function (_super) {
         _this.subId = 0;
         return _this;
     }
-    GenericWidgetClass.prototype.connectedCallback = function (el) {
-        _super.prototype.connectedCallback.call(this, el);
+    GenericWidgetClass.prototype.connectedCallback = function () {
+        _super.prototype.connectedCallback.call(this);
         this.data = { id: this.microid };
         this.subId = hub.subscribe(this.microid + '?*', this.newData.bind(this));
         hub.replay(this.subId);
@@ -292,7 +294,7 @@ var GenericWidgetClass = (function (_super) {
         if (src && a)
             this.dispatchAction(a, src['value']);
         if (this.el && src.classList.contains('setconfig')) {
-            this.el.classList.toggle('configmode');
+            window.openModal('configelementdlg', this.data);
         }
     };
     GenericWidgetClass = __decorate([
@@ -339,14 +341,16 @@ var DSTimeWidgetClass = (function (_super) {
             ' ' + pad02(d.getHours()) + ':' + pad02(d.getMinutes()) + ':' + pad02(d.getSeconds());
         return (ds);
     };
-    DSTimeWidgetClass.prototype.connectedCallback = function (el) {
-        _super.prototype.connectedCallback.call(this, el);
-        this._nowObj = el.querySelector(".setnow");
-        window.setInterval(function () {
-            if (this._nowObj) {
-                setTextContent(this._nowObj, this.isoDate());
-            }
-        }.bind(this), 200);
+    DSTimeWidgetClass.prototype.connectedCallback = function () {
+        _super.prototype.connectedCallback.call(this);
+        if (this.el) {
+            this._nowObj = this.el.querySelector(".setnow");
+            window.setInterval(function () {
+                if (this._nowObj) {
+                    setTextContent(this._nowObj, this.isoDate());
+                }
+            }.bind(this), 200);
+        }
     };
     DSTimeWidgetClass.prototype.onclick = function (e) {
         var src = e.target;
@@ -374,8 +378,8 @@ var DisplayDotWidgetClass = (function (_super) {
         _this._value = false;
         return _this;
     }
-    DisplayDotWidgetClass.prototype.connectedCallback = function (el) {
-        _super.prototype.connectedCallback.call(this, el);
+    DisplayDotWidgetClass.prototype.connectedCallback = function () {
+        _super.prototype.connectedCallback.call(this);
         this._dispElem = document.querySelector("#panel .display");
         hub.subscribe(this.microid + "?*", this.newValue.bind(this), true);
     };
@@ -432,8 +436,8 @@ var DisplayTextWidgetClass = (function (_super) {
         _this._postfix = '';
         return _this;
     }
-    DisplayTextWidgetClass.prototype.connectedCallback = function (el) {
-        _super.prototype.connectedCallback.call(this, el);
+    DisplayTextWidgetClass.prototype.connectedCallback = function () {
+        _super.prototype.connectedCallback.call(this);
         this._dispElem = document.querySelector("#panel .display");
         if (this._dispElem) {
             if (this._dispElem.getAttribute('grid'))
@@ -503,7 +507,11 @@ function jsonFind(obj, path) {
     }
     var steps = path.split('/');
     while (obj && steps.length > 0) {
-        obj = obj[steps[0]];
+        var p = steps[0];
+        if (!obj[p]) {
+            obj[p] = {};
+        }
+        obj = obj[p];
         steps.shift();
     }
     return obj;
@@ -516,10 +524,12 @@ var LogWidgetClass = (function (_super) {
         _this.lineSVGObj = null;
         return _this;
     }
-    LogWidgetClass.prototype.connectedCallback = function (el) {
-        _super.prototype.connectedCallback.call(this, el);
-        this.lineSVGObj = el.querySelector('object');
-        hub.subscribe(this.microid + '?*', this.newValue.bind(this), true);
+    LogWidgetClass.prototype.connectedCallback = function () {
+        _super.prototype.connectedCallback.call(this);
+        if (this.el) {
+            this.lineSVGObj = this.el.querySelector('object');
+            hub.subscribe(this.microid + '?*', this.newValue.bind(this), true);
+        }
     };
     LogWidgetClass.prototype.loadData = function () {
         fetch(this.filename)
@@ -568,8 +578,8 @@ var PWMOutWidgetClass = (function (_super) {
         _this.lastValue = null;
         return _this;
     }
-    PWMOutWidgetClass.prototype.connectedCallback = function (el) {
-        _super.prototype.connectedCallback.call(this, el);
+    PWMOutWidgetClass.prototype.connectedCallback = function () {
+        _super.prototype.connectedCallback.call(this);
         hub.subscribe(this.microid + "?*", this.newValue.bind(this));
     };
     PWMOutWidgetClass.prototype.newValue = function (_path, key, value) {
@@ -609,8 +619,8 @@ var SliderWidgetClass = (function (_super) {
         _this.maxvalue = 255;
         return _this;
     }
-    SliderWidgetClass.prototype.connectedCallback = function (el) {
-        _super.prototype.connectedCallback.call(this, el);
+    SliderWidgetClass.prototype.connectedCallback = function () {
+        _super.prototype.connectedCallback.call(this);
         if (this.el) {
             this._handle = this.el.querySelector(".handle");
             var p = this._handle.parentElement;
@@ -656,6 +666,9 @@ var SliderWidgetClass = (function (_super) {
                 }
                 else if (src.classList.contains('down')) {
                     this.dispatchAction('down', '1');
+                }
+                else {
+                    _super.prototype.onclick.call(this, e);
                 }
             }
         }
@@ -718,8 +731,12 @@ var SwitchWidgetClass = (function (_super) {
             var src = e.srcElement;
             while (src != null && src != this.el && src != o)
                 src = src.parentElement;
-            if (src == o)
+            if (src == o) {
                 this.dispatchAction('toggle', '1');
+            }
+            else {
+                _super.prototype.onclick.call(this, e);
+            }
         }
     };
     SwitchWidgetClass = __decorate([
@@ -746,7 +763,12 @@ function changeConfig(id, newConfig) {
     var c = JSON.parse(hub.read('config'));
     var node = jsonFind(c, id);
     for (var n in newConfig) {
-        node[n] = newConfig[n];
+        if (newConfig[n]) {
+            node[n] = newConfig[n];
+        }
+        else {
+            delete node[n];
+        }
     }
     upload('/config.json', JSON.stringify(c));
 }

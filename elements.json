@@ -78,7 +78,7 @@
   },
 
   "value": {
-    "properties": ["loglevel", "description", "min", "max"],
+    "properties": ["loglevel", "description", "value", "min", "max"],
     "events": ["value", "up", "down"],
     "actions": ["onChange"]
   },

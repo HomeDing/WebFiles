@@ -70,8 +70,11 @@
       <h1>Panel</h1>
     </div>
     <div class="u-navbar">
-      <!-- <button id="moveButton">move</button> -->
-    </div>
+      <button onclick="window.location='/'">Home</button>
+      <button onclick="window.location='/ding-info.htm'">Board</button>
+      <button onclick="window.location='/ding-ide.htm'">IDE</button>
+      <button onclick="window.location='/ding-log.htm'">Log</button>
+  </div>
 
     <svg id="panel">
       <rect height="100%" width="100%"></rect>
@@ -106,7 +109,6 @@
 
       var panelObj = document.getElementById('panel');
       var viewObj = document.getElementById('viewport');
-      var moveButtonObj = document.getElementById('moveButton');
 
       panelObj.style.width = PANEL_GRIDSIZE * PANEL_WIDTH + "px";
       panelObj.style.height = PANEL_GRIDSIZE * PANEL_HEIGHT + "px";
@@ -354,14 +356,6 @@
         updateNodes();
         updateEdges();
       });
-
-      if (moveButtonObj) {
-        moveButtonObj.addEventListener("click", function () {
-          moveNodes();
-          updateNodes();
-          updateEdges();
-        })
-      }
 
       panelObj.addEventListener("mousedown", function (evt) {
         if (!DragObj) {

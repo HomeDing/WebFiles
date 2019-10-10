@@ -45,7 +45,11 @@ function jsonFind(obj: any, path: string): any {
 
   // use existing objects.
   while (obj && steps.length > 0) {
-    obj = obj[steps[0]];
+    const p = steps[0];
+    if (!obj[p]) {
+      obj[p] = {};
+    }
+    obj = obj[p];
     steps.shift();
   } // while
   return obj;

@@ -182,7 +182,7 @@ class MicroRegistry {
       (<MicroControlClass>o)._attachedBehavior = behavior;
       if (obj.parentElement !== this._tco) {
         // call connectedCallback only if not a template
-        (<MicroControlClass>o).connectedCallback(obj);
+        (<MicroControlClass>o).connectedCallback();
         this.List.push(obj);
       }
     } // if

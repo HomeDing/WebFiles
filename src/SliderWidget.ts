@@ -22,19 +22,15 @@ class SliderWidgetClass extends GenericWidgetClass {
   _moveFunc: any;
   _upFunc: any;
 
-
-  connectedCallback(el: HTMLElement) {
-    super.connectedCallback(el);
-    // debugger;
-
-    // find the moveable knob
+  connectedCallback() {
+    super.connectedCallback();
     if (this.el) {
+      // find the moveable knob
       this._handle = <HTMLElement>this.el.querySelector(".handle");
       const p = <HTMLElement>this._handle.parentElement;
       const ps = getComputedStyle(p);
       this._maxright = p.clientWidth - this._handle.offsetWidth - parseFloat(<string>ps.paddingLeft) - parseFloat(<string>ps.paddingRight);
     }
-
   } // connectedCallback
 
   // adjust position of the handle
@@ -80,6 +76,8 @@ class SliderWidgetClass extends GenericWidgetClass {
         else if (src.classList.contains('down')) {
           // alert('plus');
           this.dispatchAction('down', '1');
+        } else {
+          super.onclick(e);
         }
       }
 

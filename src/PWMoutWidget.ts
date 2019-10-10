@@ -12,8 +12,8 @@ class PWMOutWidgetClass extends GenericWidgetClass {
   _range: number = 255;
   lastValue: string | null = null;
 
-  connectedCallback(el: HTMLElement) {
-    super.connectedCallback(el);
+  connectedCallback() {
+    super.connectedCallback();
     hub.subscribe(this.microid + "?*", this.newValue.bind(this));
   }
 

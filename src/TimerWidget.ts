@@ -24,7 +24,7 @@ function upload(filename: string, content: string) {
   //   });
   // } // if
 
-  objHTTP.addEventListener('readystatechange', function() {
+  objHTTP.addEventListener('readystatechange', function () {
     if (this.readyState == 4 && this.status >= 200 && this.status < 300) {
       alert('saved.');
     } // if
@@ -36,7 +36,11 @@ function changeConfig(id: string, newConfig: any) {
   var c = JSON.parse(hub.read('config'));
   var node = jsonFind(c, id);
   for (let n in newConfig) {
-    node[n] = newConfig[n];
+    if (newConfig[n]) {
+      node[n] = newConfig[n];
+    } else {
+      delete node[n];
+    }
   }
   upload('/config.json', JSON.stringify(c));
 } // changeConfig()
@@ -95,7 +99,7 @@ class TimerWidgetClass extends GenericWidgetClass {
     const tar: HTMLElement = evt.target as HTMLElement;
     if (this.el && tar.classList.contains('save')) {
       const d: any = {};
-      this.el.querySelectorAll('[u-value]').forEach(function(elem) {
+      this.el.querySelectorAll('[u-value]').forEach(function (elem) {
         const n = elem.getAttribute('u-value');
         if (n) d[n] = (elem as HTMLInputElement).value;
       });

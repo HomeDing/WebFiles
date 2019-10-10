@@ -24,7 +24,6 @@
       </tr>
     </table>
   </div>
-  <div class="block config Element"></div>
 </div>
 
 <div class="col card" u-control="timer" microID="${id}" u-is="timer">
@@ -51,23 +50,6 @@
     <button u-action="next" value="1">Next</button>
     <button u-action="stop" value="1">Stop</button>
   </div>
-  <div class="block config">
-    <div class="form-group">
-      <label for="bx">type:</label>
-      <select id="bx" u-value="type">
-        <option value="LOOP">LOOP</option>
-        <option value="once">once</option>
-      </select>
-    </div>
-    <div class="form-group">
-      <label>waittime:</label>
-      <input u-value="waittime" class="text-right" /></div>
-    <div class="form-group"><label>pulsetime:</label>
-      <input u-value="pulsetime" class="text-right" /></div>
-    <div class="form-group"><label>cycletime:</label>
-      <input u-value="cycletime" class="text-right" /></div>
-    <button class="save" style="float: right" u-save="1">Save</button>
-  </div>
 </div>
 
 <div class="col card" u-control="rfsend" microID="${id}" u-is="generic">
@@ -84,11 +66,6 @@
       <button u-action="value" value="0">Off</button>
     </div>
     <div class="form-group"><label>last value:</label><span u-text="value"></span></div>
-  </div>
-  <div class="block config">
-    <div class="form-group"><label>code on:</label><span u-text="codeon"></span></div>
-    <div class="form-group"><label>code off:</label><span u-text="codeoff"></span></div>
-    <div class="form-group"><label>loglevel:</label><span u-text="loglevel"></span></div>
   </div>
 </div>
 
@@ -119,12 +96,6 @@
     <img src="/i/digitalout.svg" style="float:left;height:4rem;margin-right:1rem" />
     <span class="u-bool ux-value" u-active="value" style="position: absolute;top:0.5rem;right:0.5rem"></span>
   </div>
-  <div class="block config">
-    <div class="form-group"><label>pin:</label><span u-text="pin"></span></div>
-    <div class="form-group"><label>inverse:</label><span u-text="inverse"></span></div>
-    <div class="form-group"><label>value:</label><span u-text="value"></span></div>
-    <div class="form-group"><label>loglevel:</label><span u-text="loglevel"></span></div>
-  </div>
 </div>
 
 <div class="col card" u-control="pwmout" u-is="pwmout" microID="${id}">
@@ -139,9 +110,6 @@
     <span class="ux-levelbar ux-value"></span>
     <div style="font-size: 2rem"><span u-text="value"></span> / <span u-text="range"></span></div>
   </div>
-  <div class="block config Element" style="position: relative;min-height: 5rem">
-    <div class="form-group"><label>loglevel:</label><input u-value="loglevel" /></div>
-  </div>
 </div>
 
 <div class="col card" u-control="log" u-is="log" microID="${id}">
@@ -154,9 +122,6 @@
   </div>
   <div class="block">
     <object data="lineChart.svg" type="image/svg+xml" style="width:360px;height:136px"></object>
-  </div>
-  <div class="block config Element" style="position: relative;min-height: 5rem">
-    <div class="form-group"><label>loglevel:</label><input u-value="loglevel" /></div>
   </div>
 </div>
 
@@ -174,9 +139,6 @@
     <div class="display" style="font-family: sans-serif">
     </div>
   </div>
-  <div class="block config Element">
-    <div class="form-group"><label>loglevel:</label><input u-value="loglevel" /></div>
-  </div>
 </div>
 
 <div class="col card" u-control="displaysh1106" u-is="generic" microID="${id}">
@@ -190,9 +152,6 @@
   <div class="block">
     <div class="display" style="font-family: sans-serif">
     </div>
-  </div>
-  <div class="block config Element">
-    <div class="form-group"><label>loglevel:</label><input u-value="loglevel" /></div>
   </div>
 </div>
 
@@ -208,9 +167,6 @@
     <div class="display" grid="10" style="height: 20px;width: 112px;font-family: monospace">
     </div>
   </div>
-  <div class="block config Element">
-    <div class="form-group"><label>loglevel:</label><input u-value="loglevel" /></div>
-  </div>
 </div>
 
 <div class="col card hidden" u-control="displaytext" u-is="displaytext" microID="${id}">
@@ -224,9 +180,6 @@
   <div class="block">
     <div class="form-group"><label>Value:</label><span u-text="value"></span></div>
   </div>
-  <div class="block config Element">
-    <div class="form-group"><label>loglevel:</label><input u-value="loglevel" /></div>
-  </div>
 </div>
 
 <div class="col card hidden" u-control="displaydot" u-is="displaydot" microID="${id}">
@@ -239,9 +192,6 @@
   </div>
   <div class="block">
     <div class="form-group"><label>Value:</label><span u-text="value"></span></div>
-  </div>
-  <div class="block config Element">
-    <div class="form-group"><label>loglevel:</label><input u-value="loglevel" /></div>
   </div>
 </div>
 
