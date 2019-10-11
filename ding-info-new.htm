@@ -40,7 +40,7 @@
 
 
 <script>
-  var CreateElementDlgBehavior = {
+  micro.define("createElementDlg", {
     objType: null,
     objID: null,
 
@@ -73,23 +73,22 @@
       var ua = src.getAttribute('u-action');
 
       if (ua === 'close') {
-        closeModal();
+        micro.closeModal();
 
       } else if (ua === 'next') {
         if (this.objID.value === "") {
           alert('Please specify a name');
         } else {
-          openModal('configelementdlg', {
-            type: this.objType.value,
-            id: this.objID.value
+          micro.openModal('configelementdlg', {
+            id: '/' + this.objType.value + '/' + this.objID.value
           });
         }
       }
-    }
-  }; // CreateElementDlgBehavior
+    } // onclick()
 
+  }); // CreateElementDlgBehavior
 
-  var ConfigElementDlgBehavior = {
+  micro.define("configElementDlg", {
     config: {},
     /** @type HTMLElement */
     _blk: null,
@@ -98,19 +97,18 @@
     _add: function (k) {
       var g = this._blk.appendChild(document.createElement('div'));
       g.className = 'form-group';
-      var l = g.appendChild(document.createElement('label'));
-      l.textContent = k + ':';
+      g.appendChild(document.createElement('label')).textContent = k + ':';
       var i = g.appendChild(document.createElement('input'));
       i.name = k;
-      if (modalParams[k])
-        i.value = modalParams[k];
+      if (this.params[k.toLowerCase()] !== undefined)
+        i.value = this.params[k.toLowerCase()];
     }, // add()
 
     connectedCallback: function () {
       var scope = this;
       this._blk = this.querySelector('.block:not(.header)');
-      this._type = modalParams.id.split('/')[1];
-      this._id = modalParams.id.split('/')[2];
+      this._type = this.params.id.split('/')[1];
+      this._id = this.params.id.split('/')[2];
 
       // get implemented elements and populate the dropdown
       fetch('/elements.json')
@@ -126,12 +124,11 @@
         });
     }, // connectedCallback()
 
-    onclick: function (evt /*:PointerEvent*/) {
-      var src /*:HTMLElement */ = evt.srcElement;
-      var ua = src.getAttribute('u-action');
+    onclick: function (evt) {
+      var ua = evt.srcElement.getAttribute('u-action');
 
       if (ua === 'close') {
-        closeModal();
+        micro.closeModal();
 
       } else if (ua === 'save') {
         // var b: HTMLElement;
@@ -142,12 +139,9 @@
           c[e.name] = e.value;
         });
         changeConfig(this._id, c);
-        closeModal();
+        micro.closeModal();
       }
     }
-  }; // ConfigElementDlgBehavior
-
-  micro.define("createElementDlg", CreateElementDlgBehavior);
-  micro.define("configElementDlg", ConfigElementDlgBehavior);
+  }); // ConfigElementDlgBehavior
 
 </script>

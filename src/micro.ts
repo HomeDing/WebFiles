@@ -138,6 +138,7 @@ class MicroRegistry {
       var te = this._tco.querySelector('[u-control="' + controlName.toLowerCase() + '"]');
       if (te) e = te.cloneNode(true) as HTMLElement;
       if (e) {
+        (<any>e).params = props; // dialog parameters
         this._setPlaceholders(e, props);
         root.appendChild(e);
       } // if
@@ -192,6 +193,27 @@ class MicroRegistry {
   define(name: string, mixin: GenericWidgetClass) {
     this._registry[name] = mixin;
   }
+
+  openModal(tmplName: string, data: any) {
+    const modalObj = document.getElementById('modal');
+    const containerObj = document.getElementById('modalContainer');
+
+    if ((modalObj) && (containerObj)) {
+      // open Dialog, replace existing.
+      containerObj.innerHTML = '';
+      micro.insertTemplate(containerObj, tmplName, data);
+      modalObj.classList.remove('hidden');
+    } // if
+  } // openModal
+
+  closeModal() {
+    const modalObj = document.getElementById('modal');
+    const containerObj = document.getElementById('modalContainer');
+    if ((modalObj) && (containerObj)) {
+      modalObj.classList.add('hidden');
+      containerObj.innerHTML = '';
+    } // if
+  } // closeModal()
 
   onunload(_evt: Event) {
     for (var n in this.List) {

@@ -137,6 +137,7 @@ var MicroRegistry = (function () {
             if (te)
                 e = te.cloneNode(true);
             if (e) {
+                e.params = props;
                 this._setPlaceholders(e, props);
                 root.appendChild(e);
             }
@@ -183,6 +184,23 @@ var MicroRegistry = (function () {
     };
     MicroRegistry.prototype.define = function (name, mixin) {
         this._registry[name] = mixin;
+    };
+    MicroRegistry.prototype.openModal = function (tmplName, data) {
+        var modalObj = document.getElementById('modal');
+        var containerObj = document.getElementById('modalContainer');
+        if ((modalObj) && (containerObj)) {
+            containerObj.innerHTML = '';
+            micro.insertTemplate(containerObj, tmplName, data);
+            modalObj.classList.remove('hidden');
+        }
+    };
+    MicroRegistry.prototype.closeModal = function () {
+        var modalObj = document.getElementById('modal');
+        var containerObj = document.getElementById('modalContainer');
+        if ((modalObj) && (containerObj)) {
+            modalObj.classList.add('hidden');
+            containerObj.innerHTML = '';
+        }
     };
     MicroRegistry.prototype.onunload = function (_evt) {
         for (var n in this.List) {
@@ -294,7 +312,7 @@ var GenericWidgetClass = (function (_super) {
         if (src && a)
             this.dispatchAction(a, src['value']);
         if (this.el && src.classList.contains('setconfig')) {
-            window.openModal('configelementdlg', this.data);
+            micro.openModal('configelementdlg', this.data);
         }
     };
     GenericWidgetClass = __decorate([

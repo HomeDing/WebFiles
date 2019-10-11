@@ -88,7 +88,7 @@ class GenericWidgetClass extends MicroControlClass {
     if (src && a) this.dispatchAction(a, (<any>src)['value']);
 
     if (this.el && src.classList.contains('setconfig')) {
-      (<any>window).openModal('configelementdlg', this.data);
+      micro.openModal('configelementdlg', this.data);
 
     }
   }
