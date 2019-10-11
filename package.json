@@ -25,11 +25,13 @@
     "build:watch": "concurrently \"tsc -w\" \"npm run build:css -- -w\"",
     "prestart": "npm run build",
     "start": "node server.js",
-    "min-upload": "html-minifier --collapse-whitespace --remove-comments --minify-css true --minify-js true --quote-character ' upload.htm -o upload.min.htm",
-    "min-setup": "html-minifier --collapse-whitespace --remove-comments --minify-css true --minify-js true --quote-character ' setup.htm -o setup.min.htm",
-    "min-index": "html-minifier --collapse-whitespace --remove-comments --minify-css true --minify-js true --quote-character ' min-index.htm -o min-index.min.htm",
+    "min-setup": "html-minifier --collapse-whitespace --remove-tag-whitespace --remove-comments --minify-css true --minify-js true --quote-character ' setup.htm -o setup.min.htm",
+    "min-upload": "html-minifier --collapse-whitespace --remove-tag-whitespace --remove-comments --minify-css true --minify-js true --quote-character ' upload.htm -o upload.min.htm",
+    "min-boot": "html-minifier --collapse-whitespace --remove-tag-whitespace --remove-comments --minify-css true --minify-js true --quote-character ' boot.htm -o boot.min.htm",
+    "min-index": "html-minifier --collapse-whitespace --remove-tag-whitespace --remove-comments --minify-css true --minify-js true --quote-character ' min-index.htm -o min-index.min.htm",
     "min-micro": "uglifyjs micro.js -o micro.min.js -m",
-    "min-ide": "uglifyjs ding-ide.js -o ding-ide.min.js"
+    "min-ide": "uglifyjs ding-ide.js -o ding-ide.min.js",
+    "min-ide-2": "uglifyjs ding-ide.js -m toplevel -c -o ding-ide.min.js"
   },
   "keywords": [
     "HomeDing",
