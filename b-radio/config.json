@@ -5,7 +5,7 @@
       "pin1": "D5",
       "pin2": "D6",
       "step": 1,
-      "onchange": "menu/0?value=$v"
+      "onValue": "menu/0?value=$v"
     }
   },
   "digitalin": {
