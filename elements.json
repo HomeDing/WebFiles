@@ -68,11 +68,11 @@
 
   "rotary": {
     "properties": ["loglevel", "description", "pin1", "pin2", "step", "value"],
-    "actions": ["onchange"]
+    "actions": ["onvalue"]
   },
 
   "switch": {
-    "properties": ["loglevel", "description"],
+    "properties": ["value", "loglevel", "description"],
     "events": ["value", "toggle"],
     "actions": ["onValue", "onHigh", "onLow"]
   },
@@ -80,7 +80,7 @@
   "value": {
     "properties": ["loglevel", "description", "value", "min", "max"],
     "events": ["value", "up", "down"],
-    "actions": ["onChange"]
+    "actions": ["onValue"]
   },
 
   "ota": {

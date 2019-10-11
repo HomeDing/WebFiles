@@ -22,14 +22,14 @@
       "min": 0,
       "max": 15,
       "value": 3,
-      "onchange": "radio/r?volume=$v"
+      "onValue": "radio/r?volume=$v"
     },
     "frequency": {
       "min": 8700,
       "max": 10800,
       "step": 10,
       "value": 8930,
-      "onchange": "radio/r?frequency=$v"
+      "onValue": "radio/r?frequency=$v"
     }
   },
   "switch": {
@@ -37,19 +37,19 @@
       "min": 0,
       "max": 1,
       "value": 0,
-      "onchange": "radio/r?mono=$v"
+      "onValue": "radio/r?mono=$v"
     },
     "mute": {
       "min": 0,
       "max": 1,
       "value": 0,
-      "onchange": "radio/r?mute=$v"
+      "onValue": "radio/r?mute=$v"
     },
     "bassboost": {
       "min": 0,
       "max": 1,
       "value": 0,
-      "onchange": "radio/r?bassboost=$v"
+      "onValue": "radio/r?bassboost=$v"
     }
   },
   "menu": {
