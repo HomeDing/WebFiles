@@ -51,7 +51,7 @@
   },
 
   "pwmout": {
-    "properties": ["loglevel", "description", "value", "range", "pin", "inverse"],
+    "properties": ["loglevel", "description", "range", "pin", "inverse"],
     "events": ["on", "off", "value"]
   },
 
@@ -72,13 +72,13 @@
   },
 
   "switch": {
-    "properties": ["value", "loglevel", "description"],
+    "properties": ["loglevel", "description"],
     "events": ["value", "toggle"],
     "actions": ["onValue", "onHigh", "onLow"]
   },
 
   "value": {
-    "properties": ["loglevel", "description", "value", "min", "max"],
+    "properties": ["loglevel", "description", "min", "max"],
     "events": ["value", "up", "down"],
     "actions": ["onValue"]
   },

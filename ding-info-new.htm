@@ -119,6 +119,7 @@
           var d = elList[scope._type];
           if (d) {
             for (n in d.properties) scope._add(d.properties[n]);
+            for (n in d.events) scope._add(d.events[n]);
             for (n in d.actions) scope._add(d.actions[n]);
           }
         });
