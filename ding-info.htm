@@ -100,7 +100,7 @@
       <button onclick="window.location='/ding-info.htm'">Board</button>
       <button onclick="window.location='/ding-ide.htm'">IDE</button>
       <button onclick="window.location='/ding-log.htm'">Log</button>
-    <button id="sysButton" class="func">sys</button>
+      <button id="sysButton" class="func">sys</button>
       <button id="addButton" class="func">+</button>
     </div>
 
@@ -120,12 +120,9 @@
         </div>
       </div>
 
-      <div u-control="kv" class="form-group KV"><label>${key}:</label><span u-text="${key}"></span></div>
-      <div u-control="kve" class="form-group KV"><label>${key}:</label><input u-value="${key}" /></div>
-
       <div class="col card" u-control="schedule" id="${id}" u-is="generic" microID="${id}">
         <div class="block header">
-          <img src="/i/${type}.svg" class="icon" />
+          <img src="/i/schedule.svg" class="icon" />
           <h3>${id}</h3>
           <h4 u-text="description"></h4>
           <span class="activeState" u-active="active"></span>
@@ -189,19 +186,6 @@
         </div>
       </div>
 
-      <div class="col card" u-control="value1" u-is="generic" microID="${id}">
-        <div class="block header">
-          <img src="/i/${type}.svg" class="icon" />
-          <h3>${id}</h3>
-          <h4 u-text="description"></h4>
-          <span class="activeState" u-active="active"></span>
-          <span class="setconfig"></span>
-        </div>
-        <div class="block">
-        </div>
-      </div>
-      
-      
       <div class="col card" u-control="value" u-is="slider" microID="${id}">
         <div class="block header">
           <img src="/i/value.svg" class="icon" />
@@ -214,7 +198,7 @@
           <div class="form-group"><label>value:</label><span u-text="value"></span></div>
           <div class="u-slider">
             <label class="down"><img src="i/minus.svg"></label>
-            <div class="box"  style="width:240px">
+            <div class="box" style="width:240px">
               <div class="handle"></div>
             </div>
             <label class="up"><img src="i/plus.svg"></label>
@@ -235,8 +219,6 @@
           <div class="form-group"><label>value:</label><span u-text="value"></span></div>
         </div>
       </div>
-
-
     </div>
   </div>
 
@@ -285,27 +267,7 @@
         } // if
       } // if
     } // createElement()
-
-    function addValueInfo(path, key, value) {
-      var hText;
-      if (key && key != 'active' && path.match(/^\/.*\/.*/)) {
-        var hElem = document.querySelector("[microID='" + path + "']");
-        if (hElem) {
-          var elem = hElem.querySelector("[u-text='" + key + "'],[u-value='" + key + "'],[u-active='" + key + "']");
-          if (!elem) {
-            hElem = hElem.querySelector('.Element');
-            if (hElem) {
-              micro.insertTemplate(hElem,
-                hElem.classList.contains('config') ? 'kve' : 'kv',
-                { key: key });
-            }
-          } // if
-        } // if
-      } // if
-    } // addValueInfo
-
     hub.subscribe('/*/*', createElement);
-    hub.subscribe('/**/**?**', addValueInfo);
 
     function updateAsap(ev) {
       if (updateTimer)
@@ -370,8 +332,8 @@
 
     window.addEventListener('load', init);
 
-    window.addEventListener('xerror', function (err) {
-      alert(err);
+    window.addEventListener('error', function (err) {
+      alert(JSON.stringify(err, null, 1));
     })
   </script>
 </body>
