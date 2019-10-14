@@ -11,9 +11,9 @@
 class LogWidgetClass extends GenericWidgetClass {
   filename: string | null = null;
   lineSVGObj: HTMLObjectElement | null = null;
-  linesApi: any;
+  api: any;
   lChart: any;
-
+  
   connectedCallback() {
     super.connectedCallback();
     if (this.el) {
@@ -34,7 +34,7 @@ class LogWidgetClass extends GenericWidgetClass {
             return e.match(re);
           });
 
-          this.linesApi.updateLineChartData(
+          this.api.updateLineChartData(
             this.lChart,
             pmArray.map(function (v) {
               var p = v.split(',');
@@ -46,16 +46,20 @@ class LogWidgetClass extends GenericWidgetClass {
   } // loadData()
 
   load() {
+    try {
+      this.lineSVGObj.getSVGDocument();
+    }  catch (err) {
+      window.setTimeout(this.load.bind(this), 1000);
+      return;
+    }
     if (!this.lineSVGObj || !this.lineSVGObj.getSVGDocument() || !(this.lineSVGObj.getSVGDocument() as any).api) {
       window.setTimeout(this.load.bind(this), 20);
-      // alert("0:" + this.lineSVGObj.getSVGDocument()['api']);
     } else {
-      // alert("0+s" + this.lineSVGObj.getSVGDocument['api']);
       // now setup
-      this.linesApi = (this.lineSVGObj.getSVGDocument() as any).api;
-      this.lChart = this.linesApi.addLineChart();
-      this.linesApi.addVAxis();
-      this.linesApi.addHAxis();
+      this.api = (this.lineSVGObj.getSVGDocument() as any).api;
+      this.lChart = this.api.addLineChart();
+      this.api.addVAxis();
+      this.api.addHAxis();
       this.loadData();
     }
   } // load()

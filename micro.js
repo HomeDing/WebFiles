@@ -559,21 +559,28 @@ var LogWidgetClass = (function (_super) {
             var pmArray = pmValues.split('\n').filter(function (e) {
                 return e.match(re);
             });
-            this.linesApi.updateLineChartData(this.lChart, pmArray.map(function (v) {
+            this.api.updateLineChartData(this.lChart, pmArray.map(function (v) {
                 var p = v.split(',');
                 return { x: p[0], y: p[1] };
             }));
         }.bind(this));
     };
     LogWidgetClass.prototype.load = function () {
+        try {
+            this.lineSVGObj.getSVGDocument();
+        }
+        catch (err) {
+            window.setTimeout(this.load.bind(this), 1000);
+            return;
+        }
         if (!this.lineSVGObj || !this.lineSVGObj.getSVGDocument() || !this.lineSVGObj.getSVGDocument().api) {
             window.setTimeout(this.load.bind(this), 20);
         }
         else {
-            this.linesApi = this.lineSVGObj.getSVGDocument().api;
-            this.lChart = this.linesApi.addLineChart();
-            this.linesApi.addVAxis();
-            this.linesApi.addHAxis();
+            this.api = this.lineSVGObj.getSVGDocument().api;
+            this.lChart = this.api.addLineChart();
+            this.api.addVAxis();
+            this.api.addHAxis();
             this.loadData();
         }
     };
