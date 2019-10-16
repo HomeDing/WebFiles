@@ -19,6 +19,7 @@
   },
   "value": {
     "volume": {
+      "description": "current volume value",
       "min": 0,
       "max": 15,
       "value": 3,
