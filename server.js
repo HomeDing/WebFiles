@@ -1,20 +1,44 @@
 var express = require("express");
 var app = express();
-
+const yargs = require("yargs");
 const fs = require("fs");
+const debug = require("debug");
 
-const logInfo = require("debug")("iot:info");
+// ===== Command line support =====
+console.log('HomeDing Web Emulator');
+const options = yargs
+  .usage("Usage: $0 -c <case name>")
+  .usage('  This web server hosts a full version of the HomeDing Web interface')
+  .usage('  and emulates to a certain degree the services provided by a HomeDIng device.')
+  .option("c", { alias: "case", describe: "Name of the simulated case", type: "string", demandOption: false, default: "radio" })
+  .option("v", { alias: "verbose", describe: "Verbose logging", type: "boolean", demandOption: false, default: false })
+  .argv;
+
+if (options.verbose) {
+  debug.enable('*');
+}
+
+ // Setup debug output streams
+ 
+const logInfo = debug("iot:info");
 logInfo.log = console.log.bind(console);
 
-const logError = require("debug")("iot:error");
+const logError = debug("iot:error");
 logError.log = console.error.bind(console);
 
-const debugSend = require("debug")("iot:send");
+const debugSend = debug("iot:send");
 
 // a prefix can be added to the files config.json, env.json and $board 
-const useCase = 'b-ntp/';
+const useCase = `case-${options.case}/`;
 const boardFileName = useCase + '$board';
 
+
+if (!fs.existsSync(boardFileName)) {
+  console.log(`The configuration folder ${boardFileName} could not be found.`);
+  return;
+} else {
+  console.log(`Starting case ${useCase}...`);
+}
 
 // ===== config information
 let configData = JSON.parse(fs.readFileSync(useCase + 'config.json', 'utf8'));
@@ -80,11 +104,19 @@ const storage = multer.diskStorage({
     cb(null, './uploads/')
   },
   filename: function (req, file, cb) {
+    const p = file.originalname.split('/');
+
+    if (p.length > 2) {
+      if (!fs.existsSync('./uploads/' + p[1]))
+        fs.mkdirSync('./uploads/' + p[1]);
+    }
     cb(null, file.originalname + '-' + Date.now())
   }
 })
- 
-const upload = multer({ storage: storage, preservePath:true });
+
+const upload = multer({ storage: storage, preservePath: true });
+
+// ----- router -----
 
 // set up the router required to hook up our service to the portal
 const apiRouter = express.Router();
@@ -347,5 +379,5 @@ app.use(function (req, res, next) {
 });
 
 app.listen(3123, () => {
-  logInfo("open http://localhost:3123/");
+  console.log("open http://localhost:3123/");
 });
