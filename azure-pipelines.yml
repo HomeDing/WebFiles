@@ -21,7 +21,7 @@ steps:
   displayName: 'npm install and build'
 - task: AzureFileCopy@3
   inputs:
-    azureSubscription: '97ebb6d6-6573-4f0c-bc99-6bff59cb149f'
+    azureSubscription: 97ebb6d6-6573-4f0c-bc99-6bff59cb149f
     SourcePath: './'
     Destination: 'AzureBlob'
     storage: 'saemulator'
