@@ -565,29 +565,31 @@ var LogWidgetClass = (function (_super) {
             }));
         }.bind(this));
     };
-    LogWidgetClass.prototype.load = function () {
-        try {
-            this.lineSVGObj.getSVGDocument();
+    LogWidgetClass.prototype.loadSVG = function () {
+        var done = false;
+        if (this.lineSVGObj) {
+            var svgObj = null;
+            try {
+                svgObj = (this.lineSVGObj.getSVGDocument());
+            }
+            catch (err) { }
+            if ((svgObj) && (svgObj.api)) {
+                this.api = this.lineSVGObj.getSVGDocument().api;
+                this.lChart = this.api.addLineChart();
+                this.api.addVAxis();
+                this.api.addHAxis();
+                this.loadData();
+                done = true;
+            }
         }
-        catch (err) {
-            window.setTimeout(this.load.bind(this), 1000);
-            return;
-        }
-        if (!this.lineSVGObj || !this.lineSVGObj.getSVGDocument() || !this.lineSVGObj.getSVGDocument().api) {
-            window.setTimeout(this.load.bind(this), 20);
-        }
-        else {
-            this.api = this.lineSVGObj.getSVGDocument().api;
-            this.lChart = this.api.addLineChart();
-            this.api.addVAxis();
-            this.api.addHAxis();
-            this.loadData();
+        if (!done) {
+            window.setTimeout(this.loadSVG.bind(this), 1000);
         }
     };
     LogWidgetClass.prototype.newValue = function (_path, key, value) {
         if (key === 'filename') {
             this.filename = value;
-            this.load();
+            this.loadSVG();
         }
     };
     LogWidgetClass = __decorate([
