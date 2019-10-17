@@ -13,7 +13,7 @@ class LogWidgetClass extends GenericWidgetClass {
   lineSVGObj: HTMLObjectElement | null = null;
   api: any;
   lChart: any;
-  
+
   connectedCallback() {
     super.connectedCallback();
     if (this.el) {
@@ -45,29 +45,39 @@ class LogWidgetClass extends GenericWidgetClass {
       );
   } // loadData()
 
-  load() {
-    try {
-      this.lineSVGObj.getSVGDocument();
-    }  catch (err) {
-      window.setTimeout(this.load.bind(this), 1000);
-      return;
+
+  /** get the API from the SVG object when loaded */
+  loadSVG() {
+    var done = false;
+
+    if (this.lineSVGObj) {
+      var svgObj = null;
+      try {
+        svgObj = <any>(this.lineSVGObj.getSVGDocument());
+      } catch (err) { }
+
+      if ((svgObj) && (svgObj.api)) {
+        // now setup
+        this.api = (this.lineSVGObj.getSVGDocument() as any).api;
+        this.lChart = this.api.addLineChart();
+        this.api.addVAxis();
+        this.api.addHAxis();
+        this.loadData();
+        done = true;
+      }
     }
-    if (!this.lineSVGObj || !this.lineSVGObj.getSVGDocument() || !(this.lineSVGObj.getSVGDocument() as any).api) {
-      window.setTimeout(this.load.bind(this), 20);
-    } else {
-      // now setup
-      this.api = (this.lineSVGObj.getSVGDocument() as any).api;
-      this.lChart = this.api.addLineChart();
-      this.api.addVAxis();
-      this.api.addHAxis();
-      this.loadData();
+
+    if (!done) {
+      // try again some time later
+      window.setTimeout(this.loadSVG.bind(this), 1000);
     }
-  } // load()
+  } // loadSVG()
+
 
   newValue(_path: string, key: string | null, value: string | null) {
     if (key === 'filename') {
       this.filename = value;
-      this.load();
+      this.loadSVG();
     }
   } // newValue()
 }
