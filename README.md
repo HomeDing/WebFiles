@@ -1,6 +1,11 @@
 # HomeDing WebFiles
 
-This is the central project for developing the small web UI for HomeDing devices.
+![Build Status](https://dev.azure.com/HomeDing/WebFiles/_apis/build/status/HomeDing.WebFiles?branchName=master)
+
+This is the project of the HomeDing library for developing the Web UI to be embedded into the HomeDing devices.
+It supports TypeScript and SCSS compilation. 
+
+This project also contains an emulator of devices implemented in nodejs. 
 
 # uploading an initial web 
 
