@@ -1,7 +1,12 @@
-var express = require("express");
-var app = express();
+// server.js
+
+// ===== Packages used =====
+
+const express = require("express");
 const yargs = require("yargs");
+const multer = require('multer');
 const fs = require("fs");
+const path = require("path");
 const debug = require("debug");
 
 // ===== Command line support =====
@@ -18,7 +23,11 @@ if (options.verbose) {
   debug.enable('*');
 }
 
- // Setup debug output streams
+// ===== global modules in use =====
+
+var app = express();
+
+// Setup debug output streams
  
 const logInfo = debug("iot:info");
 logInfo.log = console.log.bind(console);
@@ -28,7 +37,9 @@ logError.log = console.error.bind(console);
 
 const debugSend = debug("iot:send");
 
+
 // a prefix can be added to the files config.json, env.json and $board 
+
 const useCase = `case-${options.case}/`;
 const boardFileName = useCase + '$board';
 
@@ -86,15 +97,23 @@ function noCache(req, res, next) {
 app.get("/", function (req, res, next) {
   logInfo("redirect...");
   res.redirect("/index.htm");
-  // next();
 });
 
+// ----- enable buildin setup pages -----
+
+app.get('/\\$upload', function (req, res, next) {
+  res.sendFile(path.join(__dirname, './upload.htm'));
+});
+
+app.get('/\\$setup', function (req, res, next) {
+  res.sendFile(path.join(__dirname, './setup.htm'));
+});
+
+app.get('/\\$boot', function (req, res, next) {
+  res.sendFile(path.join(__dirname, './boot.htm'));
+});
 
 // ----- handle listing of all existing files -----
-
-// npm i multer --save
-
-const multer = require('multer');
 
 // ----- upload -----
 
