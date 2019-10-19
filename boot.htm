@@ -2,42 +2,47 @@
 <html lang="en">
 
 <head>
-  <title>Bootstrap</title>
+  <title>Web Update</title>
 </head>
 
 <body>
-  <h1>Bootstrap</h1>
+  <h1>Web Update</h1>
   <table>
     <tr>
-      <td rowspan="2"><button id="startIt">start it..</button></td>
-      <td><progress id="bar" value=0 max=1></progress></td>
+      <td><progress value=0 max=1></progress></td>
     </tr>
-    <tr><td id='info'>&nbsp;</td></tr>
+    <tr>
+      <td id='info'>.</td>
+    </tr>
+    <tr>
+      <td><button>start</button></td>
+    </tr>
   </table>
   <script>
-    var theRoot = 'https://homeding.github.io/';
-    var bObj = document.querySelector('#startIt');
-    var theBar = document.querySelector('#bar');
-    var theInfo = document.querySelector('#info');
-    var work = { status: 'start', list: null, files: 0, done: 0 };
-    var stepTimer = 0;
+    var repo = 'https://homeding.github.io/';
+    var eStart = document.querySelector('button');
+    var eBar = document.querySelector('progress');
+    var eInfo = document.querySelector('#info');
+    var work = { status: '0', list: null, files: 0, done: 0 };
+    var timer = 0;
+
+    function log(t) {
+      eInfo.innerText = t;
+    } // log
 
     if (location.hash) {
-      theRoot += location.hash.substr(1) + '/';
+      repo += location.hash.substr(1) + '/';
     } else {
-      theRoot += 'v01/';
-    }
-
-    function logText(aText) {
-      theInfo.innerText = aText;
-    } // logText
-
+      repo += 'v01/';
+    }  
+    log('loading web files from ' + repo);
+    
     // fetch list of files
     function doStart() {
-      work.status = 'wait';
+      work.status = 'w'; // wait
 
       var oReq = new XMLHttpRequest();
-      oReq.open("GET", theRoot + 'list.txt', true);
+      oReq.open("GET", repo + 'list.txt', true);
       oReq.responseType = "text";
 
       oReq.onload = function (oEvent) {
@@ -45,7 +50,7 @@
         s = s.replace(/;$/, '');
         work.list = s.split(';');
         work.files = work.list.length;
-        work.status = 'run';
+        work.status = 'r'; // run
       };
       oReq.send(null);
     } // doStart()
@@ -53,26 +58,26 @@
 
     // grab next file
     function doFile() {
-      work.status = 'wait';
+      work.status = 'w'; // wait
       var theItem = work.list.shift();
 
       // set progress
       work.done++;
-      theBar.max = work.files;
-      theBar.value = work.done;
+      eBar.max = work.files;
+      eBar.value = work.done;
 
       var oReq = new XMLHttpRequest();
-      oReq.open("GET", theRoot + theItem, true);
+      oReq.open("GET", repo + theItem, true);
       oReq.responseType = "arraybuffer";
 
       oReq.onerror = function (evt) {
-        logText(theItem + ": error: failed.");
-        work.status = 'run';
+        log(theItem + ": error: failed.");
+        work.status = 'r'; // run
       };
 
       oReq.onload = function (oEvent) {
         if (oReq.status != 200) {
-          logText(theItem + ": error: " + oReq.status);
+          log(theItem + ": error: " + oReq.status);
         } else {
           var arrayBuffer = oReq.response; // Note: not oReq.responseText
           if (arrayBuffer) {
@@ -82,7 +87,7 @@
             var xmlHttp = new XMLHttpRequest();
             xmlHttp.addEventListener('readystatechange', function (p) {
               if ((xmlHttp.readyState == 4) && (xmlHttp.status >= 200) && (xmlHttp.status < 300)) {
-                logText(theItem + '(' + arrayBuffer.byteLength + ')');
+                log(theItem);
               }
             });
             xmlHttp.open('POST', '/');
@@ -90,33 +95,33 @@
 
           }
         }
-        work.status = (work.list.length == 0 ? 'end' : 'run');
+        work.status = (work.list.length == 0 ? 'e' : 'r');
       };
       oReq.send(null);
 
       if (work.list.length == 0)
-        work.status = 'end';
+        work.status = 'e'; // end
     } // doFile()
 
 
     function step() {
-      if (work.status == 'start') {
+      if (work.status == '0') { // not yet started
         // fetch file list;
         doStart();
-      } else if (work.status == 'run') {
+      } else if (work.status == 'r') { // run
         doFile();
-      } else if (work.status == 'end') {
-        if (stepTimer) {
-          window.clearInterval(stepTimer);
-          logText('done');
+      } else if (work.status == 'e') { // end
+        if (timer) {
+          window.clearInterval(timer);
+          log('done');
           window.location.href = '/';
         }
-        stepTimer = 0;
+        timer = 0;
       }
     }
 
-    bObj.addEventListener('click', function () {
-      stepTimer = window.setInterval(step, 330);
+    eStart.addEventListener('click', function () {
+      timer = window.setInterval(step, 330);
     });
   </script>
 </body>

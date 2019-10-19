@@ -2,11 +2,11 @@
 <html lang="en">
 
 <head>
-  <title>HomeDing Setup</title>
+  <title>WiFi Setup</title>
 </head>
 
 <body>
-  <h1>HomeDing Setup</h1>
+  <h1>WiFi Setup</h1>
   <h2>Connect to network</h2>
   <table>
     <tr>
@@ -22,12 +22,12 @@
   <script>
     var scanDone = 2;
     var checkTimer = 0;
-    var selObj = document.getElementById("conNetworks");
+    var selObj = document.getElementById('conNetworks');
 
     function load(url, loadCallback) {
       var objHTTP = new XMLHttpRequest(); // new ActiveXObject("MSXML2.XMLHTTP");
-      objHTTP.open("GET", url, true);
-      objHTTP.addEventListener("readystatechange", function (p) {
+      objHTTP.open('GET', url, true);
+      objHTTP.addEventListener('readystatechange', function (p) {
         if (objHTTP.readyState == 4) {
           if ((objHTTP.status >= 200) && (objHTTP.status < 300)) {
             loadCallback(objHTTP.responseText);
@@ -39,7 +39,7 @@
 
     function startScan() {
       if (scanDone == 2) {
-        selObj.innerHTML = "<option selected disabled>scanning...</option>";
+        selObj.innerHTML = '<option selected disabled>scanning...</option>';
         scanDone = 0;
         if (!checkTimer)
           checkTimer = window.setInterval(checkScan, 200);
@@ -63,7 +63,7 @@
 
       var o = document.createElement('option');
       o.value = 0;
-      o.text = "select...";
+      o.text = 'select...';
       o.disabled = true;
       selObj.options.add(o);
 
@@ -75,8 +75,8 @@
     } // scanResult()
 
     // connect using network name and password
-    document.getElementById("connectPass").addEventListener("click", function () {
-      load('/$connect?n=' + selObj.value + '&p=' + document.getElementById("conPass").value,
+    document.getElementById('connectPass').addEventListener('click', function () {
+      load('/$connect?n=' + selObj.value + '&p=' + document.getElementById('conPass').value,
       function () {});
     });
     startScan();
