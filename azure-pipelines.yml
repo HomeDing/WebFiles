@@ -31,11 +31,6 @@ stages:
 
   - job: pack
     steps: 
-    - task: NodeTool@0
-      inputs:
-        versionSpec: '10.x'
-      displayName: 'Install Node.js'
-
     - script: |
         npm run pack
       displayName: 'pack2'
