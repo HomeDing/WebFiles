@@ -30,6 +30,7 @@ stages:
       displayName: 'npm install, build'
 
   - job: pack
+    dependsOn: install
     steps: 
     - script: |
         npm run pack
