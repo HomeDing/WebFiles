@@ -13,37 +13,62 @@ To use the project a node.js installation version 8.x or later is required.
 * install node.js version 8.x or later
 * run `npm install` to load the dependencies
 
+
+## Device Simulation Server
+
+The server for the simultion web site uses express web server as a foundation and it can be customized by some commandline options.
+The simulated type of device is defined by the config and status files in the corresponding sub folder like `case-ntp`.
+To start this configution use the `--case` option like:
+```txt
+> node server.js --case ntp
+HomeDing Web Emulator
+Starting case case-ntp/...
+open http://localhost:3123/
+```
+
+To get a short description of the available options use:
+```txt
+> node server.js --help
+HomeDing Web Emulator
+Usage: server.js -c <case name>
+  This web server hosts a full version of the HomeDing Web interface
+  and emulates to a certain degree the services provided by a HomeDIng device.
+
+Options:
+  --help         Show help                                             [boolean]
+  --version      Show version number                                   [boolean]
+  -c, --case     Name of the simulated case          [string] [default: "radio"]
+  -v, --verbose  Verbose logging                      [boolean] [default: false]
+```
+
 ## Building the web for embedding into devices
 
-There are typescript and SASS source files used that need to be compiled using the npm tasks.
+The build steps are using npm scripts to compile the typescript and SASS source files.
+
+- **build:css:** compile iotstyle.scss to iotstyle.css
+- **build:css-min:** compile iotstyle.scss to mindist/iotstyle.css with compressing
+- **build:css-watch:** compile iotstyle.scss to iotstyle.css and watch for changes
+- **build:ts:** compile the typescript files to micro.js
+- **build:ts-watch:** compile the typescript files to micro.js and watch for changes
+- **build:** compile typescript and SCSS
+
+The **build** script is required to start the server in emulating mode and is required before packacking  
 
 ```PS
-makeDist.ps1
+npm run build
 ```
 
-This powershell script will compile and copy all required files to the `dist` folder.
+## Packing the files for upload into devices
 
-## Starting the web server
+The pack steps will create the format required to be used in the devices.
 
-The following steps can be used to start the web server with the emulator locally:
+- **pack:dist:** create a `dist` folder with all files required for upload 
+- **pack:embed:** create the `upload.h` file with the embedded pages for setup 
+- **pack:** create both.
 
-### Typescript compilation
-
-To build the javascript file of the micro framework use the following npm task:
-
-```ps
-npm run build:ts
+```PS
+npm run pack
 ```
-
-### SCSS compilation
-
-To build the CSS file of the micro framework use the following npm task:
-
-```ps
-npm run build:css
-```
-
-This will generate the files `iotstyle.css` and `micro.js` that are used in the full version.
 
 
 ### Start the server
@@ -59,7 +84,22 @@ node server.js
 * Use the HomeDing library on a new device: <https://homeding.github.io/#page=stepsnewdevice.md>
 * New upload or upgrade the web on a device: <https://homeding.github.io/#page=stepsupdateweb.md>
 
-  
+
+## Plugins
+
+The server and the build tasks are using the following packages:
+
+- **express:** web server 
+- **debug:** logging output
+- **multer:** express middleware for uploading files 
+- **yargs:** command line for starting the server
+- **typescript:** compile typescript to javascript
+- **html-minifier :** reduce html file size
+- **node-sass :** compile SCSS to CSS
+- **uglify-js:** minify javascript files
+- **shell:** shell operations of files and folders 
+
+
 <!-- --- 
 
 ### Create a minified version of boot.htm

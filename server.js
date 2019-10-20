@@ -23,19 +23,15 @@ if (options.verbose) {
   debug.enable('*');
 }
 
-// ===== global modules in use =====
+// ===== initializing modules =====
 
 var app = express();
 
 // Setup debug output streams
- 
 const logInfo = debug("iot:info");
-logInfo.log = console.log.bind(console);
-
 const logError = debug("iot:error");
-logError.log = console.error.bind(console);
-
 const debugSend = debug("iot:send");
+debug.log = console.log.bind(console);
 
 
 // a prefix can be added to the files config.json, env.json and $board 

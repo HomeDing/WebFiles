@@ -1,4 +1,6 @@
 // makedist.js
+// copy all files for the full featured web server into the dist folder
+// ready to be published on http://homeding.github.io/vxx 
 
 // ===== Packages used =====
 
@@ -9,25 +11,30 @@ const shell = require('shelljs');
 const distFolder = "dist";
 
 // ===== Command line support =====
-console.log('HomeDing: Build Dist Folder');
+console.log('HomeDing: Packing Dist Folder');
 const options = yargs
-  .usage('Usage: $0 -c <case name>')
-  .usage('  This ...')
+  .usage('Usage: $0')
   .option('v', { alias: 'verbose', describe: 'Verbose logging', type: 'boolean', demandOption: false, default: false })
   .argv;
 
-if (options.verbose) {
-  debug.enable('*');
-}
+debug.enable(options.verbose ? '*' : '*:info');
 
-// ===== global modules in use =====
+// ===== initializing modules =====
 
 const logInfo = debug('iot:info');
-// logInfo.log = console.log.bind(console);
+const logTrace = debug('iot:trace');
+debug.log = console.log.bind(console);
 
-console.log(`Starting...`);
+Array.prototype.unique = function () {
+  return this.filter(function (value, index, self) {
+    return self.indexOf(value) === index;
+  });
+}
 
-// array with files that get copies as they are
+logInfo(`Starting...`);
+
+
+// array with files that get copied as they are
 const srcAssets = [
   'index.htm',
   'iotstyle.css',
@@ -54,28 +61,47 @@ const srcAssets = [
   '*.svg',
   'favicon*.*',
 
-  'manifest.json'
+  'manifest.json',
+
+  'i/*.svg',
+  'i/a*.svg',
+  'ft/*.svg'
 ];
 
 const builtinAssets = [
   'boot.htm',
   'upload.htm',
-  'setup.htm'];
+  'setup.htm'
+];
 
+
+// create fresh dist folder
 shell.rm('-rf', distFolder);
 shell.mkdir(distFolder);
-shell.mkdir(distFolder + '/ft');
-shell.mkdir(distFolder + '/i');
 
-// copy all assets
-srcAssets.forEach(fn => shell.cp(fn, distFolder));
+// create sub-folders
+srcAssets
+  .filter(name => (name.indexOf('/') > 0))
+  .map(name => distFolder + '/' + name.split('/')[0])
+  .unique()
+  .forEach(foldername => shell.mkdir(foldername));
+logInfo(`new ${distFolder} created.`);
 
-// copy immages
-shell.cp('-R', 'ft/*.svg', distFolder + '/ft')
-shell.cp('-R', 'i/*.svg', distFolder + '/i')
+// copy all file assets
+srcAssets
+  .filter(name => (name.indexOf('/') < 0))
+  .forEach(filename => shell.cp(filename, distFolder));
+logInfo(`Files copied.`);
+
+// copy all folder assets
+srcAssets
+  .filter(name => (name.indexOf('/') > 0))
+  .forEach(name => shell.cp(name, distFolder + '/' + name.split('/')[0]));
+logInfo(`Images copied.`);
 
 // create list file
 shell.ls('-R', distFolder).grep(/^.*\..*$/).to(distFolder + '/list.txt');
+logInfo(`list.txt file written.`);
 
-console.log(`done.`);
+logInfo(`${distFolder} created.`);
 

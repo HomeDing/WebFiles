@@ -1,0 +1,14 @@
+// file: upload.h
+// contains the minimal html for uploading files
+
+// minimized from setup.htm: configure the network
+static const char setupContent[] PROGMEM =
+R"==(${setup.htm})==";
+
+// minimized from upload.htm
+static const char uploadContent[] PROGMEM =
+R"==(${upload.htm})==";
+
+// minimized from boot.htm
+static const char bootContent [] PROGMEM =
+R"==(${boot.htm})==";
