@@ -29,9 +29,17 @@ stages:
         npm run build
       displayName: 'npm install, build'
 
-  - job: pack
-    dependsOn: install
-    steps: 
     - script: |
         npm run pack
       displayName: 'pack2'
+
+  - job: verify
+    steps: 
+    - task: NodeTool@0
+      inputs:
+        versionSpec: '10.x'
+      displayName: 'Install Node.js'
+
+    - script: |
+        npm install
+      displayName: 'npm install only'
