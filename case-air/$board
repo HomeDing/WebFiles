@@ -1,0 +1,77 @@
+{
+  "device/0": {
+    "active": "true",
+    "name": "lcddevice",
+    "description": "IoT Dev-Device with LCD",
+    "nextboot": "28765"
+  },
+  "ota/0": {
+    "active": "true"
+  },
+  "ssdp/0": {
+    "active": "true"
+  },
+
+  "dstime/0": 
+  {"active":"true",
+  "now":"2019-02-25 17:10:30",
+  "wire-address":"104"},
+
+  "serialcmd/0": {
+    "active": "true"
+  },
+  "rotary/0": {
+    "active": "true",
+    "value": "2"
+  },
+  "value/led": {
+    "active": "true",
+    "value": "20"
+  },
+
+  "button/in": {
+    "active": "true"
+  },
+  "digitalout/led": {
+    "active": "true"
+  },
+
+  "dht/lr": {
+    "active": "true",
+    "temperature": "16.60",
+    "humidity": "45.20"
+  },
+  "displaytext/val": {
+    "active": "true",
+    "value": "20"
+  },
+  "displaytext/pm": {
+    "active": "true",
+    "value": "20"
+  },
+  "displaydot/b": {
+    "active": "true",
+    "value": "1"
+  },
+  "time/0": {
+    "active": "true"
+  },
+  "timer/blink": {
+    "active": "true",
+    "state": "1",
+    "time": "2",
+    "value": "0"
+  },
+  "schedule/0": {
+    "active": "true",
+    "value": "0"
+  },
+  "pwmout/led": {
+    "active": "true",
+    "value": "120"
+  },
+
+"rfsend/a1": {"active":"true","value":"1"},
+"rfsend/aa": {"active":"true","value":"0"},
+"rfsend/d1": {"active":"true","value":"0"}
+}

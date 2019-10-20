@@ -15,7 +15,7 @@ pool:
 
 
 stages:
-- stage: Build_and_Pack
+- stage: Build_and_Pack2
   jobs:
   - job: install
     steps: 
@@ -27,6 +27,15 @@ stages:
     - script: |
         npm install
         npm run build
-        npm run pack
-      displayName: 'npm install, build and pack'
+      displayName: 'npm install, build'
 
+  - job: pack
+    steps: 
+    - task: NodeTool@0
+      inputs:
+        versionSpec: '10.x'
+      displayName: 'Install Node.js'
+
+    - script: |
+        npm run pack
+      displayName: 'pack2'

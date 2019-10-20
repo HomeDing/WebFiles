@@ -252,11 +252,13 @@ svg.button {
   padding: $gutter $white-space;
   margin-bottom: $gutter;
 
-  > button {
+  > button,
+  .button {
     min-width: 2em;
   }
 
-  > button:hover {
+  > button:hover,
+  .button:hover {
     border-color: $u-focus;
     background-color: $u-focus;
   }
@@ -339,7 +341,9 @@ button + label {
   margin-left: $gutter;
 }
 
-button {
+button,
+.button,
+a.button:visited {
   display: inline-block;
   font-size: 1.25em;
   min-width: 4em;
@@ -352,26 +356,25 @@ button {
   cursor: pointer;
   user-select: none;
   -ms-user-select: none;
-}
 
-button:focus {
-  border-color: $u-focus;
-  background-color: $u-focus;
-}
+  & :focus {
+    border-color: $u-focus;
+    background-color: $u-focus;
+  }
+  &:disabled {
+    border: 0.1rem solid $u-disabled;
+    background-color: $u-disabled;
+  }
 
-button:disabled {
-  border: 0.1rem solid $u-disabled;
-  background-color: $u-disabled;
-}
+  &.active {
+    background-color: #acc1e4 !important;
+    border-color: #203050 !important;
+  }
 
-button.active {
-  background-color: #acc1e4 !important;
-  border-color: #203050 !important;
-}
-
-button.secondary {
-  background-color: #777777;
-  border-color: #777777;
+  &.secondary {
+    background-color: #777777;
+    border-color: #777777;
+  }
 }
 
 .btn-group {
