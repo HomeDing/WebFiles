@@ -7,6 +7,10 @@ name: WebFiles Pipes
 
 trigger:
 - master
+- azure*
+
+pr:
+- master
 
 
 pool:
