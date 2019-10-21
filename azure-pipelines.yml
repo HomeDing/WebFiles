@@ -26,6 +26,14 @@ stages:
     - script: npm install
     - script: npm run build
     - script: npm run pack
-    - script: pwd
-    - script: export
-    - script: ls -la
+
+    - task: ArchiveFiles@2
+      inputs:
+        rootFolderOrFile: '$(Build.Repository.LocalPath)/dist'
+        includeRootFolder: false
+        archiveType: 'zip'
+        archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+        replaceExistingArchive: true
+        verbose: true
+
+    - script: ls -la $(Build.ArtifactStagingDirectory)
