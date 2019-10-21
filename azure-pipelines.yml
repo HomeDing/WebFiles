@@ -12,10 +12,8 @@ trigger:
 pr:
 - master
 
-
 pool:
   vmImage: 'ubuntu-latest'
-
 
 stages:
 - stage: Build_and_Pack
@@ -26,10 +24,15 @@ stages:
       inputs:
         versionSpec: '10.x'
       displayName: 'Install Node.js'
+    - script: npm install
 
-    - script: |
-        npm install
-        npm run build
-        npm run pack
-      displayName: 'npm install, build and pack'
-
+  - job: build
+    dependsOn: install
+    steps:
+    - script: npm run build
+    - script: ls -la
+      
+  - job: pack
+    dependsOn: build
+    steps:
+      - script: npm run pack 
