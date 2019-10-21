@@ -1,6 +1,6 @@
 # HomeDing WebFiles
 
-![Build Status](https://dev.azure.com/HomeDing/WebFiles/_apis/build/status/HomeDing.WebFiles?branchName=master)
+Build Status: [![Build Status](https://dev.azure.com/HomeDing/WebFiles/_apis/build/status/HomeDing.WebFiles?branchName=master)](https://dev.azure.com/HomeDing/WebFiles/_build)
 
 This is the project of the HomeDing library for developing the Web UI to be embedded into the HomeDing devices.
 It supports TypeScript and SCSS compilation. 
