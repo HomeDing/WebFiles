@@ -7,8 +7,7 @@ name: WebFiles Pipes
 
 trigger:
 - master
-- azure-build2
-
+- azure*
 
 pool:
   vmImage: 'ubuntu-latest'
@@ -24,22 +23,6 @@ stages:
         versionSpec: '10.x'
       displayName: 'Install Node.js'
 
-    - script: |
-        npm install
-        npm run build
-      displayName: 'npm install, build'
-
-    - script: |
-        npm run pack
-      displayName: 'pack2'
-
-  - job: verify
-    steps: 
-    - task: NodeTool@0
-      inputs:
-        versionSpec: '10.x'
-      displayName: 'Install Node.js'
-
-    - script: |
-        npm install
-      displayName: 'npm install only'
+    - script: npm install
+    - script: npm run build
+    - script: npm run pack
