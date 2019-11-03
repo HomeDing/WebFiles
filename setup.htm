@@ -2,6 +2,8 @@
 <html lang="en">
 
 <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>WiFi Setup</title>
 </head>
 
@@ -10,75 +12,89 @@
   <h2>Connect to network</h2>
   <table>
     <tr>
+      <td>Devicename:</td>
+      <td id="devname">xyz</td>
+    </tr>
+    <tr>
       <td>Network:</td>
-      <td><select id="conNetworks" style="width:18em"></select></td>
+      <td><select id="conNet" style="width:18em">
+          <option selected disabled>scanning...</option>
+        </select></td>
     </tr>
     <tr>
       <td>Passphrase:</td>
-      <td><input id="conPass" style="width:18em"></input></td>
+      <td><input id="pass" style="width:18em"></input></td>
     </tr>
   </table>
-  <button id="connectPass">Connect</button>
+  <button id="bCon">Connect</button>
   <script>
-    var scanDone = 2;
-    var checkTimer = 0;
-    var selObj = document.getElementById('conNetworks');
+    var state = 0;  // 0: start, 1: get sysinfo, 2: sysinfo-done,  3: scan, 4, scan-done
+    var timer;
+    var oSel = document.getElementById('conNet');
+    var devname;
 
-    function load(url, loadCallback) {
-      var objHTTP = new XMLHttpRequest(); // new ActiveXObject("MSXML2.XMLHTTP");
-      objHTTP.open('GET', url, true);
-      objHTTP.addEventListener('readystatechange', function (p) {
-        if (objHTTP.readyState == 4) {
-          if ((objHTTP.status >= 200) && (objHTTP.status < 300)) {
-            loadCallback(objHTTP.responseText);
+    function load(url, func) {
+      var xhr = new XMLHttpRequest(); // new ActiveXObject("MSXML2.XMLHTTP");
+      xhr.open('GET', url, true);
+      xhr.addEventListener('readystatechange', function (p) {
+        if (xhr.readyState == 4) {
+          if ((xhr.status >= 200) && (xhr.status < 300)) {
+            func(xhr.responseText);
           } // if
         } // if
       });
-      objHTTP.send();
+      xhr.send();
     } // load()
 
-    function startScan() {
-      if (scanDone == 2) {
-        selObj.innerHTML = '<option selected disabled>scanning...</option>';
-        scanDone = 0;
-        if (!checkTimer)
-          checkTimer = window.setInterval(checkScan, 200);
-      }
-    } // startScan()
+    function check() {
+      if (state == 0) {
+        // start sysinfo
+        state = 1;
+        load('/$sysinfo', function (t) {
+          if (t.length > 0) {
+            document.getElementById('devname').textContent = devname = JSON.parse(t).devicename;
+            state = 2;
+          }
+        });
 
-    function checkScan() {
-      load('/$scan', function (txt) {
-        if (txt.length > 0) {
-          scanDone = 2;
-          scanResult(JSON.parse(txt));
-        }
-      });
-    } // checkScan()
+      } else if (state == 2) {
+        // start scan 
+        state = 3;
+        load('/$scan', function (t) {
+          if (t.length == 0) {
+            state = 2;
+          } else {
+            state = 4;
+            scanned(JSON.parse(t));
+          }
+        });
+      } else if (state == 4) {
+        window.clearInterval(timer);
+        timer = 0;
+      } // if
+    } // check()
 
-    function scanResult(netList) {
-      window.clearInterval(checkTimer);
-      checkTimer = 0;
-
-      selObj.innerHTML = "";
+    function scanned(netList) {
+      oSel.innerHTML = "";
 
       var o = document.createElement('option');
       o.value = 0;
       o.text = 'select...';
       o.disabled = true;
-      selObj.options.add(o);
+      oSel.options.add(o);
 
       netList.forEach(function (n) {
         var o = document.createElement('option');
         o.value = o.text = n.id;
-        selObj.options.add(o);
+        oSel.options.add(o);
       });
-    } // scanResult()
+    } // scanned()
 
     // connect using network name and password
-    document.getElementById('connectPass').addEventListener('click', function () {
-      load('/$connect?n=' + selObj.value + '&p=' + document.getElementById('conPass').value,
-      function () {});
+    document.getElementById('bCon').addEventListener('click', function () {
+      load('/$connect?n=' + oSel.value + '&p=' + document.getElementById('pass').value,
+        function () { });
     });
-    startScan();
+    timer = window.setInterval(check, 800);
   </script>
 </body>
