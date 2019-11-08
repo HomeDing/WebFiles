@@ -1,7 +1,10 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 
 <head>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Web Update</title>
 </head>
 
@@ -34,9 +37,9 @@
       repo += location.hash.substr(1) + '/';
     } else {
       repo += 'v01/';
-    }  
+    }
     log('loading web files from ' + repo);
-    
+
     // fetch list of files
     function doStart() {
       work.status = 'w'; // wait
