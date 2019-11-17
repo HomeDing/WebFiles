@@ -1,0 +1,6 @@
+{
+  "device/0": { "active": "true", "name": "radioding", "description": "IoT Device with Radio and LCD", "nextboot": "28699" },
+  "ota/0": { "active": "true" },
+  "ssdp/0": { "active": "true" },
+  "neo/stripe": { "active": "true", "value": "red,blue" }
+}

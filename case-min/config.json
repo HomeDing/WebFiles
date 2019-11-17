@@ -1,0 +1,11 @@
+{
+  "neo": {
+    "stripe": {
+      "loglevel": 2,
+      "pin": "D4",
+      "count": "9",
+      "brightness": 128,
+      "value": "red,blue"
+    }
+  }
+}

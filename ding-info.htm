@@ -219,6 +219,21 @@
           <div class="form-group"><label>value:</label><span u-text="value"></span></div>
         </div>
       </div>
+
+      <div class="col card" u-control="neo" id="${id}" u-is="generic" microID="${id}">
+        <div class="block header">
+          <img src="/i/neo.svg" class="icon" />
+          <h3>${id}</h3>
+          <h4 u-text="description"></h4>
+          <span class="activeState" u-active="active"></span>
+          <span class="setconfig"></span>
+        </div>
+        <div class="block">
+          <div class="form-group"><label>value:</label><span u-text="value"></span></div>
+          <button u-action="mode" value="flow" >flow</button><button u-action="mode" value="wheel" >wheel</button><button u-action="value" value="red" >red</button><button u-action="value" value="green" >green</button>
+        </div>
+      </div>
+
     </div>
   </div>
 

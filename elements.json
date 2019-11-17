@@ -115,6 +115,12 @@
     "actions": ["ontemperature", "onhumidity"]
   },
 
+  "neo": {
+    "properties": ["loglevel", "description", "pin", "duration", "count"],
+    "events": ["value", "mode", "brightness"],
+    "actions": []
+  },
+
   "alarm": {
     "properties": ["loglevel", "description", "time"],
     "actions": ["onTime"]
