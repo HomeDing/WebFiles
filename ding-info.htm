@@ -101,7 +101,7 @@
     </div>
     <div class="u-navbar">
       <button onclick="window.location='/'">Home</button>
-      <button onclick="window.location='/ding-info.htm'">Board</button>
+      <button onclick="window.location='/board.htm'">Board</button>
       <button onclick="window.location='/ding-ide.htm'">IDE</button>
       <button onclick="window.location='/ding-log.htm'">Log</button>
       <button id="sysButton" class="func">sys</button>
@@ -316,7 +316,7 @@
 
     function init() {
       // load templates from other file.
-      var p0 = Promise.all([micro.loadFile('/ding-templates.htm'), micro.loadFile('/ding-info-new.htm')]);
+      var p0 = Promise.all([micro.loadFile('/ding-templates.htm'), micro.loadFile('/board-new.htm')]);
 
       // element definitions -> env.json -> config.json
       var p1 = fetch('/elements.json')

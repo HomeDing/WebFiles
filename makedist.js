@@ -45,8 +45,8 @@ const srcAssets = [
   'ding-ide.htm',
   'ding-ide.js',
 
-  'ding-info.htm',
-  'ding-info-new.htm',
+  'board.htm',
+  'board-new.htm',
   'ding-templates.htm',
 
   'ding-log.htm',
