@@ -2,6 +2,7 @@
 <html>
 
 <head>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Elements</title>
@@ -224,7 +225,7 @@
         </div>
       </div>
 
-      <div class="col card" u-control="neo" id="${id}" u-is="generic" microID="${id}">
+      <div class="col card" u-control="neo" id="${id}" u-is="neo" microID="${id}">
         <div class="block header">
           <img src="/i/neo.svg" class="icon" />
           <h3>${id}</h3>
@@ -234,9 +235,9 @@
         </div>
         <div class="block">
           <div class="form-group"><label>value:</label><span u-text="value"></span></div>
-          <div id="hueband" class="hueband" style="height:1.4rem;width:100%;margin-bottom: 0.4rem;"></div>
-          <button u-action="mode" value="flow">flow</button><button u-action="mode" value="wheel">wheel</button><button
-            u-action="value" value="red">red</button><button u-action="value" value="green">green</button>
+          <div class="hueband" style="height:1.4rem;width:100%;margin-bottom: 0.4rem;"></div>
+          <button u-action="mode" value="flow">flow</button>
+          <button u-action="mode" value="wheel">wheel</button>
         </div>
       </div>
 
@@ -357,13 +358,6 @@
       alert(JSON.stringify(err, null, 1));
     })
 
-
-    // var hueObj = document.getElementById("hueband");
-    // hueObj.addEventListener("click", function (evt) {
-    //   var tarObj = document.getElementById("tar");
-    //   // alert(evt.offsetX + " " + evt.srcElement.scrollWidth);
-    //   tarObj.style.backgroundColor = "hsl(" + Math.round(evt.offsetX) + ", 100%, 50%)";
-    // });
 
   </script>
 </body>

@@ -608,6 +608,40 @@ var LogWidgetClass = (function (_super) {
     ], LogWidgetClass);
     return LogWidgetClass;
 }(GenericWidgetClass));
+var NeoWidgetClass = (function (_super) {
+    __extends(NeoWidgetClass, _super);
+    function NeoWidgetClass() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    NeoWidgetClass.prototype.x16 = function (d) {
+        var x = Number(d).toString(16);
+        if (x.length === 1)
+            x = '0' + x;
+        return (x);
+    };
+    NeoWidgetClass.prototype.onclick = function (e) {
+        if (this.el) {
+            var src = e.srcElement;
+            if (src.className == "hueband") {
+                var color = "hsl(" + Math.round(e.offsetX) + ", 100%, 50%)";
+                src.style.backgroundColor = color;
+                if (document && document.defaultView) {
+                    var ccol = document.defaultView.getComputedStyle(src, null).backgroundColor;
+                    var l = String(ccol).replace(/[^0-9,]/g, "").split(',');
+                    var col = 'x' + this.x16(l[0]) + this.x16(l[1]) + this.x16(l[2]);
+                    this.dispatchAction('value', col);
+                }
+            }
+            else {
+                _super.prototype.onclick.call(this, e);
+            }
+        }
+    };
+    NeoWidgetClass = __decorate([
+        MicroControl("neo")
+    ], NeoWidgetClass);
+    return NeoWidgetClass;
+}(GenericWidgetClass));
 var PWMOutWidgetClass = (function (_super) {
     __extends(PWMOutWidgetClass, _super);
     function PWMOutWidgetClass() {
