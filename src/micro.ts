@@ -126,6 +126,12 @@ class MicroRegistry {
     }
   } // _setPlaceholders
 
+  isVisible(el: HTMLElement) {
+    var rect = el.getBoundingClientRect();
+    // Partially visible elements are treated as visible
+    return (rect.top <= window.innerHeight && rect.bottom >= 0);
+  } // isVisible()
+  
   /**
    * Insert a new control based on a template into the root object and activate behavior.
    * @param {HTMLObjectElement} root parent object for the new control
@@ -141,6 +147,14 @@ class MicroRegistry {
         (<any>e).params = props; // dialog parameters
         this._setPlaceholders(e, props);
         root.appendChild(e);
+
+        var oList = root.querySelectorAll('[data-src]:not([src])');
+        oList.forEach(e => {
+          if (this.isVisible(<HTMLElement>e) && ((<HTMLElement>e).dataset.src)) {
+            (<any>e).src = (<HTMLElement>e).dataset.src;
+          }
+        });
+      
       } // if
     } // if
     return e;

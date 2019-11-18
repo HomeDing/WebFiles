@@ -82,6 +82,10 @@
       user-select: none;
       -ms-user-select: none;
     }
+
+    .hueband {
+      background: linear-gradient(to right, #ff0000 0%, #ffff00 17%, #00ff00 33%, #00ffff 50%, #0000ff 67%, #ff00ff 83%, #ff0000 100%);
+    }
   </style>
   <script src="polyfill.js"></script>
   <script src="es6-promise.auto.js"></script>
@@ -109,7 +113,7 @@
     <div id="u-templates" style="border:2px solid green;padding:1rem;display:none">
       <div class="col card" u-control="generic" u-is="generic" microID="${id}">
         <div class="block header">
-          <img src="/i/${type}.svg" class="icon" />
+          <img data-src="/i/${type}.svg" class="icon" />
           <h3>${id}</h3>
           <h4 u-text="description"></h4>
           <span class="activeState" u-active="active"></span>
@@ -230,7 +234,9 @@
         </div>
         <div class="block">
           <div class="form-group"><label>value:</label><span u-text="value"></span></div>
-          <button u-action="mode" value="flow" >flow</button><button u-action="mode" value="wheel" >wheel</button><button u-action="value" value="red" >red</button><button u-action="value" value="green" >green</button>
+          <div id="hueband" class="hueband" style="height:1.4rem;width:100%;margin-bottom: 0.4rem;"></div>
+          <button u-action="mode" value="flow">flow</button><button u-action="mode" value="wheel">wheel</button><button
+            u-action="value" value="red">red</button><button u-action="value" value="green">green</button>
         </div>
       </div>
 
@@ -350,6 +356,15 @@
     window.addEventListener('error', function (err) {
       alert(JSON.stringify(err, null, 1));
     })
+
+
+    // var hueObj = document.getElementById("hueband");
+    // hueObj.addEventListener("click", function (evt) {
+    //   var tarObj = document.getElementById("tar");
+    //   // alert(evt.offsetX + " " + evt.srcElement.scrollWidth);
+    //   tarObj.style.backgroundColor = "hsl(" + Math.round(evt.offsetX) + ", 100%, 50%)";
+    // });
+
   </script>
 </body>
 

@@ -130,7 +130,12 @@ var MicroRegistry = (function () {
             });
         }
     };
+    MicroRegistry.prototype.isVisible = function (el) {
+        var rect = el.getBoundingClientRect();
+        return (rect.top <= window.innerHeight && rect.bottom >= 0);
+    };
     MicroRegistry.prototype.insertTemplate = function (root, controlName, props) {
+        var _this = this;
         var e = null;
         if (root && controlName && this._tco) {
             var te = this._tco.querySelector('[u-control="' + controlName.toLowerCase() + '"]');
@@ -140,6 +145,12 @@ var MicroRegistry = (function () {
                 e.params = props;
                 this._setPlaceholders(e, props);
                 root.appendChild(e);
+                var oList = root.querySelectorAll('[data-src]:not([src])');
+                oList.forEach(function (e) {
+                    if (_this.isVisible(e) && (e.dataset.src)) {
+                        e.src = e.dataset.src;
+                    }
+                });
             }
         }
         return e;
