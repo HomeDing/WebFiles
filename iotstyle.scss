@@ -342,8 +342,7 @@ button + label {
 }
 
 button,
-.button,
-a.button:visited {
+.button {
   display: inline-block;
   font-size: 1.25em;
   min-width: 4em;
@@ -357,6 +356,9 @@ a.button:visited {
   user-select: none;
   -ms-user-select: none;
 
+  & :visited {
+    color: white;
+  }
   & :focus {
     border-color: $u-focus;
     background-color: $u-focus;

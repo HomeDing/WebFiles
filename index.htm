@@ -46,10 +46,8 @@
           <h2><img style="margin-right:0.4em;height:1em" src="/i/home.svg" />Device Pages</h2>
         </div>
         <div class="block">
-          <p><a href="setup.htm">Network setup</a></p>
           <p><a href="ding-log.htm">Log output</a></p>
           <p><a href="panel.htm">Panel</a></p>
-          <p><a href="boot.htm">Boot</a></p>
         </div>
       </div>
 
@@ -157,7 +155,7 @@
     var selObj = document.getElementById('elemsel');
     var elemsvgObj = document.getElementById('elemsvg');
 
-    memObj.onload = function () {
+    window.addEventListener('load', function () {
       fetch('/$sysinfo')
         .then(function (result) {
           return result.json();
@@ -212,7 +210,7 @@
         });
 
       selObj.addEventListener('change', elemChange);
-    };
+    });
   </script>
 </body>
 

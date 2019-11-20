@@ -102,15 +102,17 @@ svg.button .connect { fill: #00cc00; fill-opacity: 1; }
 
 a + a, a + button, a + label, label + a, label + button, label + label, button + a, button + button, button + label { margin-left: 0.5rem; }
 
-button, .button, a.button:visited { display: inline-block; font-size: 1.25em; min-width: 4em; height: 1.4em; padding: 0 0.25em; border-radius: 0.2em; border: 0.1rem solid #304878; background-color: #304878; color: white; cursor: pointer; user-select: none; -ms-user-select: none; }
+button, .button { display: inline-block; font-size: 1.25em; min-width: 4em; height: 1.4em; padding: 0 0.25em; border-radius: 0.2em; border: 0.1rem solid #304878; background-color: #304878; color: white; cursor: pointer; user-select: none; -ms-user-select: none; }
 
-button :focus, .button :focus, a.button:visited :focus { border-color: #4466ee; background-color: #4466ee; }
+button :visited, .button :visited { color: white; }
 
-button:disabled, .button:disabled, a.button:visited:disabled { border: 0.1rem solid #808080; background-color: #808080; }
+button :focus, .button :focus { border-color: #4466ee; background-color: #4466ee; }
 
-button.active, .button.active, a.button:visited.active { background-color: #acc1e4 !important; border-color: #203050 !important; }
+button:disabled, .button:disabled { border: 0.1rem solid #808080; background-color: #808080; }
 
-button.secondary, .button.secondary, a.button:visited.secondary { background-color: #777777; border-color: #777777; }
+button.active, .button.active { background-color: #acc1e4 !important; border-color: #203050 !important; }
+
+button.secondary, .button.secondary { background-color: #777777; border-color: #777777; }
 
 .btn-group { display: flex; flex-direction: row; flex-wrap: nowrap; align-items: flex-start; }
 
