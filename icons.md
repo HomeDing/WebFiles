@@ -12,17 +12,11 @@ and the renaming the following icons accordingly:
 | filename        | OS      | resolution          | used for...                |
 | --------------- | ------: | ------------------- | -------------------------- |
 | favicon.ico     | all     | 16x16, 32x32, 64x64 | for hyperlinks in general  |
-| favicon.svg     | all     |                     |                            |
-| favicon16.png   |         | 16x16               |
-| favicon32.png   |         | 32x32               |
-| favicon128.png  | windows | 128x128             | small window tiles         |
 | favicon144.png  | windows | 144x144             | window tiles               |
 | favicon180.png  | apple   | 180x180             | touch icon                 |
 | favicon192.ico  | android | 192x192             | tiles on android homepages |
 | favicon270.png  | windows | 270x270             | medium window tiles        |
-| favicon270w.png | windows | 558x270             | wide window tiles          |
 | favicon512.ico  | android | 512x512             | tiles on android homepages |
-| favicon558.png  | windows | 558x558             | large window tiles         |
 
 For the icons of the HomeDing library you can find zip files for every icon in the repository that all contain the following files:
 
@@ -32,10 +26,7 @@ They are linked direct or indirect to the index.htm file
 
 ```html
   <link rel="apple-touch-icon" sizes="180x180" href="/favicon180.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/favicon16.png">
   <link rel="icon" type="image/png" sizes="192x192" href="/favicon192.png">
-  <link rel="mask-icon" href="/favicon.svg" color="#5bbad5">
   <meta name="msapplication-config" content="/browserconfig.xml" />
   <meta name="msapplication-TileColor" content="#2b5797">
   <meta name="msapplication-TileImage" content="/favicon144.png">
@@ -66,10 +57,7 @@ They are linked direct or indirect to the index.htm file
 <browserconfig>
   <msapplication>
     <tile>
-      <square70x70logo src="/favicon128.png"/>
       <square150x150logo src="/favicon270.png"/>
-      <square310x310logo src="/favicon270w.png"/>
-      <wide310x150logo src="/favicon558.png"/>
       <TileColor>#2b5797</TileColor>
     </tile>
   </msapplication>
