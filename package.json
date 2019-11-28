@@ -40,11 +40,11 @@
     "start": "node server.js",
 
     "min-index": "html-minifier --collapse-whitespace --remove-tag-whitespace --remove-comments --minify-css true --minify-js true --quote-character ' min-index.htm -o min-index.min.htm",
-    "min-ide-htm": "html-minifier --collapse-whitespace --remove-tag-whitespace --remove-comments --minify-css true --minify-js true --quote-character ' ding-ide.htm -o mindist/ding-ide.htm",
+    "min-ide-htm": "html-minifier --collapse-whitespace --remove-tag-whitespace --remove-comments --minify-css true --minify-js true --quote-character ' microide.htm -o mindist/microide.htm",
     "min-templates-htm": "html-minifier --collapse-whitespace --remove-tag-whitespace --remove-comments --minify-css true --minify-js true --quote-character ' ding-templates.htm -o mindist/ding-templates.htm",
     "min-board-htm": "html-minifier --collapse-whitespace --remove-tag-whitespace --remove-comments --minify-css true --minify-js true --quote-character ' board.htm -o mindist/board.htm",
     "min-micro": "uglifyjs micro.js -c -o mindist/micro.js -m",
-    "min-ide": "uglifyjs ding-ide.js -c -o mindist/ding-ide.js"
+    "min-ide": "uglifyjs microide.js -c -o mindist/microide.js"
   },
   "keywords": [
     "IoT",

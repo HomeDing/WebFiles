@@ -1,4 +1,4 @@
-// ding-ide javascript implementation
+// microide javascript implementation
 
 var filesObj = document.getElementById("files");
 var contentObj = document.getElementById("content");

@@ -74,7 +74,7 @@ svg.button .connect { fill: #00cc00; fill-opacity: 1; }
 
 .u-navbar { background-color: #304878; padding: 0.5rem 1rem; margin-bottom: 0.5rem; }
 
-.u-navbar > button, .u-navbar .button { min-width: 2em; }
+.u-navbar > button, .u-navbar .button { min-width: 2em; color: white; }
 
 .u-navbar > button:hover, .u-navbar .button:hover { border-color: #4466ee; background-color: #4466ee; }
 

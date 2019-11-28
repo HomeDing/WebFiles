@@ -10,7 +10,7 @@ set curlopts=-0 --retry 3
 curl -T iotstyle.min.css "http://%devname%/iotstyle.css" %curlopts%
 curl -T micro.min.js "http://%devname%/micro.js" %curlopts%
 curl -T ding.min.js "http://%devname%/ding.js" %curlopts%
-curl -T ding-ide.min.js "http://%devname%/ding-ide.js" %curlopts%
+curl -T microide.min.js "http://%devname%/microide.js" %curlopts%
 
 REM curl -T index.htm "http://%devname%/index.htm" %curlopts%
 REM curl -T spinner.gif "http://%devname%/spinner.gif" %curlopts%

@@ -38,12 +38,15 @@ logInfo(`Starting...`);
 const srcAssets = [
   'index.htm',
   'iotstyle.css',
+  'spinner.gif',
+  
   'micro.js',
   'es6-promise.auto.js',
   'polyfill.js',
 
-  'ding-ide.htm',
-  'ding-ide.js',
+  'elements.json',
+
+  'microide.*',
 
   'board.htm',
   'board-new.htm',
@@ -53,9 +56,9 @@ const srcAssets = [
   'panel.htm',
   'panel.js',
 
+  'microsvg.js',
   'elementsvg.js',
   'lineChart.js',
-  'microsvg.js',
   'pieChart.js',
 
   '*.svg',
