@@ -47,9 +47,17 @@ var dataBox = minBox;
 var displayBox = minBox;
 
 // Date and Time formatting
+function fmtDate(t) {
+  var d = new Date(t * 1000);
+  return d.toLocaleDateString();
+} // fmtDate
+
+// Date and Time formatting
 function fmtTime(t) {
-  return new Date(t * 1000).toISOString().replace(/([0-9\-]*)T([0-9\:]*).000Z/, '$2');
+  var d = new Date(t * 1000);
+  return d.toLocaleTimeString();
 } // fmtTime
+
 
 // look in all graphs.data for maximum values
 
@@ -239,7 +247,6 @@ function drawVAxis(g) {
       y: -1 * (n - low) * scaleY
     });
     txtObj.textContent = String(n);
-    // <text x="11" y="0">0-</text>
   }
 }
 
@@ -271,9 +278,6 @@ function drawHAxis(g) {
       y: 0
     });
     txtObj.textContent = fmtTime(n);
-
-    //   // <text x="11" y="0">0-</text>
-    // }
   } // if
 }
 
@@ -335,12 +339,13 @@ function setIndicator(box, data) {
 
     var infoObj = indObj.querySelector('.info');
     // calc infobox position
-    xPos += xPos < REGION_WIDTH / 2 ? 2 : -18;
+    xPos += xPos < REGION_WIDTH / 2 ? 2 : -20;
     yPos += yPos < REGION_HEIGHT / 2 ? 2 : -12;
     infoObj.setAttribute('transform', 'translate(' + xPos + ',' + yPos + ')');
     var txtObjs = infoObj.querySelectorAll('text');
     txtObjs[0].textContent = data.y;
-    txtObjs[1].textContent = fmtTime(data.x);
+    txtObjs[1].textContent = fmtDate(data.x);
+    txtObjs[2].textContent = fmtTime(data.x);
   } // if
 } // setIndicator()
 
