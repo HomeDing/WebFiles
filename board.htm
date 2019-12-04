@@ -120,7 +120,7 @@
       <a class="button" href="/">Home</a>
       <a class="button" href="/board.htm">Board</a>
       <a class="button" href="/microide.htm">IDE</a>
-      <a class="button" href="/ding-log.htm">Log</a>
+      <a class="button" href="/log.htm">Log</a>
       <button id="sysButton" class="func">sys</button>
       <button id="addButton" class="func">+</button>
     </div>
@@ -333,7 +333,7 @@
 
     function init() {
       // load templates from other file.
-      var p0 = Promise.all([micro.loadFile('/ding-templates.htm'), micro.loadFile('/board-new.htm')]);
+      var p0 = Promise.all([micro.loadFile('/board-templates.htm'), micro.loadFile('/board-new.htm')]);
 
       // element definitions -> env.json -> config.json
       var p1 = fetch('/elements.json')

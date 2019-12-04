@@ -34,8 +34,6 @@ copy min-config.json mindist\config.json
 
 
 REM ===== copy icons for min device ===== 
-copy favicon.svg mindist
-copy favicon32.png mindist
 copy favicon180.png mindist
 
 md mindist\i

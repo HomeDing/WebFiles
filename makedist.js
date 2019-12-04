@@ -50,9 +50,9 @@ const srcAssets = [
 
   'board.htm',
   'board-new.htm',
-  'ding-templates.htm',
+  'board-templates.htm',
 
-  'ding-log.htm',
+  'log.htm',
   'panel.htm',
   'panel.js',
 
@@ -65,6 +65,7 @@ const srcAssets = [
   'favicon*.*',
 
   'manifest.json',
+  'browserconfig.xml',
 
   'i/*.svg',
   'i/a*.svg',
