@@ -25,7 +25,7 @@ $u-off: red;
 // ===== Sizes =====
 
 $white-space: 1rem;
-$gutter: 0.5rem;
+$gutter: $white-space/2;
 
 $u-btn-radius: 0.2em;
 $u-input-border: 0.1rem solid #304878;
@@ -288,7 +288,7 @@ svg.button {
   > .block {
     position: relative;
     flex: 1 1 auto;
-    padding: $white-space;
+    padding: $gutter $white-space;
     min-height: 3em;
 
     &.header {
@@ -310,14 +310,6 @@ svg.button {
       > h4 {
         margin: 0;
       }
-    }
-
-    &:not(:first-child) {
-      padding-top: $gutter;
-    }
-
-    &:not(:last-child) {
-      padding-bottom: $gutter;
     }
   }
 
