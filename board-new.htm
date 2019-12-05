@@ -139,7 +139,7 @@
         l.forEach(function (e) {
           c[e.name] = e.value;
         });
-        changeConfig(this._id, c);
+        changeConfig(this._type + '/' + this._id, c);
         micro.closeModal();
       }
     }
