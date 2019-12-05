@@ -23,7 +23,7 @@
   <meta name="theme-color" content="#ffffff" />
 
   <link Content-Type="text/css" href="/iotstyle.css" rel="stylesheet" />
-  
+
   <style>
     .card img.active {
       background-color: limegreen;
@@ -290,6 +290,7 @@
 
     function createElement(path, key, value) {
       if (path) {
+        path = path.toLowerCase();
         var hElem = document.querySelector("[microID='" + path + "']");
         if (!hElem) {
           var t = path.split('/')[1];
