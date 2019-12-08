@@ -1,32 +1,19 @@
 {
-  "rotary": {
-    "0": {
-      "description": "Rotary Input",
-      "pin1": "D5",
-      "pin2": "D6",
-      "step": 10,
-      "onValue": "value/led?up=$v"
-    }
-  },
-
-  "value": {
-    "led": {
+  "pms": {
+    "pm25": {
       "loglevel": 2,
-      "value": 20,
-      "min": 0,
-      "max": 255,
-      "onValue": "pwmout/led?value=$v",
-      "description": "value for the LED"
+      "pinrx": "D2",
+      "pintx": "D1",
+      "readtime": 60,
+      "description": "read out pm25 sensor",
+      "onvalue": "log/pm?value=$v"
     }
   },
-
-  "pwmout": {
-    "led": {
-      "pin": "D4",
-      "range": 255,
-      "value": 10,
-      "invers": "true",
-      "description": "Build-in LED"
+  "log": {
+    "pm": {
+      "loglevel": 2,
+      "filename": "/pmlog.txt",
+      "description": "Log values to file"
     }
   }
 }
