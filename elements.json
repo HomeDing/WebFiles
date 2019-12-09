@@ -105,14 +105,24 @@
     "properties": ["loglevel", "description", "address", "readtime", "resetpin", "height"]
   },
 
-  "bme680": {
-    "properties": ["loglevel", "description", "address", "readtime"],
-    "actions": ["ontemperature", "onhumidity", "onpressure", "ongas"]
-  },
-
   "dht": {
     "properties": ["loglevel", "description", "type", "pin", "readtime", "resendtime"],
     "actions": ["ontemperature", "onhumidity"]
+  },
+
+  "bme680": {
+    "properties": ["loglevel", "description", "address", "readtime"],
+    "actions": ["ontemperature", "onhumidity", "onpressure", "ongas"]
+  },  
+
+  "pms": {
+    "properties": ["loglevel", "description", "pinrx", "pintx", "readtime"],
+    "actions": ["onvalue"]
+  },
+
+  "log": {
+    "properties": ["loglevel", "description", "filename"],
+    "events": ["value"]
   },
 
   "neo": {
