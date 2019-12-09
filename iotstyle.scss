@@ -110,9 +110,19 @@ h4 {
   min-height: 0.8rem;
 }
 
-.hidden {
-  display: none !important;
+#modal {
+  visibility: visible;
+  opacity: 1;
+  transition: opacity 0.3s ease-in-out;
 }
+
+#modal.hidden  {
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0s .3s, opacity 0.3s ease-in-out;;
+}
+
+
 
 // ===== Grid Design with grid of 6 =====
 

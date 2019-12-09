@@ -24,7 +24,9 @@ h3 { font-size: 1.25em; font-weight: bold; }
 
 h4 { font-size: 0.8em; min-height: 0.8rem; }
 
-.hidden { display: none !important; }
+#modal { visibility: visible; opacity: 1; transition: opacity 0.3s ease-in-out; }
+
+#modal.hidden { visibility: hidden; opacity: 0; transition: visibility 0s .3s, opacity 0.3s ease-in-out; }
 
 .container { margin-right: 2rem; margin-left: 2rem; }
 
