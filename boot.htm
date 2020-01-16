@@ -28,6 +28,7 @@
     var eInfo = document.querySelector('#info');
     var work = { status: '0', list: null, files: 0, done: 0 };
     var timer = 0;
+    var seed = "?" + new Date().valueOf();
 
     function log(t) {
       eInfo.innerText = t;
@@ -45,7 +46,7 @@
       work.status = 'w'; // wait
 
       var oReq = new XMLHttpRequest();
-      oReq.open("GET", repo + 'list.txt', true);
+      oReq.open("GET", repo + 'list.txt' + seed, true);
       oReq.responseType = "text";
 
       oReq.onload = function (oEvent) {
@@ -68,19 +69,21 @@
       work.done++;
       eBar.max = work.files;
       eBar.value = work.done;
+      eInfo.innerText = theItem; // log
 
       var oReq = new XMLHttpRequest();
-      oReq.open("GET", repo + theItem, true);
+      oReq.open("GET", repo + theItem + seed, true);
       oReq.responseType = "arraybuffer";
 
       oReq.onerror = function (evt) {
-        log(theItem + ": error: failed.");
+        console.log(theItem + ": read failed.");
         work.status = 'r'; // run
       };
 
       oReq.onload = function (oEvent) {
         if (oReq.status != 200) {
-          log(theItem + ": error: " + oReq.status);
+          console.log(theItem + ": error " + oReq.status);
+          work.status = 'r'; // run
         } else {
           var arrayBuffer = oReq.response; // Note: not oReq.responseText
           if (arrayBuffer) {
@@ -90,7 +93,7 @@
             var xmlHttp = new XMLHttpRequest();
             xmlHttp.addEventListener('readystatechange', function (p) {
               if ((xmlHttp.readyState == 4) && (xmlHttp.status >= 200) && (xmlHttp.status < 300)) {
-                log(theItem);
+                work.status = 'r'; // run
               }
             });
             xmlHttp.open('POST', '/');
@@ -98,7 +101,7 @@
 
           }
         }
-        work.status = (work.list.length == 0 ? 'e' : 'r');
+        // work.status = (work.list.length == 0 ? 'e' : 'r');
       };
       oReq.send(null);
 
@@ -112,7 +115,10 @@
         // fetch file list;
         doStart();
       } else if (work.status == 'r') { // run
-        doFile();
+        if (work.list.length == 0)
+          work.status = 'e';
+        else
+          doFile();
       } else if (work.status == 'e') { // end
         if (timer) {
           window.clearInterval(timer);
