@@ -1,6 +1,7 @@
 // makeicon.js
 // create the favicons from a SVG icon in the /i/ folder
 // 
+// node makeicon.js -n pms 
 // to create all files use:
 // for %F in (i\*.svg) do (node makeicon.js -n %~nF -s)
 //
@@ -56,24 +57,24 @@ function convert(filename, size) {
         shell.mv(`${workingFolder}\\_out\\favicon.png`, `${workingFolder}\\_out\\${filename}.png`);
         resolve();
       })
-    });
-  };
-  
-  
-  async function main() {
-    logInfo (`Converting icon: "${options.name}"`)
-    
-    // create fresh folder
-    shell.rm('-rf', outFolder);
-    shell.mkdir(outFolder);
-    
-    // create favicon.svg from selected icon
-    let s = fs.readFileSync(`${workingFolder}\\i\\${iconName}.svg`).toString();
+  });
+};
+
+async function main() {
+  logInfo(`Converting icon: "${options.name}"`)
+
+  // create fresh folder
+  shell.rm('-rf', outFolder);
+  shell.mkdir(outFolder);
+
+  // create favicon.svg from selected icon
+  let s = fs.readFileSync(`${workingFolder}\\i\\${iconName}.svg`).toString();
   const offset = s.indexOf('>') + 1;
   s = s.substr(0, offset) + backpanel + s.substr(offset);
   fs.writeFileSync(`${workingFolder}\\_out\\favicon.svg`, s);
 
   // create pngs
+  await convert('favicon48', 48);
   await convert('favicon144', 144);
   await convert('favicon180', 180);
   await convert('favicon192', 192);

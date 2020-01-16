@@ -2,29 +2,28 @@
 <html lang="en">
 
 <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
   <title>IoT HomeDing Device</title>
 
-  <link rel="shortcut icon" href="/favicon.ico">
-  <link rel="icon" type="image/png" sizes="192x192" href="/favicon192.png" />
-
+  <link rel="icon" type="image/png" href="/favicon48.png" sizes="48x48">
   <meta name="application-name" content="Ding" />
   <meta name="msapplication-config" content="/browserconfig.xml" />
   <meta name="msapplication-TileColor" content="#2b5797" />
   <meta name="msapplication-TileImage" content="/favicon144.png" />
-
   <link rel="apple-touch-icon" sizes="180x180" href="/favicon180.png" />
   <meta name="mobile-web-app-capable" content="yes" />
-
   <link rel="manifest" href="/manifest.json" />
   <meta name="theme-color" content="#ffffff" />
+  <link rel="icon" type="image/png" href="/favicon48.png" sizes="48x48">
 
-  <link Content-Type="text/css" href="iotstyle.css" rel="stylesheet" />
-  <style></style>
-  <script src="polyfill.js"></script>
-  <script src="es6-promise.auto.js"></script>
-  <!-- <script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.auto.js"></script> -->
-  <script src="micro.js"></script>
+  <link Content-Type="text/css" href="/iotstyle.css" rel="stylesheet" />
+
+  <script src="/polyfill.js"></script>
+  <script src="/es6-promise.auto.js"></script>
+  <script src="/micro.js"></script>
 </head>
 
 <body>
@@ -49,6 +48,7 @@
         <div class="block">
           <p><a href="log.htm">Log output</a></p>
           <p><a href="panel.htm">Panel</a></p>
+          <p><a href="ding.htm">Ding</a></p>
         </div>
       </div>
 
@@ -71,7 +71,6 @@
         <div class="block">
           <p><a href="/env.json">Env file</a></p>
           <p><a href="/config.json">Config file</a></p>
-          <p><a href="/i/index.htm">Icons</a></p>
 
           <p><a href="/$board">State of elements</a></p>
           <p><a href="/$list">current files</a></p>
