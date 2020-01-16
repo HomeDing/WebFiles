@@ -312,6 +312,7 @@ svg.button {
         height: 3rem;
         float: left;
         margin-right: $gutter;
+        overflow:hidden;
       }
 
       > h3 {
