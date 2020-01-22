@@ -46,7 +46,7 @@ class GenericWidgetClass extends MicroControlClass {
     }, this);
 
     // textContent
-    ['h2', 'h4', 'span'].forEach(function (this: GenericWidgetClass, elType) {
+    ['h2', 'h4', 'span', 'button'].forEach(function (this: GenericWidgetClass, elType) {
       if (this.el) {
         this.el.querySelectorAll(elType + "[u-text='" + key + "']").forEach(function (elem) {
           if (elem.textContent != value) elem.textContent = value;
@@ -62,12 +62,28 @@ class GenericWidgetClass extends MicroControlClass {
         });
       }
     }, this);
+
+    // action of buttons
+    ['button'].forEach(function (this: GenericWidgetClass, elType) {
+      if (this.el) {
+        this.el.querySelectorAll(elType + "[u-action='${" + key + "}']").forEach(function (elem) {
+          setAttr(elem as HTMLElement, 'u-action', value ? value : '');
+        });
+      }
+    }, this);
   } // newData()
+
 
   // send an action to the board and dispatch to the element
   dispatchAction(prop: string | null, val: string | null) {
     if (prop !== null && val !== null) {
-      fetch(`/$board${this.microid}?${prop}=${encodeURI(val)}`).then(() => {
+      let url = '';
+      if (prop.includes('/')) {
+        url = `/$board/${prop}`;
+      } else {
+        url = `/$board${this.microid}?${prop}=${encodeURI(val)}`;
+      }
+      fetch(url).then(() => {
         // @ts-ignore
         if (updateAsap) updateAsap();
       });

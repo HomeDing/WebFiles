@@ -288,7 +288,7 @@ var GenericWidgetClass = (function (_super) {
                 });
             }
         }, this);
-        ['h2', 'h4', 'span'].forEach(function (elType) {
+        ['h2', 'h4', 'span', 'button'].forEach(function (elType) {
             if (this.el) {
                 this.el.querySelectorAll(elType + "[u-text='" + key + "']").forEach(function (elem) {
                     if (elem.textContent != value)
@@ -304,10 +304,24 @@ var GenericWidgetClass = (function (_super) {
                 });
             }
         }, this);
+        ['button'].forEach(function (elType) {
+            if (this.el) {
+                this.el.querySelectorAll(elType + "[u-action='${" + key + "}']").forEach(function (elem) {
+                    setAttr(elem, 'u-action', value ? value : '');
+                });
+            }
+        }, this);
     };
     GenericWidgetClass.prototype.dispatchAction = function (prop, val) {
         if (prop !== null && val !== null) {
-            fetch("/$board" + this.microid + "?" + prop + "=" + encodeURI(val)).then(function () {
+            var url = '';
+            if (prop.includes('/')) {
+                url = "/$board/" + prop;
+            }
+            else {
+                url = "/$board" + this.microid + "?" + prop + "=" + encodeURI(val);
+            }
+            fetch(url).then(function () {
                 if (updateAsap)
                     updateAsap();
             });
