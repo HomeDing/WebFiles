@@ -260,6 +260,7 @@ var GenericWidgetClass = (function (_super) {
         _this.microid = '';
         _this.data = {};
         _this.subId = 0;
+        _this.actions = [];
         return _this;
     }
     GenericWidgetClass.prototype.connectedCallback = function () {
@@ -312,19 +313,34 @@ var GenericWidgetClass = (function (_super) {
             }
         }, this);
     };
+    GenericWidgetClass.prototype.dispatchNext = function () {
+        var _this = this;
+        if (this.actions) {
+            var a = this.actions.shift();
+            if (a) {
+                fetch(a).then(function () {
+                    if (_this.actions.length > 0) {
+                        debounce(_this.dispatchNext.bind(_this))();
+                    }
+                    else {
+                        if (updateAsap)
+                            updateAsap();
+                    }
+                });
+            }
+        }
+    };
     GenericWidgetClass.prototype.dispatchAction = function (prop, val) {
+        var _this = this;
         if (prop !== null && val !== null) {
-            var url = '';
             if (prop.includes('/')) {
-                url = "/$board/" + prop;
+                prop.replace('${v}', encodeURI(val));
+                prop.split(',').forEach(function (a) { return _this.actions.push('/$board/' + a); });
             }
             else {
-                url = "/$board" + this.microid + "?" + prop + "=" + encodeURI(val);
+                this.actions.push("/$board" + this.microid + "?" + prop + "=" + encodeURI(val));
             }
-            fetch(url).then(function () {
-                if (updateAsap)
-                    updateAsap();
-            });
+            debounce(this.dispatchNext.bind(this))();
         }
     };
     GenericWidgetClass.prototype.onchange = function (e) {
@@ -1068,6 +1084,20 @@ function setTextContent(el, txt) {
 function setAttr(el, name, value) {
     if (el.getAttribute(name) !== value)
         el.setAttribute(name, value);
+}
+function debounce(func, wait) {
+    if (wait === void 0) { wait = 20; }
+    var timer;
+    return function () {
+        var scope = this;
+        var args = arguments;
+        if (timer)
+            clearTimeout(timer);
+        timer = setTimeout(function () {
+            timer = 0;
+            func.apply(scope, args);
+        }, wait);
+    };
 }
 function getHashParams(defaults) {
     var params = __assign({}, defaults);

@@ -145,7 +145,7 @@
 
       <div class="col card" u-control="webbutton" id="${id}" u-is="generic" microID="${id}">
         <div class="block">
-          <button u-action="${onaction}" u-text="description" >...</button>
+          <button u-action="${onclick}" u-text="description" ></button>
         </div>
       </div>
     </div>
@@ -226,12 +226,10 @@
         })
         .then(function (json) {
           hub.write('config', JSON.stringify(json));
-          hub.write('config2', json);
           hub.publishObj(json);
         })
         .then(function () {
           updateState();
-          // window.setTimeout(updateState, 4000);
         });
     } // init()
 

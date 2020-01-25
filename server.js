@@ -51,11 +51,12 @@ if (!fs.existsSync(boardFileName)) {
 let configData = JSON.parse(fs.readFileSync(useCase + 'config.json', 'utf8'));
 
 // ===== /$board status
-let boardStatus = null;
+let boardStatus = {};
 
 // ===== status mocking functions
 let mockGetStatus = {}; // return current status
-let mockSetAction = {}; // set an Property of process an action
+let mockSetAction = {}; // set a property or process an action
+let mockConfigData = {}; // config data of element
 
 
 // enable to add X-Respose-Time to http header
@@ -223,62 +224,74 @@ function addElementMock(id, fGet, fSet) {
     mockGetStatus[id] = fGet;
   if (fSet)
     mockSetAction[id] = fSet;
+  // boardStatus[id] = {};
 };
 
 
 addElementMock('dstime/0', function (state) {
+  if (!state) state = {};
   state.now = isoDate();
   return (state);
 }, null);
 
 addElementMock('ntptime/on', function (state) {
+  if (!state) state = {};
   state.now = isoDate();
   return (state);
 }, null);
 
 addElementMock('displaytext/pm', function (state) {
+  if (!state) state = {};
   state.value = Math.floor(Math.random() * 40);
   return (state);
 }, null);
 
-addElementMock('displaydot/b', function (state) {
-  var d = new Date();
-  state.value = Math.floor(d.getSeconds() / 8) % 2;
-  return (state);
-}, null);
+addElementMock('displaydot/b',
+  function (state) {
+    var d = new Date();
+    if (!state) state = {};
+    state.value = Math.floor(d.getSeconds() / 8) % 2;
+    return (state);
+  },
+  null);
 
 
-// ===== mocking switch elements
+// ===== add mocking function for some common types. 
 
-if (configData.value) {
-  for (e in configData.value) {
-    const cnf = configData.value[e];
-    // set default value
-    if (!cnf.step)
-      cnf.step = 1;
-
-    // add get and set methods of state
-    addElementMock('value/' + e, function (state) {
-      if (!state) {
-        state = {
-          active: 1,
-          value: 0
-        };
-      }
-      return (state);
-    }, function (state, query) {
-      if (query.value != null)
-        state.value = query.value;
-      if (query.up != null)
-        state.value = Number(state.value) + Number(cnf.step) * Number(query.up);
-      if (query.down != null)
-        state.value = Number(state.value) - Number(cnf.step) * Number(query.down);
-      return (state);
-    });
-
-    logInfo(e);
+function addTypeMock(type, fGet, fSet) {
+  if (configData[type]) {
+    for (e in configData[type]) {
+      addElementMock(type + '/' + e, fGet, fSet);
+    }
   }
-}
+} // addTypeMock()
+
+
+// ===== mocking value elements mentioned in config
+
+addTypeMock('value',
+  function (state) {
+    if (!state) {
+      state = {
+        active: 1,
+        value: 0
+      };
+    }
+    return (state);
+  },
+  function (state, action, cnf) {
+    const step = cnf.step ? Number(cnf.step) : 1;
+
+    if (action.value != null)
+      state.value = action.value;
+    if (action.up != null)
+      state.value = Number(state.value) + Number(action.up) * step;
+    if (action.down != null)
+      state.value = Number(state.value) - Number(action.down) * step;
+    return (state);
+  });
+
+// ===== mocking all switch elements mentioned in config
 
 if (configData.switch) {
   for (e in configData.switch) {
@@ -319,8 +332,10 @@ app.get('/\\$board/:type/:id', noCache, function (req, res, next) {
 
   if (Object.keys(req.query).length > 0) {
     // incoming action
-    if (mockSetAction[id])
-      boardStatus[id] = mockSetAction[id](boardStatus[id], req.query);
+    if (mockSetAction[id]) {
+      const c = configData[req.params.type][req.params.id];
+      boardStatus[id] = mockSetAction[id](boardStatus[id], req.query, c);
+    }
     logInfo(boardStatus[id]);
     res.send();
 
@@ -342,14 +357,8 @@ app.get(/^\/\$board$/, noCache, function (req, res, next) {
     boardStatus = JSON.parse(fs.readFileSync(boardFileName, 'utf8'));
 
   for (let id in mockGetStatus) {
-    // if (!boardStatus[id]) {
-    //   boardStatus[id] = {};
-    // }
-    // boardStatus[id] = mockGetStatus[id](boardStatus[id]);
-    // update mock status when element is known.
-    if (boardStatus[id]) {
-      boardStatus[id] = mockGetStatus[id](boardStatus[id]);
-    }
+    // update all mock status .
+    boardStatus[id] = mockGetStatus[id](boardStatus[id]);
   }
 
   // debugIoT(boardStatus);

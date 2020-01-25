@@ -10,6 +10,7 @@ class GenericWidgetClass extends MicroControlClass {
   microid: string = '';
   data: any = {};
   subId: number = 0;
+  actions: string[] = [];
 
   connectedCallback() {
     super.connectedCallback();
@@ -74,21 +75,38 @@ class GenericWidgetClass extends MicroControlClass {
   } // newData()
 
 
+  dispatchNext() {
+    if (this.actions) {
+      const a = this.actions.shift();
+      if (a) {
+        fetch(a).then(() => {
+          if (this.actions.length > 0) {
+            debounce(this.dispatchNext.bind(this))();
+          } else {
+            // @ts-ignore
+            if (updateAsap) updateAsap();
+          } // if
+        });
+      }
+    }
+  } // dispatchNext()
+
+
   // send an action to the board and dispatch to the element
   dispatchAction(prop: string | null, val: string | null) {
     if (prop !== null && val !== null) {
-      let url = '';
       if (prop.includes('/')) {
-        url = `/$board/${prop}`;
+        // list of actions with optional value placeholder
+        prop.replace('${v}', encodeURI(val));
+        prop.split(',').forEach((a) => this.actions.push('/$board/' + a));
       } else {
-        url = `/$board${this.microid}?${prop}=${encodeURI(val)}`;
+        // simple set one property to this element 
+        this.actions.push(`/$board${this.microid}?${prop}=${encodeURI(val)}`);
       }
-      fetch(url).then(() => {
-        // @ts-ignore
-        if (updateAsap) updateAsap();
-      });
+      debounce(this.dispatchNext.bind(this))();
     }
   } // dispatchAction()
+
 
   // send changed value of property as an action to the board
   onchange(e: Event) {
