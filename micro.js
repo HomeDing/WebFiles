@@ -846,22 +846,52 @@ var SwitchWidgetClass = (function (_super) {
     ], SwitchWidgetClass);
     return SwitchWidgetClass;
 }(GenericWidgetClass));
-function upload(filename, content) {
-    var formData = new FormData();
-    var blob = new Blob([content], {
-        type: 'text/html'
-    });
-    formData.append(filename, blob, filename);
-    var objHTTP = new XMLHttpRequest();
-    objHTTP.open('POST', '/');
-    objHTTP.addEventListener('readystatechange', function () {
-        if (this.readyState == 4 && this.status >= 200 && this.status < 300) {
-            alert('saved.');
-        }
-    });
-    objHTTP.send(formData);
+function toBool(s) {
+    if (!s)
+        return false;
+    switch (s.toLowerCase().trim()) {
+        case 'true':
+        case 'yes':
+            return true;
+        case 'false':
+        case 'no':
+        case '0':
+        case null:
+            return false;
+        default:
+            return Boolean(s);
+    }
+}
+function toSeconds(v) {
+    var ret = 0;
+    v = v.toLowerCase();
+    if (v.endsWith('h')) {
+        ret = parseInt(v, 10) * 60 * 60;
+    }
+    else if (v.endsWith('m')) {
+        ret = parseInt(v, 10) * 60;
+    }
+    else if (v.endsWith('s')) {
+        ret = parseInt(v, 10);
+    }
+    else if (v.includes(':')) {
+        ret = (Date.parse('1.1.1970 ' + v) - Date.parse('1.1.1970')) / 1000;
+    }
+    else {
+        ret = Number(v);
+    }
+    return ret;
+}
+function setTextContent(el, txt) {
+    if (el.textContent !== txt)
+        el.textContent = txt;
+}
+function setAttr(el, name, value) {
+    if (el.getAttribute(name) !== value)
+        el.setAttribute(name, value);
 }
 function changeConfig(id, newConfig) {
+    var fName = '/config.json';
     var c = JSON.parse(hub.read('config'));
     var node = jsonFind(c, id);
     for (var n in newConfig) {
@@ -872,7 +902,41 @@ function changeConfig(id, newConfig) {
             delete node[n];
         }
     }
-    upload('/config.json', JSON.stringify(c));
+    var formData = new FormData();
+    formData.append(fName, new Blob([JSON.stringify(c)], { type: 'text/html' }), fName);
+    var objHTTP = new XMLHttpRequest();
+    objHTTP.open('POST', '/');
+    objHTTP.addEventListener('readystatechange', function () {
+        if (this.readyState == 4 && this.status >= 200 && this.status < 300) {
+            alert('saved.');
+        }
+    });
+    objHTTP.send(formData);
+}
+function debounce(func, wait) {
+    if (wait === void 0) { wait = 20; }
+    var timer;
+    return function () {
+        var scope = this;
+        var args = arguments;
+        if (timer)
+            clearTimeout(timer);
+        timer = setTimeout(function () {
+            timer = 0;
+            func.apply(scope, args);
+        }, wait);
+    };
+}
+function getHashParams(defaults) {
+    var params = __assign({}, defaults);
+    window.location.hash
+        .substr(1)
+        .split('&')
+        .forEach(function (p) {
+        var pa = p.split('=');
+        params[pa[0]] = pa[1];
+    });
+    return params;
 }
 var TimerWidgetClass = (function (_super) {
     __extends(TimerWidgetClass, _super);
@@ -884,36 +948,19 @@ var TimerWidgetClass = (function (_super) {
         _this.time = 0;
         return _this;
     }
-    TimerWidgetClass.prototype._timeToSec = function (v) {
-        var ret = 0;
-        v = v.toLowerCase();
-        if (v.endsWith('h')) {
-            ret = parseInt(v, 10) * 60 * 60;
-        }
-        else if (v.endsWith('m')) {
-            ret = parseInt(v, 10) * 60;
-        }
-        else if (v.endsWith('s')) {
-            ret = parseInt(v, 10);
-        }
-        else {
-            ret = Number(v);
-        }
-        return ret;
-    };
     TimerWidgetClass.prototype.newData = function (path, key, value) {
         _super.prototype.newData.call(this, path, key, value);
         if (key == 'waittime') {
-            this.wt = this._timeToSec(value);
+            this.wt = toSeconds(value);
         }
         else if (key == 'pulsetime') {
-            this.pt = this._timeToSec(value);
+            this.pt = toSeconds(value);
         }
         else if (key == 'cycletime') {
-            this.ct = this._timeToSec(value);
+            this.ct = toSeconds(value);
         }
         else if (key == 'time') {
-            this.time = this._timeToSec(value);
+            this.time = toSeconds(value);
         }
         if (this.ct < this.wt + this.pt)
             this.ct = this.wt + this.pt;
@@ -1061,53 +1108,4 @@ var MicroHub = (function () {
 }());
 var hub = new MicroHub();
 window.addEventListener('unload', hub.onunload.bind(hub), false);
-function toBool(s) {
-    if (!s)
-        return false;
-    switch (s.toLowerCase().trim()) {
-        case 'true':
-        case 'yes':
-            return true;
-        case 'false':
-        case 'no':
-        case '0':
-        case null:
-            return false;
-        default:
-            return Boolean(s);
-    }
-}
-function setTextContent(el, txt) {
-    if (el.textContent !== txt)
-        el.textContent = txt;
-}
-function setAttr(el, name, value) {
-    if (el.getAttribute(name) !== value)
-        el.setAttribute(name, value);
-}
-function debounce(func, wait) {
-    if (wait === void 0) { wait = 20; }
-    var timer;
-    return function () {
-        var scope = this;
-        var args = arguments;
-        if (timer)
-            clearTimeout(timer);
-        timer = setTimeout(function () {
-            timer = 0;
-            func.apply(scope, args);
-        }, wait);
-    };
-}
-function getHashParams(defaults) {
-    var params = __assign({}, defaults);
-    window.location.hash
-        .substr(1)
-        .split('&')
-        .forEach(function (p) {
-        var pa = p.split('=');
-        params[pa[0]] = pa[1];
-    });
-    return params;
-}
 //# sourceMappingURL=micro.js.map

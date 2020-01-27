@@ -1,49 +1,13 @@
-// SwitchWidget.ts: Widget Behavior implementation for Timer Elements
+// TimerWidget.ts: Widget Behavior implementation for Timer Elements
 
 // This file is part of the Widget implementation for the HomeDing Library
 // implementing the Web UI corresponding to an internal configured element.
 
 /// <reference path="micro.ts" />
+/// <reference path="utils.ts" />
 /// <reference path="microControls.ts" />
 /// <reference path="GenericWidget.ts" />
 
-// start uploading file content
-function upload(filename: string, content: string) {
-  var formData = new FormData();
-  var blob = new Blob([content], {
-    type: 'text/html'
-  });
-  formData.append(filename, blob, filename);
-
-  var objHTTP = new XMLHttpRequest();
-  objHTTP.open('POST', '/');
-  // if (objHTTP.upload) {
-  //   objHTTP.upload.addEventListener('progress', function (e) {
-  //     progressObj.max = e.total;
-  //     progressObj.value = e.loaded;
-  //   });
-  // } // if
-
-  objHTTP.addEventListener('readystatechange', function () {
-    if (this.readyState == 4 && this.status >= 200 && this.status < 300) {
-      alert('saved.');
-    } // if
-  });
-  objHTTP.send(formData);
-} // upload
-
-function changeConfig(id: string, newConfig: any) {
-  var c = JSON.parse(hub.read('config'));
-  var node = jsonFind(c, id);
-  for (let n in newConfig) {
-    if (newConfig[n]) {
-      node[n] = newConfig[n];
-    } else {
-      delete node[n];
-    }
-  }
-  upload('/config.json', JSON.stringify(c));
-} // changeConfig()
 
 @MicroControl('timer')
 class TimerWidgetClass extends GenericWidgetClass {
@@ -52,31 +16,16 @@ class TimerWidgetClass extends GenericWidgetClass {
   ct: number = 0;
   time: number = 0;
 
-  _timeToSec(v: string): number {
-    let ret: number = 0;
-    v = v.toLowerCase();
-    if (v.endsWith('h')) {
-      ret = parseInt(v, 10) * 60 * 60;
-    } else if (v.endsWith('m')) {
-      ret = parseInt(v, 10) * 60;
-    } else if (v.endsWith('s')) {
-      ret = parseInt(v, 10);
-    } else {
-      ret = Number(v);
-    } // if
-    return ret;
-  } // _timeToSec()
-
   newData(path: string, key: string, value: string) {
     super.newData(path, key, value);
     if (key == 'waittime') {
-      this.wt = this._timeToSec(value);
+      this.wt = toSeconds(value);
     } else if (key == 'pulsetime') {
-      this.pt = this._timeToSec(value);
+      this.pt = toSeconds(value);
     } else if (key == 'cycletime') {
-      this.ct = this._timeToSec(value);
+      this.ct = toSeconds(value);
     } else if (key == 'time') {
-      this.time = this._timeToSec(value);
+      this.time = toSeconds(value);
     }
 
     if (this.ct < this.wt + this.pt) this.ct = this.wt + this.pt;
