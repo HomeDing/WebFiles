@@ -24,9 +24,9 @@ class SliderWidgetClass extends GenericWidgetClass {
 
   connectedCallback() {
     super.connectedCallback();
-    if (this.el) {
-      // find the moveable knob
-      this._handle = <HTMLElement>this.el.querySelector(".handle");
+    // find the moveable knob
+    this._handle = this.querySelector(".handle");
+    if (this._handle) {
       const p = <HTMLElement>this._handle.parentElement;
       const ps = getComputedStyle(p);
       this._maxright = p.clientWidth - this._handle.offsetWidth - parseFloat(<string>ps.paddingLeft) - parseFloat(<string>ps.paddingRight);
@@ -62,9 +62,8 @@ class SliderWidgetClass extends GenericWidgetClass {
     } // if
   } // newData()
 
-  
+
   on_click(e: MouseEvent) {
-    if (this.el) {
       var src: HTMLElement | null = e.srcElement as HTMLElement;
       while (src != null && src.classList.length == 0) src = src.parentElement;
       if (src != null) {
@@ -80,9 +79,7 @@ class SliderWidgetClass extends GenericWidgetClass {
           super.on_click(e);
         }
       }
-
       // if (src == o) this.dispatchAction('toggle', '1');
-    }
   }
 
   on_mousedown(evt: MouseEvent) {
@@ -139,7 +136,7 @@ class SliderWidgetClass extends GenericWidgetClass {
     document.removeEventListener("mouseup", this._upFunc);
   } // onmouseup
 
-  on_touchstart(evt:TouchEvent) {
+  on_touchstart(evt: TouchEvent) {
     /// <summary>Handle the event when a touch operation starts.</summary>
     var t = evt.targetTouches[0].target;
     if (t == this._handle) {

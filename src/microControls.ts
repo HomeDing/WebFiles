@@ -9,17 +9,14 @@
 // https://www.typescriptlang.org/docs/handbook/decorators.html
 
 interface MicroControlClass extends HTMLElement {
-  el: HTMLElement | undefined;
-  connectedCallback(el: HTMLElement): void;
+  connectedCallback(): void;
   init?() : void;
   term?() : void;
   _attachedBehavior: MicroControlClass | undefined;
 } // ControlInterface
 
 class MicroControlClass {
-  connectedCallback(): void {
-    this.el = <HTMLElement><any>this;
-  }
+  connectedCallback(): void {}
 }
 
 // Decorator for micro-controls.

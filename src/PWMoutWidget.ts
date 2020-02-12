@@ -21,8 +21,8 @@ class PWMOutWidgetClass extends GenericWidgetClass {
     if (key == "range") {
       this._range = Number(value);
     } else if (key == "value") {
-      if (this.el && this.lastValue !== value) {
-        var o: HTMLElement = <HTMLElement>this.el.querySelector(".ux-levelbar");
+      if (this.lastValue !== value) {
+        var o: HTMLElement = <HTMLElement>this.querySelector(".ux-levelbar");
         var h = o.offsetHeight;
         var bh = (h * Number(value)) / this._range;
         if (bh > h - 1) bh = h - 1;

@@ -22,17 +22,17 @@ class DSTimeWidgetClass extends GenericWidgetClass {
     return (ds);
   }
 
+  
   connectedCallback() {
     super.connectedCallback();
-    if (this.el) {
-      this._nowObj = <HTMLElement>this.el.querySelector(".setnow");
-      window.setInterval(function (this: DSTimeWidgetClass) {
-        if (this._nowObj) {
-          setTextContent(this._nowObj, this.isoDate());
-        }
-      }.bind(this), 200);
-    }
-  }
+    this._nowObj = <HTMLElement>this.querySelector(".setnow");
+    window.setInterval(function (this: DSTimeWidgetClass) {
+      if (this._nowObj) {
+        setTextContent(this._nowObj, this.isoDate());
+      }
+    }.bind(this), 200);
+  } // connectedCallback()
+
 
   on_click(this: DSTimeWidgetClass, e: MouseEvent) {
     const src = e.target as HTMLElement;

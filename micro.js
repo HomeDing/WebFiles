@@ -157,38 +157,41 @@ var MicroRegistry = (function () {
     };
     MicroRegistry.prototype.loadBehavior = function (obj, behavior) {
         var b = behavior;
-        var o = obj;
+        var oc = obj;
         if (!obj) {
             console.error('loadBehavior: obj argument is missing.');
         }
         else if (!behavior) {
             console.error('loadBehavior: behavior argument is missing.');
         }
-        else if (o._attachedBehavior == behavior) {
+        else if (oc._attachedBehavior === behavior) {
         }
         else {
             if (obj.attributes) {
                 for (var n = 0; n < obj.attributes.length; n++) {
                     var a = obj.attributes[n];
-                    if (!o[a.name])
-                        o[a.name] = a.value;
+                    if (!obj[a.name])
+                        obj[a.name] = a.value;
                 }
             }
             for (var p in b) {
-                if (p.substr(0, 2) == 'on') {
+                if (p.substr(0, 3) == 'on_') {
+                    obj.addEventListener(p.substr(3), b[p].bind(obj), false);
+                }
+                else if (p.substr(0, 2) == 'on') {
                     obj.addEventListener(p.substr(2), b[p].bind(obj), false);
                 }
                 else if (b[p] == null || b[p].constructor != Function) {
-                    if (!o[p])
-                        o[p] = b[p];
+                    if (!obj[p])
+                        obj[p] = b[p];
                 }
                 else {
-                    o[p] = b[p];
+                    obj[p] = b[p];
                 }
             }
-            o._attachedBehavior = behavior;
+            oc._attachedBehavior = behavior;
             if (obj.parentElement !== this._tco) {
-                o.connectedCallback();
+                oc.connectedCallback();
                 this.List.push(obj);
             }
         }
@@ -239,20 +242,18 @@ var obs = new MutationObserver(function (mutationsList, _observer) {
     }
 });
 obs.observe(document, { childList: true, subtree: true });
+var MicroControlClass = (function () {
+    function MicroControlClass() {
+    }
+    MicroControlClass.prototype.connectedCallback = function () { };
+    return MicroControlClass;
+}());
 function MicroControl(isSelector) {
     return function (target) {
         micro.define(isSelector, new target());
         return target;
     };
 }
-var MicroControlClass = (function () {
-    function MicroControlClass() {
-    }
-    MicroControlClass.prototype.connectedCallback = function () {
-        this.el = this;
-    };
-    return MicroControlClass;
-}());
 var GenericWidgetClass = (function (_super) {
     __extends(GenericWidgetClass, _super);
     function GenericWidgetClass() {
@@ -270,9 +271,9 @@ var GenericWidgetClass = (function (_super) {
         hub.replay(this.subId);
     };
     GenericWidgetClass.prototype.newData = function (_path, key, value) {
-        if (this.el && key && value) {
+        if (key && value) {
             this.data[key] = value;
-            var ic = this.el.querySelector('img');
+            var ic = this.querySelector('img');
             if (ic) {
                 setAttr(ic, 'title', JSON.stringify(this.data, null, 1)
                     .replace('{\n', '')
@@ -280,37 +281,29 @@ var GenericWidgetClass = (function (_super) {
             }
         }
         ['span', 'div'].forEach(function (elType) {
-            if (this.el) {
-                this.el.querySelectorAll(elType + ("[u-active='" + key + "']")).forEach(function (elem) {
-                    var b = toBool(value);
-                    setAttr(elem, 'value', b ? '1' : '0');
-                    setAttr(elem, 'title', b ? 'active' : 'not active');
-                    elem.classList.toggle('active', b);
-                });
-            }
+            this.querySelectorAll(elType + ("[u-active='" + key + "']")).forEach(function (elem) {
+                var b = toBool(value);
+                setAttr(elem, 'value', b ? '1' : '0');
+                setAttr(elem, 'title', b ? 'active' : 'not active');
+                elem.classList.toggle('active', b);
+            });
         }, this);
         ['h2', 'h4', 'span', 'button'].forEach(function (elType) {
-            if (this.el) {
-                this.el.querySelectorAll(elType + "[u-text='" + key + "']").forEach(function (elem) {
-                    if (elem.textContent != value)
-                        elem.textContent = value;
-                });
-            }
+            this.querySelectorAll(elType + "[u-text='" + key + "']").forEach(function (elem) {
+                if (elem.textContent != value)
+                    elem.textContent = value;
+            });
         }, this);
         ['input', 'select'].forEach(function (elType) {
-            if (this.el) {
-                this.el.querySelectorAll(elType + "[u-value='" + key + "']").forEach(function (elem) {
-                    if (elem.value != value)
-                        elem.value = value ? value : "";
-                });
-            }
+            this.querySelectorAll(elType + "[u-value='" + key + "']").forEach(function (elem) {
+                if (elem.value != value)
+                    elem.value = value ? value : "";
+            });
         }, this);
         ['button'].forEach(function (elType) {
-            if (this.el) {
-                this.el.querySelectorAll(elType + "[u-action='${" + key + "}']").forEach(function (elem) {
-                    setAttr(elem, 'u-action', value ? value : '');
-                });
-            }
+            this.querySelectorAll(elType + "[u-action='${" + key + "}']").forEach(function (elem) {
+                setAttr(elem, 'u-action', value ? value : '');
+            });
         }, this);
     };
     GenericWidgetClass.prototype.dispatchNext = function () {
@@ -343,16 +336,16 @@ var GenericWidgetClass = (function (_super) {
             debounce(this.dispatchNext.bind(this))();
         }
     };
-    GenericWidgetClass.prototype.onchange = function (e) {
+    GenericWidgetClass.prototype.on_change = function (e) {
         var src = e.target;
         this.dispatchAction(src.getAttribute('u-value'), src.value);
     };
-    GenericWidgetClass.prototype.onclick = function (e) {
+    GenericWidgetClass.prototype.on_click = function (e) {
         var src = e.target;
         var a = src.getAttribute('u-action');
         if (src && a)
             this.dispatchAction(a, src['value']);
-        if (this.el && src.classList.contains('setconfig')) {
+        if (src.classList.contains('setconfig')) {
             micro.openModal('configelementdlg', this.data);
         }
     };
@@ -366,14 +359,14 @@ var ButtonWidgetClass = (function (_super) {
     function ButtonWidgetClass() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    ButtonWidgetClass.prototype.onpointerdown = function (e) {
+    ButtonWidgetClass.prototype.on_pointerdown = function (e) {
         var src = e.target;
         if ((src) && (src.classList.contains("u-button"))) {
             src.classList.add("active");
             this.dispatchAction("value", '1');
         }
     };
-    ButtonWidgetClass.prototype.onpointerup = function (e) {
+    ButtonWidgetClass.prototype.on_pointerup = function (e) {
         var src = e.target;
         if (src.classList.contains("u-button")) {
             src.classList.remove("active");
@@ -402,22 +395,20 @@ var DSTimeWidgetClass = (function (_super) {
     };
     DSTimeWidgetClass.prototype.connectedCallback = function () {
         _super.prototype.connectedCallback.call(this);
-        if (this.el) {
-            this._nowObj = this.el.querySelector(".setnow");
-            window.setInterval(function () {
-                if (this._nowObj) {
-                    setTextContent(this._nowObj, this.isoDate());
-                }
-            }.bind(this), 200);
-        }
+        this._nowObj = this.querySelector(".setnow");
+        window.setInterval(function () {
+            if (this._nowObj) {
+                setTextContent(this._nowObj, this.isoDate());
+            }
+        }.bind(this), 200);
     };
-    DSTimeWidgetClass.prototype.onclick = function (e) {
+    DSTimeWidgetClass.prototype.on_click = function (e) {
         var src = e.target;
         if ((src) && (src.classList.contains("setnow"))) {
             this.dispatchAction("time", this.isoDate());
         }
         else {
-            _super.prototype.onclick.call(this, e);
+            _super.prototype.on_click.call(this, e);
         }
     };
     DSTimeWidgetClass = __decorate([
@@ -585,10 +576,8 @@ var LogWidgetClass = (function (_super) {
     }
     LogWidgetClass.prototype.connectedCallback = function () {
         _super.prototype.connectedCallback.call(this);
-        if (this.el) {
-            this.lineSVGObj = this.el.querySelector('object');
-            hub.subscribe(this.microid + '?*', this.newValue.bind(this), true);
-        }
+        this.lineSVGObj = this.querySelector('object');
+        hub.subscribe(this.microid + '?*', this.newValue.bind(this), true);
     };
     LogWidgetClass.prototype.loadData = function () {
         fetch(this.filename)
@@ -649,22 +638,20 @@ var NeoWidgetClass = (function (_super) {
             x = '0' + x;
         return (x);
     };
-    NeoWidgetClass.prototype.onclick = function (e) {
-        if (this.el) {
-            var src = e.srcElement;
-            if (src.className == "hueband") {
-                var color = "hsl(" + Math.round(e.offsetX) + ", 100%, 50%)";
-                src.style.backgroundColor = color;
-                if (document && document.defaultView) {
-                    var ccol = document.defaultView.getComputedStyle(src, null).backgroundColor;
-                    var l = String(ccol).replace(/[^0-9,]/g, "").split(',');
-                    var col = 'x' + this.x16(l[0]) + this.x16(l[1]) + this.x16(l[2]);
-                    this.dispatchAction('value', col);
-                }
+    NeoWidgetClass.prototype.on_click = function (e) {
+        var src = e.srcElement;
+        if (src.className == "hueband") {
+            var color = "hsl(" + Math.round(e.offsetX) + ", 100%, 50%)";
+            src.style.backgroundColor = color;
+            if (document && document.defaultView) {
+                var ccol = document.defaultView.getComputedStyle(src, null).backgroundColor;
+                var l = String(ccol).replace(/[^0-9,]/g, "").split(',');
+                var col = 'x' + this.x16(l[0]) + this.x16(l[1]) + this.x16(l[2]);
+                this.dispatchAction('value', col);
             }
-            else {
-                _super.prototype.onclick.call(this, e);
-            }
+        }
+        else {
+            _super.prototype.on_click.call(this, e);
         }
     };
     NeoWidgetClass = __decorate([
@@ -689,8 +676,8 @@ var PWMOutWidgetClass = (function (_super) {
             this._range = Number(value);
         }
         else if (key == "value") {
-            if (this.el && this.lastValue !== value) {
-                var o = this.el.querySelector(".ux-levelbar");
+            if (this.lastValue !== value) {
+                var o = this.querySelector(".ux-levelbar");
                 var h = o.offsetHeight;
                 var bh = (h * Number(value)) / this._range;
                 if (bh > h - 1)
@@ -723,8 +710,8 @@ var SliderWidgetClass = (function (_super) {
     }
     SliderWidgetClass.prototype.connectedCallback = function () {
         _super.prototype.connectedCallback.call(this);
-        if (this.el) {
-            this._handle = this.el.querySelector(".handle");
+        this._handle = this.querySelector(".handle");
+        if (this._handle) {
             var p = this._handle.parentElement;
             var ps = getComputedStyle(p);
             this._maxright = p.clientWidth - this._handle.offsetWidth - parseFloat(ps.paddingLeft) - parseFloat(ps.paddingRight);
@@ -757,25 +744,23 @@ var SliderWidgetClass = (function (_super) {
             this.unit = Number(value);
         }
     };
-    SliderWidgetClass.prototype.onclick = function (e) {
-        if (this.el) {
-            var src = e.srcElement;
-            while (src != null && src.classList.length == 0)
-                src = src.parentElement;
-            if (src != null) {
-                if (src.classList.contains('up')) {
-                    this.dispatchAction('up', '1');
-                }
-                else if (src.classList.contains('down')) {
-                    this.dispatchAction('down', '1');
-                }
-                else {
-                    _super.prototype.onclick.call(this, e);
-                }
+    SliderWidgetClass.prototype.on_click = function (e) {
+        var src = e.srcElement;
+        while (src != null && src.classList.length == 0)
+            src = src.parentElement;
+        if (src != null) {
+            if (src.classList.contains('up')) {
+                this.dispatchAction('up', '1');
+            }
+            else if (src.classList.contains('down')) {
+                this.dispatchAction('down', '1');
+            }
+            else {
+                _super.prototype.on_click.call(this, e);
             }
         }
     };
-    SliderWidgetClass.prototype.onmousedown = function (evt) {
+    SliderWidgetClass.prototype.on_mousedown = function (evt) {
         if (evt.target == this._handle) {
             this.MoveStart(evt);
         }
@@ -811,7 +796,7 @@ var SliderWidgetClass = (function (_super) {
         document.removeEventListener("mousemove", this._moveFunc);
         document.removeEventListener("mouseup", this._upFunc);
     };
-    SliderWidgetClass.prototype.ontouchstart = function (evt) {
+    SliderWidgetClass.prototype.on_touchstart = function (evt) {
         var t = evt.targetTouches[0].target;
         if (t == this._handle) {
             console.log('TouchStart');
@@ -827,18 +812,16 @@ var SwitchWidgetClass = (function (_super) {
     function SwitchWidgetClass() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    SwitchWidgetClass.prototype.onclick = function (e) {
-        if (this.el) {
-            var o = this.el.querySelector(".u-switch");
-            var src = e.srcElement;
-            while (src != null && src != this.el && src != o)
-                src = src.parentElement;
-            if (src == o) {
-                this.dispatchAction('toggle', '1');
-            }
-            else {
-                _super.prototype.onclick.call(this, e);
-            }
+    SwitchWidgetClass.prototype.on_click = function (e) {
+        var o = this.querySelector(".u-switch");
+        var src = e.srcElement;
+        while (src != null && src != this && src != o)
+            src = src.parentElement;
+        if (src == o) {
+            this.dispatchAction('toggle', '1');
+        }
+        else {
+            _super.prototype.on_click.call(this, e);
         }
     };
     SwitchWidgetClass = __decorate([
@@ -964,8 +947,8 @@ var TimerWidgetClass = (function (_super) {
         }
         if (this.ct < this.wt + this.pt)
             this.ct = this.wt + this.pt;
-        if (this.el && this.ct > 0) {
-            var el = this.el.querySelector('.u-bar');
+        if (this.ct > 0) {
+            var el = this.querySelector('.u-bar');
             var f = el.clientWidth / this.ct;
             var pto = el.querySelector('.pulse');
             pto.style.left = Math.floor(this.wt * f) + 'px';
@@ -974,18 +957,18 @@ var TimerWidgetClass = (function (_super) {
             cto.style.width = Math.floor(this.time * f) + 'px';
         }
     };
-    TimerWidgetClass.prototype.onclick = function (evt) {
+    TimerWidgetClass.prototype.on_click = function (evt) {
         var tar = evt.target;
-        if (this.el && tar.classList.contains('save')) {
+        if (tar.classList.contains('save')) {
             var d_1 = {};
-            this.el.querySelectorAll('[u-value]').forEach(function (elem) {
+            this.querySelectorAll('[u-value]').forEach(function (elem) {
                 var n = elem.getAttribute('u-value');
                 if (n)
                     d_1[n] = elem.value;
             });
             changeConfig(this.microid, d_1);
         }
-        _super.prototype.onclick.call(this, evt);
+        _super.prototype.on_click.call(this, evt);
     };
     TimerWidgetClass = __decorate([
         MicroControl('timer')

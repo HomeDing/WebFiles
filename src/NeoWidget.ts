@@ -17,21 +17,19 @@ class NeoWidgetClass extends GenericWidgetClass {
   }
 
   on_click(e: MouseEvent) {
-    if (this.el) {
-      var src: HTMLElement | null = e.srcElement as HTMLElement;
-      if (src.className == "hueband") {
-        const color = "hsl(" + Math.round(e.offsetX) + ", 100%, 50%)";
-        src.style.backgroundColor = color;
+    var src: HTMLElement | null = e.srcElement as HTMLElement;
+    if (src.className == "hueband") {
+      const color = "hsl(" + Math.round(e.offsetX) + ", 100%, 50%)";
+      src.style.backgroundColor = color;
 
-        if (document && document.defaultView) {
-          const ccol = document.defaultView.getComputedStyle(src, null).backgroundColor;
-          const l = String(ccol).replace(/[^0-9,]/g, "").split(',');
-          var col = 'x' + this.x16(l[0]) + this.x16(l[1]) + this.x16(l[2]);
-          this.dispatchAction('value', col);
-        }
-      } else {
-        super.on_click(e);
+      if (document && document.defaultView) {
+        const ccol = document.defaultView.getComputedStyle(src, null).backgroundColor;
+        const l = String(ccol).replace(/[^0-9,]/g, "").split(',');
+        var col = 'x' + this.x16(l[0]) + this.x16(l[1]) + this.x16(l[2]);
+        this.dispatchAction('value', col);
       }
+    } else {
+      super.on_click(e);
     }
   }
 }

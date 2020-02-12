@@ -31,8 +31,8 @@ class TimerWidgetClass extends GenericWidgetClass {
     if (this.ct < this.wt + this.pt) this.ct = this.wt + this.pt;
 
     // update bars
-    if (this.el && this.ct > 0) {
-      var el = <HTMLElement>this.el.querySelector('.u-bar');
+    if (this.ct > 0) {
+      var el = this.querySelector('.u-bar') as HTMLElement;
       var f = el.clientWidth / this.ct;
 
       var pto = <HTMLElement>el.querySelector('.pulse');
@@ -46,9 +46,9 @@ class TimerWidgetClass extends GenericWidgetClass {
 
   on_click(evt: MouseEvent) {
     const tar: HTMLElement = evt.target as HTMLElement;
-    if (this.el && tar.classList.contains('save')) {
+    if (tar.classList.contains('save')) {
       const d: any = {};
-      this.el.querySelectorAll('[u-value]').forEach(function (elem) {
+      this.querySelectorAll('[u-value]').forEach(function (elem) {
         const n = elem.getAttribute('u-value');
         if (n) d[n] = (elem as HTMLInputElement).value;
       });

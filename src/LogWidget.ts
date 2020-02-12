@@ -16,10 +16,8 @@ class LogWidgetClass extends GenericWidgetClass {
 
   connectedCallback() {
     super.connectedCallback();
-    if (this.el) {
-      this.lineSVGObj = this.el.querySelector('object');
-      hub.subscribe(this.microid + '?*', this.newValue.bind(this), true);
-    }
+    this.lineSVGObj = this.querySelector('object');
+    hub.subscribe(this.microid + '?*', this.newValue.bind(this), true);
   }
 
   loadData() {
