@@ -9,7 +9,7 @@
   
 @MicroControl("switch")
 class SwitchWidgetClass extends GenericWidgetClass {
-  onclick(e: MouseEvent) {
+  on_click(e: MouseEvent) {
     if (this.el) {
       var o: HTMLElement = <HTMLElement>this.el.querySelector(".u-switch");
       var src: HTMLElement | null = e.srcElement as HTMLElement;
@@ -17,7 +17,7 @@ class SwitchWidgetClass extends GenericWidgetClass {
       if (src == o) {
         this.dispatchAction('toggle', '1');
       } else {
-        super.onclick(e);
+        super.on_click(e);
       }
     }
   }

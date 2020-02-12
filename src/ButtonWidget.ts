@@ -9,7 +9,7 @@
 
 @MicroControl("button")
 class ButtonWidgetClass extends GenericWidgetClass {
-  onpointerdown(e: PointerEvent) {
+  on_pointerdown(e: PointerEvent) {
     const src = e.target as HTMLElement;
     if ((src) && (src.classList.contains("u-button"))) {
       src.classList.add("active");
@@ -18,7 +18,7 @@ class ButtonWidgetClass extends GenericWidgetClass {
 
   }
 
-  onpointerup(e: PointerEvent) {
+  on_pointerup(e: PointerEvent) {
     const src = e.target as HTMLElement;
     if (src.classList.contains("u-button")) {
       src.classList.remove("active");

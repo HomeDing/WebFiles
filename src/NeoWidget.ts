@@ -16,7 +16,7 @@ class NeoWidgetClass extends GenericWidgetClass {
     return (x);
   }
 
-  onclick(e: MouseEvent) {
+  on_click(e: MouseEvent) {
     if (this.el) {
       var src: HTMLElement | null = e.srcElement as HTMLElement;
       if (src.className == "hueband") {
@@ -30,7 +30,7 @@ class NeoWidgetClass extends GenericWidgetClass {
           this.dispatchAction('value', col);
         }
       } else {
-        super.onclick(e);
+        super.on_click(e);
       }
     }
   }

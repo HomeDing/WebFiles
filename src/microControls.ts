@@ -8,11 +8,18 @@
 // https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_custom_elements
 // https://www.typescriptlang.org/docs/handbook/decorators.html
 
-interface ControlInterface {
+interface MicroControlClass extends HTMLElement {
   el: HTMLElement | undefined;
   connectedCallback(el: HTMLElement): void;
   init?() : void;
   term?() : void;
+  _attachedBehavior: MicroControlClass | undefined;
+} // ControlInterface
+
+class MicroControlClass {
+  connectedCallback(): void {
+    this.el = <HTMLElement><any>this;
+  }
 }
 
 // Decorator for micro-controls.
@@ -26,14 +33,5 @@ function MicroControl(isSelector: string) {
     return target;
   };
 }
-
-// @MicroControl("no-base")
-class MicroControlClass implements ControlInterface {
-  el: HTMLElement | undefined;
-  _attachedBehavior: ControlInterface | undefined;
-  connectedCallback(): void {
-    this.el = <HTMLElement><any>this;
-  }
-} // class MicroControlClass
 
 // End.

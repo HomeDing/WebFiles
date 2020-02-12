@@ -109,14 +109,14 @@ class GenericWidgetClass extends MicroControlClass {
 
 
   // send changed value of property as an action to the board
-  onchange(e: Event) {
+  on_change(e: Event) {
     var src = e.target as HTMLInputElement;
     this.dispatchAction(src.getAttribute('u-value'), src.value);
   }
 
   // send an action to the board
   // + change config mode
-  onclick(e: MouseEvent) {
+  on_click(e: MouseEvent) {
     var src = e.target as HTMLElement;
     var a = src.getAttribute('u-action');
     if (src && a) this.dispatchAction(a, (<any>src)['value']);

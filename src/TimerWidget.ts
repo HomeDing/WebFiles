@@ -44,7 +44,7 @@ class TimerWidgetClass extends GenericWidgetClass {
     }
   } // newData()}
 
-  onclick(evt: MouseEvent) {
+  on_click(evt: MouseEvent) {
     const tar: HTMLElement = evt.target as HTMLElement;
     if (this.el && tar.classList.contains('save')) {
       const d: any = {};
@@ -54,7 +54,7 @@ class TimerWidgetClass extends GenericWidgetClass {
       });
       changeConfig(this.microid, d);
     }
-    super.onclick(evt);
+    super.on_click(evt);
   }
 }
 // End.

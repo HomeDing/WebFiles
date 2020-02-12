@@ -34,12 +34,12 @@ class DSTimeWidgetClass extends GenericWidgetClass {
     }
   }
 
-  onclick(this: DSTimeWidgetClass, e: MouseEvent) {
+  on_click(this: DSTimeWidgetClass, e: MouseEvent) {
     const src = e.target as HTMLElement;
     if ((src) && (src.classList.contains("setnow"))) {
       this.dispatchAction("time", this.isoDate())
     } else {
-      super.onclick(e);
+      super.on_click(e);
     }
   }
 }

@@ -63,7 +63,7 @@ class SliderWidgetClass extends GenericWidgetClass {
   } // newData()
 
   
-  onclick(e: MouseEvent) {
+  on_click(e: MouseEvent) {
     if (this.el) {
       var src: HTMLElement | null = e.srcElement as HTMLElement;
       while (src != null && src.classList.length == 0) src = src.parentElement;
@@ -77,7 +77,7 @@ class SliderWidgetClass extends GenericWidgetClass {
           // alert('plus');
           this.dispatchAction('down', '1');
         } else {
-          super.onclick(e);
+          super.on_click(e);
         }
       }
 
@@ -85,7 +85,7 @@ class SliderWidgetClass extends GenericWidgetClass {
     }
   }
 
-  onmousedown(evt: MouseEvent) {
+  on_mousedown(evt: MouseEvent) {
     if (evt.target == this._handle) {
       this.MoveStart(evt);
     } // if
@@ -139,7 +139,7 @@ class SliderWidgetClass extends GenericWidgetClass {
     document.removeEventListener("mouseup", this._upFunc);
   } // onmouseup
 
-  ontouchstart(evt:TouchEvent) {
+  on_touchstart(evt:TouchEvent) {
     /// <summary>Handle the event when a touch operation starts.</summary>
     var t = evt.targetTouches[0].target;
     if (t == this._handle) {

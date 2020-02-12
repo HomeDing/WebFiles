@@ -161,15 +161,15 @@ class MicroRegistry {
   } // insertTemplate()
 
   // attach events, methods and default-values to a html object (using the english spelling)
-  loadBehavior(obj: HTMLElement, behavior: GenericWidgetClass) {
+  loadBehavior(obj: HTMLElement, behavior: MicroControlClass) {
     const b = behavior as any;
-    const o = obj as any;
+    const oc: MicroControlClass = obj as MicroControlClass;
 
     if (!obj) {
       console.error('loadBehavior: obj argument is missing.');
     } else if (!behavior) {
       console.error('loadBehavior: behavior argument is missing.');
-    } else if ((<MicroControlClass>o)._attachedBehavior == behavior) {
+    } else if (oc._attachedBehavior === behavior) {
       // already done.
     } else {
 
@@ -178,26 +178,28 @@ class MicroRegistry {
         // copy all new attributes to properties
         for (var n = 0; n < obj.attributes.length; n++) {
           var a: Attr = obj.attributes[n];
-          if (!o[a.name]) o[a.name] = a.value;
+          if (!(obj as any)[a.name]) (obj as any)[a.name] = a.value;
         }
       } // if
 
       for (var p in b) {
-        if (p.substr(0, 2) == 'on') {
+        if (p.substr(0, 3) == 'on_') {
+          obj.addEventListener(p.substr(3), b[p].bind(obj), false);
+        } else if (p.substr(0, 2) == 'on') {
           obj.addEventListener(p.substr(2), b[p].bind(obj), false);
         } else if (b[p] == null || b[p].constructor != Function) {
           // set default-value
-          if (!o[p]) o[p] = b[p];
+          if (!(obj as any)[p]) (obj as any)[p] = b[p];
         } else {
           // attach method
-          o[p] = b[p];
+          (obj as any)[p] = b[p];
         } // if
       } // for
 
-      (<MicroControlClass>o)._attachedBehavior = behavior;
+      oc._attachedBehavior = behavior;
       if (obj.parentElement !== this._tco) {
         // call connectedCallback only if not a template
-        (<MicroControlClass>o).connectedCallback();
+        oc.connectedCallback();
         this.List.push(obj);
       }
     } // if
