@@ -15,5 +15,25 @@
       "filename": "/pmlog.txt",
       "description": "Log values to file"
     }
+  },
+  "dht": {
+    "on": {
+      "type": "DHT22",
+      "description": "Temperature and Humidity sensor",
+      "pin": "D4",
+      "readtime": "30s",
+      "resendtime": "2m",
+      "onTemperature": "device/0?log=temp:$v,remote/display-t?value=$v",
+      "onHumidity": "device/0?log=hum:$v%,remote/display-h?value=$v"
+    }
+  },
+  "bme680": {
+    "on": {
+      "description": "BME680 sensor",
+      "readtime": "30s",
+      "resendtime": "2m",
+      "onTemperature": "device/0?log=temp:$v,remote/display-t?value=$v",
+      "onHumidity": "device/0?log=hum:$v%,remote/display-h?value=$v"
+    }
   }
 }

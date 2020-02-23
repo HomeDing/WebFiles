@@ -152,7 +152,6 @@
   },
 
   "time": {
-    "sys": "true",
     "properties": ["loglevel", "description"],
     "actions": ["onminute", "ontimestamp", "ontime", "ondate"]
   },

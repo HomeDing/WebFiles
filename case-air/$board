@@ -1,6 +1,39 @@
-{"device/0": {"active":"true","name":"airding","description":"IoT Air-Ding monitoring air quality","nextboot":"14199"},
-"ota/0": {"active":"true"},
-"ssdp/0": {"active":"true"},
-"ntptime/0": {"active":"true","now":"2019-12-03 16:30:22"},
-"pms/pm25": {"active":"true","value":"6"},
-"log/pm": {"active":"true","value":"6"}}
+{
+  "device/0": {
+    "active": "true",
+    "name": "airding",
+    "description": "IoT Air-Ding monitoring air quality",
+    "nextboot": "14199"
+  },
+  "ota/0": {
+    "active": "true"
+  },
+  "ssdp/0": {
+    "active": "true"
+  },
+  "ntptime/0": {
+    "active": "true",
+    "now": "2019-12-03 16:30:22"
+  },
+  "pms/pm25": {
+    "active": "true",
+    "value": "6"
+  },
+  "log/pm": {
+    "active": "true",
+    "value": "6"
+  },
+  "dht/on": {
+    "active": "true",
+    "temperature": "28.10",
+    "humidity": "33.30"
+  },
+  "bme680/on": {
+    "active": "true",
+    "temperature": "21.23",
+    "humidity": "33.35",
+    "pressure":"99784",
+    "gas":"72724"
+  }
+
+}
