@@ -57,9 +57,9 @@
           <h2>Build-in Setup Pages</h2>
         </div>
         <div class="block">
-          <p><a href="$setup">WiFi Setup</a></p>
-          <p><a href="$boot">Web Update</a></p>
-          <p><a href="$upload">File Upload</a></p>
+          <p><a href="$setup.htm">WiFi Setup</a></p>
+          <p><a href="$boot.htm">Web Update</a></p>
+          <p><a href="$upload.htm">File Upload</a></p>
         </div>
       </div>
 
@@ -167,22 +167,22 @@
             .replace('\n}', '')
             .replace(/^\s*/gm, '');
 
-          document.getElementById('memTotal').textContent = d['fs-totalBytes'];
-          document.getElementById('memUsed').textContent = d['fs-usedBytes'];
-          document.getElementById('memPart').textContent = Math.floor((Number(d['fs-usedBytes']) * 100) / Number(d['fs-totalBytes']));
+          document.getElementById('memTotal').textContent = d.fsTotalBytes;
+          document.getElementById('memUsed').textContent = d.fsUsedBytes;
+          document.getElementById('memPart').textContent = Math.floor((Number(d.fsUsedBytes) * 100) / Number(d.fsTotalBytes));
 
-          document.getElementById('hostName').textContent = d['devicename'];
-          document.getElementById('netName').textContent = d['ssid'];
+          document.getElementById('hostName').textContent = d.devicename;
+          document.getElementById('netName').textContent = d.ssid;
 
           var memAPI = memObj.getSVGDocument().api;
           memAPI.setRange([
             {
               color: '#304878',
-              part: Number(d['fs-usedBytes'])
+              part: Number(d['fsUsedBytes'])
             },
             {
               color: '#aaaaaa',
-              part: Number(d['fs-totalBytes']) - Number(d['fs-usedBytes'])
+              part: Number(d.fsTotalBytes) - Number(d.fsUsedBytes)
             }
           ]);
         });

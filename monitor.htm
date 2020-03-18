@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <title>IoT HomeDing Monitor</title>
+
+  <link rel="icon" type="image/png" href="/favicon48.png" sizes="48x48">
+  <meta name="application-name" content="Ding" />
+  <meta name="msapplication-config" content="/browserconfig.xml" />
+  <meta name="msapplication-TileColor" content="#2b5797" />
+  <meta name="msapplication-TileImage" content="/favicon144.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon180.png" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <link rel="manifest" href="/manifest.json" />
+  <meta name="theme-color" content="#ffffff" />
+  <link rel="icon" type="image/png" href="/favicon48.png" sizes="48x48">
+
+  <link Content-Type="text/css" href="/iotstyle.css" rel="stylesheet" />
+
+  <script src="/polyfill.js"></script>
+  <script src="/es6-promise.auto.js"></script>
+  <script src="/micro.js"></script>
+  <style>
+    .dataTab {
+      border-collapse: collapse;
+      background-color: white;
+      border: solid 1px #203050;
+      padding: 0;
+    }
+
+    .dataTab tr:nth-child(even) {background: #ddd}
+    .dataTab tr:nth-child(odd) {background: #eee}
+
+    .dataTab td,
+    .dataTab th {
+      border: solid 1px #203050;
+      padding: 0.25em 0.8em;
+    }
+
+    .dataTab thead th {
+      background-color: #203050;
+      color: white;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container-fluid">
+    <div class="u-header">
+      <a href="/" title="Startpage"><img class="icon" src="/i/device.svg" /></a>
+      <h1>IoT HomeDing Monitor</h1>
+    </div>
+
+    <div class="row">
+      <div class="col">
+        <table class="dataTab">
+          <thead>
+            <tr>
+              <th>hostname</th>
+              <th>memory</th>
+              <th>version</th>
+              <th>uptime</th>
+            </tr>
+          </thead>
+          <tr class="remote">
+            <th class="hostname">dhtdevice</th>
+            <td class="memory"></td>
+            <td class="version"></td>
+            <td class="uptime"></td>
+          </tr>
+          <tr class="remote">
+            <th class="hostname">rfdevice</th>
+            <td class="memory"></td>
+            <td class="version"></td>
+            <td class="uptime"></td>
+          </tr>
+          <tr class="remote">
+            <th class="hostname">airding</th>
+            <td class="memory"></td>
+            <td class="version"></td>
+            <td class="uptime"></td>
+          </tr>
+          <tr class="remote">
+            <th class="hostname">imkelight</th>
+            <td class="memory"></td>
+            <td class="version"></td>
+            <td class="uptime"></td>
+          </tr>
+          <tr class="remote">
+            <th class="hostname">bad</th>
+            <td class="memory"></td>
+            <td class="version"></td>
+            <td class="uptime"></td>
+          </tr>
+          <tr class="remote">
+            <th class="hostname">lcddevice</th>
+            <td class="memory"></td>
+            <td class="version"></td>
+            <td class="uptime"></td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    window.onerror = function (msg, url, lineNo, columnNo, error) {
+      var string = msg.toLowerCase();
+      var substring = 'script error';
+      if (string.indexOf(substring) > -1) {
+        alert('Script Error: See Browser Console for Detail');
+      } else {
+        var message = [
+          'Message: ' + msg,
+          'URL: ' + url,
+          'Line: ' + lineNo,
+          'Column: ' + columnNo,
+          'Error object: ' + JSON.stringify(error)
+        ].join(' - ');
+
+        alert(message);
+      }
+
+      return false;
+    };
+  </script>
+
+  <script>
+    var remotes = document.querySelectorAll('.remote');
+    var remoteIndex = 0;
+
+    function updateStatus(obj) {
+      var hostname = obj.querySelector('.hostname').textContent;
+
+      fetch('http://' + hostname + '/$sysinfo')
+        .then(function (result) {
+          return result.json();
+        })
+        .then(function (si) {
+          // alert(JSON.stringify(si, null, 2));
+          var d = new Date(si.upTime * 1000);
+
+          obj.querySelector('.memory').textContent = si.freeHeap;
+          obj.querySelector('.version').textContent = si.build;
+          obj.querySelector('.uptime').textContent = d.toISOString().split(/[T\.]/)[1];
+        })
+        .catch(function(err) {
+          obj.querySelector('.memory').textContent = '-';
+          obj.querySelector('.uptime').textContent = '-';
+          // alert(err);
+        });
+    }
+
+    function updateNext() {
+      if (remoteIndex >= remotes.length) {
+        remoteIndex = 0;
+        window.setTimeout(updateNext, 8000);
+
+      } else {
+        var r = remotes[remoteIndex];
+        updateStatus(r);
+        remoteIndex++;
+        window.setTimeout(updateNext, 200);
+      }
+    }
+
+    window.addEventListener('load', function () {
+      window.setTimeout(updateNext, 400);
+    });
+  </script>
+</body>
+
+</html>
