@@ -94,6 +94,42 @@ function debounce(func: Function, wait: number = 20) {
 } // debounce()
 
 
+// /** This is a function level decorator.
+//  *  As long as the function is called the execution is hold back.
+//  */
+// function debounce(timeout: number = 50): MethodDecorator {
+//   return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
+//     let timerID: number = 0;
+//     const fFunc = descriptor.value;
+//     descriptor.value = function (...args) {
+//       clearTimeout(timerID);
+//       timerID = setTimeout(() => { timerID = 0; fFunc.apply(this, args); }, timeout);
+//     };
+//     return descriptor;
+//   };
+// }
+
+
+// /** This is a function level decorator.
+//  *  As long as the function is called the execution is reduced to one execution only during timeout period.
+//  */
+// function throttle(timeout: number = 50): MethodDecorator {
+//   return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
+//     let timerID: number = 0;
+//     const fFunc = descriptor.value;
+//     descriptor.value = function (...args) {
+//       if (!timerID) {
+//         timerID = setTimeout(() => {
+//           timerID = 0; fFunc.apply(this, args);
+//         }, timeout);
+//         fFunc.apply(this, args);
+//       }
+//     };
+//     return descriptor;
+//   };
+// } // throttle()
+
+
 // return actual parameters in hash part of URL as object
 function getHashParams(defaults: object) {
   var params: any = { ...defaults };

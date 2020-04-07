@@ -10,7 +10,7 @@ if (!window.fetch) {
   // The returned Result is supporting .text() and .json() only.
   window.fetch = function (url) {
     return new Promise(function (resolve, reject) {
-      let xhr = new XMLHttpRequest();
+      var xhr = new XMLHttpRequest();
       xhr.open('GET', url);
       xhr.onreadystatechange = function () {
         if (this.readyState === this.DONE) {

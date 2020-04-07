@@ -301,6 +301,14 @@ svg.button {
     padding: $gutter $white-space;
     min-height: 3em;
 
+    .icon {
+      width: 5rem;
+      height: 5rem;
+      float: left;
+      margin-right: $gutter;
+      overflow:hidden;
+    }
+
     &.header {
       background-image: linear-gradient(to bottom, $u-cardbackground, darken($u-cardbackground, 10%));
       border-top-right-radius: $u-card-radius;

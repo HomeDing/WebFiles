@@ -131,8 +131,17 @@ var MicroRegistry = (function () {
         }
     };
     MicroRegistry.prototype.isVisible = function (el) {
-        var rect = el.getBoundingClientRect();
-        return (rect.top <= window.innerHeight && rect.bottom >= 0);
+        var vis = false;
+        if (el.offsetWidth > 0 && el.offsetHeight > 0) {
+            var rect = el.getBoundingClientRect();
+            vis = (rect.top <= window.innerHeight && rect.bottom >= 0);
+        }
+        return (vis);
+    };
+    MicroRegistry.prototype.loadDataImage = function (imgElem) {
+        if ((imgElem.dataset.src) && (this.isVisible(imgElem))) {
+            imgElem.src = imgElem.dataset.src;
+        }
     };
     MicroRegistry.prototype.insertTemplate = function (root, controlName, props) {
         var _this = this;
@@ -145,12 +154,7 @@ var MicroRegistry = (function () {
                 e.params = props;
                 this._setPlaceholders(e, props);
                 root.appendChild(e);
-                var oList = root.querySelectorAll('[data-src]:not([src])');
-                oList.forEach(function (e) {
-                    if (_this.isVisible(e) && (e.dataset.src)) {
-                        e.src = e.dataset.src;
-                    }
-                });
+                root.querySelectorAll('[data-src]:not([src])').forEach(function (e) { return _this.loadDataImage(e); });
             }
         }
         return e;
@@ -204,8 +208,13 @@ var MicroRegistry = (function () {
         var containerObj = document.getElementById('modalContainer');
         if ((modalObj) && (containerObj)) {
             containerObj.innerHTML = '';
+            containerObj.style.width = "";
+            containerObj.style.height = "";
+            console.log("empty:", containerObj.getBoundingClientRect());
             micro.insertTemplate(containerObj, tmplName, data);
+            console.log("added:", containerObj.getBoundingClientRect());
             modalObj.classList.remove('hidden');
+            console.log("visible:", containerObj.getBoundingClientRect());
         }
     };
     MicroRegistry.prototype.closeModal = function () {
@@ -242,6 +251,11 @@ var obs = new MutationObserver(function (mutationsList, _observer) {
     }
 });
 obs.observe(document, { childList: true, subtree: true });
+document.addEventListener("DOMContentLoaded", function () {
+    window.addEventListener('scroll', function () {
+        document.querySelectorAll('[data-src]:not([src])').forEach(function (e) { return micro.loadDataImage(e); });
+    });
+});
 var MicroControlClass = (function () {
     function MicroControlClass() {
     }

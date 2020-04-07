@@ -7,21 +7,7 @@ var progressObj = document.getElementById("progress");
 var activeFileObj = document.getElementById("activeFile");
 var checkerObj = document.getElementById("checker");
 
-var activeFile;
 var activeFileName;
-
-var icons = {
-  "json": "json",
-  "css": "css",
-  "dir": "dir",
-  "file": "file",
-  "htm": "htm",
-  "html": "htm",
-  "ico": "ico",
-  "js": "js",
-  "svg": "svg",
-  "txt": "txt"
-};
 
 // load file into editor from the server
 function handleLoadFile(e) {
@@ -43,7 +29,7 @@ function handleDeleteFile(e) {
   var xhr = new XMLHttpRequest();
   e.stopPropagation();
   e.preventDefault();
-  var s = e.target.parentElement.firstElementChild.nextElementSibling.innerText;
+  var s = e.target.parentElement.firstElementChild.innerText;
   s = s.split(' ')[0];
   var yn = window.confirm("Delete " + s + " ?");
   if (yn) {
@@ -61,21 +47,6 @@ function addFileEntry(container, f) {
   row.className = "row nogutter";
   container.appendChild(row);
   row.addEventListener("click", handleLoadFile);
-
-  // add icon based on file-type
-  var fType = f.name.split('.').reverse()[0];
-  var entry = document.createElement("div");
-  entry.className = "col file-icon";
-  var icon = document.createElement("img");
-  icon.title = fType;
-  if (icons[fType] !== undefined) {
-    icon.src = "/ft/" + icons[fType] + ".svg";
-  } else {
-    icon.src = "/ft/file.svg";
-  }
-
-  entry.appendChild(icon);
-  row.appendChild(entry);
 
   // add file name and size
   var entry = document.createElement("div");

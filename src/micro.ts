@@ -126,12 +126,28 @@ class MicroRegistry {
     }
   } // _setPlaceholders
 
+
+  // verify that element is not hidden by styles and scrolled into the visible area.
   isVisible(el: HTMLElement) {
-    var rect = el.getBoundingClientRect();
-    // Partially visible elements are treated as visible
-    return (rect.top <= window.innerHeight && rect.bottom >= 0);
+    let vis = false;
+    if (el.offsetWidth > 0 && el.offsetHeight > 0) {
+      var rect = el.getBoundingClientRect();
+      // Partially visible elements are treated as visible
+      vis = (rect.top <= window.innerHeight && rect.bottom >= 0);
+
+    }
+    return (vis);
   } // isVisible()
-  
+
+
+  // load the image when image is visible
+  loadDataImage(imgElem: HTMLElement) {
+    if ((imgElem.dataset.src) && (this.isVisible(imgElem))) {
+      (imgElem as HTMLImageElement).src = imgElem.dataset.src;
+    }
+  }
+
+
   /**
    * Insert a new control based on a template into the root object and activate behavior.
    * @param {HTMLObjectElement} root parent object for the new control
@@ -147,14 +163,7 @@ class MicroRegistry {
         (<any>e).params = props; // dialog parameters
         this._setPlaceholders(e, props);
         root.appendChild(e);
-
-        var oList = root.querySelectorAll('[data-src]:not([src])');
-        oList.forEach(e => {
-          if (this.isVisible(<HTMLElement>e) && ((<HTMLElement>e).dataset.src)) {
-            (<any>e).src = (<HTMLElement>e).dataset.src;
-          }
-        });
-      
+        root.querySelectorAll('[data-src]:not([src])').forEach(e => this.loadDataImage(e as HTMLElement));
       } // if
     } // if
     return e;
@@ -217,8 +226,14 @@ class MicroRegistry {
     if ((modalObj) && (containerObj)) {
       // open Dialog, replace existing.
       containerObj.innerHTML = '';
+      containerObj.style.width = "";
+      containerObj.style.height = "";
+      console.log("empty:", containerObj.getBoundingClientRect());
       micro.insertTemplate(containerObj, tmplName, data);
+      console.log("added:", containerObj.getBoundingClientRect());
       modalObj.classList.remove('hidden');
+      console.log("visible:", containerObj.getBoundingClientRect());
+      // console.log (containerObj);
     } // if
   } // openModal
 
@@ -255,3 +270,11 @@ let obs = new MutationObserver(function (mutationsList: MutationRecord[], _obser
   }
 });
 obs.observe(document, { childList: true, subtree: true });
+
+document.addEventListener("DOMContentLoaded", function () {
+  window.addEventListener('scroll', function () {
+    document.querySelectorAll('[data-src]:not([src])').forEach(e => micro.loadDataImage(e as HTMLElement));
+  });
+});
+
+// End.
