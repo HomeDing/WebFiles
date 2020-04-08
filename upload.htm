@@ -11,7 +11,7 @@
 <body>
   <h1>File Upload</h1>
   <div id='zone' style='width:9em;height:6em;padding:1em;background-color:#ddd'>Drop here</div>
-  <a href='#ft'>FT-Upload</a> - <a href='#i'>I-Upload</a>
+  <a href='#i'>I-Upload</a>
   <script>
     // allow drag&drop of file objects 
     function dragHelper(e) {
@@ -41,7 +41,5 @@
     zoneObj.addEventListener('dragenter', dragHelper, false);
     zoneObj.addEventListener('dragover', dragHelper, false);
     zoneObj.addEventListener('drop', dropped, false);
-
-
   </script>
 </body>

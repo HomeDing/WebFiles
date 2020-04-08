@@ -51,6 +51,7 @@ const srcAssets = [
   'board.htm',
   'board-new.htm',
   'board-templates.htm',
+  'ding.htm',
 
   'log.htm',
   'panel.htm',
@@ -62,14 +63,13 @@ const srcAssets = [
   'pieChart.js',
 
   '*.svg',
-  'favicon*.*',
+  'favicon.svg',
+  'favicon*.png',
 
   'manifest.json',
   'browserconfig.xml',
 
-  'i/*.svg',
-  'i/a*.svg',
-  'ft/*.svg'
+  'i/*.svg'
 ];
 
 const builtinAssets = [
@@ -89,7 +89,7 @@ srcAssets
   .map(name => distFolder + '/' + name.split('/')[0])
   .unique()
   .forEach(foldername => shell.mkdir(foldername));
-logInfo(`new ${distFolder} created.`);
+logInfo(`new ${distFolder} folder created.`);
 
 // copy all file assets
 srcAssets
@@ -107,5 +107,5 @@ logInfo(`Images copied.`);
 shell.ls('-R', distFolder).grep(/^.*\..*$/).to(distFolder + '/list.txt');
 logInfo(`list.txt file written.`);
 
-logInfo(`${distFolder} created.`);
+logInfo(`done.`);
 

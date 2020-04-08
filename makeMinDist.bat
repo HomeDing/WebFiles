@@ -3,45 +3,41 @@ echo.
 echo makeMinDist.bat [icon]
 echo create minDist forlder for minimal device Web UI implementation.
 
-set iconname=%1
-if [%1]==[] (
-  echo using default Icon
-  set iconname=default
-)
-
 rem ===== fresh mindist folder =====
 echo creating fresh folder...
 rd mindist /Q /S
 md mindist
 
-call npm run build:css-min
-move iotstyle.min.css mindist\iotstyle.css
+set path=%path%;node_modules\.bin
 
-call npm run min-micro
-move micro.min.js mindist\micro.js
+rem ===== create minified versions
+call node-sass iotstyle.scss mindist/iotstyle.css --output-style compressed
+call uglifyjs micro.js -c -o mindist/micro.js -m
 
-call npm run min-index
-move min-index.min.htm mindist\index.htm
+call html-minifier --collapse-whitespace --remove-tag-whitespace --remove-comments --minify-css true --minify-js true --quote-character ' microide.htm -o mindist/microide.htm
+call uglifyjs microide.js -c -o mindist/microide.js -m
 
-call npm run min-setup
-move setup.min.htm mindist\setup.htm
+call html-minifier --collapse-whitespace --remove-tag-whitespace --remove-comments --minify-css true --minify-js true --quote-character ' ding.htm -o mindist/ding.htm
 
-copy manifest.json mindist
+call uglifyjs polyfill.js -c -o mindist/polyfill.js -m
+copy es6-promise.auto.js mindist
+
 copy browserconfig.xml mindist
-
-copy min-env.json mindist\env.json
-copy min-config.json mindist\config.json
-
+copy manifest.json mindist
+copy spinner.gif mindist
 
 REM ===== copy icons for min device ===== 
-copy favicon180.png mindist
+copy favicon48.png mindist
 
 md mindist\i
 copy i\start.svg mindist\i
 copy i\stop.svg mindist\i
+copy i\plus.svg mindist\i
+copy i\minus.svg mindist\i
 copy i\default.svg mindist\i\default.svg
 
-dir mindist /w
+
+dir mindist /b /s
 
 rem https://docs.espressif.com/projects/esp-idf/en/latest/api-reference/storage/spiffs.html
 
