@@ -50,6 +50,11 @@
     "events": ["value", "clear"]
   },
 
+  "displayline": {
+    "sys": "true",
+    "properties": ["loglevel", "description", "x0", "y0", "x1", "y1"]
+  },
+
   "pwmout": {
     "properties": ["loglevel", "description", "range", "pin", "inverse"],
     "events": ["on", "off", "value"]
@@ -111,17 +116,22 @@
   },
 
   "bme680": {
-    "properties": ["loglevel", "description", "address", "readtime"],
+    "properties": ["loglevel", "description", "address", "readtime", "resendtime"],
     "actions": ["ontemperature", "onhumidity", "onpressure", "ongas"]
   },  
 
+  "bmp280": {
+    "properties": ["loglevel", "description", "address", "readtime", "resendtime"],
+    "actions": ["ontemperature", "onpressure"]
+  },  
+
   "pms": {
-    "properties": ["loglevel", "description", "pinrx", "pintx", "readtime"],
+    "properties": ["loglevel", "description", "pinrx", "pintx", "readtime", "resendtime"],
     "actions": ["onvalue"]
   },
 
   "log": {
-    "properties": ["loglevel", "description", "filename"],
+    "properties": ["loglevel", "description", "filesize", "filename"],
     "events": ["value"]
   },
 
