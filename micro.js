@@ -723,8 +723,8 @@ var SliderWidgetClass = (function (_super) {
         return _this;
     }
     SliderWidgetClass.prototype.connectedCallback = function () {
-        _super.prototype.connectedCallback.call(this);
         this._handle = this.querySelector(".handle");
+        _super.prototype.connectedCallback.call(this);
         if (this._handle) {
             var p = this._handle.parentElement;
             var ps = getComputedStyle(p);

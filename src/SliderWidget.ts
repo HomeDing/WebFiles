@@ -23,9 +23,9 @@ class SliderWidgetClass extends GenericWidgetClass {
   _upFunc: any;
 
   connectedCallback() {
+    this._handle = this.querySelector(".handle");
     super.connectedCallback();
     // find the moveable knob
-    this._handle = this.querySelector(".handle");
     if (this._handle) {
       const p = <HTMLElement>this._handle.parentElement;
       const ps = getComputedStyle(p);
