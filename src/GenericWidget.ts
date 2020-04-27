@@ -114,10 +114,10 @@ class GenericWidgetClass extends MicroControlClass {
     if (src && a) this.dispatchAction(a, (<any>src)['value']);
 
     if (src.classList.contains('setconfig')) {
-      micro.openModal('configelementdlg', this.data);
+      modal.open('configelementdlg', this.data);
 
     } else if (src.tagName == 'H3') {
-      micro.openModalObject(this);
+      modal.openFocus(this);
     }
   }
 } // GenericWidgetClass

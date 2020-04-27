@@ -68,7 +68,7 @@
       left: 50%;
       transform: translateX(-50%) translateY(-50%);
       padding: 0.5em;
-      background-color: #dddddd;
+      background-color: white;
     }
 
     /* signature dialog */
@@ -284,7 +284,7 @@
   </div>
 
   <div id="modal" class="hidden">
-    <div id="modalBack" onclick="modal.closeModal()"></div>
+    <div id="modalBack" onclick="modal.close()"></div>
     <div id="modalContainer" style="min-width:20px;min-height:20px">Hello, this is modal</div>
   </div>
 
@@ -307,7 +307,7 @@
     });
 
     addObj.addEventListener('click', function (evt) {
-      micro.openModal('newelementdlg');
+      modal.open('newelementdlg');
     });
 
     function createElement(path, key, value) {

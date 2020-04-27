@@ -42,8 +42,6 @@ var MicroRegistry = (function () {
         this._state = MicroState.PREP;
         this._unloadedList = [];
         this.List = [];
-        this._modalOpen = false;
-        this._modalFocusStyle = null;
         window.addEventListener('load', this.init.bind(this));
         window.addEventListener('unload', this.onunload.bind(this));
     }
@@ -205,73 +203,6 @@ var MicroRegistry = (function () {
     MicroRegistry.prototype.define = function (name, mixin) {
         this._registry[name] = mixin;
     };
-    MicroRegistry.prototype.isModal = function () {
-        return (this._modalOpen);
-    };
-    MicroRegistry.prototype.openModal = function (tmplName, data) {
-        var modalObj = document.getElementById('modal');
-        var containerObj = document.getElementById('modalContainer');
-        if ((modalObj) && (containerObj)) {
-            containerObj.innerHTML = '';
-            containerObj.style.width = "";
-            containerObj.style.height = "";
-            micro.insertTemplate(containerObj, tmplName, data);
-            modalObj.classList.remove('hidden');
-            this._modalOpen = true;
-        }
-    };
-    MicroRegistry.prototype.openModalObject = function (obj) {
-        var modalObj = document.getElementById('modal');
-        var containerObj = document.getElementById('modalContainer');
-        var p;
-        if ((obj) && (obj.parentElement) && (modalObj) && (containerObj)) {
-            this._modalFocusObj = obj;
-            this._modalFocusStyle = obj.getAttribute('style');
-            var w = obj.clientWidth;
-            var h = obj.clientHeight;
-            var r = obj.getBoundingClientRect();
-            p = obj.cloneNode(false);
-            p.style.width = w + "px";
-            p.style.height = h + "px";
-            obj.parentElement.insertBefore(p, obj);
-            this._modalPlaceholder = p;
-            obj.classList.add('modalObject');
-            obj.style.top = r.top + 'px';
-            obj.style.left = r.left + 'px';
-            obj.style.width = r.width + 'px';
-            obj.style.height = r.height + 'px';
-            containerObj.innerHTML = '';
-            containerObj.style.width = '';
-            containerObj.style.height = '';
-            p = document.createElement('div');
-            p.setAttribute('style', "background-color:pink");
-            p.style.width = (r.width * 2) + 'px';
-            p.style.height = (r.height * 2) + 'px';
-            containerObj.appendChild(p);
-            modalObj.classList.remove('hidden');
-            var r2 = p.getBoundingClientRect();
-            obj.style.margin = '0';
-            obj.style.top = r2.top + 'px';
-            obj.style.left = r2.left + 'px';
-            obj.style.width = (r.width * 2) + 'px';
-            obj.style.height = (r.height * 2) + 'px';
-            this._modalOpen = true;
-        }
-    };
-    MicroRegistry.prototype.closeModal = function () {
-        var modalObj = document.getElementById('modal');
-        var containerObj = document.getElementById('modalContainer');
-        if ((modalObj) && (containerObj)) {
-            modalObj.classList.add('hidden');
-            containerObj.innerHTML = '';
-            if (this._modalFocusObj && this._modalPlaceholder && this._modalPlaceholder.parentElement) {
-                this._modalFocusObj.setAttribute('style', this._modalFocusStyle || '');
-                this._modalFocusObj.classList.remove('modalObject');
-                this._modalPlaceholder.parentElement.removeChild(this._modalPlaceholder);
-            }
-            this._modalOpen = false;
-        }
-    };
     MicroRegistry.prototype.onunload = function (_evt) {
         for (var n in this.List) {
             var obj = this.List[n];
@@ -407,10 +338,10 @@ var GenericWidgetClass = (function (_super) {
         if (src && a)
             this.dispatchAction(a, src['value']);
         if (src.classList.contains('setconfig')) {
-            micro.openModal('configelementdlg', this.data);
+            modal.open('configelementdlg', this.data);
         }
         else if (src.tagName == 'H3') {
-            micro.openModalObject(this);
+            modal.openFocus(this);
         }
     };
     GenericWidgetClass = __decorate([
@@ -693,13 +624,13 @@ var LogWidgetClass = (function (_super) {
 }(GenericWidgetClass));
 var ModalDialogClass = (function () {
     function ModalDialogClass() {
-        this._modalOpen = false;
-        this._modalFocusStyle = null;
+        this._isOpen = false;
+        this._focusStyle = null;
     }
-    ModalDialogClass.prototype.isModal = function () {
-        return (this._modalOpen);
+    ModalDialogClass.prototype.isOpen = function () {
+        return (this._isOpen);
     };
-    ModalDialogClass.prototype.openModal = function (tmplName, data) {
+    ModalDialogClass.prototype.open = function (tmplName, data) {
         var modalObj = document.getElementById('modal');
         var containerObj = document.getElementById('modalContainer');
         if ((modalObj) && (containerObj)) {
@@ -708,16 +639,16 @@ var ModalDialogClass = (function () {
             containerObj.style.height = "";
             micro.insertTemplate(containerObj, tmplName, data);
             modalObj.classList.remove('hidden');
-            this._modalOpen = true;
+            this._isOpen = true;
         }
     };
-    ModalDialogClass.prototype.openModalObject = function (obj) {
+    ModalDialogClass.prototype.openFocus = function (obj) {
         var modalObj = document.getElementById('modal');
         var containerObj = document.getElementById('modalContainer');
         var p;
         if ((obj) && (obj.parentElement) && (modalObj) && (containerObj)) {
-            this._modalFocusObj = obj;
-            this._modalFocusStyle = obj.getAttribute('style');
+            this._focusObj = obj;
+            this._focusStyle = obj.getAttribute('style');
             var w = obj.clientWidth;
             var h = obj.clientHeight;
             var r = obj.getBoundingClientRect();
@@ -725,7 +656,7 @@ var ModalDialogClass = (function () {
             p.style.width = w + "px";
             p.style.height = h + "px";
             obj.parentElement.insertBefore(p, obj);
-            this._modalPlaceholder = p;
+            this._placeholderObj = p;
             obj.classList.add('modalObject');
             obj.style.top = r.top + 'px';
             obj.style.left = r.left + 'px';
@@ -746,21 +677,21 @@ var ModalDialogClass = (function () {
             obj.style.left = r2.left + 'px';
             obj.style.width = (r.width * 2) + 'px';
             obj.style.height = (r.height * 2) + 'px';
-            this._modalOpen = true;
+            this._isOpen = true;
         }
     };
-    ModalDialogClass.prototype.closeModal = function () {
+    ModalDialogClass.prototype.close = function () {
         var modalObj = document.getElementById('modal');
         var containerObj = document.getElementById('modalContainer');
         if ((modalObj) && (containerObj)) {
             modalObj.classList.add('hidden');
             containerObj.innerHTML = '';
-            if (this._modalFocusObj && this._modalPlaceholder && this._modalPlaceholder.parentElement) {
-                this._modalFocusObj.setAttribute('style', this._modalFocusStyle || '');
-                this._modalFocusObj.classList.remove('modalObject');
-                this._modalPlaceholder.parentElement.removeChild(this._modalPlaceholder);
+            if (this._focusObj && this._placeholderObj && this._placeholderObj.parentElement) {
+                this._focusObj.setAttribute('style', this._focusStyle || '');
+                this._focusObj.classList.remove('modalObject');
+                this._placeholderObj.parentElement.removeChild(this._placeholderObj);
             }
-            this._modalOpen = false;
+            this._isOpen = false;
         }
     };
     return ModalDialogClass;
