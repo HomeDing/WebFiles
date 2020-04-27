@@ -22,29 +22,28 @@
   <link Content-Type="text/css" href="/iotstyle.css" rel="stylesheet" />
 
   <style>
-    .activeState {
+    span.activeState,
+    span.setconfig {
       position: absolute;
       top: 0.5rem;
-      right: 0.5rem;
       height: 1.4rem;
       width: 1.4rem;
-      background-image: url(/i/stop.svg);
       background-size: 1.4rem;
     }
 
-    .activeState.active {
+    span.activeState {
+      right: 0.5rem;
+      background-image: url(/i/stop.svg);
+    }
+
+    span.activeState.active {
       background-image: url(/i/start.svg);
-      background-size: 1.4rem;
     }
 
     span.setconfig {
       position: absolute;
-      top: 0.4rem;
       right: 2.2rem;
-      height: 1.4rem;
-      width: 1.4rem;
       background-image: url(/i/config.svg);
-      background-size: 1.4rem;
     }
 
     #modal {
@@ -59,7 +58,7 @@
       position: absolute;
       width: 100%;
       height: 100%;
-      background-color: silver;
+      background-color: #dddddd;
       opacity: 0.75;
     }
 
@@ -69,6 +68,7 @@
       left: 50%;
       transform: translateX(-50%) translateY(-50%);
       padding: 0.5em;
+      background-color: #dddddd;
     }
 
     /* signature dialog */
@@ -91,6 +91,14 @@
       bottom: 0;
       left: 0;
     }
+
+    .modalObject {
+      position: absolute;
+      z-index: 2;
+      margin: 0;
+      transition: all 0.3s ease-in-out;
+    }
+
 
     .closedlg {
       position: absolute;
@@ -276,7 +284,7 @@
   </div>
 
   <div id="modal" class="hidden">
-    <div id="modalBack" onclick="micro.closeModal()"></div>
+    <div id="modalBack" onclick="modal.closeModal()"></div>
     <div id="modalContainer" style="min-width:20px;min-height:20px">Hello, this is modal</div>
   </div>
 

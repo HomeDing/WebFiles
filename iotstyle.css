@@ -34,7 +34,7 @@ h4 { font-size: 0.8em; min-height: 0.8rem; }
 
 .container-fluid { margin-right: 0; margin-left: 0; padding: 1rem; }
 
-.row { display: flex; flex-direction: row; flex-wrap: nowrap; align-items: flex-start; margin: -0.5rem 0.1rem 0rem; clear: both; padding: 0px; }
+.row { display: flex; flex-direction: row; flex-wrap: nowrap; align-items: flex-start; margin: 0 0.1rem -0.5rem; clear: both; padding: 0px; }
 
 .row.wrap { flex-wrap: wrap; }
 
