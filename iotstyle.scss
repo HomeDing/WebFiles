@@ -110,17 +110,82 @@ h4 {
   min-height: 0.8rem;
 }
 
+// Modal dialogs and focus Object
+
 #modal {
+  position: fixed;
   visibility: visible;
   opacity: 1;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   transition: opacity 0.3s ease-in-out;
+
+  &.hidden  {
+    visibility: hidden;
+    opacity: 0;
+  }
+  
+  #modalBack {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: $u-background;
+    opacity: 0.75;
+  }
+
+  #modalContainer {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    min-width: 100px;
+    min-height: 100px;
+    transform: translateX(-50%) translateY(-50%);
+    padding: 0.5em;
+    background-color: white;
+
+    &::before,
+    &::after {
+      content: "";
+      position: absolute;
+      background-color: red;
+      z-index: -1;
+      width: 40px;
+      height: 40px;
+    }
+    
+    &::before {
+      top: 0;
+      right: 0;
+    }
+    
+    &::after {
+      bottom: 0;
+      left: 0;
+    }
+  }
+
+  .closedlg {
+    position: absolute;
+    top: 0.4rem;
+    right: 0.4rem;
+    height: 1.8rem;
+    width: 1.8rem;
+    font-size: 1.6rem;
+    background-color: red;
+    text-align: center;
+    z-index: 3 !important;
+  }
+}
+  
+.modalObject {
+  position: fixed !important; 
+  z-index: 2 !important;
+  margin: 0 !important;
+  transition: all 0.3s ease-in-out !important;
 }
 
-#modal.hidden  {
-  visibility: hidden;
-  opacity: 0;
-  transition: visibility 0s .3s, opacity 0.3s ease-in-out;;
-}
 
 
 

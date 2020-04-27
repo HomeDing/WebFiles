@@ -626,35 +626,36 @@ var ModalDialogClass = (function () {
     function ModalDialogClass() {
         this._isOpen = false;
         this._focusStyle = null;
+        this._mObj = null;
+        this._cObj = null;
+        var scope = this;
+        window.addEventListener('load', function () {
+            scope._mObj = document.getElementById('modal');
+            scope._cObj = document.getElementById('modalContainer');
+        });
     }
     ModalDialogClass.prototype.isOpen = function () {
         return (this._isOpen);
     };
     ModalDialogClass.prototype.open = function (tmplName, data) {
-        var modalObj = document.getElementById('modal');
-        var containerObj = document.getElementById('modalContainer');
-        if ((modalObj) && (containerObj)) {
-            containerObj.innerHTML = '';
-            containerObj.style.width = "";
-            containerObj.style.height = "";
-            micro.insertTemplate(containerObj, tmplName, data);
-            modalObj.classList.remove('hidden');
+        if ((this._mObj) && (this._cObj)) {
+            this._cObj.innerHTML = '';
+            this._cObj.style.width = "";
+            this._cObj.style.height = "";
+            micro.insertTemplate(this._cObj, tmplName, data);
+            this._mObj.classList.remove('hidden');
             this._isOpen = true;
         }
     };
     ModalDialogClass.prototype.openFocus = function (obj) {
-        var modalObj = document.getElementById('modal');
-        var containerObj = document.getElementById('modalContainer');
         var p;
-        if ((obj) && (obj.parentElement) && (modalObj) && (containerObj)) {
+        if (!this._isOpen && (obj) && (obj.parentElement) && (this._mObj) && (this._cObj)) {
             this._focusObj = obj;
             this._focusStyle = obj.getAttribute('style');
-            var w = obj.clientWidth;
-            var h = obj.clientHeight;
             var r = obj.getBoundingClientRect();
             p = obj.cloneNode(false);
-            p.style.width = w + "px";
-            p.style.height = h + "px";
+            p.style.width = r.width + "px";
+            p.style.height = r.height + "px";
             obj.parentElement.insertBefore(p, obj);
             this._placeholderObj = p;
             obj.classList.add('modalObject');
@@ -662,35 +663,37 @@ var ModalDialogClass = (function () {
             obj.style.left = r.left + 'px';
             obj.style.width = r.width + 'px';
             obj.style.height = r.height + 'px';
-            containerObj.innerHTML = '';
-            containerObj.style.width = '';
-            containerObj.style.height = '';
+            this._cObj.innerHTML = '';
+            this._cObj.style.width = '';
+            this._cObj.style.height = '';
+            var f = 2;
+            f = Math.min(f, (window.innerWidth - 64) / r.width);
+            f = Math.min(f, (window.innerWidth - 64) / r.height);
+            var w = Math.floor(r.width * f) + 'px';
+            var h = Math.floor(r.height * f) + 'px';
             p = document.createElement('div');
-            p.setAttribute('style', "background-color:pink");
-            p.style.width = (r.width * 2) + 'px';
-            p.style.height = (r.height * 2) + 'px';
-            containerObj.appendChild(p);
-            modalObj.classList.remove('hidden');
+            p.style.width = w;
+            p.style.height = h;
+            this._cObj.appendChild(p);
             var r2 = p.getBoundingClientRect();
+            this._mObj.classList.remove('hidden');
             obj.style.margin = '0';
             obj.style.top = r2.top + 'px';
             obj.style.left = r2.left + 'px';
-            obj.style.width = (r.width * 2) + 'px';
-            obj.style.height = (r.height * 2) + 'px';
+            obj.style.width = w;
+            obj.style.height = h;
             this._isOpen = true;
         }
     };
     ModalDialogClass.prototype.close = function () {
-        var modalObj = document.getElementById('modal');
-        var containerObj = document.getElementById('modalContainer');
-        if ((modalObj) && (containerObj)) {
-            modalObj.classList.add('hidden');
-            containerObj.innerHTML = '';
+        if ((this._mObj) && (this._cObj)) {
+            this._mObj.classList.add('hidden');
             if (this._focusObj && this._placeholderObj && this._placeholderObj.parentElement) {
                 this._focusObj.setAttribute('style', this._focusStyle || '');
                 this._focusObj.classList.remove('modalObject');
                 this._placeholderObj.parentElement.removeChild(this._placeholderObj);
             }
+            this._cObj.innerHTML = '';
             this._isOpen = false;
         }
     };
