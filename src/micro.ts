@@ -18,6 +18,12 @@ class MicroRegistry {
   protected _unloadedList: Array<HTMLElement> = [];
   protected List: Array<HTMLElement> = [];
 
+  // modal handling
+  protected _modalOpen: boolean = false;
+  protected _modalFocusObj: HTMLElement | undefined;
+  protected _modalFocusStyle: string | null = null;
+  protected _modalPlaceholder: HTMLElement | undefined;
+
   constructor() {
     window.addEventListener('load', this.init.bind(this));
     window.addEventListener('unload', this.onunload.bind(this));
@@ -219,6 +225,12 @@ class MicroRegistry {
     this._registry[name] = mixin;
   }
 
+  // open modal viewer with template
+  isModal(): boolean {
+    return (this._modalOpen);
+  }
+
+  // open modal viewer with template
   openModal(tmplName: string, data: any) {
     const modalObj = document.getElementById('modal');
     const containerObj = document.getElementById('modalContainer');
@@ -228,14 +240,66 @@ class MicroRegistry {
       containerObj.innerHTML = '';
       containerObj.style.width = "";
       containerObj.style.height = "";
-      console.log("empty:", containerObj.getBoundingClientRect());
       micro.insertTemplate(containerObj, tmplName, data);
-      console.log("added:", containerObj.getBoundingClientRect());
       modalObj.classList.remove('hidden');
-      console.log("visible:", containerObj.getBoundingClientRect());
+      this._modalOpen = true;
       // console.log (containerObj);
     } // if
   } // openModal
+
+  // open modal viewer with existing object
+  openModalObject(obj: HTMLElement) {
+    const modalObj = document.getElementById('modal');
+    const containerObj = document.getElementById('modalContainer');
+    var p: HTMLElement;
+
+    if ((obj) && (obj.parentElement) && (modalObj) && (containerObj)) {
+      this._modalFocusObj = obj;
+      this._modalFocusStyle = obj.getAttribute('style');
+
+      const w = obj.clientWidth;
+      const h = obj.clientHeight;
+
+      const r = obj.getBoundingClientRect();
+
+      // create placeholder for obj with same size
+      p = obj.cloneNode(false) as HTMLElement;
+      p.style.width = w + "px";
+      p.style.height = h + "px";
+      obj.parentElement.insertBefore(p, obj);
+      this._modalPlaceholder = p;
+
+      // make obj free floating over dialog
+      obj.classList.add('modalObject');
+      obj.style.top = r.top + 'px';
+      obj.style.left = r.left + 'px';
+      obj.style.width = r.width + 'px';
+      obj.style.height = r.height + 'px';
+
+      // open Dialog, replace existing.
+      containerObj.innerHTML = '';
+      containerObj.style.width = '';
+      containerObj.style.height = '';
+
+      // add a dummy div element with target size
+      p = document.createElement('div');
+      p.setAttribute('style', "background-color:pink");
+      p.style.width = (r.width * 2) + 'px';
+      p.style.height = (r.height * 2) + 'px';
+      containerObj.appendChild(p);
+
+      modalObj.classList.remove('hidden');
+      // move focus object right there.
+      var r2 = p.getBoundingClientRect();
+      obj.style.margin = '0';
+      obj.style.top = r2.top + 'px';
+      obj.style.left = r2.left + 'px';
+      obj.style.width = (r.width * 2) + 'px';
+      obj.style.height = (r.height * 2) + 'px';
+      this._modalOpen = true;
+    } // if
+  } // openModal
+
 
   closeModal() {
     const modalObj = document.getElementById('modal');
@@ -243,8 +307,15 @@ class MicroRegistry {
     if ((modalObj) && (containerObj)) {
       modalObj.classList.add('hidden');
       containerObj.innerHTML = '';
+      if (this._modalFocusObj && this._modalPlaceholder && this._modalPlaceholder.parentElement) {
+        this._modalFocusObj.setAttribute('style', this._modalFocusStyle || '');
+        this._modalFocusObj.classList.remove('modalObject');
+        this._modalPlaceholder.parentElement.removeChild(this._modalPlaceholder);
+      } // if
+      this._modalOpen = false;
     } // if
   } // closeModal()
+
 
   onunload(_evt: Event) {
     for (var n in this.List) {
@@ -260,6 +331,7 @@ class MicroRegistry {
 } // MicroRegistry class
 
 const micro = new MicroRegistry();
+
 
 // detect that a new micro control was created using Mutation Observe Callback
 let obs = new MutationObserver(function (mutationsList: MutationRecord[], _observer) {
