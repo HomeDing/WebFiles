@@ -10,10 +10,15 @@
     }
   },
   "log": {
-    "pm": {
+    "aq": {
       "loglevel": 2,
-      "filename": "/pmlog.txt",
-      "description": "Log values to file"
+      "filename": "/aq.txt",
+      "description": "Air Quality Log"
+    },
+    "hum": {
+      "loglevel": 2,
+      "filename": "/humlog.txt",
+      "description": "Humidity Log"
     }
   },
   "dht": {
