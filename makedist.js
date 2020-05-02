@@ -65,6 +65,7 @@ const srcAssets = [
   '*.svg',
   'favicon.svg',
   'favicon*.png',
+  'updateicons.htm',
 
   'manifest.json',
   'browserconfig.xml',

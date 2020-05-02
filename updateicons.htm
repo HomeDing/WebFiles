@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Web Icon Update</title>
+</head>
+
+
+<body>
+  <h1>Web Icon Update</h1>
+  <table>
+    <tr>
+      <td><input /></td>
+    </tr>
+    <tr>
+      <td><progress value=0 max=1></progress></td>
+    </tr>
+    <tr>
+      <td id='info'>.</td>
+    </tr>
+    <tr>
+      <td><button>start</button></td>
+    </tr>
+  </table>
+  <script>
+    var repo = 'https://raw.githubusercontent.com/HomeDing/WebIcons/master/favicons/'; // /socket/favicon.svg';
+    var eStart = document.querySelector('button');
+    var eBar = document.querySelector('progress');
+    var eInfo = document.querySelector('#info');
+    var work = { status: '0', list: null, files: 0, done: 0 };
+    var timer = 0;
+    var seed = "?" + new Date().valueOf();
+
+
+    function log(t) {
+      eInfo.innerText = t;
+    } // log
+
+
+
+    // list of files
+    function doStart() {
+      var eIn = document.querySelector('input');
+      work.name = eIn.value;
+
+
+      log('loading ' + work.name + ' icons');
+
+
+      work.list = ['favicon.svg', 'favicon48.png', 'favicon144.png', 'favicon180.png', 'favicon192.png', 'favicon270.png', 'favicon512.png'];
+      work.files = work.list.length;
+      work.status = 'r'; // run
+    } // doStart()
+
+
+
+    // grab next file
+    function doFile() {
+      work.status = 'w'; // wait
+      var theItem = work.list.shift();
+
+
+      // set progress
+      work.done++;
+      eBar.max = work.files;
+      eBar.value = work.done;
+      eInfo.innerText = theItem; // log
+
+
+      var oReq = new XMLHttpRequest();
+      oReq.open("GET", repo + work.name + '/' + theItem + seed, true);
+      oReq.responseType = "arraybuffer";
+
+
+      oReq.onerror = function (evt) {
+        console.log(theItem + ": read failed.");
+        work.status = 'e'; // run
+      };
+
+
+      oReq.onload = function (oEvent) {
+        if (oReq.status != 200) {
+          console.log(theItem + ": error " + oReq.status);
+          work.status = 'r'; // run
+        } else {
+          var arrayBuffer = oReq.response; // Note: not oReq.responseText
+          if (arrayBuffer) {
+            var formData = new FormData();
+            formData.append('file', new Blob([arrayBuffer]), '/' + theItem);
+
+
+            var xmlHttp = new XMLHttpRequest();
+            xmlHttp.addEventListener('readystatechange', function (p) {
+              if ((xmlHttp.readyState == 4) && (xmlHttp.status >= 200) && (xmlHttp.status < 300)) {
+                work.status = 'r'; // run
+              }
+            });
+            xmlHttp.open('POST', '/');
+            xmlHttp.send(formData);
+
+
+          }
+        }
+        // work.status = (work.list.length == 0 ? 'e' : 'r');
+      };
+      oReq.send(null);
+
+
+      if (work.list.length == 0)
+        work.status = 'e'; // end
+    } // doFile()
+
+
+
+    function step() {
+      if (work.status == '0') { // not yet started
+        // fetch file list;
+        doStart();
+      } else if (work.status == 'r') { // run
+        if (work.list.length == 0)
+          work.status = 'e';
+        else
+          doFile();
+      } else if (work.status == 'e') { // end
+        if (timer) {
+          window.clearInterval(timer);
+          log('done');
+          window.location.href = '/';
+        }
+        timer = 0;
+      }
+    }
+
+
+    eStart.addEventListener('click', function () {
+
+
+      timer = window.setInterval(step, 330);
+    });
+  </script>
+</body>
+
+</html>
