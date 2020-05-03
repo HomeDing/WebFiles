@@ -6,6 +6,7 @@ const express = require("express");
 const yargs = require("yargs");
 const multer = require('multer');
 const fs = require("fs");
+const os = require("os");
 const path = require("path");
 const debug = require("debug");
 
@@ -98,15 +99,15 @@ app.get("/", function (req, res, next) {
 
 // ----- enable buildin setup pages -----
 
-app.get('/\\$upload', function (req, res, next) {
+app.get('/\\$upload.htm', function (req, res, next) {
   res.sendFile(path.join(__dirname, './upload.htm'));
 });
 
-app.get('/\\$setup', function (req, res, next) {
+app.get('/\\$setup.htm', function (req, res, next) {
   res.sendFile(path.join(__dirname, './setup.htm'));
 });
 
-app.get('/\\$boot', function (req, res, next) {
+app.get('/\\$boot.htm', function (req, res, next) {
   res.sendFile(path.join(__dirname, './boot.htm'));
 });
 
@@ -403,5 +404,5 @@ app.use(function (req, res, next) {
 });
 
 app.listen(3123, () => {
-  console.log("open http://localhost:3123/");
+  console.log(`open http://${os.hostname}:3123/`);
 });
