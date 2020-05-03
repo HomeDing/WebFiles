@@ -11,22 +11,20 @@
     "debug": "^4.1.1",
     "express": "^4.17.1",
     "multer": "^1.4.2",
-    "yargs": "^14.2.0"
+    "yargs": "^15.3.1"
   },
   "devDependencies": {
-    "typescript": "^3.6.4",
-    "node-sass": "^4.12.0",
-    "shelljs": "^0.8.3",
-    "rimraf": "^3.0.0",
     "html-minifier": "^3.5.21",
-    "uglify-js": "^3.6.0",
-    "svg-to-png": "^4.0.0"
+    "node-sass": "^4.14.0",
+    "shelljs": "^0.8.4",
+    "shx": "^0.3.2",
+    "typescript": "^3.8.3",
+    "uglify-js": "^3.9.2"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "clean": "rimraf dist",
+    "clean": "shx rm -rf dist",
     "build:css": "node-sass iotstyle.scss iotstyle.css --output-style compact",
-    "build:css-min": "node-sass iotstyle.scss mindist/iotstyle.css --output-style compressed",
     "build:css-watch": "npm run build:css -- -w",
     "build:ts": "tsc",
     "build:ts-watch": "npm run build:ts -- -w",
@@ -35,13 +33,7 @@
     "pack:embed": "node makeembedweb.js",
     "pack": "npm run pack:dist && npm run pack:embed",
     "prestart": "npm run build",
-    "start": "node server.js",
-    "min-index": "html-minifier --collapse-whitespace --remove-tag-whitespace --remove-comments --minify-css true --minify-js true --quote-character ' min-index.htm -o min-index.min.htm",
-    "min-ide-htm": "html-minifier --collapse-whitespace --remove-tag-whitespace --remove-comments --minify-css true --minify-js true --quote-character ' microide.htm -o mindist/microide.htm",
-    "min-templates-htm": "html-minifier --collapse-whitespace --remove-tag-whitespace --remove-comments --minify-css true --minify-js true --quote-character ' board-templates.htm -o mindist/board-templates.htm",
-    "min-board-htm": "html-minifier --collapse-whitespace --remove-tag-whitespace --remove-comments --minify-css true --minify-js true --quote-character ' board.htm -o mindist/board.htm",
-    "min-micro": "uglifyjs micro.js -c -o mindist/micro.js -m",
-    "min-ide": "uglifyjs microide.js -c -o mindist/microide.js"
+    "start": "node server.js"
   },
   "keywords": [
     "IoT",
