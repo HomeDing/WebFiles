@@ -167,11 +167,11 @@ app.get(/^\/\$sysinfo$/, noCache, function (req, res, next) {
   var fl = {
     "devicename": "nodejsding",
     "build": "Dec  1 2018",
-    "free heap": 31168,
-    "flash-size": 4194304,
+    "freeHeap": 31168,
+    "flashSize": 4194304,
     // "flash-real-size":4194304,
-    "fs-totalBytes": 957314,
-    "fs-usedBytes": 218872,
+    "fsTotalBytes": 957314,
+    "fsUsedBytes": 218872,
     "ssid": "devnet"
     // "bssid":"74:DA:11:22:33:44"
   };
