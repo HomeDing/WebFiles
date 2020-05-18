@@ -32,6 +32,8 @@ class DisplayTextWidgetClass extends GenericWidgetClass {
     }
 
     hub.subscribe(this.microid + "?*", this.newValue.bind(this), true);
+    if (!this.showSys())
+      this.style.display = "none";
   }
 
   newValue(_path: string, key: string | null, value: string | null) {

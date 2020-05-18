@@ -99,6 +99,11 @@ class GenericWidgetClass extends MicroControlClass {
     }
   } // dispatchAction()
 
+  showSys(): boolean {
+    const p = getHashParams({ sys: false }).sys;
+    return (toBool(p));
+  }
+
 
   // send changed value of property as an action to the board
   on_change(e: Event) {

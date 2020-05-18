@@ -1,4 +1,4 @@
-// DisplayTextWidget.ts: Widget Behavior implementation for DisplayText Elements
+// DisplayLineWidget.ts: Widget Behavior implementation for DisplayLine Elements
 
 // This file is part of the Widget implementation for the HomeDing Library
 // implementing the Web UI corresponding to an internal configured element.
@@ -7,14 +7,14 @@
 /// <reference path="microControls.ts" />
 /// <reference path="GenericWidget.ts" />
 
-@MicroControl("displaydot")
-class DisplayDotWidgetClass extends GenericWidgetClass {
-  lastValue: string | null = null;
+@MicroControl("displayline")
+class DisplayLineWidgetClass extends GenericWidgetClass {
   _dispElem: HTMLElement | null = null;
   _elem: HTMLElement | null = null;
-  _x = 0;
-  _y = 0;
-  _value: boolean = false;
+  _x0: number = 0;
+  _x1: number = 0;
+  _y0: number = 0;
+  _y1: number = 0;
 
   connectedCallback() {
     super.connectedCallback();
@@ -26,17 +26,18 @@ class DisplayDotWidgetClass extends GenericWidgetClass {
   } // connectedCallback
 
 
-  updateDisp(create: boolean) {
+  updateDisp() {
     if (this._dispElem) {
-      if (create && !this._elem) {
+      if (!this._elem) {
         this._elem = document.createElement("span");
         this._dispElem.appendChild(this._elem);
       }
       if (this._elem) {
-        this._elem.className = "dot";
-        this._elem.style.top = this._y + "px";
-        this._elem.style.left = this._x + "px";
-        this._elem.classList.toggle("active", this._value);
+        this._elem.className = "line";
+        this._elem.style.top = this._y0 + "px";
+        this._elem.style.left = this._x0 + "px";
+        this._elem.style.width = (this._x1 - this._x0) + "px";
+        this._elem.style.height = (this._y1 - this._y0) + "px";
       }
     }
   } // updateDisp
@@ -44,24 +45,10 @@ class DisplayDotWidgetClass extends GenericWidgetClass {
 
   newValue(_path: string, key: string | null, value: string | null) {
     if (key && value) {
-      if (key === "active" && !this._elem) {
-        this.updateDisp(true);
-
-      } else if (key === "value") {
-        this._value = toBool(value);
-        this.updateDisp(false);
-
-      } else if (key === "x") {
-        this._x = Number(value);
-        this.updateDisp(false);
-
-      } else if (key === "y") {
-        this._y = Number(value);
-        this.updateDisp(false);
-
-      } else {
-        console.log("key", key, value);
+      if ((<any>this)['_' + key] != null) {
+        (<any>this)['_' + key] = value;
       }
+      this.updateDisp();
     }
   } // newValue
 }
