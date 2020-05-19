@@ -90,9 +90,11 @@ svg.button .connect { fill: #00cc00; fill-opacity: 1; }
 
 .u-header .close { position: absolute; top: 1rem; right: 1rem; height: 1.8rem; width: 1.8rem; font-size: 1.6rem; background-color: red; text-align: center; z-index: 3 !important; }
 
-.u-navbar { background-color: #304878; padding: 0.5rem 1rem; margin-bottom: 0.5rem; }
+.u-navbar { background-color: #304878; padding: 0.5rem 1rem; margin-bottom: 0.5rem; height: 3rem; }
 
-.u-navbar > button, .u-navbar .button { min-width: 2em; color: white; }
+.u-navbar.nogutter { margin: 0; }
+
+.u-navbar > * { display: inline-block; font-size: 1.5em; min-width: 2em !important; height: 1.4em; color: white !important; vertical-align: top; border: 0.1em solid #304878; }
 
 .u-navbar > button:hover, .u-navbar .button:hover { border-color: #4466ee; background-color: #4466ee; }
 

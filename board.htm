@@ -67,8 +67,6 @@
     <div class="u-header">
       <a href="/" title="Start-Page"><img class="icon" src="/favicon.svg" /></a>
       <h1>Board</h1>
-      <div class="close">&#x00D7;</div>
-
     </div>
     <div class="u-navbar">
       <a class="button" href="/">Home</a>
@@ -345,11 +343,11 @@
       alert(JSON.stringify(err, null, 1));
     })
 
-    document.querySelector('.close').addEventListener('click', function (){
-      window.history.back();
-    });
-
-
+    if (window !== window.top) {
+      // disable header and navbar in portal mode.
+      document.querySelector('.u-header').style.display = 'none';
+      document.querySelector('.u-navbar').style.display = 'none';
+    } // if
   </script>
 </body>
 

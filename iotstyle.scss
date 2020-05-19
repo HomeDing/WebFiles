@@ -337,11 +337,20 @@ svg.button {
   background-color: $u-navbar;
   padding: $gutter $white-space;
   margin-bottom: $gutter;
+  height: 3rem;
+  
+  &.nogutter {
+    margin: 0;
+  }
 
-  > button,
-  .button {
-    min-width: 2em;
-    color: $u-navbar-text;
+  > * {
+    display:inline-block;
+    font-size: 1.5em;
+    min-width: 2em !important;
+    height:1.4em;
+    color: $u-navbar-text !important;
+    vertical-align: top;
+    border:0.1em solid $u-navbar;
   }
 
   > button:hover,
