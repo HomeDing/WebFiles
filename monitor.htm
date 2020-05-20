@@ -32,8 +32,13 @@
       padding: 0;
     }
 
-    .dataTab tr:nth-child(even) {background: #ddd}
-    .dataTab tr:nth-child(odd) {background: #eee}
+    .dataTab tr:nth-child(even) {
+      background: #ddd
+    }
+
+    .dataTab tr:nth-child(odd) {
+      background: #eee
+    }
 
     .dataTab td,
     .dataTab th {
@@ -44,6 +49,11 @@
     .dataTab thead th {
       background-color: #203050;
       color: white;
+    }
+
+    .remote img {
+      width: 1em;
+      height: 1em;
     }
   </style>
 </head>
@@ -60,6 +70,7 @@
         <table class="dataTab">
           <thead>
             <tr>
+              <th>*</th>
               <th>hostname</th>
               <th>memory</th>
               <th>version</th>
@@ -67,41 +78,61 @@
             </tr>
           </thead>
           <tr class="remote">
-            <th class="hostname">dhtdevice</th>
+            <td class="status"><img src="i/stop.svg"></td>
+            <th class="hostname"><a href="http://airding">airding</a></th>
             <td class="memory"></td>
             <td class="version"></td>
             <td class="uptime"></td>
           </tr>
           <tr class="remote">
-            <th class="hostname">rfdevice</th>
+            <td class="status"><img src="i/stop.svg"></td>
+            <th class="hostname"><a href="http://rfbridge">rfbridge</a></th>
             <td class="memory"></td>
             <td class="version"></td>
             <td class="uptime"></td>
           </tr>
           <tr class="remote">
-            <th class="hostname">airding</th>
+            <td class="status"><img src="i/stop.svg"></td>
+            <th class="hostname"><a href="http://dhtdevice">dhtdevice</a></th>
             <td class="memory"></td>
             <td class="version"></td>
             <td class="uptime"></td>
           </tr>
           <tr class="remote">
-            <th class="hostname">imkelight</th>
+            <td class="status"><img src="i/stop.svg"></td>
+            <th class="hostname"><a href="http://imkelight">imkelight</a></th>
             <td class="memory"></td>
             <td class="version"></td>
             <td class="uptime"></td>
           </tr>
+          <!-- <tr class="remote">
+            <td class="status"><img src="i/stop.svg"></td>
+            <th class="hostname"><a href="http://bad">bad</a></th>
+            <td class="memory"></td>
+            <td class="version"></td>
+            <td class="uptime"></td>
+          </tr> -->
           <tr class="remote">
-            <th class="hostname">bad</th>
+            <td class="status"><img src="i/stop.svg"></td>
+            <th class="hostname"><a href="http://nodeding">nodeding</a></th>
             <td class="memory"></td>
             <td class="version"></td>
             <td class="uptime"></td>
           </tr>
-          <tr class="remote">
-            <th class="hostname">lcddevice</th>
+          <!-- <tr class="remote">
+            <td class="status"><img src="i/stop.svg"></td>
+            <th class="hostname"><a href="http://lcddevice">lcddevice</a></th>
             <td class="memory"></td>
             <td class="version"></td>
             <td class="uptime"></td>
-          </tr>
+          </tr> -->
+          <!-- <tr class="remote">
+            <td class="status"><img src="i/stop.svg"></td>
+            <th class="hostname"><a href="http://wroomding">wroomding</a></th>
+            <td class="memory"></td>
+            <td class="version"></td>
+            <td class="uptime"></td>
+          </tr> -->
         </table>
       </div>
     </div>
@@ -133,39 +164,50 @@
     var remotes = document.querySelectorAll('.remote');
     var remoteIndex = 0;
 
-    function updateStatus(obj) {
-      var hostname = obj.querySelector('.hostname').textContent;
-
-      fetch('http://' + hostname + '/$sysinfo')
-        .then(function (result) {
-          return result.json();
-        })
-        .then(function (si) {
-          // alert(JSON.stringify(si, null, 2));
-          var d = new Date(si.upTime * 1000);
-
-          obj.querySelector('.memory').textContent = si.freeHeap;
-          obj.querySelector('.version').textContent = si.build;
-          obj.querySelector('.uptime').textContent = d.toISOString().split(/[T\.]/)[1];
-        })
-        .catch(function(err) {
-          obj.querySelector('.memory').textContent = '-';
-          obj.querySelector('.uptime').textContent = '-';
-          // alert(err);
-        });
-    }
-
     function updateNext() {
+      var obj = remotes[remoteIndex];
       if (remoteIndex >= remotes.length) {
         remoteIndex = 0;
         window.setTimeout(updateNext, 8000);
 
       } else {
-        var r = remotes[remoteIndex];
-        updateStatus(r);
-        remoteIndex++;
-        window.setTimeout(updateNext, 200);
+        var hostname = obj.querySelector('.hostname').textContent;
+        var statImg = obj.querySelector('.status img');
+
+        statImg.src = 'i/config.svg';
+
+        fetch('http://' + hostname + '/$sysinfo', {})
+          .then(function (response) {
+            if (response.status === 200) {
+              return response.json();
+            } else {
+              debugger;
+            }
+          })
+          .then(function (si) {
+            // alert(JSON.stringify(si, null, 2));
+            var d = new Date(si.upTime * 1000);
+
+            statImg.src = 'i/start.svg';
+            obj.querySelector('.memory').textContent = si.freeHeap;
+            obj.querySelector('.version').textContent = si.build;
+            obj.querySelector('.uptime').textContent = d.toISOString().split(/[T\.]/)[1];
+          })
+          .catch(function (err) {
+            statImg.src = 'i/stop.svg';
+            obj.querySelector('.memory').textContent = '-';
+            obj.querySelector('.uptime').textContent = '-';
+
+            console.log(err);
+            // alert(err);
+          })
+          .finally(function () {
+            console.log("finally");
+            remoteIndex++;
+            window.setTimeout(updateNext, 200);
+          });
       }
+
     }
 
     window.addEventListener('load', function () {
