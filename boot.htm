@@ -34,29 +34,31 @@
       eInfo.innerText = t;
     } // log
 
+    function next() {
+      work.status = 'r';
+    } // next
+
     if (location.hash) {
       repo += location.hash.substr(1) + '/';
     } else {
-      repo += 'v01/';
+      repo += 'v02/';
     }
     log('loading web files from ' + repo);
 
     // fetch list of files
     function doStart() {
       work.status = 'w'; // wait
-
-      var oReq = new XMLHttpRequest();
-      oReq.open("GET", repo + 'list.txt' + seed, true);
-      oReq.responseType = "text";
-
-      oReq.onload = function (oEvent) {
-        var s = oReq.responseText.replace(/\r?\n/g, ';');
-        s = s.replace(/;$/, '');
-        work.list = s.split(';');
-        work.files = work.list.length;
-        work.status = 'r'; // run
-      };
-      oReq.send(null);
+      fetch(repo + 'list.txt' + seed)
+        .then(function (result) {
+          return result.text();
+        })
+        .then(function (txt) {
+          var s = txt.replace(/\r?\n/g, ';');
+          s = s.replace(/;$/, '');
+          work.list = s.split(';');
+          work.files = work.list.length;
+          next();
+        });
     } // doStart()
 
 
@@ -71,42 +73,31 @@
       eBar.value = work.done;
       eInfo.innerText = theItem; // log
 
-      var oReq = new XMLHttpRequest();
-      oReq.open("GET", repo + theItem + seed, true);
-      oReq.responseType = "arraybuffer";
+      if (theItem[0] == '-') {
+        // delete the file
+        fetch('/' + theItem.substr(1), { method: 'DELETE' })
+          .then(next).catch(next);
 
-      oReq.onerror = function (evt) {
-        console.log(theItem + ": read failed.");
-        work.status = 'r'; // run
-      };
-
-      oReq.onload = function (oEvent) {
-        if (oReq.status != 200) {
-          console.log(theItem + ": error " + oReq.status);
-          work.status = 'r'; // run
-        } else {
-          var arrayBuffer = oReq.response; // Note: not oReq.responseText
-          if (arrayBuffer) {
+      } else {
+        fetch(repo + theItem + seed)
+          .catch(next)
+          .then(function (result) {
+            return result.arrayBuffer();
+          })
+          .then(function (buf) {
             var formData = new FormData();
-            formData.append('file', new Blob([arrayBuffer]), '/' + theItem);
+            formData.append('file', new Blob([buf]), '/' + theItem);
 
             var xmlHttp = new XMLHttpRequest();
             xmlHttp.addEventListener('readystatechange', function (p) {
               if ((xmlHttp.readyState == 4) && (xmlHttp.status >= 200) && (xmlHttp.status < 300)) {
-                work.status = 'r'; // run
+                next();
               }
             });
             xmlHttp.open('POST', '/');
             xmlHttp.send(formData);
-
-          }
-        }
-        // work.status = (work.list.length == 0 ? 'e' : 'r');
+          });
       };
-      oReq.send(null);
-
-      if (work.list.length == 0)
-        work.status = 'e'; // end
     } // doFile()
 
 

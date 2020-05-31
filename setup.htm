@@ -32,36 +32,28 @@
     var state = 0;  // 0: start, 1: get sysinfo, 2: sysinfo-done,  3: scan, 4, scan-done
     var timer;
     var oSel = document.getElementById('conNet');
-    var devname;
-
-    function load(url, func) {
-      var xhr = new XMLHttpRequest(); // new ActiveXObject("MSXML2.XMLHTTP");
-      xhr.open('GET', url, true);
-      xhr.addEventListener('readystatechange', function (p) {
-        if (xhr.readyState == 4) {
-          if ((xhr.status >= 200) && (xhr.status < 300)) {
-            func(xhr.responseText);
-          } // if
-        } // if
-      });
-      xhr.send();
-    } // load()
 
     function check() {
       if (state == 0) {
         // start sysinfo
         state = 1;
-        load('/$sysinfo', function (t) {
+        fetch('/$sysinfo')
+        .then(function (result) {
+          return (result.text());
+        }).then (function(t) {
           if (t.length > 0) {
-            document.getElementById('devname').textContent = devname = JSON.parse(t).devicename;
+            document.getElementById('devname').textContent = JSON.parse(t).devicename;
             state = 2;
-          }
+          } // if
         });
 
       } else if (state == 2) {
         // start scan 
         state = 3;
-        load('/$scan', function (t) {
+        fetch('/$scan') 
+        .then(function (result) {
+          return (result.text());
+        }).then (function(t) {
           if (t.length == 0) {
             state = 2;
           } else {
@@ -93,8 +85,7 @@
 
     // connect using network name and password
     document.getElementById('bCon').addEventListener('click', function () {
-      load('/$connect?n=' + oSel.value + '&p=' + document.getElementById('pass').value,
-        function () { });
+      fetch('/$connect?n=' + oSel.value + '&p=' + document.getElementById('pass').value);
     });
     timer = window.setInterval(check, 800);
   </script>
