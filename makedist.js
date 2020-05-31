@@ -35,14 +35,14 @@ logInfo(`Starting...`);
 
 
 // array with files that get copied as they are
+//   'es6-promise.auto.js', removed
 const srcAssets = [
   'index.htm',
   'iotstyle.css',
   'spinner.gif',
   
-  'micro.js',
-  'es6-promise.auto.js',
   'polyfill.js',
+  'micro.js',
 
   'elements.json',
 
