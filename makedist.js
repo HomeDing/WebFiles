@@ -62,7 +62,9 @@ const srcAssets = [
   'lineChart.js',
   'pieChart.js',
 
-  '*.svg',
+  'element.svg',
+  'lineChart.svg',
+  'pieChart.svg',
   'favicon.svg',
   'favicon*.png',
   'updateicons.htm',
@@ -105,7 +107,8 @@ srcAssets
 logInfo(`Images copied.`);
 
 // create list file
-shell.ls('-R', distFolder).grep(/^.*\..*$/).to(distFolder + '/list.txt');
+shell.cat('oldlist.txt').to(distFolder + '/list.txt');
+shell.ls('-R', distFolder).grep(/^.*\..*$/).toEnd(distFolder + '/list.txt');
 logInfo(`list.txt file written.`);
 
 logInfo(`done.`);

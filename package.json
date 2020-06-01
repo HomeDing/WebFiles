@@ -15,7 +15,7 @@
   },
   "devDependencies": {
     "html-minifier": "^3.5.21",
-    "node-sass": "^4.14.0",
+    "node-sass": "^4.14.1",
     "shelljs": "^0.8.4",
     "shx": "^0.3.2",
     "typescript": "^3.8.3",
