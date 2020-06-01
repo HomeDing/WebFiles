@@ -50,6 +50,10 @@
       eInfo.innerText = t;
     } // log
 
+    function next() {
+      work.status = 'r';
+    } // next
+
     var selObj = document.querySelector('select#namesel');
     var list = 'and,bme680,bulb,button,config,default,dht,digitalin,digitalout,door,home,minus,ntptime,ota,plus,pms,power,radio,remote,rfsend,rotary,schedule,socket,ssdp,switch,time,timer,tool,value,water,wifi'.split(',');
 
@@ -95,7 +99,7 @@
           .then(next).catch(next);
 
       } else {
-        fetch(repo + theItem + seed)
+        fetch(repo + iconname + '/' + theItem + seed)
           .catch(next)
           .then(function (result) {
             return result.arrayBuffer();
