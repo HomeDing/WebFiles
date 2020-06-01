@@ -9,7 +9,6 @@
   <link Content-Type="text/css" href="/iotstyle.css" rel="stylesheet" />
 </head>
 
-
 <body>
   <h1>Web Icon Update</h1>
   <table>
@@ -84,57 +83,38 @@
       work.status = 'w'; // wait
       var theItem = work.list.shift();
 
-
       // set progress
       work.done++;
       eBar.max = work.files;
       eBar.value = work.done;
       eInfo.innerText = theItem; // log
 
+      if (theItem[0] == '-') {
+        // delete the file
+        fetch('/' + theItem.substr(1), { method: 'DELETE' })
+          .then(next).catch(next);
 
-      var oReq = new XMLHttpRequest();
-      oReq.open("GET", repo + iconname + '/' + theItem + seed, true);
-      oReq.responseType = "arraybuffer";
-
-
-      oReq.onerror = function (evt) {
-        console.log(theItem + ": read failed.");
-        work.status = 'e'; // run
-      };
-
-
-      oReq.onload = function (oEvent) {
-        if (oReq.status != 200) {
-          console.log(theItem + ": error " + oReq.status);
-          work.status = 'r'; // run
-        } else {
-          var arrayBuffer = oReq.response; // Note: not oReq.responseText
-          if (arrayBuffer) {
+      } else {
+        fetch(repo + theItem + seed)
+          .catch(next)
+          .then(function (result) {
+            return result.arrayBuffer();
+          })
+          .then(function (buf) {
             var formData = new FormData();
-            formData.append('file', new Blob([arrayBuffer]), '/' + theItem);
-
+            formData.append('file', new Blob([buf]), '/' + theItem);
 
             var xmlHttp = new XMLHttpRequest();
             xmlHttp.addEventListener('readystatechange', function (p) {
               if ((xmlHttp.readyState == 4) && (xmlHttp.status >= 200) && (xmlHttp.status < 300)) {
-                work.status = 'r'; // run
+                next();
               }
             });
             xmlHttp.open('POST', '/');
             xmlHttp.send(formData);
-
-
-          }
-        }
-        // work.status = (work.list.length == 0 ? 'e' : 'r');
+          });
       };
-      oReq.send(null);
-
-
-      if (work.list.length == 0)
-        work.status = 'e'; // end
     } // doFile()
-
 
 
     function step() {
@@ -153,7 +133,6 @@
         timer = 0;
       }
     }
-
 
     eStart.addEventListener('click', doStart);
   </script>

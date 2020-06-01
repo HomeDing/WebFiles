@@ -26,16 +26,13 @@ function handleLoadFile(e) {
 
 // delete file on the server
 function handleDeleteFile(e) {
-  var xhr = new XMLHttpRequest();
   e.stopPropagation();
   e.preventDefault();
   var s = e.target.parentElement.firstElementChild.innerText;
   s = s.split(' ')[0];
   var yn = window.confirm("Delete " + s + " ?");
   if (yn) {
-    // sync call
-    xhr.open("DELETE", s, true);
-    xhr.send();
+    fetch(s, { method: 'DELETE' });
     window.setTimeout(handleReloadFS, 100);
   } // if
 } // handleDeleteFile()
