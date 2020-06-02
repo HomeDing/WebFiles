@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="en">
 
@@ -6,7 +7,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <title>HomeDing</title>
+  <title>HomeDing Portal</title>
 
   <link rel="icon" type="image/png" href="/favicon48.png" sizes="48x48">
   <meta name="application-name" content="Ding" />
@@ -73,6 +74,7 @@ font-size: 1.3em;
     <div class="u-navbar nogutter">
       <img src="/i/menui.svg" class="button" />
       <span>HomePortal</span>
+      <img id="reload" src="/i/reload.svg" class="button" />
     </div>
 
     <div id="pbody">
@@ -84,6 +86,7 @@ font-size: 1.3em;
           <li><a href="#dhtdevice/board.htm">DHTdevice</a></li>
           <li><a href="#airding/board.htm">AirDing</a></li>
           <li><a href="#imkelight/board.htm">ImkeLight</a></li>
+          <li><a href="#water2/">Water2</a></li>
           <li><a href="#rfbridge/board.htm">RF Bridge</a></li>
           <li><a href="#switch1/index.htm">switch 1</a></li>
           <hr />
@@ -122,6 +125,9 @@ font-size: 1.3em;
 
     window.addEventListener('hashchange', startContent);
     window.addEventListener('load', startContent);
+    document.querySelector('#reload').addEventListener('click', function() {
+      window.location.reload(true);
+    })
   </script>
 </body>
 
