@@ -79,8 +79,6 @@ node server.js
 
 ## See also:
 
-* Promise implementation for IE11: <https://github.com/stefanpenner/es6-promise>
-
 * Use the HomeDing library on a new device: <https://homeding.github.io/#page=stepsnewdevice.md>
 * New upload or upgrade the web on a device: <https://homeding.github.io/#page=stepsupdateweb.md>
 
@@ -100,19 +98,42 @@ The server and the build tasks are using the following packages:
 - **shell:** shell operations of files and folders 
 
 
+## Create the builtin web UI
+
+To create the builtin web ui that will be compiled into the firmware the `upload.h` file can be created
+by using the script `makeembeddedweb.js`.
+
+This can be started using the npm command
+
+```CMD
+npm run pack:embed
+```
+
+The generated `upload.h` file needs to be copied to the Arduino library folder.
+
+The source files used are:
+* makeembedtemplate.txt
+* setup.htm
+* upload.htm
+* boot.htm
+
+
 <!-- --- 
 
-### Create a minified version of boot.htm
 
 2 steps are required to create a minified version of bootpage.htm:
 
 1. remove all whitespaces from the html part of the file.
 2. pass the javascript through the minify or uglify service like https://www.uglifyjs.net/
 3. be sure to replace all double-quotes by single-quotes.
-4. add result into "bootpage.h" replacing the existing text. -->
+4. add result into "bootpage.h" replacing the existing text.
 
-<!-- 
 More to read:
 
 https://www.w3.org/TR/appmanifest/
-http://tinkerman.cat/optimizing-files-for-spiffs-with-gulp/ -->
+http://tinkerman.cat/optimizing-files-for-spiffs-with-gulp/
+
+
+    <script src="/polyfill.js"></script>
+    <!-- <script src="/es6-promise.auto.js"></script>
+-->
