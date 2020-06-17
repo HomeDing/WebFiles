@@ -66,7 +66,7 @@
 
     <div class="row">
       <div class="col">
-        <table class="dataTab">
+        <table id="devices" class="dataTab">
           <thead>
             <tr>
               <th>*</th>
@@ -76,62 +76,6 @@
               <th>uptime</th>
             </tr>
           </thead>
-          <tr class="remote">
-            <td class="status"><img src="i/stop.svg"></td>
-            <th class="hostname"><a href="http://airding">airding</a></th>
-            <td class="memory"></td>
-            <td class="version"></td>
-            <td class="uptime"></td>
-          </tr>
-          <tr class="remote">
-            <td class="status"><img src="i/stop.svg"></td>
-            <th class="hostname"><a href="http://rfbridge">rfbridge</a></th>
-            <td class="memory"></td>
-            <td class="version"></td>
-            <td class="uptime"></td>
-          </tr>
-          <tr class="remote">
-            <td class="status"><img src="i/stop.svg"></td>
-            <th class="hostname"><a href="http://dhtdevice">dhtdevice</a></th>
-            <td class="memory"></td>
-            <td class="version"></td>
-            <td class="uptime"></td>
-          </tr>
-          <tr class="remote">
-            <td class="status"><img src="i/stop.svg"></td>
-            <th class="hostname"><a href="http://imkelight">imkelight</a></th>
-            <td class="memory"></td>
-            <td class="version"></td>
-            <td class="uptime"></td>
-          </tr>
-          <!-- <tr class="remote">
-            <td class="status"><img src="i/stop.svg"></td>
-            <th class="hostname"><a href="http://bad">bad</a></th>
-            <td class="memory"></td>
-            <td class="version"></td>
-            <td class="uptime"></td>
-          </tr> -->
-          <tr class="remote">
-            <td class="status"><img src="i/stop.svg"></td>
-            <th class="hostname"><a href="http://nodeding">nodeding</a></th>
-            <td class="memory"></td>
-            <td class="version"></td>
-            <td class="uptime"></td>
-          </tr>
-          <!-- <tr class="remote">
-            <td class="status"><img src="i/stop.svg"></td>
-            <th class="hostname"><a href="http://lcddevice">lcddevice</a></th>
-            <td class="memory"></td>
-            <td class="version"></td>
-            <td class="uptime"></td>
-          </tr> -->
-          <!-- <tr class="remote">
-            <td class="status"><img src="i/stop.svg"></td>
-            <th class="hostname"><a href="http://wroomding">wroomding</a></th>
-            <td class="memory"></td>
-            <td class="version"></td>
-            <td class="uptime"></td>
-          </tr> -->
         </table>
       </div>
     </div>
@@ -160,8 +104,59 @@
   </script>
 
   <script>
+    var devices;
     var remotes = document.querySelectorAll('.remote');
     var remoteIndex = 0;
+
+    var state = 0;
+
+    function addDevice(name) {
+      var tab = document.querySelector('#devices');
+      var r = tab.insertRow(-1);
+      var c, o;
+      r.className = "remote";
+
+      c = r.insertCell(-1);
+      c.className = 'status';
+      var o = document.createElement('img');
+      o.src = 'i/stop.svg';
+      c.appendChild(o);
+
+      c = r.insertCell(-1);
+      c.className = 'hostname';
+      var o = document.createElement('a');
+      o.href = 'http://' + name;
+      o.innerText = name;
+      c.appendChild(o);
+
+      c = r.insertCell(-1);
+      c.className = 'memory';
+
+      c = r.insertCell(-1);
+      c.className = 'version';
+
+      c = r.insertCell(-1);
+      c.className = 'uptime';
+
+      return (r);
+    } // addDevice()
+
+
+    function loadDevices() {
+      fetch('/devices.json')
+        .then(function (result) {
+          return result.json();
+        })
+        .then(function (json) {
+          devices = json.devices;
+          remotes = [];
+          for (var n = 0; n < devices.length; n++) {
+            remotes[n] = addDevice(devices[n]);
+          }
+          window.setTimeout(updateNext, 10);
+        });
+    } // loadDevices()
+
 
     function updateNext() {
       var obj = remotes[remoteIndex];
@@ -170,7 +165,7 @@
         window.setTimeout(updateNext, 8000);
 
       } else {
-        var hostname = obj.querySelector('.hostname').textContent;
+        var hostname = devices[remoteIndex];
         var statImg = obj.querySelector('.status img');
 
         statImg.src = 'i/config.svg';
@@ -205,12 +200,12 @@
             remoteIndex++;
             window.setTimeout(updateNext, 200);
           });
-      }
-
-    }
+      } // if
+    } // updateNext()
 
     window.addEventListener('load', function () {
-      window.setTimeout(updateNext, 400);
+      state = 'l'; // load devices
+      window.setTimeout(loadDevices, 400);
     });
   </script>
 </body>
