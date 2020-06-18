@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="en">
 
@@ -51,7 +50,7 @@
       flex: 0;
       min-width: 10em;
       background-color: lightgray;
-font-size: 1.3em;
+      font-size: 1.3em;
 
     }
 
@@ -62,10 +61,10 @@ font-size: 1.3em;
     ul>hr {
       border: 0
     }
+
     ul>li {
       margin-bottom: 0.3em;
     }
-
   </style>
 </head>
 
@@ -79,21 +78,13 @@ font-size: 1.3em;
 
     <div id="pbody">
       <nav>
-        <ul style="padding-inline-start: 1rem;list-style-type: none;">
+        <ul id="devices" style="padding-inline-start: 1rem;list-style-type: none;">
 
           <li><a href="#/portalhome.htm">Home</a></li>
           <hr />
-          <li><a href="#dhtdevice/board.htm">DHTdevice</a></li>
-          <li><a href="#airding/board.htm">AirDing</a></li>
-          <li><a href="#imkelight/board.htm">ImkeLight</a></li>
-          <li><a href="#water2/">Water2</a></li>
-          <li><a href="#rfbridge/board.htm">RF Bridge</a></li>
-          <li><a href="#switch1/index.htm">switch 1</a></li>
-          <hr />
           <li><a href="#/monitor.htm">Monitor</a></li>
-          <li><a href="#nodeding/index.htm">nodeding</a></li>
-          <li><a href="#nodeding/board.htm">nodeding-board</a></li>
-
+          <hr />
+          <li><a href="#water2/ding.htm">Water-Balcony</a></li>
         </ul>
       </nav>
       <main>
@@ -104,6 +95,25 @@ font-size: 1.3em;
 
   <script>
     var iframeObj = document.querySelector('iframe#content');
+
+    function loadDevices() {
+      fetch('/$devices')
+        .then(function (result) {
+          return result.json();
+        })
+        .then(function (devices) {
+          var nav = document.querySelector('#devices');
+          for (var n = 0; n < devices.length; n++) {
+            var o = document.createElement('li');
+            nav.appendChild(o);
+            var a = document.createElement('a');
+            a.href = "#" + devices[n] + '/board.htm';
+            a.innerText = devices[n].replace('.local', '');
+            o.appendChild(a);
+          }
+          window.setTimeout(startContent, 10);
+        });
+    } // loadDevices()
 
     // display to content in iframe, specified by url-hash
     function startContent() {
@@ -124,8 +134,8 @@ font-size: 1.3em;
     } // startContent()
 
     window.addEventListener('hashchange', startContent);
-    window.addEventListener('load', startContent);
-    document.querySelector('#reload').addEventListener('click', function() {
+    window.addEventListener('load', loadDevices);
+    document.querySelector('#reload').addEventListener('click', function () {
       window.location.reload(true);
     })
   </script>

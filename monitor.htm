@@ -143,12 +143,12 @@
 
 
     function loadDevices() {
-      fetch('/devices.json')
+      fetch('/$devices')
         .then(function (result) {
           return result.json();
         })
         .then(function (json) {
-          devices = json.devices;
+          devices = json;
           remotes = [];
           for (var n = 0; n < devices.length; n++) {
             remotes[n] = addDevice(devices[n]);

@@ -34,6 +34,23 @@ const logError = debug("iot:error");
 const debugSend = debug("iot:send");
 debug.log = console.log.bind(console);
 
+// support mDNS browsing for arduinos with network access
+let netDevices = [];
+const mDns = require('mdns-js');
+mDns.excludeInterface('0.0.0.0');
+var browser = mDns.createBrowser(mDns.tcp('arduino'));
+
+browser.on('ready', () => { browser.discover(); });
+
+browser.on('update', (data) => {
+
+  // console.log(`>>${JSON.stringify(data, null, 2)}`);
+  console.log(`>>${JSON.stringify(data.addresses)} - ${data.host} - ${data.fullname}`);
+  // console.log(`  ${JSON.stringify(data.query)}`);
+  // console.log(`  ${JSON.stringify(data.type)}`);
+  netDevices.push(data.host);
+});
+
 
 // a prefix can be added to the files config.json, env.json and $board 
 
@@ -368,6 +385,10 @@ app.get(/^\/\$board$/, noCache, function (req, res, next) {
 });
 
 
+app.get(/^\/\$devices$/, noCache, function (req, res, next) {
+  res.type('application/json');
+  res.send(JSON.stringify(netDevices, null, 2));
+});
 
 
 // ===== serving file system 
