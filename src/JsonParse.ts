@@ -43,11 +43,12 @@ function jsonFind(obj: any, path: string): any {
   }
   let steps = path.split('/');
 
-  // use existing objects.
+  // use existing objects. 
   while (obj && steps.length > 0) {
     const p = steps[0];
     if (!obj[p]) {
-      obj[p] = {};
+      // create new object
+      obj[p] = {}; 
     }
     obj = obj[p];
     steps.shift();

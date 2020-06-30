@@ -48,11 +48,21 @@ function setAttr(el: HTMLElement, name: string, value: string) {
 } // setAttr
 
 
-/** change an element configuration in /config.json */ 
+/** change an element configuration in /config.json */
 function changeConfig(id: string, newConfig: any) {
-  const fName = '/config.json';
-  const c = JSON.parse(hub.read('config'));
-  let node = jsonFind(c, id);
+  let c: any, node: any, fName: string;
+
+  fName = '/env.json';
+  c = JSON.parse(hub.read('env'));
+  node = jsonFind(c, id);
+
+  if (Object.keys(node).length == 0) {
+    // not a env configuration
+    fName = '/config.json';
+    c = JSON.parse(hub.read('config'));
+    node = jsonFind(c, id);
+  }
+
   for (let n in newConfig) {
     if (newConfig[n]) {
       node[n] = newConfig[n];
@@ -62,7 +72,7 @@ function changeConfig(id: string, newConfig: any) {
   }
 
   var formData = new FormData();
-  formData.append(fName, new Blob([JSON.stringify(c)], {type: 'text/html'}), fName);
+  formData.append(fName, new Blob([JSON.stringify(c)], { type: 'text/html' }), fName);
 
   var objHTTP = new XMLHttpRequest();
   objHTTP.open('POST', '/');
