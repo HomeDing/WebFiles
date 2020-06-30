@@ -144,11 +144,10 @@ function handleFmt() {
     var t = contentObj.innerText;
     var o = null;
 
-    // missing comma
-    t = t.replace(/\}\s*/g, "}");
-    t = t.replace(/\}([^,}])/g, "},$1");
-    // trailing comma
-    t = t.replace(/\}\s*,\s*\}/g, "}}");
+    // missing comma in '}{'
+    t = t.replace(/\}\s*\{/g, "},{");
+    // comma before close brackets
+    t = t.replace(/,\s*([\}\]])/g, "$1");
 
     try {
       o = JSON.parse(t);

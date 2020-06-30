@@ -1002,9 +1002,15 @@ function setAttr(el, name, value) {
         el.setAttribute(name, value);
 }
 function changeConfig(id, newConfig) {
-    var fName = '/config.json';
-    var c = JSON.parse(hub.read('config'));
-    var node = jsonFind(c, id);
+    var c, node, fName;
+    fName = '/env.json';
+    c = JSON.parse(hub.read('env'));
+    node = jsonFind(c, id);
+    if (Object.keys(node).length == 0) {
+        fName = '/config.json';
+        c = JSON.parse(hub.read('config'));
+        node = jsonFind(c, id);
+    }
     for (var n in newConfig) {
         if (newConfig[n]) {
             node[n] = newConfig[n];
