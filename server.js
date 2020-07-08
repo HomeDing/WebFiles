@@ -48,7 +48,7 @@ function addDevice(data) {
   var isNew = (! netDevices[data.host]);
   // console.log(`>>${JSON.stringify(data.addresses)} - ${data.host} - ${data.fullname}`);
   netDevices[data.host] = new Date();
-  if (isNew.) {
+  if (isNew) {
     console.log(`add ${data.host}`);
     console.log(Object.keys(netDevices).join(' '));
   }
