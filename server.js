@@ -24,7 +24,8 @@ if (options.verbose) {
   debug.enable('*');
 }
 
-// ===== initializing modules =====
+
+// ===== initializing web server modules =====
 
 var app = express();
 
@@ -34,22 +35,46 @@ const logError = debug("iot:error");
 const debugSend = debug("iot:send");
 debug.log = console.log.bind(console);
 
-// support mDNS browsing for arduinos with network access
-let netDevices = [];
+
+// ===== mDns browser updates =====
+
 const mDns = require('mdns-js');
 mDns.excludeInterface('0.0.0.0');
-var browser = mDns.createBrowser(mDns.tcp('arduino'));
+let netDevices = {}; // has hostnames as keys, last known date as values;
+let mDnsBrowser;
 
-browser.on('ready', () => { browser.discover(); });
 
-browser.on('update', (data) => {
+function addDevice(data) {
+  // console.log(`>>${JSON.stringify(data.addresses)} - ${data.host} - ${data.fullname}`);
+  if (! netDevices[data.host])
+    console.log(`add ${data.host}`);
+  netDevices[data.host] = new Date();
+  console.log(Object.keys(netDevices));
+}
 
-  // console.log(`>>${JSON.stringify(data, null, 2)}`);
-  console.log(`>>${JSON.stringify(data.addresses)} - ${data.host} - ${data.fullname}`);
-  // console.log(`  ${JSON.stringify(data.query)}`);
-  // console.log(`  ${JSON.stringify(data.type)}`);
-  netDevices.push(data.host);
-});
+function startDiscovery() {
+  // console.log(`>>START`);
+  const now = new Date();
+  if (mDnsBrowser) mDnsBrowser.stop();
+
+  // clear out old devices, not responding since 90secs.
+  for (host in netDevices) {
+    // console.log(`old ${host} : ${netDevices[host]}`);
+    // console.log(now.valueOf() - netDevices[host].valueOf());
+
+    if (now.valueOf() - netDevices[host].valueOf() > 90 * 1000) {
+      console.log(`drop ${host}`);
+      delete netDevices[host];
+    }
+  } // for
+
+  mDnsBrowser = mDns.createBrowser(mDns.tcp('homeding'));
+  mDnsBrowser.on('ready', () => mDnsBrowser.discover());
+  mDnsBrowser.on('update', addDevice);
+} // startDiscovery
+
+startDiscovery();
+setInterval(startDiscovery, 30 * 1000);
 
 
 // a prefix can be added to the files config.json, env.json and $board 
@@ -387,7 +412,7 @@ app.get(/^\/\$board$/, noCache, function (req, res, next) {
 
 app.get(/^\/\$devices$/, noCache, function (req, res, next) {
   res.type('application/json');
-  res.send(JSON.stringify(netDevices, null, 2));
+  res.send(JSON.stringify(Object.keys(netDevices), null, 2));
 });
 
 
