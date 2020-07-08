@@ -45,11 +45,13 @@ let mDnsBrowser;
 
 
 function addDevice(data) {
+  var isNew = (! netDevices[data.host]);
   // console.log(`>>${JSON.stringify(data.addresses)} - ${data.host} - ${data.fullname}`);
-  if (! netDevices[data.host])
-    console.log(`add ${data.host}`);
   netDevices[data.host] = new Date();
-  console.log(Object.keys(netDevices));
+  if (isNew.) {
+    console.log(`add ${data.host}`);
+    console.log(Object.keys(netDevices).join(' '));
+  }
 }
 
 function startDiscovery() {
@@ -65,6 +67,7 @@ function startDiscovery() {
     if (now.valueOf() - netDevices[host].valueOf() > 90 * 1000) {
       console.log(`drop ${host}`);
       delete netDevices[host];
+      console.log(Object.keys(netDevices).join(' '));
     }
   } // for
 
