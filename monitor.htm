@@ -74,6 +74,7 @@
               <th>memory</th>
               <th>version</th>
               <th>uptime</th>
+              <th>savemode</th>
             </tr>
           </thead>
         </table>
@@ -138,6 +139,9 @@
       c = r.insertCell(-1);
       c.className = 'uptime';
 
+      c = r.insertCell(-1);
+      c.className = 'savemode';
+
       return (r);
     } // addDevice()
 
@@ -186,11 +190,13 @@
             obj.querySelector('.memory').textContent = si.freeHeap;
             obj.querySelector('.version').textContent = si.build;
             obj.querySelector('.uptime').textContent = d.toISOString().split(/[T\.]/)[1];
+            obj.querySelector('.savemode').textContent = si.savemode;
           })
           .catch(function (err) {
             statImg.src = 'i/stop.svg';
             obj.querySelector('.memory').textContent = '-';
             obj.querySelector('.uptime').textContent = '-';
+            obj.querySelector('.savemode').textContent = '-';
 
             console.log(err);
             // alert(err);
