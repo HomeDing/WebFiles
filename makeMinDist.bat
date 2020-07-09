@@ -12,15 +12,12 @@ set path=%path%;node_modules\.bin
 
 rem ===== create minified versions
 call node-sass iotstyle.scss mindist/iotstyle.css --output-style compressed
-call uglifyjs micro.js -c -o mindist/micro.js -m
 
 call html-minifier --collapse-whitespace --remove-tag-whitespace --remove-comments --minify-css true --minify-js true --quote-character ' microide.htm -o mindist/microide.htm
 call uglifyjs microide.js -c -o mindist/microide.js -m
 
 call html-minifier --collapse-whitespace --remove-tag-whitespace --remove-comments --minify-css true --minify-js true --quote-character ' ding.htm -o mindist/ding.htm
-
-call uglifyjs polyfill.js -c -o mindist/polyfill.js -m
-copy es6-promise.auto.js mindist
+call uglifyjs micro.js -c -o mindist/micro.js -m
 
 copy browserconfig.xml mindist
 copy manifest.json mindist
@@ -28,6 +25,10 @@ copy spinner.gif mindist
 
 REM ===== copy icons for min device ===== 
 copy favicon48.png mindist
+copy favicon192.png mindist
+copy favicon270.png mindist
+copy favicon512.png mindist
+copy favicon.svg mindist
 
 md mindist\i
 copy i\start.svg mindist\i
@@ -35,6 +36,7 @@ copy i\stop.svg mindist\i
 copy i\plus.svg mindist\i
 copy i\minus.svg mindist\i
 copy i\default.svg mindist\i\default.svg
+copy i\ide.svg mindist\i
 
 
 dir mindist /b /s

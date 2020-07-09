@@ -23,6 +23,12 @@ function handleLoadFile(e) {
     });
 } // handleLoadFile()
 
+// General Purpose Promise
+function DelayPromise(ms) {
+  return new Promise(function (resolve, reject) {
+    setTimeout(resolve, ms);
+  });
+}
 
 // delete file on the server
 function handleDeleteFile(e) {
