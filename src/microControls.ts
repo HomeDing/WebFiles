@@ -9,10 +9,10 @@
 // https://www.typescriptlang.org/docs/handbook/decorators.html
 
 interface MicroControlClass extends HTMLElement {
+  _attachedBehavior: MicroControlClass | undefined;
   connectedCallback(): void;
   init?(): void;
   term?(): void;
-  _attachedBehavior: MicroControlClass | undefined;
 } // ControlInterface
 
 class MicroControlClass {

@@ -3,7 +3,7 @@
 class ModalDialogClass {
 
   // modal handling
-  protected _isOpen: boolean = false;
+  protected _isOpen = false;
   protected _focusObj: HTMLElement | undefined;
   protected _placeholderObj: HTMLElement | undefined;
   protected _focusStyle: string | null = null;
@@ -30,8 +30,8 @@ class ModalDialogClass {
     if ((this._mObj) && (this._cObj)) {
       // open Dialog, replace existing.
       this._cObj.innerHTML = '';
-      this._cObj.style.width = "";
-      this._cObj.style.height = "";
+      this._cObj.style.width = '';
+      this._cObj.style.height = '';
       micro.insertTemplate(this._cObj, tmplName, data);
       this._mObj.classList.remove('hidden');
       this._isOpen = true;
@@ -42,7 +42,7 @@ class ModalDialogClass {
 
   // open modal viewer with existing object
   openFocus(obj: HTMLElement) {
-    var p: HTMLElement;
+    let p: HTMLElement;
 
     if (!this._isOpen && (obj) && (obj.parentElement) && (this._mObj) && (this._cObj)) {
       this._focusObj = obj;
@@ -52,8 +52,8 @@ class ModalDialogClass {
 
       // create placeholder for obj with same size
       p = obj.cloneNode(false) as HTMLElement;
-      p.style.width = r.width + "px";
-      p.style.height = r.height + "px";
+      p.style.width = r.width + 'px';
+      p.style.height = r.height + 'px';
       obj.parentElement.insertBefore(p, obj);
       this._placeholderObj = p;
 
@@ -82,7 +82,7 @@ class ModalDialogClass {
       p.style.width = w;
       p.style.height = h;
       this._cObj.appendChild(p);
-      var r2 = p.getBoundingClientRect();
+      const r2 = p.getBoundingClientRect();
 
       this._mObj.classList.remove('hidden');
       // move focus object right there.

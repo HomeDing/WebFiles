@@ -3,7 +3,7 @@
 
 // convert a string to a boolean value where Boolean(v) doesn't cover everything.
 function toBool(s: string | null) {
-  if (!s) return false;
+  if (!s) { return false; }
   switch (s.toLowerCase().trim()) {
     case 'true':
     case 'yes':
@@ -21,7 +21,7 @@ function toBool(s: string | null) {
 
 // convert a string to a duration or time value from various formate into seconde.
 function toSeconds(v: string): number {
-  let ret: number = 0;
+  let ret = 0;
   v = v.toLowerCase();
   if (v.endsWith('h')) {
     ret = parseInt(v, 10) * 60 * 60;
@@ -40,11 +40,11 @@ function toSeconds(v: string): number {
 
 
 function setTextContent(el: HTMLElement, txt: string) {
-  if (el.textContent !== txt) el.textContent = txt;
+  if (el.textContent !== txt) { el.textContent = txt; }
 } // setTextContent
 
 function setAttr(el: HTMLElement, name: string, value: string) {
-  if (el.getAttribute(name) !== value) el.setAttribute(name, value);
+  if (el.getAttribute(name) !== value) { el.setAttribute(name, value); }
 } // setAttr
 
 
@@ -63,7 +63,7 @@ function changeConfig(id: string, newConfig: any) {
     node = jsonFind(c, id);
   }
 
-  for (let n in newConfig) {
+  for (const n in newConfig) {
     if (newConfig[n]) {
       node[n] = newConfig[n];
     } else {
@@ -71,10 +71,10 @@ function changeConfig(id: string, newConfig: any) {
     }
   }
 
-  var formData = new FormData();
+  const formData = new FormData();
   formData.append(fName, new Blob([JSON.stringify(c)], { type: 'text/html' }), fName);
 
-  var objHTTP = new XMLHttpRequest();
+  const objHTTP = new XMLHttpRequest();
   objHTTP.open('POST', '/');
   objHTTP.addEventListener('readystatechange', function () {
     if (this.readyState == 4 && this.status >= 200 && this.status < 300) {
@@ -85,39 +85,22 @@ function changeConfig(id: string, newConfig: any) {
 } // changeConfig()
 
 
-
 /** Simple function for debouncing.
  * reduce the # of function calls when initiating events trigger too often
  * by deferring the function execution. */
 function debounce(func: Function, wait: number = 20) {
-  var timer: number;
+  let timer: number;
   return function (this: any) {
-    var scope: any = this;
-    var args = arguments;
+    const scope: any = this;
+    const args = arguments;
 
-    if (timer) clearTimeout(timer);
+    if (timer) { clearTimeout(timer); }
     timer = setTimeout(function () {
       timer = 0;
       func.apply(scope, args);
     }, wait);
   };
 } // debounce()
-
-
-// /** This is a function level decorator.
-//  *  As long as the function is called the execution is hold back.
-//  */
-// function debounce(timeout: number = 50): MethodDecorator {
-//   return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
-//     let timerID: number = 0;
-//     const fFunc = descriptor.value;
-//     descriptor.value = function (...args) {
-//       clearTimeout(timerID);
-//       timerID = setTimeout(() => { timerID = 0; fFunc.apply(this, args); }, timeout);
-//     };
-//     return descriptor;
-//   };
-// }
 
 
 // /** This is a function level decorator.
@@ -142,13 +125,13 @@ function debounce(func: Function, wait: number = 20) {
 
 // return actual parameters in hash part of URL as object
 function getHashParams(defaults: object) {
-  var params: any = { ...defaults };
+  const params: any = { ...defaults };
 
   window.location.hash
     .substr(1)
     .split('&')
     .forEach(function (p) {
-      var pa = p.split('=');
+      const pa = p.split('=');
       params[pa[0]] = pa[1];
     });
   return params;

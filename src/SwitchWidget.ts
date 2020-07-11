@@ -7,12 +7,12 @@
 /// <reference path="microControls.ts" />
 /// <reference path="GenericWidget.ts" />
 
-@MicroControl("switch")
+@MicroControl('switch')
 class SwitchWidgetClass extends GenericWidgetClass {
   on_click(e: MouseEvent) {
-    var o: HTMLElement = <HTMLElement>this.querySelector(".u-switch");
-    var src: HTMLElement | null = e.srcElement as HTMLElement;
-    while (src != null && src != this && src != o) src = src.parentElement;
+    const o: HTMLElement = <HTMLElement>this.querySelector('.u-switch');
+    let src: HTMLElement | null = e.srcElement as HTMLElement;
+    while (src != null && src != this && src != o) { src = src.parentElement; }
     if (src == o) {
       this.dispatchAction('toggle', '1');
     } else {

@@ -7,23 +7,23 @@
 /// <reference path="microControls.ts" />
 /// <reference path="GenericWidget.ts" />
 
-@MicroControl("slider")
+@MicroControl('slider')
 class SliderWidgetClass extends GenericWidgetClass {
   _handle: HTMLElement | null = null; /// <summary>Reference to the handle obj.</summary>
-  _lastValue: number = -1; /// <summary>last published value to avoid doublicate events.</summary>
-  _maxright: number = 100; //= p.offsetWidth - this._handle.offsetWidth;
-  _x: number = 0; // x - offset of mouse and handle while moving. 
-  _xOffset: number = 0; // x - offset of mouse and area. 
-  unit: number = 1;
+  _lastValue = -1; /// <summary>last published value to avoid doublicate events.</summary>
+  _maxright = 100; // = p.offsetWidth - this._handle.offsetWidth;
+  _x = 0; // x - offset of mouse and handle while moving.
+  _xOffset = 0; // x - offset of mouse and area.
+  unit = 1;
 
-  minvalue: number = 0; /// <summary>The value that is reached on the leftmost position of the knob.</summary>
-  maxvalue: number = 255; /// <summary>The value that is reached on the rightmost position of the knob.</summary>
+  minvalue = 0; /// <summary>The value that is reached on the leftmost position of the knob.</summary>
+  maxvalue = 255; /// <summary>The value that is reached on the rightmost position of the knob.</summary>
 
   _moveFunc: any;
   _upFunc: any;
 
   connectedCallback() {
-    this._handle = this.querySelector(".handle");
+    this._handle = this.querySelector('.handle');
     super.connectedCallback();
     // find the moveable knob
     if (this._handle) {
@@ -40,39 +40,38 @@ class SliderWidgetClass extends GenericWidgetClass {
 
       left = Math.round(left * this._maxright / (this.maxvalue - this.minvalue));
       left = Math.min(this._maxright, Math.max(0, left));
-      this._handle.style.left = left + "px";
+      this._handle.style.left = left + 'px';
     }
   } // _adjustHandle()
 
 
   newData(path: string, key: string, value: string) {
     super.newData(path, key, value);
-    if (key == 'value') {
+    if (key === 'value') {
       const v = Number(value);
-      if (v != this._lastValue) {
+      if (v !== this._lastValue) {
         this._adjustHandle(v);
         this._lastValue = v;
       }
-    } else if (key == 'min') {
+    } else if (key === 'min') {
       this.minvalue = Number(value);
-    } else if (key == 'max') {
+    } else if (key === 'max') {
       this.maxvalue = Number(value);
-    } else if (key == 'step') {
+    } else if (key === 'step') {
       this.unit = Number(value);
     } // if
   } // newData()
 
 
   on_click(e: MouseEvent) {
-      var src: HTMLElement | null = e.srcElement as HTMLElement;
-      while (src != null && src.classList.length == 0) src = src.parentElement;
+      let src: HTMLElement | null = e.srcElement as HTMLElement;
+      while (src != null && src.classList.length === 0) { src = src.parentElement; }
       if (src != null) {
 
         if (src.classList.contains('up')) {
           // alert('plus');
           this.dispatchAction('up', '1');
-        }
-        else if (src.classList.contains('down')) {
+        } else if (src.classList.contains('down')) {
           // alert('plus');
           this.dispatchAction('down', '1');
         } else {
@@ -83,7 +82,7 @@ class SliderWidgetClass extends GenericWidgetClass {
   }
 
   on_mousedown(evt: MouseEvent) {
-    if (evt.target == this._handle) {
+    if (evt.target === this._handle) {
       this.MoveStart(evt);
     } // if
   } // onmousedown()
@@ -91,7 +90,7 @@ class SliderWidgetClass extends GenericWidgetClass {
   MoveStart(evt: MouseEvent) {
     /// <summary>Start sliding the knob.</summary>
     this._xOffset = 0;
-    var obj = (this._handle as HTMLElement).offsetParent as (HTMLElement | null);
+    let obj = (this._handle as HTMLElement).offsetParent as (HTMLElement | null);
     while (obj != null) {
       this._xOffset += obj.offsetLeft;
       obj = obj.offsetParent as HTMLElement;
@@ -114,15 +113,15 @@ class SliderWidgetClass extends GenericWidgetClass {
 
   _onmousemove(evt: MouseEvent) {
     /// <summary>Handle the mouse button move event. This handler will be attached to the document level.</summary>
-    var left = evt.clientX - this._x - this._xOffset;
+    let left = evt.clientX - this._x - this._xOffset;
     left = Math.min(this._maxright, Math.max(0, left));
 
     // calc value from position
-    var val = Math.round(left * (this.maxvalue - this.minvalue) / this._maxright + this.minvalue);
+    let val = Math.round(left * (this.maxvalue - this.minvalue) / this._maxright + this.minvalue);
     val = Math.round(val / this.unit) * this.unit;
     this._adjustHandle(val);
 
-    if (val != this._lastValue) {
+    if (val !== this._lastValue) {
       this._lastValue = val;
       this.dispatchAction('value', String(val));
     } // if
@@ -132,14 +131,14 @@ class SliderWidgetClass extends GenericWidgetClass {
   _onmouseup(evt: MouseEvent) {
     /// <summary>Handle the mouse button up event. This handler will be attached to the document level.</summary>
     evt = evt || window.event;
-    document.removeEventListener("mousemove", this._moveFunc);
-    document.removeEventListener("mouseup", this._upFunc);
+    document.removeEventListener('mousemove', this._moveFunc);
+    document.removeEventListener('mouseup', this._upFunc);
   } // onmouseup
 
   on_touchstart(evt: TouchEvent) {
     /// <summary>Handle the event when a touch operation starts.</summary>
-    var t = evt.targetTouches[0].target;
-    if (t == this._handle) {
+    const t = evt.targetTouches[0].target;
+    if (t === this._handle) {
       // this.TouchStart(evt);
       console.log('TouchStart');
     } // if

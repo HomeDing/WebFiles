@@ -18,54 +18,16 @@ interface HubEntryList {
  */
 class MicroHub {
   private _registrations: HubEntryList = {};
-  private _registrationsId: number = 0;
+  private _registrationsId = 0;
   private _store: object = {};
 
-  protected _findStoreObject(path: string): any {
-    let p: any = this._store;
-    if (path[0] === '/') {
-      path = path.substr(1);
-    }
-    let steps = path.split('/');
-
-    // use existing objects.
-    while (steps.length > 0 && p[steps[0]]) {
-      p = p[steps[0]];
-      steps.shift();
-    } // while
-
-    // create new objects.
-    while (steps.length > 0 && steps[0]) {
-      p = p[steps[0]] = {};
-      steps.shift();
-    } // while
-    return p;
-  } // _findStoreObject
-
-  // return path to parent object
-  private pPath(path: string): string {
-    if (path[0] === '/') {
-      path = path.substr(1);
-    }
-    let steps = path.split('/');
-    let res = steps.slice(0, steps.length - 1).join('/');
-    return res;
-  } // pPath
-
-  // return key in parent object
-  private pKey(path: string): string {
-    let steps = path.split('/');
-    let res = steps[steps.length - 1];
-    return res;
-  }
-
   read(path: string): any {
-    let o: any = this._findStoreObject(this.pPath(path));
+    const o: any = this._findStoreObject(this.pPath(path));
     return o[this.pKey(path)];
   }
 
   write(path: string, value: any) {
-    let o: any = this._findStoreObject(this.pPath(path));
+    const o: any = this._findStoreObject(this.pPath(path));
     o[this.pKey(path)] = value;
   }
 
@@ -77,13 +39,13 @@ class MicroHub {
    * @returns {number} number of registration
    */
   subscribe(matchPath: string, fCallback: JsonParseCallback, replay: boolean = false): number {
-    var h = this._registrationsId;
+    const h = this._registrationsId;
 
     // treating upper/lowercase equal is not clearly defined, but true with domain names.
-    var rn = matchPath.toLocaleLowerCase();
+    const rn = matchPath.toLocaleLowerCase();
 
     // build a regexp pattern that will match the event names
-    let re =
+    const re =
       '^' +
       rn
         .replace(/(\[|\]|\/|\?)/g, '\\$1')
@@ -91,7 +53,7 @@ class MicroHub {
         .replace(/\*/g, '[^/?]*') +
       '$';
 
-    var newEntry: HubEntry = {
+    const newEntry: HubEntry = {
       id: h,
       match: RegExp(re),
       callback: fCallback
@@ -107,7 +69,7 @@ class MicroHub {
           let fullPath: string = path + (key ? '?' + key : '');
           if (fullPath) {
             fullPath = fullPath.toLocaleLowerCase();
-            if (fullPath.match(newEntry.match)) newEntry.callback(path, key ? key.toLowerCase() : null, value);
+            if (fullPath.match(newEntry.match)) { newEntry.callback(path, key ? key.toLowerCase() : null, value); }
           } // if
         }.bind(this)
       );
@@ -129,7 +91,7 @@ class MicroHub {
    * @param h subscription registration id.
    */
   replay(h: number) {
-    let e: HubEntry = this._registrations[h];
+    const e: HubEntry = this._registrations[h];
 
     if (e) {
       jsonParse(
@@ -138,7 +100,7 @@ class MicroHub {
           let fullPath: string = path + (key ? '?' + key : '');
           if (fullPath) {
             fullPath = fullPath.toLocaleLowerCase();
-            if (fullPath.match(e.match)) e.callback(path, key ? key.toLowerCase() : null, value);
+            if (fullPath.match(e.match)) { e.callback(path, key ? key.toLowerCase() : null, value); }
           } // if
         }.bind(this)
       );
@@ -170,23 +132,61 @@ class MicroHub {
     if (fullPath) {
       if (key) {
         // save to store
-        let p: any = this._findStoreObject(path);
+        const p: any = this._findStoreObject(path);
         p[key] = value;
       } // if
 
       fullPath = fullPath.toLocaleLowerCase();
 
       Object.values(this._registrations).forEach(r => {
-        if (fullPath.match(r.match)) r.callback(path, key, value);
+        if (fullPath.match(r.match)) { r.callback(path, key, value); }
       });
     } // if
   } // publish
 
   onunload(_evt: Event) {
-    for (var n in this._registrations) {
+    for (const n in this._registrations) {
       delete this._registrations[n];
     }
   } // onunload
+
+  protected _findStoreObject(path: string): any {
+    let p: any = this._store;
+    if (path[0] === '/') {
+      path = path.substr(1);
+    }
+    const steps = path.split('/');
+
+    // use existing objects.
+    while (steps.length > 0 && p[steps[0]]) {
+      p = p[steps[0]];
+      steps.shift();
+    } // while
+
+    // create new objects.
+    while (steps.length > 0 && steps[0]) {
+      p = p[steps[0]] = {};
+      steps.shift();
+    } // while
+    return p;
+  } // _findStoreObject
+
+  // return path to parent object
+  private pPath(path: string): string {
+    if (path[0] === '/') {
+      path = path.substr(1);
+    }
+    const steps = path.split('/');
+    const res = steps.slice(0, steps.length - 1).join('/');
+    return res;
+  } // pPath
+
+  // return key in parent object
+  private pKey(path: string): string {
+    const steps = path.split('/');
+    const res = steps[steps.length - 1];
+    return res;
+  }
 } // MicroEvents class
 
 const hub = new MicroHub();

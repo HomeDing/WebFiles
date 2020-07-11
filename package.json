@@ -19,16 +19,18 @@
     "node-sass": "^4.14.1",
     "shelljs": "^0.8.4",
     "shx": "^0.3.2",
+    "tslint": "^6.1.2",
     "typescript": "^3.9.6",
     "uglify-js": "^3.10.0"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "tslint --project . --force",
     "clean": "shx rm -rf dist",
     "build:css": "node-sass iotstyle.scss iotstyle.css --output-style compact",
     "build:css-watch": "npm run build:css -- -w",
     "build:ts": "tsc",
     "build:ts-watch": "npm run build:ts -- -w",
+    "prebuild": "npm run test",
     "build": "npm run build:ts && npm run build:css",
     "pack:dist": "node packdist.js",
     "pack:minimal": "node packminimal.js",
@@ -39,7 +41,8 @@
   },
   "files": [
     "dist",
-    "mindist"
+    "dist-mini",
+    "upload.h"
   ],
   "keywords": [
     "IoT",

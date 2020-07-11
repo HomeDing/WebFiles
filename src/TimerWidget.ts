@@ -11,10 +11,10 @@
 
 @MicroControl('timer')
 class TimerWidgetClass extends GenericWidgetClass {
-  wt: number = 0;
-  pt: number = 0;
-  ct: number = 0;
-  time: number = 0;
+  wt = 0;
+  pt = 0;
+  ct = 0;
+  time = 0;
 
   newData(path: string, key: string, value: string) {
     super.newData(path, key, value);
@@ -28,18 +28,18 @@ class TimerWidgetClass extends GenericWidgetClass {
       this.time = toSeconds(value);
     }
 
-    if (this.ct < this.wt + this.pt) this.ct = this.wt + this.pt;
+    if (this.ct < this.wt + this.pt) { this.ct = this.wt + this.pt; }
 
     // update bars
     if (this.ct > 0) {
-      var el = this.querySelector('.u-bar') as HTMLElement;
-      var f = el.clientWidth / this.ct;
+      const el = this.querySelector('.u-bar') as HTMLElement;
+      const f = el.clientWidth / this.ct;
 
-      var pto = <HTMLElement>el.querySelector('.pulse');
+      const pto = <HTMLElement>el.querySelector('.pulse');
       pto.style.left = Math.floor(this.wt * f) + 'px';
       pto.style.width = Math.floor(this.pt * f) + 'px';
 
-      var cto = <HTMLElement>el.querySelector('.current');
+      const cto = <HTMLElement>el.querySelector('.current');
       cto.style.width = Math.floor(this.time * f) + 'px';
     }
   } // newData()}
@@ -50,7 +50,7 @@ class TimerWidgetClass extends GenericWidgetClass {
       const d: any = {};
       this.querySelectorAll('[u-value]').forEach(function (elem) {
         const n = elem.getAttribute('u-value');
-        if (n) d[n] = (elem as HTMLInputElement).value;
+        if (n) { d[n] = (elem as HTMLInputElement).value; }
       });
       changeConfig(this.microid, d);
     }
