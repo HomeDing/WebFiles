@@ -7,37 +7,38 @@
 /// <reference path="microControls.ts" />
 /// <reference path="GenericWidget.ts" />
 
-@MicroControl("displayline")
+@MicroControl('displayline')
 class DisplayLineWidgetClass extends GenericWidgetClass {
   _dispElem: HTMLElement | null = null;
   _elem: HTMLElement | null = null;
-  _x0: number = 0;
-  _x1: number = 0;
-  _y0: number = 0;
-  _y1: number = 0;
+  _x0 = 0;
+  _x1 = 0;
+  _y0 = 0;
+  _y1 = 0;
 
   connectedCallback() {
     super.connectedCallback();
 
-    this._dispElem = document.querySelector("#panel .display");
-    hub.subscribe(this.microid + "?*", this.newValue.bind(this), true);
-    if (!this.showSys())
-      this.style.display = "none";
+    this._dispElem = document.querySelector('#panel .display');
+    hub.subscribe(this.microid + '?*', this.newValue.bind(this), true);
+    if (!this.showSys()) {
+      this.style.display = 'none';
+    }
   } // connectedCallback
 
 
   updateDisp() {
     if (this._dispElem) {
       if (!this._elem) {
-        this._elem = document.createElement("span");
+        this._elem = document.createElement('span');
         this._dispElem.appendChild(this._elem);
       }
       if (this._elem) {
-        this._elem.className = "line";
-        this._elem.style.top = this._y0 + "px";
-        this._elem.style.left = this._x0 + "px";
-        this._elem.style.width = (this._x1 - this._x0) + "px";
-        this._elem.style.height = (this._y1 - this._y0) + "px";
+        this._elem.className = 'line';
+        this._elem.style.top = this._y0 + 'px';
+        this._elem.style.left = this._x0 + 'px';
+        this._elem.style.width = (this._x1 - this._x0) + 'px';
+        this._elem.style.height = (this._y1 - this._y0) + 'px';
       }
     }
   } // updateDisp

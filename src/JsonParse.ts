@@ -4,28 +4,27 @@
 // See also:
 // http://goessner.net/articles/JsonPath/
 
-interface JsonParseCallback {
-  (path: string, key: string | null, value: string | null): void;
-}
+type JsonParseCallback = (path: string, key: string | null, value: string | null) => void;
 
 function jsonParse(obj: any, cbFunc: JsonParseCallback) {
   /** internal function used in recursion */
-  function _jsonParse(path: string, key: string, value: any, cbFunc: JsonParseCallback) {
-    var path2 = key ? path + '/' + key : path;
+  function _jsonParse(path: string, key: string, value: any) {
+    let path2 = key ? path + '/' + key : path;
     path2 = path2.replace('/[', '[');
 
     if (Array.isArray(value)) {
       // traverse all entries in the array
-      for (var n = 0; n < value.length; n++) {
-        _jsonParse(path2, '[' + n + ']', value[n], cbFunc);
+      for (let n = 0; n < value.length; n++) {
+        _jsonParse(path2, '[' + n + ']', value[n]);
       } // for
-    } else if (typeof value == 'object') {
+    } else if (typeof value === 'object') {
       // this is an attribute for the receiver function
       cbFunc(path2, null, null);
 
       // traverse all entries in the object
-      for (let k in value) {
-        _jsonParse(path2, k, value[k], cbFunc);
+      // tslint:disable-next-line: forin
+      for (const k in value) {
+        _jsonParse(path2, k, value[k]);
       } // for
     } else {
       // this is an attribute for the receiver function
@@ -34,21 +33,21 @@ function jsonParse(obj: any, cbFunc: JsonParseCallback) {
   } // _jsonParse()
 
   // start with root and scan recursively.
-  _jsonParse('', '', obj, cbFunc);
+  _jsonParse('', '', obj);
 } // jsonParse()
 
 function jsonFind(obj: any, path: string): any {
   if (path[0] === '/') {
     path = path.substr(1);
   }
-  let steps = path.split('/');
+  const steps = path.split('/');
 
-  // use existing objects. 
+  // use existing objects.
   while (obj && steps.length > 0) {
     const p = steps[0];
     if (!obj[p]) {
       // create new object
-      obj[p] = {}; 
+      obj[p] = {};
     }
     obj = obj[p];
     steps.shift();

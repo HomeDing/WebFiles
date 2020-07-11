@@ -7,9 +7,9 @@
 
 @MicroControl('generic')
 class GenericWidgetClass extends MicroControlClass {
-  microid: string = '';
+  microid = '';
   data: any = {};
-  subId: number = 0;
+  subId = 0;
   actions: string[] = [];
 
   connectedCallback() {
@@ -24,7 +24,7 @@ class GenericWidgetClass extends MicroControlClass {
     // save data to title
     if (key && value) {
       this.data[key] = value;
-      var ic = this.querySelector('img');
+      const ic = this.querySelector('img');
       if (ic) {
         setAttr(ic, 'title',
           JSON.stringify(this.data, null, 1)
@@ -37,7 +37,7 @@ class GenericWidgetClass extends MicroControlClass {
     // u-active flags
     ['span', 'div'].forEach(function (this: GenericWidgetClass, elType) {
       this.querySelectorAll(elType + `[u-active='${key}']`).forEach(function (elem) {
-        var b = toBool(value);
+        const b = toBool(value);
         setAttr(elem as HTMLElement, 'value', b ? '1' : '0');
         setAttr(elem as HTMLElement, 'title', b ? 'active' : 'not active');
         elem.classList.toggle('active', b);
@@ -46,21 +46,21 @@ class GenericWidgetClass extends MicroControlClass {
 
     // textContent
     ['h2', 'h4', 'span', 'button'].forEach(function (this: GenericWidgetClass, elType) {
-      this.querySelectorAll(elType + "[u-text='" + key + "']").forEach(function (elem) {
-        if (elem.textContent != value) elem.textContent = value;
+      this.querySelectorAll(elType + '[u-text=\'' + key + '\']').forEach(function (elem) {
+        if (elem.textContent !== value) { elem.textContent = value; }
       });
     }, this);
 
     // value of input and select fields
     ['input', 'select'].forEach(function (this: GenericWidgetClass, elType) {
-      this.querySelectorAll(elType + "[u-value='" + key + "']").forEach(function (elem) {
-        if ((elem as HTMLInputElement).value != value) (elem as HTMLInputElement).value = value ? value : "";
+      this.querySelectorAll(elType + '[u-value=\'' + key + '\']').forEach(function (elem) {
+        if ((elem as HTMLInputElement).value !== value) { (elem as HTMLInputElement).value = value ? value : ''; }
       });
     }, this);
 
     // action of buttons
     ['button'].forEach(function (this: GenericWidgetClass, elType) {
-      this.querySelectorAll(elType + "[u-action='${" + key + "}']").forEach(function (elem) {
+      this.querySelectorAll(elType + '[u-action=\'${' + key + '}\']').forEach(function (elem) {
         setAttr(elem as HTMLElement, 'u-action', value ? value : '');
       });
     }, this);
@@ -76,7 +76,7 @@ class GenericWidgetClass extends MicroControlClass {
             debounce(this.dispatchNext.bind(this))();
           } else {
             // @ts-ignore
-            if (updateAsap) updateAsap();
+            if (updateAsap) { updateAsap(); }
           } // if
         });
       }
@@ -92,7 +92,7 @@ class GenericWidgetClass extends MicroControlClass {
         prop.replace('${v}', encodeURI(val));
         prop.split(',').forEach((a) => this.actions.push('/$board/' + a));
       } else {
-        // simple set one property to this element 
+        // simple set one property to this element
         this.actions.push(`/$board${this.microid}?${prop}=${encodeURI(val)}`);
       }
       debounce(this.dispatchNext.bind(this))();
@@ -107,21 +107,21 @@ class GenericWidgetClass extends MicroControlClass {
 
   // send changed value of property as an action to the board
   on_change(e: Event) {
-    var src = e.target as HTMLInputElement;
+    const src = e.target as HTMLInputElement;
     this.dispatchAction(src.getAttribute('u-value'), src.value);
   }
 
   // send an action to the board
   // + change config mode
   on_click(e: MouseEvent) {
-    var src = e.target as HTMLElement;
-    var a = src.getAttribute('u-action');
-    if (src && a) this.dispatchAction(a, (<any>src)['value']);
+    const src = e.target as HTMLElement;
+    const a = src.getAttribute('u-action');
+    if (src && a) { this.dispatchAction(a, (<any>src)['value']); }
 
     if (src.classList.contains('setconfig')) {
       modal.open('configelementdlg', this.data);
 
-    } else if (src.tagName == 'H3') {
+    } else if (src.tagName === 'H3') {
       modal.openFocus(this);
     }
   }

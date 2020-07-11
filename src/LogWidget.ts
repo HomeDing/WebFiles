@@ -27,15 +27,15 @@ class LogWidgetClass extends GenericWidgetClass {
       })
       .then(
         function (this: LogWidgetClass, pmValues: string) {
-          var re = /^\d{2,},\d+/;
-          var pmArray = pmValues.split('\n').filter(function (e) {
+          const re = /^\d{2,},\d+/;
+          const pmArray = pmValues.split('\n').filter(function (e) {
             return e.match(re);
           });
 
           this.api.updateLineChartData(
             this.lChart,
             pmArray.map(function (v) {
-              var p = v.split(',');
+              const p = v.split(',');
               return { x: p[0], y: p[1] };
             })
           );
@@ -46,10 +46,10 @@ class LogWidgetClass extends GenericWidgetClass {
 
   /** get the API from the SVG object when loaded */
   loadSVG() {
-    var done = false;
+    let done = false;
 
     if (this.lineSVGObj) {
-      var svgObj = null;
+      let svgObj = null;
       try {
         svgObj = <any>(this.lineSVGObj.getSVGDocument());
       } catch (err) { }

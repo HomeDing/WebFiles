@@ -7,11 +7,11 @@
 /// <reference path="microControls.ts" />
 /// <reference path="GenericWidget.ts" />
 
-@MicroControl("displaytext")
+@MicroControl('displaytext')
 class DisplayTextWidgetClass extends GenericWidgetClass {
   lastValue: string | null = null;
   _dispElem: HTMLElement | null = null;
-  _dispGrid: number = 1;
+  _grid = 1;
   _elem: HTMLElement | null = null;
   _prefix = '';
   _postfix = '';
@@ -19,10 +19,11 @@ class DisplayTextWidgetClass extends GenericWidgetClass {
   connectedCallback() {
     super.connectedCallback();
 
-    this._dispElem = document.querySelector("#panel .display");
+    this._dispElem = document.querySelector('#panel .display');
     if (this._dispElem) {
-      if (this._dispElem.getAttribute('grid'))
-        this._dispGrid = Number(this._dispElem.getAttribute('grid'));
+      if (this._dispElem.getAttribute('grid')) {
+        this._grid = Number(this._dispElem.getAttribute('grid'));
+      }
 
       const e: HTMLSpanElement = this._elem = document.createElement('span');
       e.className = 'text';
@@ -31,9 +32,10 @@ class DisplayTextWidgetClass extends GenericWidgetClass {
       this._dispElem.appendChild(e);
     }
 
-    hub.subscribe(this.microid + "?*", this.newValue.bind(this), true);
-    if (!this.showSys())
-      this.style.display = "none";
+    hub.subscribe(this.microid + '?*', this.newValue.bind(this), true);
+    if (!this.showSys()) {
+      this.style.display = 'none';
+    }
   }
 
   newValue(_path: string, key: string | null, value: string | null) {
@@ -44,10 +46,11 @@ class DisplayTextWidgetClass extends GenericWidgetClass {
         this._elem.innerHTML = t.replace(/ /g, '&nbsp;');
 
       } else if (key === 'x') {
-        this._elem.style.left = (Number(value) * this._dispGrid * 7 / 10) + 'px';
+        const n = Number(value) * this._grid;
+        this._elem.style.left = (this._grid > 1 ? n : (n * 7 / 10)) + 'px';
 
       } else if (key === 'y') {
-        this._elem.style.top = (Number(value) * this._dispGrid) + 'px';
+        this._elem.style.top = (Number(value) * this._grid) + 'px';
 
       } else if (key === 'fontsize') {
         this._elem.style.fontSize = value + 'px';

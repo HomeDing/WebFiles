@@ -7,22 +7,22 @@
 /// <reference path="microControls.ts" />
 /// <reference path="GenericWidget.ts" />
 
-@MicroControl("button")
+@MicroControl('button')
 class ButtonWidgetClass extends GenericWidgetClass {
   on_pointerdown(e: PointerEvent) {
     const src = e.target as HTMLElement;
-    if ((src) && (src.classList.contains("u-button"))) {
-      src.classList.add("active");
-      this.dispatchAction("value", '1');
+    if ((src) && (src.classList.contains('u-button'))) {
+      src.classList.add('active');
+      this.dispatchAction('value', '1');
     } // if
 
   }
 
   on_pointerup(e: PointerEvent) {
     const src = e.target as HTMLElement;
-    if (src.classList.contains("u-button")) {
-      src.classList.remove("active");
-      this.dispatchAction("value", '0');
+    if (src.classList.contains('u-button')) {
+      src.classList.remove('active');
+      this.dispatchAction('value', '0');
     } // if
   }
 }
