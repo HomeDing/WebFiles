@@ -1,4 +1,4 @@
-// makeembedweb.js
+// packembedweb.js
 // create the upload.h file that contains the html strings for the embedded web files
 // like WiFi manager, web update and upload
 

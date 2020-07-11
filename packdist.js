@@ -1,4 +1,4 @@
-// makedist.js
+// packdist.js
 // copy all files for the full featured web server into the dist folder
 // ready to be published on http://homeding.github.io/vxx 
 
