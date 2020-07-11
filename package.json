@@ -1,6 +1,6 @@
 {
   "name": "homedingnode",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "Node based emulator of a HomeDing embedded web server",
   "main": "server.js",
   "repository": {
@@ -19,8 +19,8 @@
     "node-sass": "^4.14.1",
     "shelljs": "^0.8.4",
     "shx": "^0.3.2",
-    "typescript": "^3.8.3",
-    "uglify-js": "^3.9.2"
+    "typescript": "^3.9.6",
+    "uglify-js": "^3.10.0"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -30,22 +30,32 @@
     "build:ts": "tsc",
     "build:ts-watch": "npm run build:ts -- -w",
     "build": "npm run build:ts && npm run build:css",
-    "pack:dist": "node makedist.js",
-    "pack:embed": "node makeembedweb.js",
-    "pack": "npm run pack:dist && npm run pack:embed",
+    "pack:dist": "node packdist.js",
+    "pack:minimal": "node packminimal.js",
+    "pack:embed": "node packembedweb.js",
+    "pack": "npm run pack:dist && npm run pack:minimal && npm run pack:embed",
     "prestart": "npm run build",
     "start": "node server.js"
   },
+  "files": [
+    "dist",
+    "mindist"
+  ],
   "keywords": [
     "IoT",
     "Arduino",
     "ESP8266",
     "HomeDing",
+    "HomeDingPortal",
     "HomeDingNode",
     "node.js",
     "iot",
     "webserver"
   ],
+  "homepage": "https://homeding.github.io/",
+  "bugs": {
+    "url": "https://github.com/HomeDing/WebFiles/issues"
+  },
   "author": "Matthias Hertel",
   "license": "BSD-3-Clause"
 }
