@@ -12,6 +12,7 @@
 -favicon512.png
 -favicon558.png
 -es6-promise.auto.js
+-polyfill.js
 -ft/css.svg
 -ft/dir.svg
 -ft/file.svg

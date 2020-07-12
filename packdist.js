@@ -41,7 +41,6 @@ const srcAssets = [
   'iotstyle.css',
   'spinner.gif',
   
-  'polyfill.js',
   'micro.js',
 
   'elements.json',
