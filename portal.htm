@@ -21,7 +21,6 @@
 
   <link Content-Type="text/css" href="/iotstyle.css" rel="stylesheet" />
 
-  <script src="/polyfill.js"></script>
   <script src="/micro.js"></script>
   <style>
     html,
@@ -104,11 +103,12 @@
         .then(function (devices) {
           var nav = document.querySelector('#devices');
           for (var n = 0; n < devices.length; n++) {
+            var devName = devices[n].split('.')[0];
             var o = document.createElement('li');
             nav.appendChild(o);
             var a = document.createElement('a');
-            a.href = "#" + devices[n] + '/board.htm';
-            a.innerText = devices[n].replace('.local', '');
+            a.href = "#" + devName + '/';
+            a.innerText = devName;
             o.appendChild(a);
           }
           window.setTimeout(startContent, 10);
