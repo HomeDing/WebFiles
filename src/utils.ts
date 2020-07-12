@@ -56,7 +56,7 @@ function changeConfig(id: string, newConfig: any) {
   c = JSON.parse(hub.read('env'));
   node = jsonFind(c, id);
 
-  if (Object.keys(node).length == 0) {
+  if (Object.keys(node).length === 0) {
     // not a env configuration
     fName = '/config.json';
     c = JSON.parse(hub.read('config'));
@@ -77,7 +77,7 @@ function changeConfig(id: string, newConfig: any) {
   const objHTTP = new XMLHttpRequest();
   objHTTP.open('POST', '/');
   objHTTP.addEventListener('readystatechange', function () {
-    if (this.readyState == 4 && this.status >= 200 && this.status < 300) {
+    if (this.readyState === 4 && this.status >= 200 && this.status < 300) {
       alert('saved.');
     } // if
   });

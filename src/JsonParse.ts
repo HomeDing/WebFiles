@@ -22,7 +22,6 @@ function jsonParse(obj: any, cbFunc: JsonParseCallback) {
       cbFunc(path2, null, null);
 
       // traverse all entries in the object
-      // tslint:disable-next-line: forin
       for (const k in value) {
         _jsonParse(path2, k, value[k]);
       } // for

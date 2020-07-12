@@ -784,7 +784,7 @@ var NeoWidgetClass = (function (_super) {
     };
     NeoWidgetClass.prototype.on_click = function (e) {
         var src = e.srcElement;
-        if (src.className == 'hueband') {
+        if (src.className === 'hueband') {
             var color = 'hsl(' + Math.round(e.offsetX) + ', 100%, 50%)';
             src.style.backgroundColor = color;
             if (document && document.defaultView) {
@@ -816,10 +816,10 @@ var PWMOutWidgetClass = (function (_super) {
         hub.subscribe(this.microid + '?*', this.newValue.bind(this));
     };
     PWMOutWidgetClass.prototype.newValue = function (_path, key, value) {
-        if (key == 'range') {
+        if (key === 'range') {
             this._range = Number(value);
         }
-        else if (key == 'value') {
+        else if (key === 'value') {
             if (this.lastValue !== value) {
                 var o = this.querySelector('.ux-levelbar');
                 var h = o.offsetHeight;
@@ -962,10 +962,10 @@ var SwitchWidgetClass = (function (_super) {
     SwitchWidgetClass.prototype.on_click = function (e) {
         var o = this.querySelector('.u-switch');
         var src = e.srcElement;
-        while (src != null && src != this && src != o) {
+        while (src !== null && src !== this && src !== o) {
             src = src.parentElement;
         }
-        if (src == o) {
+        if (src === o) {
             this.dispatchAction('toggle', '1');
         }
         else {
@@ -1029,7 +1029,7 @@ function changeConfig(id, newConfig) {
     fName = '/env.json';
     c = JSON.parse(hub.read('env'));
     node = jsonFind(c, id);
-    if (Object.keys(node).length == 0) {
+    if (Object.keys(node).length === 0) {
         fName = '/config.json';
         c = JSON.parse(hub.read('config'));
         node = jsonFind(c, id);
@@ -1047,7 +1047,7 @@ function changeConfig(id, newConfig) {
     var objHTTP = new XMLHttpRequest();
     objHTTP.open('POST', '/');
     objHTTP.addEventListener('readystatechange', function () {
-        if (this.readyState == 4 && this.status >= 200 && this.status < 300) {
+        if (this.readyState === 4 && this.status >= 200 && this.status < 300) {
             alert('saved.');
         }
     });
@@ -1091,16 +1091,16 @@ var TimerWidgetClass = (function (_super) {
     }
     TimerWidgetClass.prototype.newData = function (path, key, value) {
         _super.prototype.newData.call(this, path, key, value);
-        if (key == 'waittime') {
+        if (key === 'waittime') {
             this.wt = toSeconds(value);
         }
-        else if (key == 'pulsetime') {
+        else if (key === 'pulsetime') {
             this.pt = toSeconds(value);
         }
-        else if (key == 'cycletime') {
+        else if (key === 'cycletime') {
             this.ct = toSeconds(value);
         }
-        else if (key == 'time') {
+        else if (key === 'time') {
             this.time = toSeconds(value);
         }
         if (this.ct < this.wt + this.pt) {

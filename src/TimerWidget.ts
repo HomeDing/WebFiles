@@ -18,13 +18,13 @@ class TimerWidgetClass extends GenericWidgetClass {
 
   newData(path: string, key: string, value: string) {
     super.newData(path, key, value);
-    if (key == 'waittime') {
+    if (key === 'waittime') {
       this.wt = toSeconds(value);
-    } else if (key == 'pulsetime') {
+    } else if (key === 'pulsetime') {
       this.pt = toSeconds(value);
-    } else if (key == 'cycletime') {
+    } else if (key === 'cycletime') {
       this.ct = toSeconds(value);
-    } else if (key == 'time') {
+    } else if (key === 'time') {
       this.time = toSeconds(value);
     }
 

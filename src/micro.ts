@@ -64,7 +64,6 @@ class MicroRegistry {
    */
   _setPlaceholders(obj: Node, props: any) {
     function fill(val: string): string {
-      // tslint:disable-next-line: forin
       for (const p in props) { val = val.replace(new RegExp('\\$\\{' + p + '\\}', 'g'), props[p]); }
       return val;
     } // fill
@@ -184,13 +183,11 @@ class MicroRegistry {
 
 
   onunload(_evt: Event) {
-    // tslint:disable-next-line: forin
     for (const n in this.List) {
       const obj = this.List[n];
       if (obj && (<any>obj).term) { (<any>obj).term(); }
       for (let a = 0; a < obj.attributes.length; a++) { (<any>obj)[obj.attributes[a].name] = null; }
     } // for
-    // tslint:disable-next-line: forin
     for (const n in this.List) {
       delete this.List[n];
     }

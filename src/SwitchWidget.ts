@@ -12,8 +12,8 @@ class SwitchWidgetClass extends GenericWidgetClass {
   on_click(e: MouseEvent) {
     const o: HTMLElement = <HTMLElement>this.querySelector('.u-switch');
     let src: HTMLElement | null = e.srcElement as HTMLElement;
-    while (src != null && src != this && src != o) { src = src.parentElement; }
-    if (src == o) {
+    while (src !== null && src !== this && src !== o) { src = src.parentElement; }
+    if (src === o) {
       this.dispatchAction('toggle', '1');
     } else {
       super.on_click(e);
