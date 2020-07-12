@@ -73,15 +73,9 @@ function changeConfig(id: string, newConfig: any) {
 
   const formData = new FormData();
   formData.append(fName, new Blob([JSON.stringify(c)], { type: 'text/html' }), fName);
-
-  const objHTTP = new XMLHttpRequest();
-  objHTTP.open('POST', '/');
-  objHTTP.addEventListener('readystatechange', function () {
-    if (this.readyState === 4 && this.status >= 200 && this.status < 300) {
-      alert('saved.');
-    } // if
+  fetch('/', { method: 'POST', body: formData }).then(function() {
+    window.alert('saved.');
   });
-  objHTTP.send(formData);
 } // changeConfig()
 
 

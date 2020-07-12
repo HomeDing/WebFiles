@@ -107,15 +107,7 @@
           .then(function (buf) {
             var formData = new FormData();
             formData.append('file', new Blob([buf]), '/' + theItem);
-
-            var xmlHttp = new XMLHttpRequest();
-            xmlHttp.addEventListener('readystatechange', function (p) {
-              if ((xmlHttp.readyState == 4) && (xmlHttp.status >= 200) && (xmlHttp.status < 300)) {
-                next();
-              }
-            });
-            xmlHttp.open('POST', '/');
-            xmlHttp.send(formData);
+            fetch('/', { method: 'POST', body: formData }).then(next);
           });
       };
     } // doFile()

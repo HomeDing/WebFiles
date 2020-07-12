@@ -28,14 +28,9 @@
       for (var i = 0; i < fls.length; i++) {
         formData.append('file', fls[i], r + fls[i].name);
       }
-      var xmlHttp = new XMLHttpRequest();
-      xmlHttp.addEventListener('readystatechange', function (p) {
-        if ((xmlHttp.readyState == 4) && (xmlHttp.status >= 200) && (xmlHttp.status < 300)) {
-          window.alert('done.');
-        }
+      fetch('/', { method: 'POST', body: formData }).then(function() {
+        window.alert('done.');
       });
-      xmlHttp.open('POST', '/');
-      xmlHttp.send(formData);
     }
     var zoneObj = document.getElementById('zone');
     zoneObj.addEventListener('dragenter', dragHelper, false);
