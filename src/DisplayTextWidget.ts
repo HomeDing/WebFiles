@@ -47,7 +47,7 @@ class DisplayTextWidgetClass extends GenericWidgetClass {
 
       } else if (key === 'x') {
         const n = Number(value) * this._grid;
-        this._elem.style.left = (this._grid > 1 ? n : (n * 7 / 10)) + 'px';
+        this._elem.style.left = (this._grid > 1 ? (n * 7 / 10) : n) + 'px';
 
       } else if (key === 'y') {
         this._elem.style.top = (Number(value) * this._grid) + 'px';

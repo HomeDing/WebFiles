@@ -572,7 +572,7 @@ var DisplayTextWidgetClass = (function (_super) {
             }
             else if (key === 'x') {
                 var n = Number(value) * this._grid;
-                this._elem.style.left = (this._grid > 1 ? n : (n * 7 / 10)) + 'px';
+                this._elem.style.left = (this._grid > 1 ? (n * 7 / 10) : n) + 'px';
             }
             else if (key === 'y') {
                 this._elem.style.top = (Number(value) * this._grid) + 'px';
@@ -1044,14 +1044,9 @@ function changeConfig(id, newConfig) {
     }
     var formData = new FormData();
     formData.append(fName, new Blob([JSON.stringify(c)], { type: 'text/html' }), fName);
-    var objHTTP = new XMLHttpRequest();
-    objHTTP.open('POST', '/');
-    objHTTP.addEventListener('readystatechange', function () {
-        if (this.readyState === 4 && this.status >= 200 && this.status < 300) {
-            alert('saved.');
-        }
+    fetch('/', { method: 'POST', body: formData }).then(function () {
+        window.alert('saved.');
     });
-    objHTTP.send(formData);
 }
 function debounce(func, wait) {
     if (wait === void 0) { wait = 20; }
