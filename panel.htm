@@ -144,24 +144,25 @@
       jsonParse(conf, function (path, key, val) {
         if ((path.length > 1) && (path[0] === '/'))
           path = path.substr(1);
-        if (path.split('/').length == 2) {
-          var t = path.split('/')[0].toLowerCase();
-          var i = path.split('/')[1].toLowerCase();
-          var s = JSON.stringify(conf[t][i], null, 2)
+        var p = path.split('/');   
+        if (p.length >= 2) {
+          var s = JSON.stringify(conf[p[0]][p[1]], null, 2)
+          var t = p[0].toLowerCase();
+          var id = t + '/' + p[1].toLowerCase();
 
           if (toBool(params.sys) || (!elementDef[t]) || (toBool(elementDef[t].sys) == false)) {
-            var n = nodes[path];
+            var n = nodes[id];
             if (!n) {
-              n = nodes[path] = {
-                id: path
+              n = nodes[id] = {
+                id: id
               }; // create a new node
               n.icon = t;
               n.conf = s;
             } // if
             if (key) {
-              n[key] = val;
+              // n[key] = val;
               if (key.substr(0, 2) == 'on') {
-                createEdges(path, val);
+                createEdges(id, val);
               }
             } // if
           } // if
@@ -195,7 +196,8 @@
           nodes[n].yPos = 0;
         } else {
           // nodes with edges vertically;
-          nodes[n].xPos = 5 + nodes[n]._in - nodes[n]._out;
+          nodes[n].xPos = 6 + nodes[n]._in - nodes[n]._out;
+          nodes[n].xPos = Math.max(nodes[n].xPos, 0);
           nodes[n].yPos = py++;
         }
       };
