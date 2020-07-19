@@ -1,38 +1,102 @@
 {
+  "displayline": {
+    "h1": {
+      "x0": 0,
+      "y0": 25,
+      "x1": 127,
+      "y1": 25
+    }
+  },
   "displaytext": {
-    "date": {
-      "type": "TEXT",
+    "time": {
       "x": 0,
       "y": 0,
-      "description": "show the date."
+      "prefix": "",
+      "postfix": "",
+      "fontsize": 24,
+      "description": "Display the time",
+      "value": "..."
     },
-    "time": {
-      "type": "TEXT",
-      "x": 0,
-      "y": 16,
-      "fontsize": 16,
-      "description": "show the time"
+    "t": {
+      "x": 8,
+      "y": 28,
+      "prefix": "Temp: ",
+      "postfix": "°C",
+      "fontsize": 10,
+      "description": "Display temperature",
+      "value": "..."
+    },
+    "h": {
+      "x": 8,
+      "y": 40,
+      "prefix": "Hum: ",
+      "postfix": "%",
+      "fontsize": 10,
+      "description": "Display humidity",
+      "value": "..."
+    },
+    "pm": {
+      "x": 8,
+      "y": 52,
+      "prefix": "pm25: ",
+      "postfix": "",
+      "fontsize": 10,
+      "description": "particles",
+      "value": ".."
+    },
+    "test": {
+      "x": 94,
+      "y": 52,
+      "prefix": "<",
+      "postfix": ">",
+      "fontsize": 10,
+      "description": "test",
+      "value": ".."
+    }
+  },
+  "map": {
+    "m": {
+      "loglevel": 2,
+      "description": "classify incomming values using a map",
+      "y": 8,
+      "value": [
+        1,
+        "B2",
+        3
+      ]
+    }
+  },
+  "webbutton": {
+    "flow": {
+      "description": "All lights off",
+      "onClick": "neo/d2?mode=flow,timer/done?start=1"
     }
   },
   "time": {
-    "on": {
-      "ondate": "displaytext/date?value=$v",
-      "ontime": "displaytext/time?value=$v"
+    "clock": {
+      "onminute": "displaytext/time?value=$v"
     }
   },
-  "displaydot": {
+
+  "switch": {
+    "a": {
+      "description": "Switch A",
+      "value": 0,
+      "onValue": "and/a?value01=$v"
+    },
     "b": {
-      "x": 110,
-      "y": 8,
-      "description": "Display a bink"
+      "description": "Switch B",
+      "value": 0,
+      "onValue": "and/a?value02=$v"
     }
   },
-  "schedule": {
-    "0": {
-      "onTime": "22:05:00",
-      "offTime": "22:05:30",
-      "onon": "device/0?log=switch on,displaydot/b?value=1",
-      "onoff": "device/0?log=switch off,displaydot/b?value=0"
+  "and": {
+    "a": {
+      "description": "Logical AND",
+      "invert": "false",
+      "value01": "true",
+      "value02": "false",
+      "onvalue": "device/0?log=LOG:$v"
     }
   }
 }
