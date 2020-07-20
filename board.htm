@@ -295,7 +295,7 @@
 
     function init() {
       // load templates from other file.
-      var p0 = Promise.all([micro.loadFile('/board-templates.htm'), micro.loadFile('/board-new.htm')]);
+      var p0 = Promise.allSettled([micro.loadFile('/board-templates.htm'), micro.loadFile('/board-new.htm')]);
 
       // element definitions -> env.json -> config.json
       var p1 = fetch('/elements.json')
@@ -304,8 +304,9 @@
         })
         .then(function (json) {
           elementDef = json;
-
-          return fetch('/env.json');
+        })
+        .finally(function () {
+          return fetch('/env.json')
         })
         .then(function (result) {
           return result.json();
@@ -313,7 +314,8 @@
         .then(function (json) {
           hub.write('env', JSON.stringify(json));
           hub.publishObj(json);
-
+        })
+        .finally(function () {
           return fetch('/config.json');
         })
         .then(function (result) {
@@ -324,7 +326,7 @@
           hub.publishObj(json);
         });
 
-      Promise.all([p0, p1]).then(function () {
+      Promise.allSettled([p0, p1]).then(function () {
         updateState();
       });
     } // init()
