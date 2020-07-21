@@ -293,40 +293,49 @@
         });
     } // updateState()
 
+    // initiate a fetch with JSON response expected.
+    async function fetchJSON(url, options) {
+      var p = fetch(url, options)
+        .then(function (result) {
+          return (result.json());
+        });
+      return (p)
+    }
+
     function init() {
       // load templates from other file.
       var p0 = Promise.allSettled([micro.loadFile('/board-templates.htm'), micro.loadFile('/board-new.htm')]);
 
       // element definitions -> env.json -> config.json
-      var p1 = fetch('/elements.json')
-        .then(function (result) {
-          return result.json();
-        })
+      var p1 = fetchJSON('/elements.json')
         .then(function (json) {
           elementDef = json;
-        })
-        .finally(function () {
-          return fetch('/env.json')
-        })
-        .then(function (result) {
-          return result.json();
-        })
-        .then(function (json) {
-          hub.write('env', JSON.stringify(json));
-          hub.publishObj(json);
-        })
-        .finally(function () {
-          return fetch('/config.json');
-        })
-        .then(function (result) {
-          return result.json();
-        })
-        .then(function (json) {
-          hub.write('config', JSON.stringify(json));
-          hub.publishObj(json);
         });
 
-      Promise.allSettled([p0, p1]).then(function () {
+      var envData;
+      // element definitions -> env.json -> config.json
+      var p2 = fetchJSON('/env.json')
+        .then(function (json) {
+          envData = json;
+        });
+
+      var configData;
+      // element definitions -> env.json -> config.json
+      var p3 = fetchJSON('/config.json')
+        .then(function (json) {
+          configData = json;
+        });
+
+      Promise.allSettled([p0, p1, p2, p3]).then(function () {
+        // env data should be published before config data
+        if (envData) {
+          hub.write('env', JSON.stringify(envData));
+          hub.publishObj(envData);
+        }
+        if (configData) {
+          hub.write('config', JSON.stringify(configData));
+          hub.publishObj(configData);
+        }
         updateState();
       });
     } // init()
