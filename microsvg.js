@@ -10,3 +10,13 @@ function createSVGNode(parentNode, tagName, properties) {
 } // createSVGNode()
 
 
+/// calculate the event position using document units from mouse position.
+function eventPoint(evt) {
+  var svg = document.documentElement;
+  var pt = svg.createSVGPoint();
+  pt.x = evt.clientX;
+  pt.y = evt.clientY;
+  return pt.matrixTransform(svg.getScreenCTM().inverse());
+} // eventPoint
+
+

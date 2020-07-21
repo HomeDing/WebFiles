@@ -8,12 +8,9 @@ var indObj = document.getElementById('ind');
 
 var redrawTimer = null;
 
+// Region of data drawing
 var REGION_WIDTH = 128;
 var REGION_HEIGHT = 36;
-
-// local timezone offset for correct time conversion
-var tzOffset = new Date().getTimezoneOffset() * 60;
-
 
 // point = [x,y], x may be date as seconds
 /* 
@@ -72,15 +69,15 @@ var graph_cnt = 0;
 var minBox = { minX: Infinity, maxX: -Infinity, minY: 0, maxY: 1 };
 var displayBox = minBox;
 
-// Date and Time formatting
+// Date formatting
 function fmtDate(t) {
-  var d = new Date((Number(t) + tzOffset) * 1000);
+  var d = new Date(Number(t) * 1000);
   return d.toLocaleDateString();
 } // fmtDate
 
-// Date and Time formatting
+// Time formatting
 function fmtTime(t) {
-  var d = new Date((Number(t) + tzOffset) * 1000);
+  var d = new Date(Number(t) * 1000);
   return d.toLocaleTimeString();
 } // fmtTime
 
@@ -378,37 +375,28 @@ function setRedraw() {
   if (!redrawTimer) redrawTimer = window.setTimeout(redraw, 20);
 }
 
-// === to:microsvg.js
-
-/// calculate a event position using the document units.
-function eventPoint(evt) {
-  var svg = document.documentElement;
-  var pt = svg.createSVGPoint();
-  pt.x = evt.clientX;
-  pt.y = evt.clientY;
-  return pt.matrixTransform(svg.getScreenCTM().inverse());
-} // eventPoint
-
 function setIndicator(box, data) {
   if (box && data) {
     indObj.style.display = '';
 
-    var indLine = indObj.querySelector('line');
-    var indcircle = indObj.querySelector('circle');
+    var oLine = indObj.querySelector('line');
+    var oCircle = indObj.querySelector('circle');
+    var oInfo = indObj.querySelector('.info');
 
     var xPos = ((data.x - box.minX) * REGION_WIDTH) / (box.maxX - box.minX);
     var yPos = (data.y - box.minY) * (REGION_HEIGHT / (box.maxY - box.minY));
 
-    indLine.x1.baseVal.value = indLine.x2.baseVal.value = xPos;
-    indcircle.cx.baseVal.value = xPos;
-    indcircle.cy.baseVal.value = yPos;
+    oLine.x1.baseVal.value = oLine.x2.baseVal.value = xPos;
+    oCircle.cx.baseVal.value = xPos;
+    oCircle.cy.baseVal.value = yPos;
 
-    var infoObj = indObj.querySelector('.info');
     // calc infobox position
     xPos += xPos < REGION_WIDTH / 2 ? 2 : -20;
     yPos += yPos < REGION_HEIGHT / 2 ? 2 : -12;
-    infoObj.setAttribute('transform', 'translate(' + xPos + ',' + yPos + ')');
-    var txtObjs = infoObj.querySelectorAll('text');
+    oInfo.setAttribute('transform', 'translate(' + xPos + ',' + yPos + ')');
+
+    // add textual information
+    var txtObjs = oInfo.querySelectorAll('text');
     txtObjs[0].textContent = data.y;
     txtObjs[1].textContent = fmtDate(data.x);
     txtObjs[2].textContent = fmtTime(data.x);
