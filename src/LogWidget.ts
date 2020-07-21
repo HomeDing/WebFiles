@@ -7,6 +7,11 @@
 /// <reference path="microControls.ts" />
 /// <reference path="GenericWidget.ts" />
 
+// workaround for implemented but unknown allSetteled 
+declare interface PromiseConstructor {
+  allSettled(promises: Array<Promise<any>>): Promise<Array<{status: 'fulfilled' | 'rejected', value?: any, reason?: any}>>;
+}
+
 @MicroControl('log')
 class LogWidgetClass extends GenericWidgetClass {
   filename: string | null = null;
@@ -21,26 +26,38 @@ class LogWidgetClass extends GenericWidgetClass {
   }
 
   loadData() {
-    fetch(this.filename as string)
+    const fName = (this.filename as string);
+    let allData = '';
+
+    const p1 = fetch(fName)
       .then(function (result) {
         return result.text();
       })
-      .then(
-        function (this: LogWidgetClass, pmValues: string) {
-          const re = /^\d{2,},\d+/;
-          const pmArray = pmValues.split('\n').filter(function (e) {
-            return e.match(re);
-          });
+      .then(function (txt) {
+        allData = allData + '\n' + txt;
+      });
 
-          this.api.updateLineChartData(
-            this.lChart,
-            pmArray.map(function (v) {
-              const p = v.split(',');
-              return { x: p[0], y: p[1] };
-            })
-          );
-        }.bind(this)
+    const p2 = fetch(fName.replace('.txt', '_old.txt'))
+      .then(function (result) {
+        return result.text();
+      })
+      .then(function (txt) {
+        allData = txt + '\n' + allData;
+      });
+    Promise.allSettled([p1, p2]).then(function (this: LogWidgetClass) {
+      const re = /^\d{4,},\d+/;
+      const pmArray = allData.split('\n').filter(function (e) {
+        return e.match(re);
+      });
+
+      this.api.updateLineChartData(
+        this.lChart,
+        pmArray.map(function (v) {
+          const p = v.split(',');
+          return { x: p[0], y: p[1] };
+        })
       );
+    }.bind(this));
   } // loadData()
 
 

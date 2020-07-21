@@ -645,13 +645,25 @@ var LogWidgetClass = (function (_super) {
         hub.subscribe(this.microid + '?*', this.newValue.bind(this), true);
     };
     LogWidgetClass.prototype.loadData = function () {
-        fetch(this.filename)
+        var fName = this.filename;
+        var allData = '';
+        var p1 = fetch(fName)
             .then(function (result) {
             return result.text();
         })
-            .then(function (pmValues) {
-            var re = /^\d{2,},\d+/;
-            var pmArray = pmValues.split('\n').filter(function (e) {
+            .then(function (txt) {
+            allData = allData + '\n' + txt;
+        });
+        var p2 = fetch(fName.replace('.txt', '_old.txt'))
+            .then(function (result) {
+            return result.text();
+        })
+            .then(function (txt) {
+            allData = txt + '\n' + allData;
+        });
+        Promise.allSettled([p1, p2]).then(function () {
+            var re = /^\d{4,},\d+/;
+            var pmArray = allData.split('\n').filter(function (e) {
                 return e.match(re);
             });
             this.api.updateLineChartData(this.lChart, pmArray.map(function (v) {
