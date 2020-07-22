@@ -1,0 +1,24 @@
+{
+  "dht": {
+    "on": {
+      "type": "DHT22",
+      "description": "Temperature and Humidity sensor",
+      "pin": "D5",
+      "readtime": "60s",
+      "ontemperature": "log/temp?value=$v",
+      "onhumidity": "log/hum?value=$v"
+    }
+  },
+  "log": { 
+    "temp": {
+      "description": "Log values to file",
+      "filename": "/log-temp.txt",
+      "filesize": "10000"
+    },
+    "hum": {
+      "description": "logging humidity",
+      "filename": "/log-hum.txt",
+      "filesize": "10000"
+    }
+  }
+}
