@@ -45,7 +45,7 @@ let mDnsBrowser;
 
 
 function addDevice(data) {
-  var isNew = (! netDevices[data.host]);
+  var isNew = (!netDevices[data.host]);
   // console.log(`>>${JSON.stringify(data.addresses)} - ${data.host} - ${data.fullname}`);
   netDevices[data.host] = new Date();
   if (isNew) {
@@ -97,12 +97,10 @@ if (!fs.existsSync(boardFileName)) {
 let configData = JSON.parse(fs.readFileSync(useCase + 'config.json', 'utf8'));
 
 // ===== /$board status
-let boardStatus = {};
+let boardStatus = null;
 
 // ===== status mocking functions
-let mockGetStatus = {}; // return current status
-let mockSetAction = {}; // set a property or process an action
-let mockConfigData = {}; // config data of element
+let mocks = {};
 
 
 // enable to add X-Respose-Time to http header
@@ -228,28 +226,6 @@ app.get(/^\/\xconfig.json$/, noCache, function (req, res, next) {
 
 });
 
-// ----- handle uploading a file using the PUT method -----
-
-// app.put("/:fn", function (req, res, next) {
-//   var filename = req.params.fn;
-//   debugIoT("PUT: %s started", filename);
-
-//   var writer = fs.createWriteStream(filename); // "output.txt");
-
-//   req.setEncoding("utf8");
-//   req.on("data", function (chunk) {
-//     writer.write(chunk);
-//     debugIoT("PUT: got %d bytes", chunk.length);
-//   });
-
-//   req.on("end", function () {
-//     writer.close();
-//     debugIoT("PUT: end.");
-//     next();
-//   });
-
-//   res.send("this is an update");
-// });
 
 function isoDate() {
   function pad02(num) {
@@ -265,34 +241,31 @@ function isoDate() {
 
 // ===== mocking elements
 
-function addElementMock(id, fGet, fSet) {
-  if (fGet)
-    mockGetStatus[id] = fGet;
-  if (fSet)
-    mockSetAction[id] = fSet;
-  // boardStatus[id] = {};
+function addMock(id, fGet, fSet) {
+  const m = mocks[id] = {};
+  m.fGet = fGet;
+  m.fSet = fSet;
 };
 
-
-addElementMock('dstime/0', function (state) {
+addMock('dstime/0', function (state) {
   if (!state) state = {};
   state.now = isoDate();
   return (state);
 }, null);
 
-addElementMock('ntptime/on', function (state) {
+addMock('ntptime/0', function (state) {
   if (!state) state = {};
   state.now = isoDate();
   return (state);
 }, null);
 
-addElementMock('displaytext/pm', function (state) {
+addMock('displaytext/pm', function (state) {
   if (!state) state = {};
   state.value = Math.floor(Math.random() * 40);
   return (state);
 }, null);
 
-addElementMock('displaydot/b',
+addMock('displaydot/b',
   function (state) {
     var d = new Date();
     if (!state) state = {};
@@ -307,7 +280,7 @@ addElementMock('displaydot/b',
 function addTypeMock(type, fGet, fSet) {
   if (configData[type]) {
     for (e in configData[type]) {
-      addElementMock(type + '/' + e, fGet, fSet);
+      addMock(type + '/' + e, fGet, fSet);
     }
   }
 } // addTypeMock()
@@ -342,7 +315,7 @@ addTypeMock('value',
 if (configData.switch) {
   for (e in configData.switch) {
     // add get and set methods of state
-    addElementMock('switch/' + e, function (state) {
+    addMock('switch/' + e, function (state) {
       if (!state) {
         state = {
           active: 1,
@@ -369,26 +342,28 @@ fs.watch(boardFileName, function (eventName, filename) {
 app.get('/\\$board/:type/:id', noCache, function (req, res, next) {
   if (!boardStatus) {
     boardStatus = JSON.parse(fs.readFileSync(boardFileName, 'utf8'));
-    for (let id in mockGetStatus) {
-      boardStatus[id] = mockGetStatus[id](boardStatus[id]);
-    }
   }
 
+  Object.keys(mocks).forEach(id => {
+    const m = mocks[id];
+    if (boardStatus[id] && m.fGet)
+      boardStatus[id] = m.fGet(boardStatus[id]);
+  });
+
+
   let id = req.params.type + '/' + req.params.id;
+  const m = mocks[id];
 
   if (Object.keys(req.query).length > 0) {
     // incoming action
-    if (mockSetAction[id]) {
+    if (m.fSet) {
       const c = configData[req.params.type][req.params.id];
-      boardStatus[id] = mockSetAction[id](boardStatus[id], req.query, c);
+      boardStatus[id] = m.fSet(boardStatus[id], req.query, c);
     }
     logInfo(boardStatus[id]);
     res.send();
 
   } else {
-    if (mockGetStatus[id])
-      boardStatus[id] = mockGetStatus[id](boardStatus[id]);
-    logInfo(boardStatus[id]);
     res.type('application/json');
     let elementStatus = {};
     elementStatus[id] = boardStatus[id];
@@ -399,15 +374,16 @@ app.get('/\\$board/:type/:id', noCache, function (req, res, next) {
 
 
 app.get(/^\/\$board$/, noCache, function (req, res, next) {
-  if (!boardStatus)
+  if (!boardStatus) {
     boardStatus = JSON.parse(fs.readFileSync(boardFileName, 'utf8'));
-
-  for (let id in mockGetStatus) {
-    // update all mock status .
-    boardStatus[id] = mockGetStatus[id](boardStatus[id]);
   }
+  Object.keys(mocks).forEach(id => {
+    const m = mocks[id];
+    if (boardStatus[id] && m.fGet)
+      boardStatus[id] = m.fGet(boardStatus[id]);
+  });
 
-  // debugIoT(boardStatus);
+  // debugSend('send:' , boardStatus);
   res.type('application/json');
   res.send(JSON.stringify(boardStatus, null, 2));
 });

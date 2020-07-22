@@ -28,9 +28,12 @@ install ---> build ------------+---> start
               +-> build:css          +-> pack:dist
                                      +-> pack:minimal
                                      +-> pack:embed
-
-
 ```
+
+The **build** steps create derived version of the source files.
+
+The **pack** steps create the target file collections.
+
 
 ## Installation
 
@@ -74,26 +77,61 @@ The open the default page using <http://localhost:3123/> for device simulation.
 The start the portal implementation use <http://localhost:3123/portal.htm>.
 
 
-## Packing the files for upload into devices
+## Packing
 
-The pack steps will create the format required to be used in the devices.
+```CMD
+npm run pack
+```
 
-- **pack:dist:** create a `dist` folder with all files required for upload 
-- **pack:minimal:** create a `dist-mini` folder with all files required for upload to minimal devices. 
-- **pack:embed:** create the `upload.h` file with the embedded pages for setup 
-- **pack:** create all above.
+This command will create all packages below.
 
 
-## Create the builtin web UI
+### Packing for standard distributions
+
+The standard pack contains all Web UI files for a full-featured device. This requires a filesystem of min. 1 MByte.
+
+```CMD
+npm run pack:dist
+```
+
+This command will create a `dist` folder with all files required for upload into the filesystem of a new device.
+
+In this packing job is implemented using a nodejs implementation that you can find in `packdist.js`. It knows the required files and will copy them (no minifying etc) into the `dist` folder.
+
+In addition a list.txt file is formed that will also name all the files that can be updated by the built-in `boot.htm` implementation
+that can be started using <http://[devname]/$boot.htm> even on devices that only have a sketch uploaded and still an empty filesystem. 
+
+
+### Packing for minimal distributions
+
+The minimal pack contains all Web UI files for a small device. This requires a filesystem of min. 128 kByte.
+
+```CMD
+npm run pack:minimal
+```
+
+This command will create a `dist-mini` folder with all files required for upload to minimal devices. 
+
+
+In this packing job is implemented using a nodejs implementation that you can find in `packminimal.js`.
+It knows the required files and will transfer them  into the `dist-mini` folder. Some files will be minified (HTML, CSS) or uglified (JS) to save space on the filesystem.
+
+In addition a list.txt file is formed that will also name all the files that can be updated by the built-in `boot.htm` implementation
+that can be started using <http://[devname]/$boot.htm> even on devices that only have a sketch uploaded and still an empty filesystem. 
+
+You an specify the download version with a parameter ???
+
+
+### Create the builtin web UI
 
 To create the builtin web ui that will be compiled into the firmware the `upload.h` file can be created
 by using the script `packembedweb.js`.
 
-This can be started using the npm command
-
 ```CMD
 npm run pack:embed
 ```
+
+This command will create the `upload.h` file with the embedded pages for setup 
 
 The generated `upload.h` file needs to be copied to the Arduino library folder.
 
