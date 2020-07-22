@@ -355,6 +355,9 @@ var GenericWidgetClass = (function (_super) {
         if (src.classList.contains('setconfig')) {
             modal.open('configelementdlg', this.data);
         }
+        else if (src.classList.contains('setactive')) {
+            this.dispatchAction(toBool(this.data.active) ? 'stop' : 'start', '1');
+        }
         else if (src.tagName === 'H3') {
             modal.openFocus(this);
         }
@@ -1261,4 +1264,3 @@ var MicroHub = (function () {
 }());
 var hub = new MicroHub();
 window.addEventListener('unload', hub.onunload.bind(hub), false);
-//# sourceMappingURL=micro.js.map
