@@ -7,7 +7,7 @@
 /// <reference path="microControls.ts" />
 /// <reference path="GenericWidget.ts" />
 
-// workaround for implemented but unknown allSetteled 
+// workaround for implemented but unknown allSetteled
 declare interface PromiseConstructor {
   allSettled(promises: Array<Promise<any>>): Promise<Array<{status: 'fulfilled' | 'rejected', value?: any, reason?: any}>>;
 }
