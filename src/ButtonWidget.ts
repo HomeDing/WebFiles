@@ -9,20 +9,54 @@
 
 @MicroControl('button')
 class ButtonWidgetClass extends GenericWidgetClass {
-  on_pointerdown(e: PointerEvent) {
-    const src = e.target as HTMLElement;
-    if ((src) && (src.classList.contains('u-button'))) {
-      src.classList.add('active');
-      this.dispatchAction('value', '1');
-    } // if
+  _onclick = '';
+  _ondoubleclick = '';
+  _onpress = '';
+  _timer = 0;
+  _start = 0;
+  _duration = 0;
 
-  }
-
-  on_pointerup(e: PointerEvent) {
-    const src = e.target as HTMLElement;
-    if (src.classList.contains('u-button')) {
-      src.classList.remove('active');
-      this.dispatchAction('value', '0');
+  newData(path: string, key: string, value: string) {
+    super.newData(path, key, value);
+    if (key === 'onclick') {
+      this._onclick = value;
+    } else if (key === 'ondoubleclick') {
+      this._ondoubleclick = value;
+    } else if (key === 'onpress') {
+      this._onpress = value;
     } // if
-  }
+  } // newData()
+
+  on_click() {
+    if (this._duration > 800) {
+      // press event
+      if (this._onpress) {
+        this.dispatchAction(this._onpress, '1');
+      }
+
+    } else {
+      // single short click
+      const scope = this;
+      if (this._timer) { clearTimeout(this._timer); }
+      this._timer = setTimeout(function () {
+        // wait until time for double-click is over
+        scope.dispatchAction(scope._onclick, '1');
+      }, 250);
+    }
+  } // on_click
+
+  on_dblclick() {
+    if (this._timer) { clearTimeout(this._timer); }
+    this.dispatchAction(this._ondoubleclick, '1');
+  } // on_dblclick
+
+  on_pointerdown() {
+    this._start = new Date().valueOf();
+  } // on_pointerdown
+
+
+  on_pointerup() {
+    this._duration = new Date().valueOf() - this._start;
+    // onclick event will follow.
+  } // on_pointerup()
 }

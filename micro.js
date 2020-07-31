@@ -370,21 +370,54 @@ var GenericWidgetClass = (function (_super) {
 var ButtonWidgetClass = (function (_super) {
     __extends(ButtonWidgetClass, _super);
     function ButtonWidgetClass() {
-        return _super !== null && _super.apply(this, arguments) || this;
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this._onclick = '';
+        _this._ondoubleclick = '';
+        _this._onpress = '';
+        _this._timer = 0;
+        _this._start = 0;
+        _this._duration = 0;
+        return _this;
     }
-    ButtonWidgetClass.prototype.on_pointerdown = function (e) {
-        var src = e.target;
-        if ((src) && (src.classList.contains('u-button'))) {
-            src.classList.add('active');
-            this.dispatchAction('value', '1');
+    ButtonWidgetClass.prototype.newData = function (path, key, value) {
+        _super.prototype.newData.call(this, path, key, value);
+        if (key === 'onclick') {
+            this._onclick = value;
+        }
+        else if (key === 'ondoubleclick') {
+            this._ondoubleclick = value;
+        }
+        else if (key === 'onpress') {
+            this._onpress = value;
         }
     };
-    ButtonWidgetClass.prototype.on_pointerup = function (e) {
-        var src = e.target;
-        if (src.classList.contains('u-button')) {
-            src.classList.remove('active');
-            this.dispatchAction('value', '0');
+    ButtonWidgetClass.prototype.on_click = function () {
+        if (this._duration > 800) {
+            if (this._onpress) {
+                this.dispatchAction(this._onpress, '1');
+            }
         }
+        else {
+            var scope_1 = this;
+            if (this._timer) {
+                clearTimeout(this._timer);
+            }
+            this._timer = setTimeout(function () {
+                scope_1.dispatchAction(scope_1._onclick, '1');
+            }, 250);
+        }
+    };
+    ButtonWidgetClass.prototype.on_dblclick = function () {
+        if (this._timer) {
+            clearTimeout(this._timer);
+        }
+        this.dispatchAction(this._ondoubleclick, '1');
+    };
+    ButtonWidgetClass.prototype.on_pointerdown = function () {
+        this._start = new Date().valueOf();
+    };
+    ButtonWidgetClass.prototype.on_pointerup = function () {
+        this._duration = new Date().valueOf() - this._start;
     };
     ButtonWidgetClass = __decorate([
         MicroControl('button')
@@ -1264,3 +1297,4 @@ var MicroHub = (function () {
 }());
 var hub = new MicroHub();
 window.addEventListener('unload', hub.onunload.bind(hub), false);
+//# sourceMappingURL=micro.js.map
