@@ -36,14 +36,17 @@ const debugSend = debug("iot:send");
 debug.log = console.log.bind(console);
 
 
-// ===== mDns browser updates =====
+//#region ===== mDNS Browser =====
 
 const mDns = require('mdns-js');
 mDns.excludeInterface('0.0.0.0');
 let netDevices = {}; // has hostnames as keys, last known date as values;
 let mDnsBrowser;
 
-
+/**
+ * A device was reported in mDNS: add to list of devices and set current timestamp.
+ * This function is registered in the mDNS browser.
+ */
 function addDevice(data) {
   var isNew = (!netDevices[data.host]);
   // console.log(`>>${JSON.stringify(data.addresses)} - ${data.host} - ${data.fullname}`);
@@ -52,8 +55,12 @@ function addDevice(data) {
     console.log(`add ${data.host}`);
     console.log(Object.keys(netDevices).join(' '));
   }
-}
+} // addDevice()
 
+
+/**
+ * Setup the mDNS browser and start dicovering devices.
+ */
 function startDiscovery() {
   // console.log(`>>START`);
   const now = new Date();
@@ -71,37 +78,47 @@ function startDiscovery() {
     }
   } // for
 
+  // search for `_homeding._tcp`
   mDnsBrowser = mDns.createBrowser(mDns.tcp('homeding'));
   mDnsBrowser.on('ready', () => mDnsBrowser.discover());
   mDnsBrowser.on('update', addDevice);
-} // startDiscovery
+} // startDiscovery()
 
+// starts discovery now and every 30 secs.
 startDiscovery();
 setInterval(startDiscovery, 30 * 1000);
 
+//#endregion
 
-// a prefix can be added to the files config.json, env.json and $board 
+//#region ===== Setup simulated case ===== 
 
-const useCase = `case-${options.case}/`;
-const boardFileName = useCase + '$board';
+// to simulate a specific case the files `config.json`, `env.json` and `$board` 
+// are used from a directory named `case-${casename}`. 
 
+const caseFolder = `case-${options.case}/`;
+const boardFileName = caseFolder + '$board';
 
 if (!fs.existsSync(boardFileName)) {
   console.log(`The configuration folder ${boardFileName} could not be found.`);
   return;
 } else {
-  console.log(`Starting case ${useCase}...`);
+  console.log(`Starting case ${options.case} ...`);
 }
 
-// ===== config information
-let configData = JSON.parse(fs.readFileSync(useCase + 'config.json', 'utf8'));
+// ===== env and config information
+const allConfig = Object.assign({},
+  JSON.parse(fs.readFileSync(caseFolder + 'env.json', 'utf8')),
+  JSON.parse(fs.readFileSync(caseFolder + 'config.json', 'utf8'))
+);
+
+const boardStart = new Date().valueOf();
 
 // ===== /$board status
 let boardStatus = null;
 
-// ===== status mocking functions
-let mocks = {};
+//#endregion
 
+//#region ===== Setup web server features =====
 
 // enable to add X-Respose-Time to http header
 // var responseTime = require('response-time');
@@ -134,6 +151,9 @@ function noCache(req, res, next) {
   next();
 }
 
+//#endregion
+
+
 // ----- enable start page redirect -----
 app.get("/", function (req, res, next) {
   logInfo("redirect...");
@@ -156,7 +176,8 @@ app.get('/\\$boot.htm', function (req, res, next) {
 
 // ----- handle listing of all existing files -----
 
-// ----- upload -----
+
+//#region ===== Upload files service ====
 
 // configure upload storage to save in /uploads and use the filename+date
 const storage = multer.diskStorage({
@@ -176,76 +197,50 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage, preservePath: true });
 
-// ----- router -----
-
-// set up the router required to hook up our service to the portal
-const apiRouter = express.Router();
-
-// test uploading files, use a file upload folder to avoid overwriting local files
-// 
+/**
+ * Test uploading files without overwriting existing files.
+ * new files are saved to the `uploads` folder 
+*/
 app.post('/', upload.any(), function (req, res) {
   req.files;
   req.originalUrl;
   res.send("");
 });
-/*  */
 
-app.get(/^\/\$list$/, noCache, function (req, res, next) {
-  var fl = [];
-  var files = fs.readdirSync(__dirname);
-  for (var i in files) {
-    var aFile = fs.statSync(files[i]);
-    if (aFile.isFile())
-      fl.push({
-        name: "/" + files[i],
-        size: aFile.size
-      });
-  }
-  res.type('application/json');
-  res.json(fl);
-});
+//#endregion
 
 
-app.get(/^\/\$sysinfo$/, noCache, function (req, res, next) {
-  var fl = {
-    "devicename": "nodejsding",
-    "build": "Dec  1 2018",
-    "freeHeap": 31168,
-    "flashSize": 4194304,
-    // "flash-real-size":4194304,
-    "fsTotalBytes": 957314,
-    "fsUsedBytes": 218872,
-    "ssid": "devnet"
-    // "bssid":"74:DA:11:22:33:44"
-  };
-  res.type('application/json');
-  res.send(JSON.stringify(fl, null, 2));
-});
+//#region ===== Setup mocking functions =====
 
-app.get(/^\/\xconfig.json$/, noCache, function (req, res, next) {
+// directory of active log functions
+// mocks[${type}/${id}] = {fGet, fSet}
 
-});
+let mocks = {};
 
-
-function isoDate() {
-  function pad02(num) {
-    return (((num < 10) ? '0' : '') + num);
-  };
-
-  var d = new Date();
-  var ds = d.getFullYear() + '-' + pad02(d.getMonth() + 1) + '-' + pad02(d.getDate()) +
-    ' ' + pad02(d.getHours()) + ':' + pad02(d.getMinutes()) + ':' + pad02(d.getSeconds());
-  return (ds);
-}
-
-
-// ===== mocking elements
-
+/**
+ * Setup a mocking function for a specific element.
+ */
 function addMock(id, fGet, fSet) {
-  const m = mocks[id] = {};
-  m.fGet = fGet;
-  m.fSet = fSet;
-};
+  mocks[id] = {
+    fGet: fGet,
+    fSet: fSet,
+  };
+} // addMock()
+
+
+/**
+ * Setup mocking functions for all configured elements of the specified type
+ */
+function addTypeMock(type, fGet, fSet) {
+  if (allConfig[type]) {
+    for (e in allConfig[type]) {
+      addMock(type + '/' + e, fGet, fSet);
+    }
+  }
+} // addTypeMock()
+
+
+// ===== mocking specific elements
 
 addMock('dstime/0', function (state) {
   if (!state) state = {};
@@ -277,17 +272,27 @@ addMock('displaydot/b',
 
 // ===== add mocking function for some common types. 
 
-function addTypeMock(type, fGet, fSet) {
-  if (configData[type]) {
-    for (e in configData[type]) {
-      addMock(type + '/' + e, fGet, fSet);
+addTypeMock('device',
+  function getState(state) {
+    var now = new Date().valueOf();
+    if (!state) {
+      state = {
+        active: 1
+      };
     }
-  }
-} // addTypeMock()
+    // simulate remaining time for nextboot.
+    state.nextboot = 30000 - Math.floor((now - boardStart) / 1000);
+    return (state);
+  },
+  function (state, action, cnf) {
+    if (action.log !== null) {
+      console.log('>>', action.log);
+    }
+    return (state);
+  });
 
 
-// ===== mocking value elements mentioned in config
-
+/** Mock value elements */
 addTypeMock('value',
   function (state) {
     if (!state) {
@@ -310,27 +315,69 @@ addTypeMock('value',
     return (state);
   });
 
-// ===== mocking all switch elements mentioned in config
 
-if (configData.switch) {
-  for (e in configData.switch) {
-    // add get and set methods of state
-    addMock('switch/' + e, function (state) {
-      if (!state) {
-        state = {
-          active: 1,
-          value: 0
-        };
-      }
-      return (state);
-    }, function (state, query) {
-      if (query.value != null)
-        state.value = query.value;
-      if (query.toggle != null)
-        state.value = (state.value ? 0 : 1);
-      return (state);
-    });
+/** Mock switch elements */
+addTypeMock('switch',
+  function getSwitchState(state) {
+    if (!state) {
+      state = {
+        active: 1,
+        value: 0
+      };
+    }
+    return (state);
+  },
+  function switchAction(state, action, cnf) {
+    if (action.value != null)
+      state.value = action.value;
+    if (action.toggle != null)
+      state.value = (state.value ? 0 : 1);
+    return (state);
+  });
+
+//#endregion
+
+app.get(/^\/\$list$/, noCache, function (req, res, next) {
+  var fl = [];
+  var files = fs.readdirSync(__dirname);
+  for (var i in files) {
+    var aFile = fs.statSync(files[i]);
+    if (aFile.isFile())
+      fl.push({
+        name: "/" + files[i],
+        size: aFile.size
+      });
   }
+  res.type('application/json');
+  res.json(fl);
+});
+
+
+app.get(/^\/\$sysinfo$/, noCache, function (req, res, next) {
+  var fl = {
+    "devicename": "nodejsding",
+    "build": "Dec  1 2018",
+    "freeHeap": 31168,
+    "flashSize": 4194304,
+    // "flash-real-size":4194304,
+    "fsTotalBytes": 957314,
+    "fsUsedBytes": 218872,
+    "ssid": "devnet"
+    // "bssid":"74:DA:11:22:33:44"
+  };
+  res.json(fl);
+});
+
+
+function isoDate() {
+  function pad02(num) {
+    return (((num < 10) ? '0' : '') + num);
+  };
+
+  var d = new Date();
+  var ds = d.getFullYear() + '-' + pad02(d.getMonth() + 1) + '-' + pad02(d.getDate()) +
+    ' ' + pad02(d.getHours()) + ':' + pad02(d.getMinutes()) + ':' + pad02(d.getSeconds());
+  return (ds);
 }
 
 // ===== serving /$board status
@@ -357,7 +404,7 @@ app.get('/\\$board/:type/:id', noCache, function (req, res, next) {
   if (Object.keys(req.query).length > 0) {
     // incoming action
     if (m.fSet) {
-      const c = configData[req.params.type][req.params.id];
+      const c = allConfig[req.params.type][req.params.id];
       boardStatus[id] = m.fSet(boardStatus[id], req.query, c);
     }
     logInfo(boardStatus[id]);
@@ -408,7 +455,7 @@ app.delete("/:fn", function (req, res, next) {
 
 // setup serving static files
 
-app.use(express.static(__dirname + '/' + useCase, {
+app.use(express.static(__dirname + '/' + caseFolder, {
   index: false
 }));
 
