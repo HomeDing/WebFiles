@@ -23,7 +23,7 @@
   },
 
   "button": {
-    "properties": ["loglevel", "description"],
+    "properties": ["loglevel", "description", "value"],
     "events": ["value"],
     "actions": ["onclick", "ondoubleclick", "onpress"]
   },
@@ -34,19 +34,19 @@
   },
 
   "digitalout": {
-    "properties": ["loglevel", "description", "pin", "inverse"],
+    "properties": ["loglevel", "description", "pin", "inverse", "value"],
     "events": ["on", "off", "value"]
   },
 
   "displaydot": {
     "sys": "false",
-    "properties": ["loglevel", "description", "x", "y"],
+    "properties": ["loglevel", "description", "x", "y", "value"],
     "events": ["value", "clear"]
   },
 
   "displaytext": {
     "sys": "false",
-    "properties": ["loglevel", "description", "x", "y", "fontsize", "prefix", "postfix"],
+    "properties": ["loglevel", "description", "x", "y", "fontsize", "value", "prefix", "postfix"],
     "events": ["value", "clear"]
   },
 
@@ -77,13 +77,13 @@
   },
 
   "switch": {
-    "properties": ["loglevel", "description"],
+    "properties": ["loglevel", "description", "value"],
     "events": ["value", "toggle"],
     "actions": ["onValue", "onHigh", "onLow"]
   },
 
   "value": {
-    "properties": ["loglevel", "description", "min", "max"],
+    "properties": ["loglevel", "description", "min", "max", "value"],
     "events": ["value", "up", "down"],
     "actions": ["onValue"]
   },
@@ -136,7 +136,7 @@
   },
 
   "neo": {
-    "properties": ["loglevel", "description", "pin", "duration", "count"],
+    "properties": ["loglevel", "description", "pin", "duration", "count", "value", "mode", "brightness"],
     "events": ["value", "mode", "brightness"],
     "actions": []
   },

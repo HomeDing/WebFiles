@@ -100,7 +100,7 @@
           </div>
         </div>
         <div class="block">
-          <object id="elemsvg" data="element.svg" type="image/svg+xml" style="height:320px; width:800px"></object>
+          <object id="elemsvg" data="element.svg" type="image/svg+xml" style="height:400px; width:800px"></object>
         </div>
       </div>
     </div>
@@ -130,11 +130,13 @@
 
   <script>
     var memObj = document.getElementById('meminfo');
+    var memAPI;
     var elementsData;
     var selObj = document.getElementById('elemsel');
     var elemsvgObj = document.getElementById('elemsvg');
 
     window.addEventListener('load', function () {
+      memAPI = memObj.getSVGDocument().api;
       fetch('/$sysinfo')
         .then(function (result) {
           return result.json();
@@ -150,14 +152,15 @@
           document.getElementById('memUsed').textContent = d.fsUsedBytes;
           document.getElementById('memPart').textContent = Math.floor((Number(d.fsUsedBytes) * 100) / Number(d.fsTotalBytes));
 
-          var memAPI = memObj.getSVGDocument().api;
           memAPI.setRange([
             {
               color: '#304878',
+              title: "Used",
               part: Number(d['fsUsedBytes'])
             },
             {
               color: '#aaaaaa',
+              title: "Available",
               part: Number(d.fsTotalBytes) - Number(d.fsUsedBytes)
             }
           ]);
