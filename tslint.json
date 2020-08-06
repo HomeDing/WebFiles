@@ -8,7 +8,7 @@
     ],
     "curly": true,
     "eofline": true,
-    "forin": false,
+    "forin": true,
     "import-blacklist": [true, "rxjs"],
     "import-spacing": true,
     "indent": [

@@ -144,10 +144,8 @@ class MicroHub {
     } // if
   } // publish
 
-  onunload(_evt: Event) {
-    for (const n in this._registrations) {
-      delete this._registrations[n];
-    }
+  onunload() {
+    Object.getOwnPropertyNames(this._registrations).forEach(n => delete this._registrations[n as any]);
   } // onunload
 
   protected _findStoreObject(path: string): any {

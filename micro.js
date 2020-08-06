@@ -76,9 +76,7 @@ var MicroRegistry = (function () {
     MicroRegistry.prototype._setPlaceholders = function (obj, props) {
         var _this = this;
         function fill(val) {
-            for (var p in props) {
-                val = val.replace(new RegExp('\\$\\{' + p + '\\}', 'g'), props[p]);
-            }
+            Object.getOwnPropertyNames(props).forEach(function (p) { return val = val.replace(new RegExp('\\$\\{' + p + '\\}', 'g'), props[p]); });
             return val;
         }
         if (obj.nodeType === Node.TEXT_NODE) {
@@ -176,16 +174,15 @@ var MicroRegistry = (function () {
         this._registry[name] = mixin;
     };
     MicroRegistry.prototype.onunload = function (_evt) {
-        for (var n in this.List) {
-            var obj = this.List[n];
+        this.List.forEach(function (obj) {
             if (obj && obj.term) {
                 obj.term();
             }
             for (var a = 0; a < obj.attributes.length; a++) {
                 obj[obj.attributes[a].name] = null;
             }
-        }
-        for (var n in this.List) {
+        });
+        for (var n = 0; n < this.List.length; n++) {
             delete this.List[n];
         }
         this.List = [];
@@ -642,9 +639,7 @@ function jsonParse(obj, cbFunc) {
         }
         else if (typeof value === 'object') {
             cbFunc(path2, null, null);
-            for (var k in value) {
-                _jsonParse(path2, k, value[k]);
-            }
+            Object.getOwnPropertyNames(value).forEach(function (k) { return _jsonParse(path2, k, value[k]); });
         }
         else {
             cbFunc(path, key, String(value));
@@ -1259,10 +1254,9 @@ var MicroHub = (function () {
             });
         }
     };
-    MicroHub.prototype.onunload = function (_evt) {
-        for (var n in this._registrations) {
-            delete this._registrations[n];
-        }
+    MicroHub.prototype.onunload = function () {
+        var _this = this;
+        Object.getOwnPropertyNames(this._registrations).forEach(function (n) { return delete _this._registrations[n]; });
     };
     MicroHub.prototype._findStoreObject = function (path) {
         var p = this._store;

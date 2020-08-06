@@ -64,7 +64,8 @@ class MicroRegistry {
    */
   _setPlaceholders(obj: Node, props: any) {
     function fill(val: string): string {
-      for (const p in props) { val = val.replace(new RegExp('\\$\\{' + p + '\\}', 'g'), props[p]); }
+      // for (const p in props) { val = val.replace(new RegExp('\\$\\{' + p + '\\}', 'g'), props[p]); }
+      Object.getOwnPropertyNames(props).forEach(p => val = val.replace(new RegExp('\\$\\{' + p + '\\}', 'g'), props[p]));
       return val;
     } // fill
 
@@ -183,13 +184,12 @@ class MicroRegistry {
 
 
   onunload(_evt: Event) {
-    for (const n in this.List) {
-      const obj = this.List[n];
+    this.List.forEach(obj => {
       if (obj && (<any>obj).term) { (<any>obj).term(); }
       for (let a = 0; a < obj.attributes.length; a++) { (<any>obj)[obj.attributes[a].name] = null; }
-    } // for
-    for (const n in this.List) {
-      delete this.List[n];
+    });
+    for (let n = 0; n < this.List.length; n++) {
+      delete this.List[n]; // free up any memory
     }
     this.List = [];
   } // onunload
