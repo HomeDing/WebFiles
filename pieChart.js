@@ -7,7 +7,22 @@
 // * 03.08.2020 include <title> for mouse over effect. 
 
 var panelObj = document.getElementById("panel");
+var valuesObj = document.getElementById("values");
 var RAD_OUT = 20;
+
+
+/**
+ * Calculate a point on the circle
+ * @param {number} alpha degree of angle
+ * @param {number} r radius of circlt
+ * @returns object with x and y coordinates.
+ */
+function _cPoint(alpha, r) {
+  return ({
+    x: (Math.sin(alpha) * r),
+    y: (-Math.cos(alpha) * r)
+  });
+} // _piePoint()
 
 
 /**
@@ -21,19 +36,22 @@ function _piePoint(alpha, r) {
 
 /**
  * Append another pie slice inside inside the panelObj.
+ * @param start start of slice in percent
+ * @param size size of slice in percent
+ * @param color color of slice
+ * @param value value of slice to be shown
+ * @param title description of slice to be shown
  */
-function _addPieSlice(start, part, color, title) {
+function _addPieSlice(start, size, color, value, title) {
   var alpha = 2 * Math.PI * start;
-  var beta = 2 * Math.PI * (start + part);
-
-  var g = createSVGNode(panelObj, "g", null);
-  createSVGNode(g, "title").textContent = title;
+  var beta = 2 * Math.PI * (start + size);
+  var options = document.api.options;
 
   // create pie slice path
   var p = "";
   p += "M" + _piePoint(alpha, RAD_OUT);
   p += "A" + RAD_OUT + "," + RAD_OUT;
-  if (part < 0.5) {
+  if (size < 0.5) {
     p += " 0 0 1 ";
   } else {
     p += " 0 1 1 ";
@@ -41,33 +59,52 @@ function _addPieSlice(start, part, color, title) {
   p += _piePoint(beta, RAD_OUT);
   p += "L" + " 0,0";
   p += "Z";
-  createSVGNode(g, "path", {
+  var pNode = createSVGNode(panelObj, "path", {
     class: "segment",
     style: "fill:" + color,
     d: p
   });
+
+  if ((options.showValue) || (options.showPercentage)) {
+    var tvals = [];
+
+    if (options.showValue) { tvals.push(Number(value).toLocaleString()); }
+    if (options.showPercentage) { tvals.push('(' + Math.round(size * 100) + '%)'); }
+
+    // calc lightness of fill color
+    var lum = window.getComputedStyle(pNode)
+      .fill  // returns e.g. rgb(0, 0, 139)
+      .match(/\d+/g)
+      .reduce(function (s, e) { return (s + Number(e)) }, 0) / 3;
+
+
+    // create text element on top of pie slice
+    var tp = _cPoint((alpha + beta) / 2, RAD_OUT * 0.7);
+    createSVGNode(valuesObj, "text", {
+      class: "text",
+      style: "fill:" + ((lum > 127) ? "black" : "white"),
+      x: tp.x, y: tp.y
+    }, tvals.join(' '));
+  } // if
 } // _addPieSlice()
 
 
-/** create a set of ranges for the pie chart panel in the background. The sum of all parts should add-up to 1.
- * @rangeList: List of pie chart segments. 
+/**
+ * Create all slices from the given pie data.
+ * @param rangeList: Array of pie chart segment definitions. 
  */
-function _setRange(rangeList) {
+function _draw(rangeList) {
   if (rangeList) {
-    // calculate sum:
-    var sum = 0;
-    for (var n = 0; n < rangeList.length; n++) {
-      sum += rangeList[n].part;
-    } // for
+    // calculate sum of all parts:
+    var sum = rangeList.reduce(function (x, e) { return (x + e.value); }, 0);
 
-    var x = 0;
-    for (var n = 0; n < rangeList.length; n++) {
-      var p = rangeList[n].part / sum;
-      _addPieSlice(x, p, rangeList[n].color, rangeList[n].title);
-      x += p;
-    } // for
+    rangeList.reduce(function (x, e) {
+      var p = e.value / sum;
+      _addPieSlice(x, p, e.color, e.value, e.title);
+      return (x + p);
+    }, 0);
   } // if
-} // _setRange()
+} // _draw()
 
 
 /**
@@ -83,7 +120,11 @@ function _clear() {
 // expose API functions.
 document.api = {
   clear: _clear,
-  setRange: _setRange
+  draw: _draw,
+  options: {
+    showPercentage: false,
+    showValue: false
+  }
 };
 
 // End.

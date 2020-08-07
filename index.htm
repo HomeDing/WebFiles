@@ -150,18 +150,19 @@
 
           document.getElementById('memTotal').textContent = d.fsTotalBytes;
           document.getElementById('memUsed').textContent = d.fsUsedBytes;
-          document.getElementById('memPart').textContent = Math.floor((Number(d.fsUsedBytes) * 100) / Number(d.fsTotalBytes));
+          document.getElementById('memPart').textContent = Math.round((Number(d.fsUsedBytes) * 100) / Number(d.fsTotalBytes));
 
-          memAPI.setRange([
+          memAPI.options.includePercentage = true;
+          memAPI.draw([
             {
               color: '#304878',
               title: "Used",
-              part: Number(d['fsUsedBytes'])
+              value: Number(d['fsUsedBytes'])
             },
             {
               color: '#aaaaaa',
               title: "Available",
-              part: Number(d.fsTotalBytes) - Number(d.fsUsedBytes)
+              value: Number(d.fsTotalBytes) - Number(d.fsUsedBytes)
             }
           ]);
         });
@@ -190,12 +191,6 @@
 
       selObj.addEventListener('change', elemChange);
     });
-
-    // if (window !== window.top) {
-    //   // disable header and navbar in portal mode.
-    //   document.querySelector('.u-header').style.display = 'none';
-    //   document.querySelector('.u-navbar').style.display = 'none';
-    // } // if
   </script>
 </body>
 
