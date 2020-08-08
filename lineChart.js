@@ -1,5 +1,12 @@
-// lineChart.js
+// Line-Chart micro charts implementation.
+//
+// Copyright (c) by Matthias Hertel, http://www.mathertel.de
+// This work is licensed under a BSD 3-Clause license.
+//
 // * 25.04.2020 improved vertical scaling 
+// * 07.08.2020 show values optional. 
+
+// SVG file must include microsvg.js
 /// <reference path="microsvg.js" />
 
 var panelObj = document.getElementById('panel');
@@ -164,7 +171,6 @@ LineChartClass = function (values) {
         });
 
         this.svgObj = createSVGNode(panelObj, 'polyline', {
-          // id: 'line-' + lineID,
           class: 'linechart',
           points: points.join(' ')
         });
@@ -237,10 +243,8 @@ HLineClass = function (y) {
       var y = (this.data - box.minY) * scaleY;
 
       this.svgObj = createSVGNode(panelObj, 'line', {
-        x1: 0,
-        y1: y,
-        x2: 128,
-        y2: y,
+        x1: 0, y1: y,
+        x2: 128, y2: y,
         class: 'hline'
       });
     } // fDraw()
@@ -274,9 +278,7 @@ VAxisClass = function () {
     fDraw: function (box) {
       // clear existing y-Axis
       var YAxisGroup = document.getElementById('v-labels');
-      Array.from(YAxisGroup.childNodes).forEach(function (c) {
-        c.remove();
-      });
+      _removeChilds(YAxisGroup);
 
       var high = box.maxY;
       var low = box.minY;
@@ -286,11 +288,9 @@ VAxisClass = function () {
       var scaleY = REGION_HEIGHT / (high - low);
 
       for (var n = low; n <= high; n += step) {
-        var txtObj = createSVGNode(YAxisGroup, 'text', {
-          x: 11,
-          y: -1 * (n - low) * scaleY
-        });
-        txtObj.textContent = String(n.toFixed(prec));
+        createSVGNode(YAxisGroup, 'text', {
+          x: 11, y: -1 * (n - low) * scaleY
+        }, String(n.toFixed(prec)));
       }
     } // fDraw()
   }
@@ -317,9 +317,7 @@ HAxisClass = function () {
     fDraw: function (box) {
       // clear existing x-Axis labels
       var XAxisGroup = document.getElementById('h-labels');
-      Array.from(XAxisGroup.childNodes).forEach(function (c) {
-        c.remove();
-      });
+      _removeChilds(XAxisGroup);
 
       var high = box.maxX;
       var low = box.minX;
@@ -329,11 +327,10 @@ HAxisClass = function () {
 
         var n = low + Math.floor((high - low) / 2);
         // for (n = low; n <= high; n += g.step) {
-        var txtObj = createSVGNode(XAxisGroup, 'text', {
+        createSVGNode(XAxisGroup, 'text', {
           x: REGION_WIDTH / 2,
           y: 0
-        });
-        txtObj.textContent = fmtTime(n);
+        }, fmtTime(n));
       } // if
     } // fDraw()
   }

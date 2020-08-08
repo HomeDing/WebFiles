@@ -13,34 +13,73 @@
 
 <body>
   <h2>Pie Chart</h2>
-  <object id="piechart" data="pieChart.svg" type="image/svg+xml" style="float:left;width:300px;height:300px;"></object>
+  <p> <button id="doClear">clear</button> <button id="doDraw1">draw1</button> <button id="doDraw2">draw2</button> </p>
+  <object id="pieChart" data="pieChart.svg" type="image/svg+xml" style="float:left;width:300px;height:300px;"></object>
 
   <script>
-    var chartObj = document.getElementById('piechart');
+    var chartObj = document.getElementById('pieChart');
     var chartAPI;
 
-    window.addEventListener('load', function () {
-      chartAPI = chartObj.getSVGDocument().api;
-      chartAPI.options.showValue = false;
-      chartAPI.options.showPercentage = true;
-      
+    function pieClear() { chartAPI.clear(); }
+
+    function pieDraw1() {
+      chartAPI.setOptions({
+        showValue: false,
+        showPercentage: false
+      });
+
       chartAPI.draw([
         {
           color: 'darkblue',
           title: "Used",
           value: 800000
-        },
-        {
+        }, {
           color: 'yellow',
           title: "reserved",
           value: 200000
-        },
-        {
+        }, {
           color: 'silver',
           title: "Available",
           value: 1200000
         }
       ]);
+    }
+
+    function pieDraw2() {
+      chartAPI.setOptions({
+        showValue: true,
+        showPercentage: true
+      });
+
+      chartAPI.draw([
+        {
+          color: 'blue',
+          title: "Used",
+          value: 60
+        }, {
+          color: 'green',
+          title: "reserved",
+          value: 30
+        }, {
+          color: 'yellow',
+          title: "Available",
+          value: 12
+        }, {
+          color: 'red',
+          title: "alert",
+          value: 4
+        }
+      ]);
+    }
+
+    window.addEventListener('load', function () {
+      chartAPI = chartObj.getSVGDocument().api;
+      pieDraw1();
+
+      document.getElementById('doClear').addEventListener('click', pieClear);
+      document.getElementById('doDraw1').addEventListener('click', pieDraw1);
+      document.getElementById('doDraw2').addEventListener('click', pieDraw2);
+
     });
   </script>
 </body>

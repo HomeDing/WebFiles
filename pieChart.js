@@ -1,36 +1,28 @@
-// Pie-Chart Micro charts implementation.
-// must include microsvg.js
+// Pie-Chart micro charts implementation.
 //
 // Copyright (c) by Matthias Hertel, http://www.mathertel.de
 // This work is licensed under a BSD 3-Clause license.
 //
-// * 03.08.2020 include <title> for mouse over effect. 
+// * 07.08.2020 show values optional. 
+
+// SVG file must include microsvg.js
+/// <reference path="microsvg.js" />
 
 var panelObj = document.getElementById("panel");
 var valuesObj = document.getElementById("values");
-var RAD_OUT = 20;
-
 
 /**
- * Calculate a point on the circle
- * @param {number} alpha degree of angle
- * @param {number} r radius of circlt
- * @returns object with x and y coordinates.
+ * Radius of pie chart
  */
-function _cPoint(alpha, r) {
-  return ({
-    x: (Math.sin(alpha) * r),
-    y: (-Math.cos(alpha) * r)
-  });
-} // _piePoint()
+var RAD_OUT = 20;
 
 
 /**
  * Calculate an outer point on the circle, usable for svg paths
  */
 function _piePoint(alpha, r) {
-  var s = " " + (Math.sin(alpha) * r) + "," + (Math.cos(alpha) * -r);
-  return (s);
+  var p = _cPoint(alpha, r);
+  return (p.x + "," + p.y);
 } // _piePoint()
 
 
@@ -57,8 +49,7 @@ function _addPieSlice(start, size, color, value, title) {
     p += " 0 1 1 ";
   }
   p += _piePoint(beta, RAD_OUT);
-  p += "L" + " 0,0";
-  p += "Z";
+  p += "L0,0Z";
   var pNode = createSVGNode(panelObj, "path", {
     class: "segment",
     style: "fill:" + color,
@@ -89,16 +80,18 @@ function _addPieSlice(start, size, color, value, title) {
 } // _addPieSlice()
 
 
+
 /**
  * Create all slices from the given pie data.
- * @param rangeList: Array of pie chart segment definitions. 
+ * @param data: Array of pie chart segment definitions. 
  */
-function _draw(rangeList) {
-  if (rangeList) {
+function _draw(data) {
+  _clear();
+  if (data) {
     // calculate sum of all parts:
-    var sum = rangeList.reduce(function (x, e) { return (x + e.value); }, 0);
+    var sum = data.reduce(function (x, e) { return (x + e.value); }, 0);
 
-    rangeList.reduce(function (x, e) {
+    data.reduce(function (x, e) {
       var p = e.value / sum;
       _addPieSlice(x, p, e.color, e.value, e.title);
       return (x + p);
@@ -112,14 +105,15 @@ function _draw(rangeList) {
  * Remove all elements inside the panelObj.
  */
 function _clear() {
-  while (panelObj.firstChild)
-    panelObj.removeChild(panelObj.firstChild);
+  _removeChilds(panelObj);
+  _removeChilds(valuesObj);
 } // _clear()
 
 
 // expose API functions.
 document.api = {
   clear: _clear,
+  setOptions: _setOptions,
   draw: _draw,
   options: {
     showPercentage: false,
