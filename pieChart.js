@@ -56,9 +56,10 @@ function _addPieSlice(start, size, color, value, title) {
     d: p
   });
 
-  if ((options.showValue) || (options.showPercentage)) {
+  if ((options.showTitle) || (options.showValue) || (options.showPercentage)) {
     var tvals = [];
 
+    if (options.showTitle) { tvals.push(String(title)); }
     if (options.showValue) { tvals.push(Number(value).toLocaleString()); }
     if (options.showPercentage) { tvals.push('(' + Math.round(size * 100) + '%)'); }
 
@@ -87,18 +88,28 @@ function _addPieSlice(start, size, color, value, title) {
  */
 function _draw(data) {
   _clear();
+  var cl = document.api._colors;
+  var cll = document.api._colors.length
+
   if (data) {
     // calculate sum of all parts:
     var sum = data.reduce(function (x, e) { return (x + e.value); }, 0);
 
-    data.reduce(function (x, e) {
-      var p = e.value / sum;
-      _addPieSlice(x, p, e.color, e.value, e.title);
-      return (x + p);
+    data.reduce(function (start, el, indx) {
+      var p = el.value / sum;
+      _addPieSlice(start, p, el.color || cl[indx % cll] || "gray", el.value, el.title);
+      return (start + p);
     }, 0);
   } // if
 } // _draw()
 
+
+function _setColors(cols) {
+  if (typeof cols == "string")
+    document.api._colors = cols.split(',');
+  else if (Array.isArray(cols))
+    document.api._colors = [...cols];
+}
 
 /**
  * Clear the pie chart.
@@ -114,11 +125,14 @@ function _clear() {
 document.api = {
   clear: _clear,
   setOptions: _setOptions,
+  setColors: _setColors,
   draw: _draw,
   options: {
     showPercentage: false,
+    showTitle: false,
     showValue: false
-  }
+  },
+  _colors: []
 };
 
 // End.
