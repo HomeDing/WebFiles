@@ -14,13 +14,13 @@ set devicename=%1
 rem upload all files from dist
 FOR %%F IN ("dist/*.*") DO (
   echo Uploading file %%F...
-  curl --form "fileupload=@%%F;filename=/%%~nxF" http://%devicename%/ %curlopts%
+  curl --form "fileupload=dist/@%%F;filename=/%%~nxF" http://%devicename%/ %curlopts%
 )
 
 rem upload all element icons
 FOR %%F IN ("dist/i/*.svg") DO (
   echo Uploading file %%F...
-  curl --form "fileupload=@%%F;filename=/i/%%~nxF" http://%devicename%/ %curlopts%
+  curl --form "fileupload=dist/i/@%%F;filename=/i/%%~nxF" http://%devicename%/ %curlopts%
 )
 
 :end

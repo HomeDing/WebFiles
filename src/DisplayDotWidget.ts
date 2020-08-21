@@ -59,9 +59,6 @@ class DisplayDotWidgetClass extends GenericWidgetClass {
       } else if (key === 'y') {
         this._y = Number(value);
         this.updateDisp(false);
-
-      } else {
-        console.log('key', key, value);
       }
     }
   } // newValue

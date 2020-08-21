@@ -234,9 +234,9 @@ var obs = new MutationObserver(function (mutationsList, _observer) {
 });
 obs.observe(document, { childList: true, subtree: true });
 document.addEventListener('DOMContentLoaded', function () {
-    window.addEventListener('scroll', function () {
-        document.querySelectorAll('[data-src]:not([src])').forEach(function (e) { return micro.loadDataImage(e); });
-    });
+    function f() { document.querySelectorAll('[data-src]:not([src])').forEach(function (e) { return micro.loadDataImage(e); }); }
+    window.addEventListener('scroll', f);
+    window.setTimeout(f, 40);
 });
 var MicroControlClass = (function () {
     function MicroControlClass() {
@@ -509,9 +509,6 @@ var DisplayDotWidgetClass = (function (_super) {
                 this._y = Number(value);
                 this.updateDisp(false);
             }
-            else {
-                console.log('key', key, value);
-            }
         }
     };
     DisplayDotWidgetClass = __decorate([
@@ -691,13 +688,15 @@ var LogWidgetClass = (function (_super) {
         })
             .then(function (txt) {
             allData = txt + '\n' + allData;
+        })
+            .catch(function () {
         });
         Promise.allSettled([p1, p2]).then(function () {
             var re = /^\d{4,},\d+/;
             var pmArray = allData.split('\n').filter(function (e) {
                 return e.match(re);
             });
-            this.api.updateLineChartData(this.lChart, pmArray.map(function (v) {
+            this.api.draw(this.lChart, pmArray.map(function (v) {
                 var p = v.split(',');
                 return { x: p[0], y: p[1] };
             }));
@@ -713,7 +712,7 @@ var LogWidgetClass = (function (_super) {
             catch (err) { }
             if ((svgObj) && (svgObj.api)) {
                 this.api = this.lineSVGObj.getSVGDocument().api;
-                this.lChart = this.api.addLineChart();
+                this.lChart = this.api.addChart('line', { linetype: 'line' });
                 this.api.addVAxis();
                 this.api.addHAxis();
                 this.loadData();
@@ -887,17 +886,20 @@ var SliderWidgetClass = (function (_super) {
     __extends(SliderWidgetClass, _super);
     function SliderWidgetClass() {
         var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this._slider = null;
         _this._handle = null;
         _this._lastValue = -1;
         _this._maxright = 100;
         _this._x = 0;
         _this._xOffset = 0;
         _this.unit = 1;
+        _this._type = 'int';
         _this.minvalue = 0;
         _this.maxvalue = 255;
         return _this;
     }
     SliderWidgetClass.prototype.connectedCallback = function () {
+        this._slider = this.querySelector('.u-slider');
         this._handle = this.querySelector('.handle');
         _super.prototype.connectedCallback.call(this);
         if (this._handle) {
@@ -931,6 +933,14 @@ var SliderWidgetClass = (function (_super) {
         }
         else if (key === 'step') {
             this.unit = Number(value);
+        }
+        else if (key === 'type') {
+            this._type = value;
+            if (this._slider) {
+                if (value === 'string') {
+                    this._slider.style.display = 'none';
+                }
+            }
         }
     };
     SliderWidgetClass.prototype.on_click = function (e) {

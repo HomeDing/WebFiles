@@ -9,12 +9,14 @@
 
 @MicroControl('slider')
 class SliderWidgetClass extends GenericWidgetClass {
+  _slider: HTMLElement | null = null; /// <summary>Reference to the slider obj.</summary>
   _handle: HTMLElement | null = null; /// <summary>Reference to the handle obj.</summary>
   _lastValue = -1; /// <summary>last published value to avoid doublicate events.</summary>
   _maxright = 100; // = p.offsetWidth - this._handle.offsetWidth;
   _x = 0; // x - offset of mouse and handle while moving.
   _xOffset = 0; // x - offset of mouse and area.
   unit = 1;
+  _type = 'int';
 
   minvalue = 0; /// <summary>The value that is reached on the leftmost position of the knob.</summary>
   maxvalue = 255; /// <summary>The value that is reached on the rightmost position of the knob.</summary>
@@ -23,6 +25,7 @@ class SliderWidgetClass extends GenericWidgetClass {
   _upFunc: any;
 
   connectedCallback() {
+    this._slider = this.querySelector('.u-slider');
     this._handle = this.querySelector('.handle');
     super.connectedCallback();
     // find the moveable knob
@@ -59,26 +62,33 @@ class SliderWidgetClass extends GenericWidgetClass {
       this.maxvalue = Number(value);
     } else if (key === 'step') {
       this.unit = Number(value);
+    } else if (key === 'type') {
+      this._type = value;
+      if (this._slider) {
+        if (value === 'string') {
+          this._slider.style.display = 'none';
+        }
+      }
     } // if
   } // newData()
 
 
   on_click(e: MouseEvent) {
-      let src: HTMLElement | null = e.srcElement as HTMLElement;
-      while (src != null && src.classList.length === 0) { src = src.parentElement; }
-      if (src != null) {
+    let src: HTMLElement | null = e.srcElement as HTMLElement;
+    while (src != null && src.classList.length === 0) { src = src.parentElement; }
+    if (src != null) {
 
-        if (src.classList.contains('up')) {
-          // alert('plus');
-          this.dispatchAction('up', '1');
-        } else if (src.classList.contains('down')) {
-          // alert('plus');
-          this.dispatchAction('down', '1');
-        } else {
-          super.on_click(e);
-        }
+      if (src.classList.contains('up')) {
+        // alert('plus');
+        this.dispatchAction('up', '1');
+      } else if (src.classList.contains('down')) {
+        // alert('plus');
+        this.dispatchAction('down', '1');
+      } else {
+        super.on_click(e);
       }
-      // if (src == o) this.dispatchAction('toggle', '1');
+    }
+    // if (src == o) this.dispatchAction('toggle', '1');
   }
 
   on_mousedown(evt: MouseEvent) {

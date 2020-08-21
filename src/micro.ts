@@ -247,9 +247,9 @@ let obs = new MutationObserver(function (mutationsList: MutationRecord[], _obser
 obs.observe(document, { childList: true, subtree: true });
 
 document.addEventListener('DOMContentLoaded', function () {
-  window.addEventListener('scroll', function () {
-    document.querySelectorAll('[data-src]:not([src])').forEach(e => micro.loadDataImage(e as HTMLElement));
-  });
+  function f() { document.querySelectorAll('[data-src]:not([src])').forEach(e => micro.loadDataImage(e as HTMLElement)); }
+  window.addEventListener('scroll', f);
+  window.setTimeout(f, 40);
 });
 
 // End.

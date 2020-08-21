@@ -9,7 +9,7 @@
 
 // workaround for implemented but unknown allSetteled
 declare interface PromiseConstructor {
-  allSettled(promises: Array<Promise<any>>): Promise<Array<{status: 'fulfilled' | 'rejected', value?: any, reason?: any}>>;
+  allSettled(promises: Array<Promise<any>>): Promise<Array<{ status: 'fulfilled' | 'rejected', value?: any, reason?: any }>>;
 }
 
 @MicroControl('log')
@@ -43,6 +43,8 @@ class LogWidgetClass extends GenericWidgetClass {
       })
       .then(function (txt) {
         allData = txt + '\n' + allData;
+      })
+      .catch(function() {
       });
     Promise.allSettled([p1, p2]).then(function (this: LogWidgetClass) {
       const re = /^\d{4,},\d+/;
@@ -50,7 +52,7 @@ class LogWidgetClass extends GenericWidgetClass {
         return e.match(re);
       });
 
-      this.api.updateLineChartData(
+      this.api.draw(
         this.lChart,
         pmArray.map(function (v) {
           const p = v.split(',');
@@ -74,7 +76,7 @@ class LogWidgetClass extends GenericWidgetClass {
       if ((svgObj) && (svgObj.api)) {
         // now setup
         this.api = (this.lineSVGObj.getSVGDocument() as any).api;
-        this.lChart = this.api.addLineChart();
+        this.lChart = this.api.addChart('line', { linetype: 'line' });
         this.api.addVAxis();
         this.api.addHAxis();
         this.loadData();

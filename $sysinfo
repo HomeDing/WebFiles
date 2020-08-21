@@ -1,10 +1,11 @@
 {
-  "devicename": "nodeding",
-  "build": "Dec 30 2018",
-  "free heap": "30024",
-  "flash-size": "4194304",
-  "flash-real-size": "4194304",
-  "fs-totalBytes": "957314",
-  "fs-usedBytes": "204314",
-  "ssid": "devnet"
+  "devicename": "dispding",
+  "build": "Aug 19 2020",
+  "freeHeap": "24776",
+  "flashSize": "4194304",
+  "fsTotalBytes": "957314",
+  "fsUsedBytes": "318519",
+  "safemode": "false",
+  "upTime": "7117",
+  "ssid": "KHMH"
 }
