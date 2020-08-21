@@ -15,7 +15,7 @@ const uglify = require("uglify-js");
 const distFolder = "dist-mini";
 
 // ===== Command line support =====
-console.log('HomeDing: Packing Dist Folder');
+console.log('HomeDing: Packing Dist-mini Folder');
 const options = yargs
   .usage('Usage: $0')
   .option('v', { alias: 'verbose', describe: 'Verbose logging', type: 'boolean', demandOption: false, default: false })
@@ -118,6 +118,12 @@ shell.ShellString(result.css).to(`${distFolder}/iotstyle.css`);
     });
     shell.ShellString(res.code).to(`${distFolder}/${name}`);
   });
+
+
+shell.cat('oldlist.txt').to(distFolder + '/list.txt');
+shell.ls('-R', distFolder).grep(/^.*\..*$/).toEnd(distFolder + '/list.txt');
+logInfo(`list.txt file written.`);
+
 
 logInfo(`done.`);
 
