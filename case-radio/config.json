@@ -19,7 +19,7 @@
   },
   "value": {
     "volume": {
-      "description": "current volume value",
+      "description": "current volume",
       "min": 0,
       "max": 15,
       "value": 3,
@@ -75,7 +75,18 @@
   },
   "button": {
     "HR3": {
-      "onclick": "value/frequency?value=8930"
+      "onclick": "value/frequency?value=8930",
+      "ondoubleclick": "device/0?log=dbl",
+      "onpress": "device/0?log=press",
+      "description": "HR3"
+    }
+  },
+  "webbutton": {
+    "hrinfo": {
+      "onclick": "value/frequency?value=10110",
+      "ondoubleclick": "device/0?log=dbl",
+      "onpress": "device/0?log=press",
+      "description": "hrinfo"
     }
   },
   "displaytext": {
