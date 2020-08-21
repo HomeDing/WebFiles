@@ -336,10 +336,6 @@
 
     window.addEventListener('load', init);
 
-    window.addEventListener('error', function (err) {
-      alert(JSON.stringify(err, null, 1));
-    })
-
     if (window !== window.top) {
       // disable header and navbar in portal mode.
       document.querySelector('.u-header').style.display = 'none';

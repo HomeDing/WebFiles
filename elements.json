@@ -146,6 +146,10 @@
     "actions": ["onTime"]
   },
 
+  "diag": {
+    "sys": "true"
+  },
+
   "dstime": {
     "sys": "true",
     "properties": ["loglevel", "description", "address", "time", "readtime"]
@@ -162,6 +166,7 @@
   },
 
   "time": {
+    "sys": "true",
     "properties": ["loglevel", "description"],
     "actions": ["onminute", "ontimestamp", "ontime", "ondate"]
   },
