@@ -31,13 +31,16 @@ $u-btn-radius: 0.2em;
 $u-input-border: 0.1rem solid #304878;
 $u-output-border: 0.1rem solid transparent;
 
+// ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+$font-sans-serif: ui-sans-serif, sans-serif;
+
 // ===== main =====
 
 html,
 body {
   padding: 0;
   margin: 0;
-  font-family: Arial;
+  font-family: $font-sans-serif;
   font-size: 1em;
   color: $u-text;
 }
