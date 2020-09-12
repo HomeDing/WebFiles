@@ -29,7 +29,7 @@ class LogWidgetClass extends GenericWidgetClass {
     const fName = (this.filename as string);
     let allData = '';
 
-    const p1 = fetch(fName)
+    const p1 = fetch(fName, { cache: 'no-store' })
       .then(function (result) {
         return result.text();
       })
@@ -37,14 +37,14 @@ class LogWidgetClass extends GenericWidgetClass {
         allData = allData + '\n' + txt;
       });
 
-    const p2 = fetch(fName.replace('.txt', '_old.txt'))
+    const p2 = fetch(fName.replace('.txt', '_old.txt'), { cache: 'no-store' })
       .then(function (result) {
         return result.text();
       })
       .then(function (txt) {
         allData = txt + '\n' + allData;
       })
-      .catch(function() {
+      .catch(function () {
       });
     Promise.allSettled([p1, p2]).then(function (this: LogWidgetClass) {
       const re = /^\d{4,},\d+/;

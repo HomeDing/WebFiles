@@ -675,14 +675,14 @@ var LogWidgetClass = (function (_super) {
     LogWidgetClass.prototype.loadData = function () {
         var fName = this.filename;
         var allData = '';
-        var p1 = fetch(fName)
+        var p1 = fetch(fName, { cache: 'no-store' })
             .then(function (result) {
             return result.text();
         })
             .then(function (txt) {
             allData = allData + '\n' + txt;
         });
-        var p2 = fetch(fName.replace('.txt', '_old.txt'))
+        var p2 = fetch(fName.replace('.txt', '_old.txt'), { cache: 'no-store' })
             .then(function (result) {
             return result.text();
         })
