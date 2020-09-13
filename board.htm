@@ -220,8 +220,11 @@
     var panelObj = document.getElementById('panel');
     var addObj = document.getElementById('addButton');
     var sysObj = document.getElementById('sysButton');
+    var refreshState = ''; // nothing in progress
+    var updateTime;
     var updateTimer;
     var elementDef;
+
     var params = getHashParams({
       sys: false
     });
@@ -263,29 +266,50 @@
       document.querySelector("meta[name=application-name]").content = value;
     });
 
-    function updateAsap(ev) {
-      if (updateTimer)
-        window.clearTimeout(updateTimer);
-      updateTimer = null;
-      updateTimer = window.setTimeout(updateState, 20);
-    }
 
-    function updateState(ev) {
-      if (updateTimer)
-        window.clearTimeout(updateTimer);
-      updateTimer = null;
+    // '' no request on the way
+    // 'f' fetch started
+    // 'w' timer started
 
-      fetch('/$board')
-        .then(function (result) {
-          return result.json();
-        })
-        .then(function (json) {
-          hub.publishObj(json);
-        })
-        .then(function (json) {
-          updateTimer = window.setTimeout(updateState, 4000);
-        });
-    } // updateState()
+    /** 
+     * @param {number} timeout time to next fetch in msecs.
+     */
+    function updateAsap(timeout) {
+      if (!timeout) timeout = 20;
+      var now = new Date();
+      var next = now + timeout;
+
+      if (refreshState == 'f') {
+        // request already running, no action required
+
+      } else if (refreshState == 'w') {
+        // cancel longer running request
+        if (next < updateTime) {
+          window.clearTimeout(updateTimer);
+          refreshState = '';
+        }
+      }
+
+      if (refreshState == '') {
+        refreshState = 'f';
+        updateTime = next;
+        updateTimer = window.setTimeout(
+          function () {
+            fetch('/$board')
+              .then(function (result) {
+                return result.json();
+              })
+              .then(function (json) {
+                hub.publishObj(json);
+              })
+              .finally(function (json) {
+                refreshState = '';
+                updateAsap(4000);
+              });
+          }, timeout);
+      }
+    } // updateAsap()
+
 
     // initiate a fetch with JSON response expected.
     async function fetchJSON(url, options) {
@@ -330,7 +354,7 @@
           hub.write('config', JSON.stringify(configData));
           hub.publishObj(configData);
         }
-        updateState();
+        updateAsap();
       });
     } // init()
 
