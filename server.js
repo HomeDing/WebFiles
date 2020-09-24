@@ -90,6 +90,20 @@ setInterval(startDiscovery, 30 * 1000);
 
 //#endregion
 
+// Utilities
+/** ms : number */
+function sleep(ms) {
+  return new Promise(function (resolve) { setTimeout(resolve, ms) });
+} // sleep
+
+function hardsleep(millis) {
+  var date = Date.now();
+  var curDate = null;
+  do {
+      curDate = Date.now();
+  } while (curDate-date < millis);
+}
+
 //#region ===== Setup simulated case ===== 
 
 // to simulate a specific case the files `config.json`, `env.json` and `$board` 
@@ -421,6 +435,7 @@ app.get('/\\$board/:type/:id', noCache, function (req, res, next) {
 
 
 app.get(/^\/\$board$/, noCache, function (req, res, next) {
+  // hardsleep(800);
   if (!boardStatus) {
     boardStatus = JSON.parse(fs.readFileSync(boardFileName, 'utf8'));
   }
