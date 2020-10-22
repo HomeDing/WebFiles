@@ -79,22 +79,24 @@ var MicroRegistry = (function () {
             Object.getOwnPropertyNames(props).forEach(function (p) { return val = val.replace(new RegExp('\\$\\{' + p + '\\}', 'g'), props[p]); });
             return val;
         }
-        if (obj.nodeType === Node.TEXT_NODE) {
-            if (obj.textContent) {
-                obj.textContent = fill(obj.textContent);
-            }
-        }
-        else if (obj.nodeType === Node.ELEMENT_NODE) {
-            var attr = obj.attributes;
-            for (var i = 0; i < attr.length; i++) {
-                var v = attr[i].value;
-                if (v.indexOf('${') >= 0) {
-                    obj[attr[i].name] = attr[i].value = fill(v);
+        if (props) {
+            if (obj.nodeType === Node.TEXT_NODE) {
+                if (obj.textContent) {
+                    obj.textContent = fill(obj.textContent);
                 }
             }
-            obj.childNodes.forEach(function (c) {
-                _this._setPlaceholders(c, props);
-            });
+            else if (obj.nodeType === Node.ELEMENT_NODE) {
+                var attr = obj.attributes;
+                for (var i = 0; i < attr.length; i++) {
+                    var v = attr[i].value;
+                    if (v.indexOf('${') >= 0) {
+                        obj[attr[i].name] = attr[i].value = fill(v);
+                    }
+                }
+                obj.childNodes.forEach(function (c) {
+                    _this._setPlaceholders(c, props);
+                });
+            }
         }
     };
     MicroRegistry.prototype.isVisible = function (el) {

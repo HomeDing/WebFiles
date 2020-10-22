@@ -69,23 +69,25 @@ class MicroRegistry {
       return val;
     } // fill
 
-    if (obj.nodeType === Node.TEXT_NODE) {
-      if (obj.textContent) {
-        obj.textContent = fill(obj.textContent);
-      }
-    } else if (obj.nodeType === Node.ELEMENT_NODE) {
-      // HTMLElement
-      const attr = (obj as HTMLElement).attributes;
-      for (let i = 0; i < attr.length; i++) {
-        const v: string = attr[i].value;
-        if (v.indexOf('${') >= 0) {
-          (obj as any)[attr[i].name] = attr[i].value = fill(v);
-        } // if
-      } // for
+    if (props) {
+      if (obj.nodeType === Node.TEXT_NODE) {
+        if (obj.textContent) {
+          obj.textContent = fill(obj.textContent);
+        }
+      } else if (obj.nodeType === Node.ELEMENT_NODE) {
+        // HTMLElement
+        const attr = (obj as HTMLElement).attributes;
+        for (let i = 0; i < attr.length; i++) {
+          const v: string = attr[i].value;
+          if (v.indexOf('${') >= 0) {
+            (obj as any)[attr[i].name] = attr[i].value = fill(v);
+          } // if
+        } // for
 
-      obj.childNodes.forEach(c => {
-        this._setPlaceholders(c, props);
-      });
+        obj.childNodes.forEach(c => {
+          this._setPlaceholders(c, props);
+        });
+      }
     }
   } // _setPlaceholders
 

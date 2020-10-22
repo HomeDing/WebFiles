@@ -11,8 +11,8 @@
   },
 
   "analog": {
-    "properties": ["loglevel", "description", "readtime", "hysteresis", "pin", "reference"],
-    "actions": ["onvalue", "onreference"]
+    "properties": ["loglevel", "description", "readtimems", "hysteresis", "pin", "reference"],
+    "actions": ["onvalue", "onreference", "onhigh", "onlow"]
   },
 
   "and": {
@@ -68,7 +68,7 @@
   },
 
   "rfsend": {
-    "properties": ["loglevel", "description", "pin", "codeon", "codeoff"],
+    "properties": ["loglevel", "description", "pin", "codeon", "codeoff", "value"],
     "events": ["value"]
   },
 
@@ -86,6 +86,12 @@
   "value": {
     "properties": ["loglevel", "description", "min", "max", "value"],
     "events": ["value", "up", "down"],
+    "actions": ["onValue"]
+  },
+
+  "map": {
+    "properties": ["loglevel", "description", "value", "type", "maps/max", "maps/value", "maps/onmap"],
+    "events": ["value"],
     "actions": ["onValue"]
   },
 
