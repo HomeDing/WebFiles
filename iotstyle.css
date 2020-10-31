@@ -12,9 +12,9 @@ p > img:first-child, pre > img:first-child, h1 > img:first-child, h2 > img:first
 
 a, a:visited { text-decoration: none; cursor: pointer; color: #304878; }
 
-a > a, a:visited > a { text-decoration: underline; }
-
 a :hover, a :focus, a:visited :hover, a:visited :focus { color: #4466ee; }
+
+p > a p > a:visited { text-decoration: underline; }
 
 h1, h2, h3, h4 { font-family: Arial; color: #304878; }
 

@@ -77,15 +77,19 @@ a:visited {
   text-decoration: none;
   cursor: pointer;
   color: $u-primary;
-  > a {
-    text-decoration: underline;
-  }
 
   & :hover,
   & :focus {
     color: $u-focus;
   }
 }
+
+p> a
+p>a:visited {
+  text-decoration: underline;
+}
+
+
 
 h1,
 h2,
