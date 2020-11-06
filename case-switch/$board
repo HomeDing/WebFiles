@@ -3,4 +3,10 @@
 "digitalin/d3": {"active":"true","value":"0"},
 "switch/relais": {"active":"true","value":"1"},
 "switch/dummy": {"active":"true","value":"1"},
-"digitalout/d6": {"active":"true","value":"1"}}
+"digitalout/d6": {"active":"true","value":"1"},
+"bl0937/0": {"active":"true","cycletime":"1000000","mode":"voltage",
+  "power":"120","powerfactor":"1346829.38",
+  "voltage":"230","voltagefactor":"1346829.38",
+  "current":"435","voltagefactor":"1346829.38"
+}
+}

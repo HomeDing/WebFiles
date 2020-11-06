@@ -208,6 +208,34 @@
           <button u-action="mode" value="pulse">pulse</button>
         </div>
       </div>
+
+      <div class="col card" u-control="bl0937" id="${id}" u-is="generic" microID="${id}">
+        <div class="block header">
+          <img src="/i/default.svg" class="icon" />
+          <h3>${id}</h3>
+          <h4 u-text="description"></h4>
+          <span class="activeState" u-active="active"></span>
+          <span class="setconfig"></span>
+        </div>
+        <div class="block">
+          <table style="width:100%;font-size:2rem">
+            <tr>
+              <td>
+                <span u-text="power"></span> W
+              </td>
+              <td>
+                <span u-text="current"></span> mA
+              </td>
+              <td style="display:none">
+                <span u-text="voltage"></span> V
+              </td>
+            </tr>
+          </table>
+          mode: <button u-action="mode" value="current">current</button>
+          <button u-action="mode" value="voltage">voltage</button>
+        </div>
+      </div>
+
     </div>
   </div>
 

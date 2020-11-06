@@ -75,5 +75,18 @@
       "description": "timed and enabled",
       "onValue": "radio/r?volume=$v"
     }
+  },
+  "bl0937": {
+    "0": {
+      "loglevel": 2,
+      "selpin": "D6",
+      "cfpin": "D1",
+      "cf1pin": "D2",
+      "cycletime": "1000",
+      "mode": "voltage",
+      "powerfactor": "1346829.38",
+      "currentfactor": "1346829.38",
+      "voltagefactor": "1346829.38"
+    }
   }
 }
