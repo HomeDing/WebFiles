@@ -366,6 +366,48 @@ var GenericWidgetClass = (function (_super) {
     ], GenericWidgetClass);
     return GenericWidgetClass;
 }(MicroControlClass));
+var BL0937WidgetClass = (function (_super) {
+    __extends(BL0937WidgetClass, _super);
+    function BL0937WidgetClass() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.mode = '';
+        return _this;
+    }
+    BL0937WidgetClass.prototype.connectedCallback = function () {
+        _super.prototype.connectedCallback.call(this);
+        this.data = { id: this.microid };
+        this.subId = hub.subscribe(this.microid + '?mode', this.switchMode.bind(this));
+        hub.replay(this.subId);
+    };
+    BL0937WidgetClass.prototype.setMode = function (newMode) {
+        if (newMode && (newMode !== this.mode)) {
+            var td = void 0;
+            td = this.querySelector("[u-text=\"" + this.mode + "\"]");
+            if (td === null || td === void 0 ? void 0 : td.parentElement) {
+                td.parentElement.style.display = 'none';
+            }
+            td = this.querySelector("span[u-text=\"" + newMode + "\"]");
+            if (td === null || td === void 0 ? void 0 : td.parentElement) {
+                td.parentElement.style.display = '';
+            }
+            this.mode = newMode;
+        }
+    };
+    BL0937WidgetClass.prototype.switchMode = function (_path, _key, value) {
+        this.setMode(value);
+    };
+    BL0937WidgetClass.prototype.on_click = function (e) {
+        var src = e.target;
+        if (src.getAttribute('u-action') === 'mode') {
+            this.setMode(src['value']);
+        }
+        _super.prototype.on_click.call(this, e);
+    };
+    BL0937WidgetClass = __decorate([
+        MicroControl('bl0937')
+    ], BL0937WidgetClass);
+    return BL0937WidgetClass;
+}(GenericWidgetClass));
 var ButtonWidgetClass = (function (_super) {
     __extends(ButtonWidgetClass, _super);
     function ButtonWidgetClass() {

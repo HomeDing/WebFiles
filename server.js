@@ -100,8 +100,8 @@ function hardsleep(millis) {
   var date = Date.now();
   var curDate = null;
   do {
-      curDate = Date.now();
-  } while (curDate-date < millis);
+    curDate = Date.now();
+  } while (curDate - date < millis);
 }
 
 //#region ===== Setup simulated case ===== 
@@ -301,6 +301,45 @@ addTypeMock('device',
   function (state, action, cnf) {
     if (action.log !== null) {
       console.log('>>', action.log);
+    }
+    return (state);
+  });
+
+
+// report current and voltage from bl0937 with some random values.
+addTypeMock('bl0937',
+  function (state) {
+    var p = 100 + Math.floor(Math.random() * 21); // power between 100 and 120
+    var v = 228 + Math.floor(Math.random() * 5); // voltage is between 228 and 232
+
+    if (!state) {
+      // initial state
+      state = {
+        active: 1,
+        cycletime: "3000",
+        "mode": "voltage",
+        "power": "0",
+        "powerfactor": "1346829.38",
+        "voltagefactor": "1346829.38",
+        "currentfactor": "1346829.38"
+      }
+    }
+    state.power = p;  
+    if (state.mode == 'current') {
+      delete state.voltage;
+      state.current = Math.floor(p * 1000 / v);
+    } else if (state.mode == 'voltage') {
+      delete state.current;
+      state.voltage = v;
+    }
+    return (state);
+  },
+  function (state, action, cnf) {
+    if (action.mode == 'current') {
+      state.mode = "current";
+
+    } else if (action.mode == 'voltage') {
+      state.mode = "voltage";
     }
     return (state);
   });
