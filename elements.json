@@ -11,7 +11,8 @@
   },
 
   "analog": {
-    "properties": ["loglevel", "description", "readtimems", "hysteresis", "pin", "reference"],
+    "properties": ["loglevel", "description", "readtimems", "hysteresis", "pin", "reference",
+    "mapInMin", "mapInMax", "mapOutMin", "mapOutMax"],
     "actions": ["onvalue", "onreference", "onhigh", "onlow"]
   },
 
@@ -31,6 +32,11 @@
   "digitalin": {
     "properties": ["loglevel", "description", "pin", "inverse", "pullup"],
     "actions": ["onValue", "onHigh", "onLow"]
+  },
+
+  "digitalsignal": {
+    "properties": ["loglevel", "description", "pin", "pullup"],
+    "actions": ["onValue", "onHigh", "onLow", "duration"]
   },
 
   "digitalout": {
@@ -113,27 +119,39 @@
     "properties": ["loglevel", "description", "address", "readtime", "resetpin", "height"]
   },
 
-  "displayssd1306": {
-    "properties": ["loglevel", "description", "address", "readtime", "resetpin", "height"]
+  "max7219": {
+    "properties": ["loglevel", "description", "cspin", "value", "clear", "brightness", "mode"]
   },
 
+  "bl0937": {
+    "properties": ["loglevel", "description", "address", "selpin", "cfpin", "cf1pin", "cycletime", 
+       "mode", "powerfactor", "poweradjust", "currentfactor", "currentadjust", "voltagefactor", "voltageadjust"],
+    "actions": ["onVoltage", "onCurrent", "onPower"]
+  },  
+
+  "ina219": {
+    "properties": ["loglevel", "description", "address", "readtime", "warmuptime", "resendtime", "restart",
+    "gain", "mode", "samples", "range"],
+    "actions": ["onVoltage", "onCurrent", "onPower"]
+  },  
+
   "dht": {
-    "properties": ["loglevel", "description", "type", "pin", "readtime", "resendtime"],
+    "properties": ["loglevel", "description", "type", "pin", "readtime", "warmuptime", "resendtime", "restart"],
     "actions": ["ontemperature", "onhumidity"]
   },
 
   "bme680": {
-    "properties": ["loglevel", "description", "address", "readtime", "resendtime"],
+    "properties": ["loglevel", "description", "address", "readtime", "warmuptime", "resendtime", "restart"],
     "actions": ["ontemperature", "onhumidity", "onpressure", "ongas"]
   },  
 
   "bmp280": {
-    "properties": ["loglevel", "description", "address", "readtime", "resendtime"],
+    "properties": ["loglevel", "description", "address", "readtime", "warmuptime", "resendtime", "restart"],
     "actions": ["ontemperature", "onpressure"]
   },  
 
   "pms": {
-    "properties": ["loglevel", "description", "pinrx", "pintx", "readtime", "resendtime"],
+    "properties": ["loglevel", "description", "pinrx", "pintx", "readtime", "warmuptime", "resendtime", "restart"],
     "actions": ["onvalue"]
   },
 
@@ -187,5 +205,10 @@
   "serialcmd": {
     "properties": ["description"],
     "actions": ["preset0", "preset1", "preset2", "preset3"]
+  },
+
+  "weatherfeed": {
+    "properties": ["get", "key", "loc", "readtime", "path"],
+    "actions": ["actions"]
   }
 }
