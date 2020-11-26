@@ -100,6 +100,22 @@ svg.button .connect { fill: #00cc00; fill-opacity: 1; }
 
 .u-navbar > button.func { float: right; }
 
+@media print { .u-navbar { display: none; } }
+
+nav { position: fixed; min-height: 100%; width: 280px; z-index: 1; left: -280px; transition: all 0.2s; padding: 1rem 0.2rem 0.2rem 0.2rem; background-color: white; }
+
+nav.inpage { position: absolute; }
+
+nav.open { left: 0; }
+
+nav.inpage.open + main { margin-left: 280px; }
+
+@media print { nav.inpage.open + main { margin-left: 0; } }
+
+@media print { nav { display: none; } }
+
+main { transition: margin-left 0.2s; }
+
 .card { position: relative; display: flex; flex-direction: column; background-color: white; border: none; border-radius: 0; width: 24em; min-width: 24em; }
 
 .card img.active { background-color: limegreen; }

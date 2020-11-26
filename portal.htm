@@ -45,14 +45,6 @@
       background-color: silver;
     }
 
-    nav {
-      flex: 0;
-      min-width: 10em;
-      background-color: lightgray;
-      font-size: 1.3em;
-
-    }
-
     main {
       flex: 1;
     }
@@ -64,13 +56,14 @@
     ul>li {
       margin-bottom: 0.3em;
     }
+
   </style>
 </head>
 
 <body>
   <div id="ppage">
     <div class="u-navbar nogutter">
-      <img src="/i/menui.svg" class="button" />
+      <img src="/i/menui.svg" id="menuButton" class="button" />
       <span>HomePortal</span>
       <img id="reload" src="/i/reload.svg" class="button" />
     </div>
@@ -94,6 +87,22 @@
 
   <script>
     var iframeObj = document.querySelector('iframe#content');
+
+    // handle nav menuu
+    var navObj = document.querySelector('nav');
+    var mbObj = document.querySelector('#menuButton');
+
+    mbObj.addEventListener('click', function (e) {
+      navObj.classList.toggle('open');
+    });
+    if (window.innerWidth > 880) {
+      navObj.classList.add('open');
+      navObj.classList.add('inpage');
+    }
+    navObj.addEventListener('click', function (e) {
+      if (!navObj.classList.contains('inpage'))
+        navObj.classList.remove('open');
+    });
 
     function loadDevices() {
       fetch('/$devices')
