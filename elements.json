@@ -140,6 +140,11 @@
     "actions": ["ontemperature", "onhumidity"]
   },
 
+  "sht20": {
+    "properties": ["loglevel", "description", "type", "address", "readtime", "warmuptime", "resendtime", "restart"],
+    "actions": ["ontemperature", "onhumidity"]
+  },
+
   "bme680": {
     "properties": ["loglevel", "description", "address", "readtime", "warmuptime", "resendtime", "restart"],
     "actions": ["ontemperature", "onhumidity", "onpressure", "ongas"]
