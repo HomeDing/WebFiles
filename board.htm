@@ -77,7 +77,7 @@
 
     <div id="panel" class="row wrap"></div>
 
-    <div id="u-templates" style="display:none">
+    <div id="u-templates" style="cdisplay:none">
       <div class="col card" u-control="generic" u-is="generic" microID="${id}">
         <div class="block header">
           <img data-src="/i/${type}.svg" class="icon" />
@@ -269,11 +269,18 @@
       modal.open('newelementdlg');
     });
 
+    // Element type reuse
+    alias = {
+      "sht20": "dht",
+      "displaysh1106": "displayssd1306"
+    };
+
     function createElement(path, key, value) {
       if (path) {
         path = path.toLowerCase();
         var hElem = document.querySelector("[microID='" + path + "']");
         if (!hElem) {
+          // create a new card
           var t = path.split('/')[1];
           var p = {
             id: path,
@@ -282,7 +289,10 @@
 
           if (toBool(params.sys) || !elementDef[t] || toBool(elementDef[t].sys) == false) {
             var e = micro.insertTemplate(panelObj, t, p);
-            if (!e) { micro.insertTemplate(panelObj, 'generic', p); }
+            if (!e) {
+              t = alias[t] || 'generic';
+              e = micro.insertTemplate(panelObj, t, p);
+            }
           } // if
         } // if
       } // if
