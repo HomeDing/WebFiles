@@ -12,7 +12,7 @@
 
   "analog": {
     "properties": ["loglevel", "description", "readtimems", "hysteresis", "pin", "reference",
-    "mapInMin", "mapInMax", "mapOutMin", "mapOutMax"],
+    "mapinmin", "mapinmax", "mapoutmin", "mapoutmax"],
     "actions": ["onvalue", "onreference", "onhigh", "onlow"]
   },
 
@@ -31,12 +31,12 @@
 
   "digitalin": {
     "properties": ["loglevel", "description", "pin", "inverse", "pullup"],
-    "actions": ["onValue", "onHigh", "onLow"]
+    "actions": ["onvalue", "onhigh", "onlow"]
   },
 
   "digitalsignal": {
     "properties": ["loglevel", "description", "pin", "pullup"],
-    "actions": ["onValue", "onHigh", "onLow", "duration"]
+    "actions": ["onvalue", "onhigh", "onlow", "duration"]
   },
 
   "digitalout": {
@@ -86,19 +86,19 @@
   "switch": {
     "properties": ["loglevel", "description", "value"],
     "events": ["value", "toggle"],
-    "actions": ["onValue", "onHigh", "onLow"]
+    "actions": ["onvalue", "onhigh", "onlow"]
   },
 
   "value": {
     "properties": ["loglevel", "description", "min", "max", "value"],
     "events": ["value", "up", "down"],
-    "actions": ["onValue"]
+    "actions": ["onvalue"]
   },
 
   "map": {
     "properties": ["loglevel", "description", "value", "type", "maps/max", "maps/value", "maps/onmap"],
     "events": ["value"],
-    "actions": ["onValue"]
+    "actions": ["onvalue"]
   },
 
   "ota": {
@@ -108,7 +108,7 @@
 
   "ssdp": {
     "sys": "true",
-    "properties": ["loglevel", "description", "Manufacturer", "ManufacturerURL", "ModelURL", "ModelNumber"]
+    "properties": ["loglevel", "description", "manufacturer", "manufacturerurl", "modelurl", "modelnumber"]
   },
 
   "displaylcd": {
@@ -126,13 +126,13 @@
   "bl0937": {
     "properties": ["loglevel", "description", "address", "selpin", "cfpin", "cf1pin", "cycletime", 
        "mode", "powerfactor", "poweradjust", "currentfactor", "currentadjust", "voltagefactor", "voltageadjust"],
-    "actions": ["onVoltage", "onCurrent", "onPower"]
+    "actions": ["onvoltage", "oncurrent", "onpower"]
   },  
 
   "ina219": {
     "properties": ["loglevel", "description", "address", "readtime", "warmuptime", "resendtime", "restart",
     "gain", "mode", "samples", "range"],
-    "actions": ["onVoltage", "onCurrent", "onPower"]
+    "actions": ["onvoltage", "oncurrent", "onpower"]
   },  
 
   "dht": {
@@ -168,7 +168,7 @@
 
   "alarm": {
     "properties": ["loglevel", "description", "time"],
-    "actions": ["onTime"]
+    "actions": ["ontime"]
   },
 
   "diag": {
@@ -209,6 +209,6 @@
 
   "weatherfeed": {
     "properties": ["get", "key", "loc", "readtime", "path"],
-    "actions": ["actions"]
+    "actions": ["actions/path", "actions/onvalue"]
   }
 }
