@@ -77,10 +77,10 @@
 
     <div id="panel" class="row wrap"></div>
 
-    <div id="u-templates" style="cdisplay:none">
+    <div id="u-templates" style="display:none">
       <div class="col card" u-control="generic" u-is="generic" microID="${id}">
         <div class="block header">
-          <img data-src="/i/${type}.svg" class="icon" />
+          <img data-src="/i/${icon}.svg" class="icon" />
           <h3>${id}</h3>
           <h4 u-text="description"></h4>
           <span class="activeState" u-active="active"></span>
@@ -284,10 +284,14 @@
           var t = path.split('/')[1];
           var p = {
             id: path,
-            type: t
+            type: t,
+            icon: t
           };
 
           if (toBool(params.sys) || !elementDef[t] || toBool(elementDef[t].sys) == false) {
+            if ((elementDef[t]) && (elementDef[t].icon)) {
+              p.icon = elementDef[t].icon;
+            }
             var e = micro.insertTemplate(panelObj, t, p);
             if (!e) {
               t = alias[t] || 'generic';

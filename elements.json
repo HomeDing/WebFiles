@@ -141,6 +141,7 @@
   },
 
   "sht20": {
+    "icon": "dht",
     "properties": ["loglevel", "description", "type", "address", "readtime", "warmuptime", "resendtime", "restart"],
     "actions": ["ontemperature", "onhumidity"]
   },
@@ -172,6 +173,7 @@
   },
 
   "alarm": {
+    "icon": "default",
     "properties": ["loglevel", "description", "time"],
     "actions": ["ontime"]
   },
@@ -213,7 +215,8 @@
   },
 
   "weatherfeed": {
-    "properties": ["get", "key", "loc", "readtime", "path"],
-    "actions": ["actions/path", "actions/onvalue"]
+    "properties": ["get", "key", "loc", "readtime", "path", "actions/path"],
+    "events": [],
+    "actions": ["actions/onvalue"]
   }
 }
