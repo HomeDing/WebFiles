@@ -1,4 +1,5 @@
 // server.js
+// collecting more device information using mDNS: title, path
 
 // ===== Packages used =====
 
@@ -48,13 +49,25 @@ let mDnsBrowser;
  * This function is registered in the mDNS browser.
  */
 function addDevice(data) {
-  var isNew = (!netDevices[data.host]);
-  // console.log(`>>${JSON.stringify(data.addresses)} - ${data.host} - ${data.fullname}`);
-  netDevices[data.host] = new Date();
+  var now = new Date();
+  var host = data.host;
+  var isNew = (!netDevices[host]);
+  // console.log(`>>${JSON.stringify(data.addresses)} - ${host} - ${data.fullname}`);
+
   if (isNew) {
-    console.log(`add ${data.host}`);
+    var item = netDevices[host] =
+      { host: host, title: host.replace(/\.local/, "") };
+
+      // add also key/values
+    data.txt.forEach(e => {
+      var p = e.split('=');
+      item[p[0]] = p[1];
+    });
+
+    console.log(`add ${host}`);
     console.log(Object.keys(netDevices).join(' '));
   }
+  netDevices[host].ts = now;
 } // addDevice()
 
 
@@ -71,7 +84,7 @@ function startDiscovery() {
     // console.log(`old ${host} : ${netDevices[host]}`);
     // console.log(now.valueOf() - netDevices[host].valueOf());
 
-    if (now.valueOf() - netDevices[host].valueOf() > 90 * 1000) {
+    if (now.valueOf() - netDevices[host].ts.valueOf() > 90 * 1000) {
       console.log(`drop ${host}`);
       delete netDevices[host];
       console.log(Object.keys(netDevices).join(' '));
@@ -176,16 +189,16 @@ app.get("/", function (req, res, next) {
 
 // ----- enable buildin setup pages -----
 
-app.get('/\\$upload.htm', function (req, res, next) {
-  res.sendFile(path.join(__dirname, './upload.htm'));
-});
-
 app.get('/\\$setup.htm', function (req, res, next) {
   res.sendFile(path.join(__dirname, './setup.htm'));
 });
 
-app.get('/\\$boot.htm', function (req, res, next) {
-  res.sendFile(path.join(__dirname, './boot.htm'));
+app.get('/\\$update.htm', function (req, res, next) {
+  res.sendFile(path.join(__dirname, './update.htm'));
+});
+
+app.get('/\\$upload.htm', function (req, res, next) {
+  res.sendFile(path.join(__dirname, './upload.htm'));
 });
 
 // ----- handle listing of all existing files -----
@@ -324,7 +337,7 @@ addTypeMock('bl0937',
         "currentfactor": "1346829.38"
       }
     }
-    state.power = p;  
+    state.power = p;
     if (state.mode == 'current') {
       delete state.voltage;
       state.current = Math.floor(p * 1000 / v);
