@@ -91,6 +91,7 @@
     // handle nav menuu
     var navObj = document.querySelector('nav');
     var mbObj = document.querySelector('#menuButton');
+    var devList = [];
 
     mbObj.addEventListener('click', function (e) {
       navObj.classList.toggle('open');
@@ -109,15 +110,16 @@
         .then(function (result) {
           return result.json();
         })
-        .then(function (devices) {
-          var nav = document.querySelector('#devices');
-          for (var n = 0; n < devices.length; n++) {
-            var devName = devices[n].split('.')[0];
+        .then(function (data) {
+          devList = data;
+
+          for (d in data) {
+            var devObj = data[d];
             var o = document.createElement('li');
-            nav.appendChild(o);
+            document.querySelector('#devices').appendChild(o);
             var a = document.createElement('a');
-            a.href = "#" + devName + '/';
-            a.innerText = devName;
+            a.href = "#" + d + devObj.path;
+            a.innerText = devObj.title;
             o.appendChild(a);
           }
           window.setTimeout(startContent, 10);

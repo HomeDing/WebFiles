@@ -50,15 +50,18 @@ let mDnsBrowser;
  */
 function addDevice(data) {
   var now = new Date();
-  var host = data.host;
+  var host = data.host.replace(/\.local/, "");
   var isNew = (!netDevices[host]);
   // console.log(`>>${JSON.stringify(data.addresses)} - ${host} - ${data.fullname}`);
 
   if (isNew) {
     var item = netDevices[host] =
-      { host: host, title: host.replace(/\.local/, "") };
+    {
+      host: data.host,
+      title: host
+    };
 
-      // add also key/values
+    // add also key/values
     data.txt.forEach(e => {
       var p = e.split('=');
       item[p[0]] = p[1];
@@ -72,7 +75,7 @@ function addDevice(data) {
 
 
 /**
- * Setup the mDNS browser and start dicovering devices.
+ * Setup the mDNS browser and start discovering devices.
  */
 function startDiscovery() {
   // console.log(`>>START`);
@@ -85,7 +88,7 @@ function startDiscovery() {
     // console.log(now.valueOf() - netDevices[host].valueOf());
 
     if (now.valueOf() - netDevices[host].ts.valueOf() > 90 * 1000) {
-      console.log(`drop ${host}`);
+      console.log(`drop ${host}`); 
       delete netDevices[host];
       console.log(Object.keys(netDevices).join(' '));
     }
@@ -505,9 +508,8 @@ app.get(/^\/\$board$/, noCache, function (req, res, next) {
 
 app.get(/^\/\$devices$/, noCache, function (req, res, next) {
   res.type('application/json');
-  res.send(JSON.stringify(Object.keys(netDevices), null, 2));
+  res.send(JSON.stringify(netDevices, null, 2));
 });
-
 
 // ===== serving file system 
 
