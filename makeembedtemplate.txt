@@ -10,5 +10,5 @@ static const char uploadContent[] PROGMEM =
 R"==(${upload.htm})==";
 
 // minimized from boot.htm
-static const char bootContent [] PROGMEM =
-R"==(${boot.htm})==";
+static const char updateContent[] PROGMEM =
+R"==(${update.htm})==";

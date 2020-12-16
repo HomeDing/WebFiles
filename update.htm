@@ -8,9 +8,9 @@
   <title>Web Update</title>
 </head>
 
-<body>
+<body style="width:300px">
   <h1>Web Update</h1>
-  <table>
+  <table style="width:300px" >
     <tr>
       <td><progress value=0 max=1></progress></td>
     </tr>
@@ -18,9 +18,11 @@
       <td id='info'>.</td>
     </tr>
     <tr>
-      <td><button>start</button></td>
+      <td align="right"><button>Start</button></td>
     </tr>
   </table>
+  <hr>
+  <p style="text-align: right;"><a href="/updateicons.htm" title="next step" style="text-decoration: none;">&gt;&gt;&gt;</a></p>
   <script>
     var repo = 'https://homeding.github.io/';
     var eStart = document.querySelector('button');
@@ -43,7 +45,7 @@
     } else {
       repo += 'v02/';
     }
-    log('loading web files from ' + repo);
+    log('loading from:\n' + repo);
 
     // fetch list of files
     function doStart() {

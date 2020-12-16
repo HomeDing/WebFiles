@@ -5,29 +5,35 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>WiFi Setup</title>
+  <title>Setup WiFi</title>
 </head>
 
-<body>
-  <h1>WiFi Setup</h1>
-  <h2>Connect to network</h2>
-  <table>
+<body style="width:300px">
+  <h1>Setup WiFi</h1>
+  <table style="width: 300px;">
     <tr>
       <td>Devicename:</td>
-      <td id="devname">xyz</td>
+      <td id="dname">xyz</td>
     </tr>
     <tr>
       <td>Network:</td>
-      <td><select id="conNet" style="width:18em">
+      <td> <select id="conNet" style="width:12em">
           <option selected disabled>scanning...</option>
         </select></td>
     </tr>
     <tr>
       <td>Passphrase:</td>
-      <td><input id="pass" style="width:18em"></input></td>
+      <td><input id="pass" type="password" style="width:12em"></input></td>
+    </tr>
+    <tr>
+      <td colspan="2" align="right">
+        <button id="bCon">Connect</button>
+      </td>
     </tr>
   </table>
-  <button id="bCon">Connect</button>
+  <hr>
+  <p style="text-align: right;"><a id="nextLink" title="next step" href="/$update.htm" style="text-decoration: none;">&gt;&gt;&gt;</a></p>
+
   <script>
     var state = 0;  // 0: start, 1: get sysinfo, 2: sysinfo-done,  3: scan, 4, scan-done
     var timer;
@@ -38,29 +44,32 @@
         // start sysinfo
         state = 1;
         fetch('/$sysinfo')
-        .then(function (result) {
-          return (result.text());
-        }).then (function(t) {
-          if (t.length > 0) {
-            document.getElementById('devname').textContent = JSON.parse(t).devicename;
-            state = 2;
-          } // if
-        });
+          .then(function (result) {
+            return (result.text());
+          }).then(function (t) {
+            if (t.length > 0) {
+              var d = JSON.parse(t).devicename;
+              document.getElementById('dname').textContent = d;
+              var a = document.getElementById('nextLink');
+              a.href = a.href.replace(/\/\/[^\/]+\//, '//' + d + '/');
+              state = 2;
+            } // if
+          });
 
       } else if (state == 2) {
         // start scan 
         state = 3;
-        fetch('/$scan') 
-        .then(function (result) {
-          return (result.text());
-        }).then (function(t) {
-          if (t.length == 0) {
-            state = 2;
-          } else {
-            state = 4;
-            scanned(JSON.parse(t));
-          }
-        });
+        fetch('/$scan')
+          .then(function (result) {
+            return (result.text());
+          }).then(function (t) {
+            if (t.length == 0) {
+              state = 2;
+            } else {
+              state = 4;
+              scanned(JSON.parse(t));
+            }
+          });
       } else if (state == 4) {
         window.clearInterval(timer);
         timer = 0;
