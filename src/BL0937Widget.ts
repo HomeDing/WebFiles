@@ -21,10 +21,10 @@ class BL0937WidgetClass extends GenericWidgetClass {
   setMode(newMode: String | null) {
     if (newMode && (newMode !== this.mode)) {
       let td;
-      // hide old mode output 
+      // hide old mode output
       td = this.querySelector(`[u-text="${this.mode}"]`);
       if (td?.parentElement) { td.parentElement.style.display = 'none'; }
-      // show new mode output 
+      // show new mode output
       td = this.querySelector(`span[u-text="${newMode}"]`);
       if (td?.parentElement) { td.parentElement.style.display = ''; }
       this.mode = newMode;

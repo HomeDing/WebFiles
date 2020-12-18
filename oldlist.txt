@@ -23,4 +23,6 @@
 -ft/svg.svg
 -ft/txt.svg
 -ft/xml.svg
+-i/alarm.svg
+-i/sht20.svg
 -clock.svg
