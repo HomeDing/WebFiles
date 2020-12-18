@@ -118,6 +118,32 @@
         </div>
       </div>
 
+      <div class="col card" u-control="dht" microID="${id}" u-is="generic">
+        <div class="block">
+          <h4>${id} - <span u-text="description"></span></h4>
+          <table>
+            <tr>
+              <td colspan="3">
+                <h4 u-text="title"></h4>
+              </td>
+            </tr>
+            <tr>
+              <td colspan="3"><span u-text="description"></span></td>
+            </tr>
+            <tr>
+              <td style="font-size: 2rem"><span u-text="temperature">__.__</span>&deg;C</td>
+              <td style="width:1rem"></td>
+              <td style="font-size: 2rem"><span u-text="humidity">__.__</span>%</td>
+            </tr>
+            <tr>
+              <td>Temperature</td>
+              <td></td>
+              <td>Humidity</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+
       <div class="col card" u-control="and" id="${id}" u-is="generic" microID="${id}">
         <div class="block">
           <h4>${id} - <span u-text="description"></span></h4>
