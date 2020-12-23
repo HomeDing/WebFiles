@@ -89,7 +89,7 @@ function debounce(func: Function, wait: number = 20) {
     const args = arguments;
 
     if (timer) { clearTimeout(timer); }
-    timer = setTimeout(function () {
+    timer = window.setTimeout(function () {
       timer = 0;
       func.apply(scope, args);
     }, wait);
