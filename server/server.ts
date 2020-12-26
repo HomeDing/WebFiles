@@ -61,6 +61,7 @@ let boardState: any = null;
 import * as virtual from './VirtualBaseElement';
 
 import * as mock from './MockElements';
+import * as proxy from './ProxyElement';
 
 // to simulate a specific case the files `config.json`, `env.json` and `$board`
 // are used from a directory named `case-${casename}`.
@@ -192,16 +193,20 @@ app.post('/', upload.any(), function (req, res) {
 //#region ===== Setup mocking functions =====
 
 mock.register();
+proxy.register();
 virtual.activate(allConfig);
+
+// const p = new proxy.ProxyElement('dht/0', {});
+// virtual.addElement(p);
 
 //#endregion
 
-app.get(/^\/\$list$/, noCache, function (req, res, next) {
+app.get(/^\/\$list$/, noCache, async function (req, res, next) {
   const fl = [];
-  const files = fs.readdirSync(__dirname);
+  const files = await fs.promises.readdir(__dirname);
   for (const i in files) {
     if (files.hasOwnProperty(i)) {
-      const aFile = fs.statSync(files[i]);
+      const aFile = await fs.promises.stat(files[i]);
       if (aFile.isFile()) {
         fl.push({
           name: '/' + files[i],
@@ -210,7 +215,6 @@ app.get(/^\/\$list$/, noCache, function (req, res, next) {
       }
     }
   }
-  res.type('application/json');
   res.json(fl);
 });
 
@@ -233,20 +237,20 @@ app.get(/^\/\$sysinfo$/, noCache, function (req, res, next) {
 
 // ===== serving /$board status for a single element
 
-app.get('/\\$board/:type/:id', noCache, function (req, res, next) {
+app.get('/\\$board/:type/:id', noCache, async function (req, res, next) {
   if (!boardState) {
     boardState = {};
     if (caseFolder) {
       // get current state from case-folder
-      boardState = JSON.parse(fs.readFileSync(boardFileName, 'utf8'));
+      boardState = JSON.parse(await fs.promises.readFile(boardFileName, 'utf8'));
     }
   }
 
   const id = req.params.type + '/' + req.params.id;
   if (Object.keys(req.query).length > 0) {
     // incoming action
-    virtual.action(id, req.query);
     res.send();
+    /* no await */ virtual.action(id, req.query);
 
   } else {
     // Update and return status of a single element
@@ -257,18 +261,18 @@ app.get('/\\$board/:type/:id', noCache, function (req, res, next) {
 });
 
 
-app.get(/^\/\$board$/, noCache, function (req, res, next) {
+app.get(/^\/\$board$/, noCache, async function (req, res) {
   // hardsleep(800);
   if (!boardState) {
     boardState = {};
     if (caseFolder) {
       // get current state from case-folder
-      boardState = JSON.parse(fs.readFileSync(boardFileName, 'utf8'));
+      boardState = JSON.parse(await fs.promises.readFile(boardFileName, 'utf8'));
     }
   }
 
   // Update status of all elements
-  const vState = virtual.allState();
+  const vState = await virtual.allState();
   boardState = Object.assign(boardState, vState);
 
   // debugSend('send:' , boardStatus);

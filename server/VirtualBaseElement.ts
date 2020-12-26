@@ -25,8 +25,8 @@ export class VirtualBaseElement {
   }
 
   /** return the actual state from the element */
-  getState(): any { return (this.state); }
-  doAction(query: any): void { }
+  async getState(): Promise<any> { return (this.state); }
+  async doAction(query: any) { }
 }
 
 
@@ -42,15 +42,28 @@ export function register(type: string, imp: typeof VirtualBaseElement) {
   registry[type] = imp;
 }
 
+/** add a virtual element */
+export function add(typeId: string, impl: VirtualBaseElement) {
+  activeVirtuals[typeId] = impl;
+}
+
+
+/** add a virtual element */
+export function addElement(impl: VirtualBaseElement) {
+  activeVirtuals[impl.typeId] = impl;
+}
 
 /** Activate virtual elements for all configured elements. */
 export function activate(allConfig: any) {
   Object.keys(registry).forEach(typeName => {
     const tConf = allConfig[typeName];
-    Object.keys(tConf).forEach(e => {
-      const c = new registry[typeName](typeName + '/' + e, tConf);
-      activeVirtuals[c.typeId] = c;
-    });
+    if (tConf) {
+      Object.keys(tConf).forEach(e => {
+        const c = new registry[typeName](typeName + '/' + e, tConf[e]);
+        activeVirtuals[c.typeId] = c;
+      }
+      );
+    }
   });
 }
 
@@ -63,7 +76,7 @@ export function action(typeId: string, cmd: any) {
 
 
 /** Return the state of a single element. */
-export function state(typeId: string) {
+export async function state(typeId: string) {
   const ve: VirtualBaseElement = activeVirtuals[typeId];
   if (ve) {
     return (ve.getState());
@@ -74,12 +87,12 @@ export function state(typeId: string) {
 
 
 /** return the state of all virtual elements */
-export function allState() {
+export async function allState() {
   const all: any = {};
 
-  Object.keys(activeVirtuals).forEach(eId => {
-    all[eId] = activeVirtuals[eId].getState();
-  });
+  for (const eId in activeVirtuals) {
+    all[eId] = await activeVirtuals[eId].getState();
+  }
   return (all);
 } // allState()
 

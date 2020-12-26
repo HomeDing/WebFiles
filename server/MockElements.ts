@@ -7,7 +7,7 @@ export class MockSwitch extends VirtualBaseElement {
     super(typeId, config);
   }
 
-  doAction(action: any): void {
+  async doAction(action: any) {
     if (action.value != null) { this.state.value = action.value; }
     if (action.toggle != null) { this.state.value = (this.state.value ? 0 : 1); }
     super.doAction(action);
@@ -24,7 +24,7 @@ export class MockValue extends VirtualBaseElement {
     });
   }
 
-  doAction(action: any): void {
+  async doAction(action: any) {
     const step = this.config.step;
     const v = this.state.value;
     if (action.up != null) { this.state.value = Number(v) + Number(action.up) * step; }
@@ -37,13 +37,13 @@ export class MockValue extends VirtualBaseElement {
 export class MockDevice extends VirtualBaseElement {
   private boardStart = new Date().valueOf();
 
-  getState(): any {
+  async getState(): Promise<any> {
     const now = new Date().valueOf();
     this.state.nextboot = 30000 - Math.floor((now - this.boardStart) / 1000);
     return (this.state);
   }
 
-  doAction(action: any): void {
+  async doAction(action: any) {
     if (action.log !== null) { console.log('>>', action.log); }
     super.doAction(action);
   }
@@ -51,7 +51,7 @@ export class MockDevice extends VirtualBaseElement {
 
 
 export class MockTime extends VirtualBaseElement {
-  getState(): any {
+  async getState(): Promise<any> {
     const now = new Date().toISOString();
     this.state.now =
       this.state.value = now.substr(0, 19).replace(/T/, ' ');
@@ -68,7 +68,7 @@ export class MockBL0937 extends VirtualBaseElement {
     });
   }
 
-  getState(): any {
+  async getState(): Promise<any> {
     const p = 100 + Math.floor(Math.random() * 21); // power between 100 and 120
     const v = 228 + Math.floor(Math.random() * 5); // voltage is between 228 and 232
 
@@ -83,7 +83,7 @@ export class MockBL0937 extends VirtualBaseElement {
     return (this.state);
   }
 
-  doAction(action: any): void {
+  async doAction(action: any) {
     if ((action.mode === 'current') || (action.mode === 'voltage')) {
       this.state.mode = action.mode;
     }

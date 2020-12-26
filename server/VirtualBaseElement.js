@@ -1,7 +1,7 @@
 "use strict";
 // Virtual elements for HomeDing Portal and Development Server
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.allState = exports.state = exports.action = exports.activate = exports.register = exports.VirtualBaseElement = void 0;
+exports.allState = exports.state = exports.action = exports.activate = exports.addElement = exports.add = exports.register = exports.VirtualBaseElement = void 0;
 // a virtual element that can be used for mocking and proxying to real existing element in HomeDing devices.
 // The VirtualBaseElement actually does nothing but returning the static defined state.
 class VirtualBaseElement {
@@ -13,8 +13,8 @@ class VirtualBaseElement {
         this.config = config;
     }
     /** return the actual state from the element */
-    getState() { return (this.state); }
-    doAction(query) { }
+    async getState() { return (this.state); }
+    async doAction(query) { }
 }
 exports.VirtualBaseElement = VirtualBaseElement;
 /** registered virtual elements classes */
@@ -26,14 +26,26 @@ function register(type, imp) {
     registry[type] = imp;
 }
 exports.register = register;
+/** add a virtual element */
+function add(typeId, impl) {
+    activeVirtuals[typeId] = impl;
+}
+exports.add = add;
+/** add a virtual element */
+function addElement(impl) {
+    activeVirtuals[impl.typeId] = impl;
+}
+exports.addElement = addElement;
 /** Activate virtual elements for all configured elements. */
 function activate(allConfig) {
     Object.keys(registry).forEach(typeName => {
         const tConf = allConfig[typeName];
-        Object.keys(tConf).forEach(e => {
-            const c = new registry[typeName](typeName + '/' + e, tConf);
-            activeVirtuals[c.typeId] = c;
-        });
+        if (tConf) {
+            Object.keys(tConf).forEach(e => {
+                const c = new registry[typeName](typeName + '/' + e, tConf[e]);
+                activeVirtuals[c.typeId] = c;
+            });
+        }
     });
 }
 exports.activate = activate;
@@ -46,7 +58,7 @@ function action(typeId, cmd) {
 } // action()
 exports.action = action;
 /** Return the state of a single element. */
-function state(typeId) {
+async function state(typeId) {
     const ve = activeVirtuals[typeId];
     if (ve) {
         return (ve.getState());
@@ -57,11 +69,11 @@ function state(typeId) {
 } // state()
 exports.state = state;
 /** return the state of all virtual elements */
-function allState() {
+async function allState() {
     const all = {};
-    Object.keys(activeVirtuals).forEach(eId => {
-        all[eId] = activeVirtuals[eId].getState();
-    });
+    for (const eId in activeVirtuals) {
+        all[eId] = await activeVirtuals[eId].getState();
+    }
     return (all);
 } // allState()
 exports.allState = allState;

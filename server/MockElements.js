@@ -7,7 +7,7 @@ class MockSwitch extends VirtualBaseElement_1.VirtualBaseElement {
     constructor(typeId, config) {
         super(typeId, config);
     }
-    doAction(action) {
+    async doAction(action) {
         if (action.value != null) {
             this.state.value = action.value;
         }
@@ -26,7 +26,7 @@ class MockValue extends VirtualBaseElement_1.VirtualBaseElement {
             value: 0
         });
     }
-    doAction(action) {
+    async doAction(action) {
         const step = this.config.step;
         const v = this.state.value;
         if (action.up != null) {
@@ -44,12 +44,12 @@ class MockDevice extends VirtualBaseElement_1.VirtualBaseElement {
         super(...arguments);
         this.boardStart = new Date().valueOf();
     }
-    getState() {
+    async getState() {
         const now = new Date().valueOf();
         this.state.nextboot = 30000 - Math.floor((now - this.boardStart) / 1000);
         return (this.state);
     }
-    doAction(action) {
+    async doAction(action) {
         if (action.log !== null) {
             console.log('>>', action.log);
         }
@@ -58,7 +58,7 @@ class MockDevice extends VirtualBaseElement_1.VirtualBaseElement {
 } // MockDevice
 exports.MockDevice = MockDevice;
 class MockTime extends VirtualBaseElement_1.VirtualBaseElement {
-    getState() {
+    async getState() {
         const now = new Date().toISOString();
         this.state.now =
             this.state.value = now.substr(0, 19).replace(/T/, ' ');
@@ -74,7 +74,7 @@ class MockBL0937 extends VirtualBaseElement_1.VirtualBaseElement {
             mode: this.config.mode
         });
     }
-    getState() {
+    async getState() {
         const p = 100 + Math.floor(Math.random() * 21); // power between 100 and 120
         const v = 228 + Math.floor(Math.random() * 5); // voltage is between 228 and 232
         this.state.power = p;
@@ -88,7 +88,7 @@ class MockBL0937 extends VirtualBaseElement_1.VirtualBaseElement {
         }
         return (this.state);
     }
-    doAction(action) {
+    async doAction(action) {
         if ((action.mode === 'current') || (action.mode === 'voltage')) {
             this.state.mode = action.mode;
         }
