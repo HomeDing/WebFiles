@@ -286,7 +286,7 @@ var GenericWidgetClass = (function (_super) {
                 elem.classList.toggle('active', b);
             });
         }, this);
-        ['h2', 'h4', 'span', 'button'].forEach(function (elType) {
+        ['h2', 'h3', 'h4', 'span', 'button'].forEach(function (elType) {
             this.querySelectorAll(elType + '[u-text=\'' + key + '\']').forEach(function (elem) {
                 if (elem.textContent !== value) {
                     elem.textContent = value;
@@ -441,16 +441,16 @@ var ButtonWidgetClass = (function (_super) {
         else {
             var scope_1 = this;
             if (this._timer) {
-                clearTimeout(this._timer);
+                window.clearTimeout(this._timer);
             }
-            this._timer = setTimeout(function () {
+            this._timer = window.setTimeout(function () {
                 scope_1.dispatchAction(scope_1._onclick, '1');
             }, 250);
         }
     };
     ButtonWidgetClass.prototype.on_dblclick = function () {
         if (this._timer) {
-            clearTimeout(this._timer);
+            window.clearTimeout(this._timer);
         }
         this.dispatchAction(this._ondoubleclick, '1');
     };
@@ -1154,7 +1154,7 @@ function debounce(func, wait) {
         if (timer) {
             clearTimeout(timer);
         }
-        timer = setTimeout(function () {
+        timer = window.setTimeout(function () {
             timer = 0;
             func.apply(scope, args);
         }, wait);
