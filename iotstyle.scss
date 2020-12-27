@@ -212,7 +212,11 @@ h4 {
   margin-right: 0;
   margin-left: 0;
   padding: $white-space;
+  @media (max-width: 720px) {
+    padding: 0;
+  }
 }
+
 
 .row {
   display: flex;
@@ -225,6 +229,9 @@ h4 {
 
   &.wrap {
     flex-wrap: wrap;
+  }
+  @media (max-width: 720px) {
+    margin:0;
   }
 
   &.nogutter {
@@ -241,6 +248,9 @@ h4 {
 .col-6 {
   flex: 0 0 auto;
   margin: $gutter 0 0 $gutter;
+  @media (max-width: 720px) {
+    margin-left:1px;
+  }
 }
 
 .row.nogutter > .col {
@@ -447,6 +457,13 @@ main {
       overflow:hidden;
     }
 
+    h3 {
+      margin: 0 0 $gutter 0;
+    }
+    h4 {
+      margin: 0;
+    }
+
     &.header {
       background-image: linear-gradient(to bottom, $u-cardbackground, darken($u-cardbackground, 10%));
       border-top-right-radius: $u-card-radius;
@@ -459,13 +476,6 @@ main {
         float: left;
         margin-right: $gutter;
         overflow:hidden;
-      }
-
-      > h3 {
-        margin: 0 0 $gutter 0;
-      }
-      > h4 {
-        margin: 0;
       }
     }
   }
@@ -811,9 +821,6 @@ button,
 }
 
 @media (max-width: 767px) {
-  .container-fluid {
-    padding: 0;
-  }
 
   .hidden-xs {
     display: none;
@@ -823,3 +830,4 @@ button,
     display: initial;
   }
 }
+
