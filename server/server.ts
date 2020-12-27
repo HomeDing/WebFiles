@@ -94,6 +94,16 @@ if (options.case) {
       boardState = null;
     });
   }
+} else {
+  // no mock-case
+  console.log(`Starting...`);
+
+  // ===== env and config information
+  allConfig = Object.assign({},
+    JSON.parse(fs.readFileSync('env.json', 'utf8')),
+    JSON.parse(fs.readFileSync('config.json', 'utf8'))
+  );
+  boardState = {};
 }
 
 //#endregion
@@ -189,15 +199,11 @@ app.post('/', upload.any(), function (req, res) {
 //#endregion
 
 
+//#region ===== Setup mocking nd proxy elements =====
 
-//#region ===== Setup mocking functions =====
-
-mock.register();
+if (options.case) { mock.register(); }
 proxy.register();
 virtual.activate(allConfig);
-
-// const p = new proxy.ProxyElement('dht/0', {});
-// virtual.addElement(p);
 
 //#endregion
 
