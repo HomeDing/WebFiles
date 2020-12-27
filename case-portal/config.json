@@ -1,0 +1,19 @@
+{
+  "webproxy": {
+    "0": {
+      "url": "http://esp01/$board/dht/0"
+    },
+    "1": {
+      "url": "http://airding/$board/pms/pm25"
+    },
+    "2": {
+      "url": "http://switch1/$board/switch/relais"
+    },
+    "3": {
+      "url": "http://plug03/$board/switch/relay"
+    },
+    "4": {
+      "url": "http://plug02/$board/switch/relais"
+    }
+  }
+}

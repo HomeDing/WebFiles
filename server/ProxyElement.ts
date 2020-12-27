@@ -9,26 +9,43 @@ export class ProxyElement extends VirtualBaseElement {
   constructor(typeId: string, config: any) {
     super(typeId, config); // will be proxy/xxx in type/ID
 
+    const scope = this;
     const url: string[] = config.url.split('/');
+    const baseurl = url.slice(0, 3).join('/'); // 'http://server'
 
-    this.url = url.slice(0, 4).join('/') + '/'; // 'http://server/$board/'
     this.type = url[4];
     this.id = url[5];
     this.typeId = this.type + '/' + this.id;
+
+    this.url = baseurl + '/$board/' + this.typeId;
+
+    // extract config for element state
+    this.state = { url: baseurl }
+    fetch(baseurl + '/config.json')
+      .then(function (result) {
+        return (result.json())
+      }).then(function (json) {
+        const st = json[scope.type][scope.id];
+        scope.state = Object.assign(scope.state, st);
+      });
   }
 
-  async getState(): Promise<any> {
 
-    const r = await fetch(this.url + this.typeId);
+  async getState(): Promise<any> {
+    const r = await fetch(this.url);
     const j = await r.json();
     const rs = j[this.typeId];
     // const now = new Date().valueOf();
     // this.state.nextboot = 30000 - Math.floor((now - this.boardStart) / 1000);
-    this.state = rs;
+    this.state = Object.assign(this.state, rs);
     return (this.state);
   }
 
+  // pass action to real element
   async doAction(action: any) {
+    for (const a in action) {
+      await fetch(this.url + '?' + a + '=' + action[a]);
+    }
   }
 } // ProxyElement
 

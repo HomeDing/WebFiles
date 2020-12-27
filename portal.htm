@@ -88,7 +88,7 @@
   <script>
     var iframeObj = document.querySelector('iframe#content');
 
-    // handle nav menuu
+    // handle nav menu
     var navObj = document.querySelector('nav');
     var mbObj = document.querySelector('#menuButton');
     var devList = [];
@@ -119,7 +119,7 @@
             document.querySelector('#devices').appendChild(o);
             var a = document.createElement('a');
             a.href = "#" + d + devObj.path;
-            a.innerText = devObj.title;
+            a.innerText = devObj.title || d;
             o.appendChild(a);
           }
           window.setTimeout(startContent, 10);

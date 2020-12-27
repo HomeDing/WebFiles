@@ -45,7 +45,7 @@ class GenericWidgetClass extends MicroControlClass {
     }, this);
 
     // textContent
-    ['h2', 'h4', 'span', 'button'].forEach(function (this: GenericWidgetClass, elType) {
+    ['h2', 'h3', 'h4', 'span', 'button'].forEach(function (this: GenericWidgetClass, elType) {
       this.querySelectorAll(elType + '[u-text=\'' + key + '\']').forEach(function (elem) {
         if (elem.textContent !== value) { elem.textContent = value; }
       });

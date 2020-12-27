@@ -218,5 +218,11 @@
     "properties": ["get", "key", "loc", "readtime", "path", "actions/path"],
     "events": [],
     "actions": ["actions/onvalue"]
+  },
+
+  "webproxy": {
+    "sys": "true",
+    "properties": ["url"]
   }
+
 }

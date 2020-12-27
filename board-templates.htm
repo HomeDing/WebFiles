@@ -6,11 +6,9 @@
     <table>
       <tr>
         <td colspan="3">
-          <h4 u-text="title"></h4>
+          <h3 u-text="title"></h3>
+          <h4 u-text="description"></h4>
         </td>
-      </tr>
-      <tr>
-        <td colspan="3"><span u-text="description"></span></td>
       </tr>
       <tr>
         <td style="font-size: 2rem"><span u-text="temperature">__.__</span>&deg;C</td>
@@ -62,7 +60,7 @@
 <div class="col card" u-control="timer" microID="${id}" u-is="timer">
   <div class="block header">
     <img data-src="/i/timer.svg" class="icon" />
-    <h3>${id}</h3>
+    <h3 u-text="title"></h3>
     <h4 u-text="description"></h4>
     <span class="activeState" u-active="active"></span>
     <span class="setconfig"></span>
@@ -88,7 +86,7 @@
 <div class="col card" u-control="rfsend" microID="${id}" u-is="generic">
   <div class="block header">
     <img data-src="/i/rfsend.svg" class="icon" />
-    <h3>${id}</h3>
+    <h3 u-text="title"></h3>
     <h4 u-text="description"></h4>
     <span class="activeState" u-active="active"></span>
     <span class="setconfig"></span>
@@ -105,7 +103,7 @@
 <div class="col card" u-control="button" microID="${id}" u-is="button">
   <div class="block header">
     <img data-src="/i/button.svg" class="icon" />
-    <h3>${id}</h3>
+    <h3 u-text="title"></h3>
     <h4 u-text="description"></h4>
     <span class="activeState" u-active="active"></span>
     <span class="setconfig"></span>
@@ -125,7 +123,7 @@
 <div class="col card" u-control="digitalout" microID="${id}" u-is="generic">
   <div class="block header">
     <img data-src="/i/digitalout.svg" class="icon" />
-    <h3>${id}</h3>
+    <h3 u-text="title"></h3>
     <h4 u-text="description"></h4>
     <span class="activeState" u-active="active"></span>
     <span class="setconfig"></span>
@@ -140,7 +138,7 @@
 <div class="col card" u-control="pwmout" u-is="pwmout" microID="${id}">
   <div class="block header">
     <img data-src="/i/pwmout.svg" class="icon" />
-    <h3>${id}</h3>
+    <h3 u-text="title"></h3>
     <h4 u-text="description"></h4>
     <span class="activeState" u-active="active"></span>
     <span class="setconfig"></span>
@@ -154,7 +152,7 @@
 <div class="col card" u-control="log" u-is="log" microID="${id}">
   <div class="block header">
     <img data-src="/i/log.svg" class="icon" />
-    <h3>${id}</h3>
+    <h3 u-text="title"></h3>
     <h4 u-text="description"></h4>
     <span class="activeState" u-active="active"></span>
     <span class="setconfig"></span>
@@ -169,7 +167,7 @@
 <div class="col card" u-control="displayssd1306" u-is="generic" microID="${id}">
   <div class="block header">
     <img data-src="/i/displayssd1306.svg" class="icon" />
-    <h3>${id}</h3>
+    <h3 u-text="title"></h3>
     <h4 u-text="description"></h4>
     <span class="activeState" u-active="active"></span>
     <span class="setconfig"></span>
@@ -183,7 +181,7 @@
 <div class="col card" u-control="displaylcd" u-is="generic" microID="${id}">
   <div class="block header">
     <img data-src="/i/displaylcd.svg" class="icon" />
-    <h3>${id}</h3>
+    <h3 u-text="title"></h3>
     <h4 u-text="description"></h4>
     <span class="activeState" u-active="active"></span>
     <span class="setconfig"></span>
@@ -197,7 +195,7 @@
 <div class="col card hidden" u-control="displaytext" u-is="displaytext" microID="${id}">
   <div class="block header">
     <img data-src="/i/displaytext.svg" class="icon" />
-    <h3>${id}</h3>
+    <h3 u-text="title"></h3>
     <h4 u-text="description"></h4>
     <span class="activeState" u-active="active"></span>
     <span class="setconfig"></span>
@@ -210,7 +208,7 @@
 <div class="col card hidden" u-control="displaydot" u-is="displaydot" microID="${id}">
   <div class="block header">
     <img data-src="/i/displaydot.svg" class="icon" />
-    <h3>${id}</h3>
+    <h3 u-text="title"></h3>
     <h4 u-text="description"></h4>
     <span class="activeState" u-active="active"></span>
     <span class="setconfig"></span>
@@ -223,7 +221,7 @@
 <div class="col card hidden" u-control="displayline" u-is="displayline" microID="${id}">
   <div class="block header">
     <img data-src="/i/displayline.svg" class="icon" />
-    <h3>${id}</h3>
+    <h3 u-text="title"></h3>
     <h4 u-text="description"></h4>
     <span class="activeState" u-active="active"></span>
     <span class="setconfig"></span>
