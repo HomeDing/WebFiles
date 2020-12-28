@@ -1,8 +1,8 @@
 {
   "name": "homedingnode",
   "version": "1.1.0",
-  "description": "Node based emulator of a HomeDing embedded web server",
-  "main": "server.js",
+  "description": "Node based Portal for HomeDing devices on the local network",
+  "main": "app.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/HomeDing/WebFiles.git"
@@ -26,14 +26,14 @@
     "shelljs": "^0.8.4",
     "shx": "^0.3.3",
     "tslint": "^6.1.3",
-    "typescript": "^3.9.7",
+    "typescript": "^4.1.3",
     "uglify-js": "^3.12.3"
   },
   "scripts": {
     "test:ts": "tslint --project src --force",
     "test:server": "tslint --project server --force",
     "test": "npm run test:ts && npm run test:server",
-    "clean": "shx rm -rf dist",
+    "clean": "shx rm -rf dist && shx rm -rf dist-mini",
     "build:css": "node-sass iotstyle.scss iotstyle.css --output-style compact",
     "build:css-watch": "npm run build:css -- -w",
     "build:server": "tsc -p server",

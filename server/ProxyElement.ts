@@ -20,10 +20,10 @@ export class ProxyElement extends VirtualBaseElement {
     this.url = baseurl + '/$board/' + this.typeId;
 
     // extract config for element state
-    this.state = { url: baseurl }
+    this.state = { url: baseurl };
     fetch(baseurl + '/config.json')
       .then(function (result) {
-        return (result.json())
+        return (result.json());
       }).then(function (json) {
         const st = json[scope.type][scope.id];
         scope.state = Object.assign(scope.state, st);
@@ -44,7 +44,9 @@ export class ProxyElement extends VirtualBaseElement {
   // pass action to real element
   async doAction(action: any) {
     for (const a in action) {
-      await fetch(this.url + '?' + a + '=' + action[a]);
+      if (action.hasOwnProperty(a)) {
+        await fetch(this.url + '?' + a + '=' + action[a]);
+      }
     }
   }
 } // ProxyElement

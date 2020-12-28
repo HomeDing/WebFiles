@@ -1,7 +1,7 @@
 // https://commerceofthefuture.com/2020/06/getting-started-with-typescript-and-express/
 // https://github.com/microsoft/TypeScript-Node-Starter/blob/master/src/app.ts
 
-import express, { NextFunction } from 'express';
+import express from 'express';
 import debug from 'debug';
 import fs from 'fs';
 import path from 'path';
@@ -90,7 +90,7 @@ if (options.case) {
     );
 
     // ===== watch for changes of $board
-    fs.watch(boardFileName, function (eventName, filename) {
+    fs.watch(boardFileName, function (_eventName, _filename) {
       boardState = null;
     });
   }
@@ -152,15 +152,15 @@ app.get('/', function (req, res, _next) {
 
 // ----- enable buildin setup pages -----
 
-app.get('/\\$setup.htm', function (req, res, next) {
+app.get('/\\$setup.htm', function (req, res) {
   res.sendFile(path.join(__dirname, './setup.htm'));
 });
 
-app.get('/\\$update.htm', function (req, res, next) {
+app.get('/\\$update.htm', function (req, res) {
   res.sendFile(path.join(__dirname, './update.htm'));
 });
 
-app.get('/\\$upload.htm', function (req, res, next) {
+app.get('/\\$upload.htm', function (req, res) {
   res.sendFile(path.join(__dirname, './upload.htm'));
 });
 
@@ -207,7 +207,7 @@ virtual.activate(allConfig);
 
 //#endregion
 
-app.get(/^\/\$list$/, noCache, async function (req, res, next) {
+app.get(/^\/\$list$/, noCache, async function (req, res) {
   const fl = [];
   const files = await fs.promises.readdir(__dirname);
   for (const i in files) {
@@ -225,7 +225,7 @@ app.get(/^\/\$list$/, noCache, async function (req, res, next) {
 });
 
 
-app.get(/^\/\$sysinfo$/, noCache, function (req, res, next) {
+app.get(/^\/\$sysinfo$/, noCache, function (req, res) {
   const fl = {
     'devicename': 'nodejsding',
     'build': 'Dec  1 2018',
@@ -243,7 +243,7 @@ app.get(/^\/\$sysinfo$/, noCache, function (req, res, next) {
 
 // ===== serving /$board status for a single element
 
-app.get('/\\$board/:type/:id', noCache, async function (req, res, next) {
+app.get('/\\$board/:type/:id', noCache, async function (req, res) {
   if (!boardState) {
     boardState = {};
     if (caseFolder) {
@@ -289,7 +289,7 @@ app.get(/^\/\$board$/, noCache, async function (req, res) {
 
 // ===== serving file system
 
-app.delete('/:fn', function (req, res, next) {
+app.delete('/:fn', function (req, res) {
   const filename = req.params.fn;
   log.info('DELETE: %s', filename);
   log.info('DELETE: not implemented.');
@@ -313,7 +313,7 @@ app.use(express.static(process.cwd(), { index: false }));
 
 // // ----- enable 404 responses -----
 
-app.use(function (req, res, next) {
+app.use(function (req, res) {
   log.error(`could not find ${req.originalUrl}: 404`);
   res.status(404).send('Sorry cant find that!');
 });

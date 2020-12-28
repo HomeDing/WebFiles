@@ -1,6 +1,6 @@
 // Discovery of local Home devices advertising themselves
 
-import express, { NextFunction } from 'express';
+import express from 'express';
 
 const mDns = require('mdns-js');
 
@@ -83,9 +83,7 @@ export class DeviceDiscovery {
 
 
   // express function: list all found devices.
-  list(req: express.Request, res: express.Response, next: express.NextFunction) {
+  list(req: express.Request, res: express.Response) {
     res.json(netDevices);
-    // res.type('application/json');
-    // res.send(JSON.stringify(netDevices, null, 2));
   }
 }

@@ -1,11 +1,12 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
-  "display": "Node 12",
+  "display": "Node 14",
   
   "compilerOptions": {
-    "lib": ["ES2019", "es2020.promise", "es2020.bigint", "es2020.string"],
+    // see https://github.com/microsoft/TypeScript/wiki/Node-Target-Mapping
+    "lib": ["ES2020"],
     "module": "CommonJS",
-    "target": "ES2019",                          /* Specify ECMAScript target version: 'ES3' (default), 'ES5', 'ES2015', 'ES2016', 'ES2017', 'ES2018', 'ES2019', 'ES2020', or 'ESNEXT'. */
+    "target": "ES2020",                          /* Specify ECMAScript target version: 'ES3' (default), 'ES5', 'ES2015', 'ES2016', 'ES2017', 'ES2018', 'ES2019', 'ES2020', or 'ESNEXT'. */
     "sourceMap": true,                     /* Generates corresponding '.map' file. */
     "rootDir": ".",                       /* Specify the root directory of input files. Use to control the output directory structure with --outDir. */
 
