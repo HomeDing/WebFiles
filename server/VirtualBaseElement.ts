@@ -26,7 +26,7 @@ export class VirtualBaseElement {
 
   /** return the actual state from the element */
   async getState(): Promise<any> { return (this.state); }
-  async doAction(query: any) { }
+  async doAction(_query: any) { }
 }
 
 
@@ -91,7 +91,9 @@ export async function allState() {
   const all: any = {};
 
   for (const eId in activeVirtuals) {
-    all[eId] = await activeVirtuals[eId].getState();
+    if (activeVirtuals.hasOwnProperty(eId)) {
+      all[eId] = await activeVirtuals[eId].getState();
+    }
   }
   return (all);
 } // allState()
