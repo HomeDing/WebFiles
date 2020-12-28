@@ -1171,6 +1171,16 @@ function getHashParams(defaults) {
     });
     return params;
 }
+function createElementX(parentNode, tagName, attr) {
+    var o = document.createElement(tagName);
+    if (attr) {
+        for (var a in attr) {
+            o.setAttribute(a, attr[a]);
+        }
+    }
+    parentNode.appendChild(o);
+    return (o);
+}
 var TimerWidgetClass = (function (_super) {
     __extends(TimerWidgetClass, _super);
     function TimerWidgetClass() {

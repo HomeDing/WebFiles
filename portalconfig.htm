@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <title>HomeDing Portal Config</title>
+
+  <link rel="icon" type="image/png" href="/favicon48.png" sizes="48x48">
+  <meta name="application-name" content="Ding" />
+  <meta name="msapplication-config" content="/browserconfig.xml" />
+  <meta name="msapplication-TileColor" content="#2b5797" />
+  <meta name="msapplication-TileImage" content="/favicon144.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon180.png" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <link rel="manifest" href="/manifest.json" />
+  <meta name="theme-color" content="#ffffff" />
+  <link rel="icon" type="image/png" href="/favicon48.png" sizes="48x48">
+
+  <link Content-Type="text/css" href="/iotstyle.css" rel="stylesheet" />
+
+  <script src="/micro.js"></script>
+  <style>
+    html,
+    body {
+      height: 100%;
+      width: 100%;
+      margin: 0;
+      padding: 0;
+    }
+
+    #ppage {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      min-height: 100%;
+    }
+
+    #pbody {
+      flex: 1;
+      display: flex;
+      flex-direction: row;
+      background-color: silver;
+    }
+
+    main {
+      flex: 1;
+    }
+
+    ul>hr {
+      border: 0
+    }
+
+    ul>li {
+      margin-bottom: 0.3em;
+    }
+
+    #devices > h3 {
+      margin: 0.5rem 0;
+    }
+
+    #devices > div {
+      margin: 0.2rem 0 0.2rem 1rem;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container-fluid">
+    <div class="u-header">
+      <a href="/" title="Start-Page"><img class="icon" src="/favicon.svg" /></a>
+      <h1>Portal Config</h1>
+    </div>
+    <div class="u-navbar">
+      <a class="button" href="/portal.htm">Portal</a>
+    </div>
+
+    <div class="row wrap">
+      <div class="col-6">
+        <p>Select the elements to be shown on the portal board:</p>
+      </div>
+      <div id="devices" class="col-6"></div>
+    </div>
+
+  </div>
+
+  <script>
+    var devicesObj = document.querySelector('#devices');
+    var devList = [];
+    var devData = {};
+
+    function startContent() {
+      if (devList.length > 0) {
+        var d = devList.pop();
+        var devObj = createElementX(devicesObj, 'h3');
+        devObj.innerText = devData[d].title + ' (' + d + ')';
+        fetch('/$deviceconfig?host=' + d)
+          .then(function (result) {
+            return result.json();
+          })
+          .then(function (data) {
+            var url = 'http://' + devData[d].host + '/$board/';
+            for (t in data) {
+              for (i in data[t]) {
+                var cnfElem = data[t][i];
+                var divObj = createElementX(devicesObj, 'div');
+
+                var cbObj = createElementX(divObj, 'input', { type:'checkbox', title: url + t + '/'+ i});
+                var titleText = cnfElem.title || cnfElem.description || '';
+                createElementX(divObj, 'span').innerText = titleText + ' (' + t + '/' + i + ')';
+              }
+            }
+            // pre.innerText = JSON.stringify(data, null, 2);
+            window.setTimeout(startContent, 10);
+          });
+
+        // window.setTimeout(startContent, 10);
+      }
+
+    }
+
+    function loadDevices() {
+      fetch('/$devices')
+        .then(function (result) {
+          return result.json();
+        })
+        .then(function (data) {
+          devData = data;
+          devList = Object.keys(data);
+          window.setTimeout(startContent, 10);
+        });
+    } // loadDevices()
+
+    window.addEventListener('load', loadDevices);
+  </script>
+</body>
+
+</html>

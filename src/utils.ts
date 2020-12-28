@@ -73,7 +73,7 @@ function changeConfig(id: string, newConfig: any) {
 
   const formData = new FormData();
   formData.append(fName, new Blob([JSON.stringify(c)], { type: 'text/html' }), fName);
-  fetch('/', { method: 'POST', body: formData }).then(function() {
+  fetch('/', { method: 'POST', body: formData }).then(function () {
     window.alert('saved.');
   });
 } // changeConfig()
@@ -130,5 +130,17 @@ function getHashParams(defaults: object) {
     });
   return params;
 } // getHashParams()
+
+
+function createElementX(parentNode: HTMLElement, tagName: string, attr: { [id: string]: string }): HTMLElement {
+  var o = document.createElement(tagName);
+  if (attr) {
+    for (const a in attr) {
+      o.setAttribute(a, attr[a]);
+    }
+  }
+  parentNode.appendChild(o);
+  return (o);
+} // createElementX()
 
 // End
