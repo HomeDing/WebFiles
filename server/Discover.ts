@@ -2,20 +2,27 @@
 
 import express from 'express';
 
+import { ConfigCache } from './ConfigCache';
+
 const mDns = require('mdns-js');
 
 let mDnsBrowser: any = null;
 
 const netDevices: {
   [x: string]: {
-    [x: string]: any;
+    [x: string]: {
+      host: string,
+      title: string,
+      ts: Date
+    } | any;
   };
 } = {};
 
+
 /**
- * A device was reported in mDNS: add to list of devices and set current timestamp.
- * This function is registered in the mDNS browser.
- */
+* A device was reported in mDNS: add to list of devices and set current timestamp.
+* This function is registered in the mDNS browser.
+*/
 function addDevice(data: any) {
   const now = new Date();
   const host: string = data.host.replace(/\.local/, '');
@@ -57,6 +64,7 @@ function startDiscovery() {
     if (now.valueOf() - netDevices[host].ts.valueOf() > 90 * 1000) {
       console.log(`drop ${host}`);
       delete netDevices[host];
+      ConfigCache.getInstance().remove(host);
       console.log(Object.keys(netDevices).join(' '));
     }
   } // for
@@ -83,7 +91,12 @@ export class DeviceDiscovery {
 
 
   // express function: list all found devices.
-  list(req: express.Request, res: express.Response) {
+  handleDevices(req: express.Request, res: express.Response) {
     res.json(netDevices);
   }
+
+  list() {
+    return (netDevices);
+  }
 }
+

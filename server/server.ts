@@ -139,7 +139,11 @@ app.use(function (req, res, next) {
 import { DeviceDiscovery } from './Discover';
 
 const dService = new DeviceDiscovery({});
-app.get(/^\/\$devices$/, noCache, dService.list);
+app.get(/^\/\$devices$/, noCache, dService.handleDevices);
+
+import { ConfigCache } from './ConfigCache';
+const ccInstance = ConfigCache.getInstance();
+app.get(/^\/\$deviceconfig$/, noCache, ccInstance.handle.bind(ccInstance));
 
 
 // ===============================================================================================
