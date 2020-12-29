@@ -133,10 +133,12 @@ function getHashParams(defaults: object) {
 
 
 function createElementX(parentNode: HTMLElement, tagName: string, attr: { [id: string]: string }): HTMLElement {
-  var o = document.createElement(tagName);
+  const o = document.createElement(tagName);
   if (attr) {
     for (const a in attr) {
-      o.setAttribute(a, attr[a]);
+      if (attr.hasOwnProperty(a)) {
+        o.setAttribute(a, attr[a]);
+      }
     }
   }
   parentNode.appendChild(o);

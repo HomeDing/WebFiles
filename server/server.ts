@@ -38,9 +38,8 @@ debug.enable('server:info');
 
 const options = yargs
   .usage('Usage: $0 -c <case name>')
-  .usage('  This web server hosts a full version of the HomeDing Web interface')
-  .usage('  and emulates to a certain degree the services provided by a HomeDIng device.')
-  .option('c', { alias: 'case', describe: 'Name of the simulated case', type: 'string', demandOption: false, default: null })
+  .usage('  HomeDing Portal server')
+  .option('c', { alias: 'case', describe: 'Simulate case', type: 'string', demandOption: false, default: null })
   .option('v', { alias: 'verbose', describe: 'Verbose logging', type: 'boolean', demandOption: false, default: false })
   .argv;
 
