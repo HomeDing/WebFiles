@@ -40,7 +40,7 @@ const srcAssets = [
   'index.htm',
   'iotstyle.css',
   'spinner.gif',
-  
+
   'micro.js',
 
   'elements.json',
@@ -71,7 +71,8 @@ const srcAssets = [
   'manifest.json',
   'browserconfig.xml',
 
-  'i/*.svg'
+  'i/*.svg',
+  'icons.svg'
 ];
 
 const builtinAssets = [

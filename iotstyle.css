@@ -6,9 +6,9 @@ body { background-color: #dddddd; }
 
 p, pre, h1, h2, h3, h4 { margin: 0 0 1rem 0; min-height: 1rem; }
 
-p > img, pre > img, h1 > img, h2 > img, h3 > img, h4 > img { height: 1em; }
+p > img, p > svg, pre > img, pre > svg, h1 > img, h1 > svg, h2 > img, h2 > svg, h3 > img, h3 > svg, h4 > img, h4 > svg { height: 1em; }
 
-p > img:first-child, pre > img:first-child, h1 > img:first-child, h2 > img:first-child, h3 > img:first-child, h4 > img:first-child { margin-right: 0.2em; }
+p > img:first-child, p > svg:first-child, pre > img:first-child, pre > svg:first-child, h1 > img:first-child, h1 > svg:first-child, h2 > img:first-child, h2 > svg:first-child, h3 > img:first-child, h3 > svg:first-child, h4 > img:first-child, h4 > svg:first-child { margin-right: 0.2em; }
 
 a, a:visited { text-decoration: none; cursor: pointer; color: #304878; }
 
@@ -126,7 +126,7 @@ main { transition: margin-left 0.2s; }
 
 .card.small { width: 188px; min-width: 188px; }
 
-.card img.active { background-color: limegreen; }
+.card img.active, .card svg.active { background-color: limegreen; }
 
 .card > .block { position: relative; flex: 1 1 auto; padding: 0.5rem 1rem; min-height: 3em; }
 
@@ -190,7 +190,7 @@ option[disabled] { color: #808080; }
 
 .element.wide { width: 10rem; }
 
-.element > img { position: relative; left: 1rem; top: 0.4rem; height: 4rem; width: 4rem; }
+.element > svg, .element > img { position: relative; left: 1rem; top: 0.4rem; height: 4rem; width: 4rem; }
 
 .element > .id { position: absolute; display: inline-block; bottom: 0.4rem; left: 0; height: 1rem; width: 6rem; text-align: center; }
 
@@ -217,9 +217,9 @@ option[disabled] { color: #808080; }
 /* === SWITCH === */
 .u-slider { display: inline-block; width: 100%; }
 
-.u-slider > label { display: inline-block; padding: 0 0.4em; margin-bottom: 0.5rem; vertical-align: top; font-size: 1.4rem; cursor: pointer; }
+.u-slider > label, .u-slider > label { display: inline-block; padding: 0 0.2em; margin-bottom: 0.5rem; vertical-align: top; font-size: 1.4rem; cursor: pointer; }
 
-.u-slider > label > img { width: 1.2em; height: 1.2em; }
+.u-slider > label > img, .u-slider > label > svg.icon, .u-slider > label > img, .u-slider > label > svg.icon { width: 1.2em !important; height: 1.2em !important; }
 
 .u-slider > .box { position: relative; cursor: pointer; display: inline-block; width: 3rem; height: 1.7rem; border: 0.125rem solid #666666; border-radius: 1.25rem; background-color: #dddddd; padding: 0.125rem; }
 

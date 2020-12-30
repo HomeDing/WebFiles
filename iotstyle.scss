@@ -63,7 +63,7 @@ h4 {
   margin: 0 0 $white-space 0;
   min-height: 1rem;
 
-  > img {
+  > img, > svg {
     // assume image in text containers to be inline icons
     height: 1em;
 
@@ -445,7 +445,7 @@ main {
     min-width: 188px;
   }
 
-  img.active {
+  img.active, svg.active {
     background-color: limegreen;
   }
 
@@ -636,7 +636,7 @@ option[disabled] { color: $u-disabled;}
     width: 10rem;
   }
 
-  > img {
+  > svg, > img {
     position: relative;
     left: 1rem;
     top: 0.4rem;
@@ -736,16 +736,16 @@ option[disabled] { color: $u-disabled;}
   display: inline-block;
   width: 100%;
 
-  > label {
+  > label, > label {
     display: inline-block;
-    padding: 0 0.4em;
+    padding: 0 0.2em;
     margin-bottom: 0.5rem;
     vertical-align: top;
     font-size: 1.4rem;
     cursor: pointer;
-    > img {
-      width: 1.2em;
-      height: 1.2em;
+    > img, > svg.icon {
+      width: 1.2em !important;
+      height: 1.2em !important;
     }
   }
 

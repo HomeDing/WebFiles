@@ -150,7 +150,10 @@ var MicroRegistry = (function () {
                 }
             }
             for (var p in b) {
-                if (p.substr(0, 3) === 'on_') {
+                if (p === 'on_touchstart') {
+                    obj.addEventListener(p.substr(3), b[p].bind(obj), { passive: true });
+                }
+                else if (p.substr(0, 3) === 'on_') {
                     obj.addEventListener(p.substr(3), b[p].bind(obj), false);
                 }
                 else if (p.substr(0, 2) === 'on') {
@@ -269,7 +272,7 @@ var GenericWidgetClass = (function (_super) {
     GenericWidgetClass.prototype.newData = function (_path, key, value) {
         if (key && value) {
             this.data[key] = value;
-            var ic = this.querySelector('img');
+            var ic = this.querySelector('img,h3');
             if (ic) {
                 setAttr(ic, 'title', JSON.stringify(this.data, null, 1)
                     .replace('{\n', '')

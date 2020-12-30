@@ -25,6 +25,7 @@
     "node-sass": "^4.14.1",
     "shelljs": "^0.8.4",
     "shx": "^0.3.3",
+    "svgstore": "^3.0.0-2",
     "tslint": "^6.1.3",
     "typescript": "^4.1.3",
     "uglify-js": "^3.12.3"
@@ -43,6 +44,7 @@
     "build": "npm run build:ts && npm run build:css && npm run build:server",
     "pack:dist": "node packdist.js",
     "pack:minimal": "node packminimal.js",
+    "pack:icons": "node packicons.js",
     "pack:embed": "node packembedweb.js",
     "pack": "npm run pack:dist && npm run pack:minimal && npm run pack:embed",
     "prestart": "npm run build",

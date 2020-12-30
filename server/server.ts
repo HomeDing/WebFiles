@@ -212,7 +212,7 @@ virtual.activate(allConfig);
 
 app.get(/^\/\$list$/, noCache, async function (req, res) {
   const fl = [];
-  const files = await fs.promises.readdir(__dirname);
+  const files = await fs.promises.readdir('.');
   for (const i in files) {
     if (files.hasOwnProperty(i)) {
       const aFile = await fs.promises.stat(files[i]);

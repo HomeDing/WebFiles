@@ -159,7 +159,9 @@ class MicroRegistry {
       } // if
 
       for (const p in b) {
-        if (p.substr(0, 3) === 'on_') {
+        if (p === 'on_touchstart') {
+          obj.addEventListener(p.substr(3), b[p].bind(obj), {passive: true});
+        } else if (p.substr(0, 3) === 'on_') {
           obj.addEventListener(p.substr(3), b[p].bind(obj), false);
         } else if (p.substr(0, 2) === 'on') {
           obj.addEventListener(p.substr(2), b[p].bind(obj), false);

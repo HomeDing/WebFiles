@@ -24,7 +24,7 @@ class GenericWidgetClass extends MicroControlClass {
     // save data to title
     if (key && value) {
       this.data[key] = value;
-      const ic = this.querySelector('img');
+      const ic = this.querySelector('img,h3') as HTMLElement;
       if (ic) {
         setAttr(ic, 'title',
           JSON.stringify(this.data, null, 1)

@@ -73,7 +73,7 @@
           alert('Please specify a name');
         } else {
           modal.open('configelementdlg', {
-            id: this.objType.value + '/' + this.objID.value
+            id: '/' + this.objType.value + '/' + this.objID.value
           });
         }
       }
@@ -99,8 +99,8 @@
 
     connectedCallback: function () {
       this._blk = this.querySelector('.block:not(.header)');
-      this._type = this.params.id.split('/')[0];
-      this._id = this.params.id.split('/')[1];
+      this._type = this.params.id.split('/')[1];
+      this._id = this.params.id.split('/')[2];
 
       // get implemented elements and populate the dropdown
       var d = uElements.defs[this._type];
