@@ -2,6 +2,7 @@
 // micro implementation for web controls using html templates and behaviors.
 
 //  <reference path="JsonParse.ts" />
+//  <reference path="utils.ts" />
 
 // eslint-disable-next-line no-unused-vars
 enum MicroState {
@@ -205,9 +206,7 @@ class MicroRegistry {
     this._tco = document.getElementById('u-templates');
 
     if (!this._tco) {
-      const t = document.createElement('div');
-      t.id = 'u-templates';
-      this._tco = document.body.appendChild(t);
+      this._tco = createHTMLElement(document.body, 'div', { id: 'u-templates' });
     }
     if (document.readyState === 'complete') {
       this.init2();

@@ -181,10 +181,7 @@
           elementsData = elList;
           selObj.innerHTML = '';
           for (e in elList) {
-            var opt = document.createElement('option');
-            opt.value = e;
-            opt.textContent = e;
-            selObj.appendChild(opt);
+            createHTMLElement(selObj, 'option', { value: e }).textContent = e;
           }
           elemChange();
         });

@@ -1,5 +1,8 @@
 // microide javascript implementation
 
+/// <reference path="src/utils.ts" />
+
+
 var filesObj = document.getElementById("files");
 var contentObj = document.getElementById("content");
 var progressObj = document.getElementById("progress");
@@ -46,22 +49,16 @@ function handleDeleteFile(e) {
 
 // add one file to the directory listing.
 function addFileEntry(container, f) {
-  var row = document.createElement("div");
-  row.className = "row nogutter";
-  container.appendChild(row);
+  var row = createHTMLElement(container, "div", { class: 'row nogutter' });
   row.addEventListener("click", handleLoadFile);
 
   // add file name and size
-  var entry = document.createElement("div");
-  entry.className = "col stretch file-entry";
+  var entry = createHTMLElement(row, "div", { class: 'col stretch file-entry' });
   entry.innerText = entry.title = f.name + " (" + f.size + ")";
-  row.appendChild(entry);
 
-  var delx = document.createElement("div");
-  delx.className = "col file-delete";
+  var delx = createHTMLElement(row, "div", { class: 'col file-delete' });
   delx.innerText = "[X]";
   delx.addEventListener("click", handleDeleteFile);
-  row.appendChild(delx);
 } // addFileEntry()
 
 // create the directory listing from the fileList dataset.

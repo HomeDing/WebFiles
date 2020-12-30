@@ -112,15 +112,12 @@
         })
         .then(function (data) {
           devList = data;
+          var devObj = document.querySelector('#devices')
 
           for (d in data) {
-            var devObj = data[d];
-            var o = document.createElement('li');
-            document.querySelector('#devices').appendChild(o);
-            var a = document.createElement('a');
-            a.href = "#" + d + devObj.path;
-            a.innerText = devObj.title || d;
-            o.appendChild(a);
+            var devData = data[d];
+            var o = createHTMLElement(devObj, 'li');
+            createHTMLElement(o, 'a', { href: '#' + d + devData.path }).innerText = devData.title || d;
           }
           window.setTimeout(startContent, 10);
         });

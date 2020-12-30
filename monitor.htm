@@ -116,17 +116,10 @@
       r.className = "remote";
 
       c = r.insertCell(-1);
-      c.className = 'status';
-      var o = document.createElement('img');
-      o.src = 'i/stop.svg';
-      c.appendChild(o);
+      createHTMLElement(c, 'img', { class: 'status', src: 'i/stop.svg' });
 
       c = r.insertCell(-1);
-      c.className = 'hostname';
-      var o = document.createElement('a');
-      o.href = 'http://' + name;
-      o.innerText = name;
-      c.appendChild(o);
+      createHTMLElement(c, 'a', { href: 'http://' + name }).innerText = name;
 
       c = r.insertCell(-1);
       c.className = 'memory';
@@ -150,7 +143,6 @@
           return result.json();
         })
         .then(function (json) {
-          debugger;
           devices = Object.keys(json);
           for (var n = 0; n < devices.length; n++) {
             remotes[n] = addDevice(devices[n]);
@@ -168,7 +160,7 @@
 
       } else {
         var hostname = devices[remoteIndex];
-        var statImg = obj.querySelector('.status img');
+        var statImg = obj.querySelector('img.status');
 
         statImg.src = 'i/config.svg';
 
@@ -176,8 +168,6 @@
           .then(function (response) {
             if (response.status === 200) {
               return response.json();
-            } else {
-              debugger;
             }
           })
           .then(function (si) {

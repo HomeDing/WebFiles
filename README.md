@@ -2,17 +2,69 @@
 
 Build Status: [![Build Status](https://dev.azure.com/HomeDing/WebFiles/_apis/build/status/HomeDing.WebFiles?branchName=master)](https://dev.azure.com/HomeDing/WebFiles/_build)
 
-This is the project of the HomeDing library related to web technologies. It i used for multiple purposes:
+This is the project of the HomeDing library related to web technologies. It is used for multiple purposes:
 
-* The Web UI to be embedded into the HomeDing devices is developed using TypeScript and SCSS compilation and packaging.
+* The Web UI to be embedded into the HomeDing devices.
+* Web UI files to be embedded into the sketch.
+* The Portal implementation, a node.js based central solution that can act as a single point to find and operate all HomeDing devices.
+* The Portal implementation can also be used to simulate (mock) some Elements for development purpose.
+
+
+## Folder structure and technologies of this project
+
+The client side components of this project are used for implementing the portal and the WebUI for the devices. They are delivered as static files to the browser.
+The project folder structure includes these files directly in the ´root´ and the ´i´ sub-folder.
+This allows using the project directly for development:
+
+* The HTML files are created in the root folder.
+* The CSS files are generated using SASS from the *.scss file in the root.
+* The Javascript for client side scripting is compiled from the `src` folder into the `micro.js` file in the root directory.
+* The Javascript for node.js server is compiled from the `server` folder.
+* The WebUI that will be deployed on devices are packed into the folders `dist` and `dist-mini`
+<!-- * The portal implementation is packed into the folder `dist-portal` -->
+
+All development build tasks are started from npm jobs like `npm run build:ts` and are im
+
+  The Typescript source files that contain the client-side scripting are in the `src` folder. They are compiled into the `micro.js` file in the root directory. 
   The result is a set of static files that can be uploaded to devices.
+
+
+## Building steps
+
+The steps to build the Web UIs:
+
+* Compile CSS using `npm run build:css`.
+* Compile client side script using `npm run build:ts`.
+* Option to start a development server using `npm start`
+* Pack files for standard devices (1 MByte file space) using `npm run pack:dist`.
+* Pack files for minimal devices (128 kByte file space) using `npm run pack:minimal`.
+* create the include file for sketch embedded files using `npm run pack:embed`.
+
+The steps to build the server:
+
+* Compile CSS using `npm run build:css`.
+* Compile client side script using `npm run build:ts`.
+* Compile server side script using `npm run build:server`.
+* Option to start a development server using `npm start`
+
+
+
+## Building the portal project
+
+
+
 
 * There is a device simulator integrated that allows to use mock files and some mock service implementations that helps
   developing and testing without the need for flashing physical devices. 
+* 
+* that identifies all HomeDing devices in the local network and offers an easy navigation to the device specific pages.
+* 
+*  is developed using TypeScript and SCSS compilation and packaging.
+* A 
 
-* The Portal implementation is as central solution that identifies all HomeDing devices in the local network and offers an easy navigation to the device specific pages.
 
 This project relies on the nodejs runtime and several libraries. See installation.
+
 
 ## Overview
 

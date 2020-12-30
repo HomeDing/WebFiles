@@ -24,12 +24,7 @@ class DisplayTextWidgetClass extends GenericWidgetClass {
       if (this._dispElem.getAttribute('grid')) {
         this._grid = Number(this._dispElem.getAttribute('grid'));
       }
-
-      const e: HTMLSpanElement = this._elem = document.createElement('span');
-      e.className = 'text';
-      e.style.top = '0px';
-      e.style.left = '0px';
-      this._dispElem.appendChild(e);
+      this._elem = createHTMLElement(this._dispElem, 'span', { class: 'text', style: 'top:0;left:0' });
     }
 
     hub.subscribe(this.microid + '?*', this.newValue.bind(this), true);

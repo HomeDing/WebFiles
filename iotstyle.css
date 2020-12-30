@@ -4,7 +4,7 @@ body { background-color: #dddddd; }
 
 * { box-sizing: border-box; }
 
-p, pre, h1, h2, h3, h4 { margin: 0 0 1rem 0; }
+p, pre, h1, h2, h3, h4 { margin: 0 0 1rem 0; min-height: 1rem; }
 
 p > img, pre > img, h1 > img, h2 > img, h3 > img, h4 > img { height: 1em; }
 
@@ -122,7 +122,9 @@ nav.inpage.open + main { margin-left: 280px; }
 
 main { transition: margin-left 0.2s; }
 
-.card { position: relative; display: flex; flex-direction: column; background-color: white; border: none; border-radius: 0; width: 24em; min-width: 24em; }
+.card { position: relative; display: flex; flex-direction: column; background-color: white; border: none; border-radius: 0; width: 376px; min-width: 376px; }
+
+.card.small { width: 188px; min-width: 188px; }
 
 .card img.active { background-color: limegreen; }
 
@@ -176,6 +178,8 @@ button.secondary, .button.secondary { background-color: #777777; border-color: #
 
 .form-group > span { border: 0.1rem solid transparent; }
 
+option[disabled] { color: #808080; }
+
 .form-group:not(:last-child) { margin-bottom: 0.5rem; }
 
 .invalid { border: 2px solid #ff0000 !important; background-color: #ffcccc !important; }
@@ -213,9 +217,9 @@ button.secondary, .button.secondary { background-color: #777777; border-color: #
 /* === SWITCH === */
 .u-slider { display: inline-block; width: 100%; }
 
-.u-slider > label { display: inline-block; padding: 0 0.6em; margin-bottom: 0.5rem; vertical-align: top; font-size: 1.4rem; cursor: pointer; }
+.u-slider > label { display: inline-block; padding: 0 0.4em; margin-bottom: 0.5rem; vertical-align: top; font-size: 1.4rem; cursor: pointer; }
 
-.u-slider > label > img { width: 1em; height: 1em; }
+.u-slider > label > img { width: 1.2em; height: 1.2em; }
 
 .u-slider > .box { position: relative; cursor: pointer; display: inline-block; width: 3rem; height: 1.7rem; border: 0.125rem solid #666666; border-radius: 1.25rem; background-color: #dddddd; padding: 0.125rem; }
 

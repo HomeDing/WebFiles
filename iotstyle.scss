@@ -61,6 +61,7 @@ h2,
 h3,
 h4 {
   margin: 0 0 $white-space 0;
+  min-height: 1rem;
 
   > img {
     // assume image in text containers to be inline icons
@@ -436,8 +437,13 @@ main {
   background-color: $u-cardbackground;
   border: $u-card-border;
   border-radius: $u-card-radius;
-  width: 24em;
-  min-width: 24em;
+  width: 376px;
+  min-width: 376px;
+
+  &.small {
+    width: 188px;
+    min-width: 188px;
+  }
 
   img.active {
     background-color: limegreen;
@@ -601,6 +607,8 @@ button,
   }
 }
 
+option[disabled] { color: $u-disabled;}
+
 .form-group:not(:last-child) {
   margin-bottom: $gutter;
 }
@@ -730,14 +738,14 @@ button,
 
   > label {
     display: inline-block;
-    padding: 0 0.6em;
+    padding: 0 0.4em;
     margin-bottom: 0.5rem;
     vertical-align: top;
     font-size: 1.4rem;
     cursor: pointer;
     > img {
-      width: 1em;
-      height: 1em;
+      width: 1.2em;
+      height: 1.2em;
     }
   }
 

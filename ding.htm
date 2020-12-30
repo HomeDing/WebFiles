@@ -205,7 +205,7 @@
     var panelObj = document.getElementById('panel');
     var updateTimer;
 
-    function createElement(path, key, value) {
+    hub.subscribe('/*/*', function (path, key, value) {
       if (path) {
         path = path.toLowerCase();
         var hElem = document.querySelector("[microID='" + path + "']");
@@ -220,8 +220,7 @@
           // if (!e) { micro.insertTemplate(panelObj, 'generic', p); }
         } // if
       } // if
-    } // createElement()
-    hub.subscribe('/*/*', createElement);
+    });
 
     hub.subscribe('/device/*?name', function (path, key, value) {
       document.title = value;

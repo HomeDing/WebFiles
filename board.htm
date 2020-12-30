@@ -96,7 +96,7 @@
           <img src="/i/schedule.svg" class="icon" />
           <h3 u-text="title"></h3>
           <h4 u-text="description"></h4>
-                <span class="activeState" u-active="active"></span>
+          <span class="activeState" u-active="active"></span>
           <span class="setconfig"></span>
         </div>
         <div class="block">
@@ -251,7 +251,12 @@
     var refreshState = ''; // nothing in progress
     var updateTime;
     var updateTimer;
-    var elementDef;
+
+    // Element definitions and list of implemented elements
+    var uElements = {
+      defs: {},
+      impl: [],
+    }
 
     var params = getHashParams({
       sys: false
@@ -275,7 +280,7 @@
       "displaysh1106": "displayssd1306"
     };
 
-    function createElement(path, key, value) {
+    hub.subscribe('/*/*', function (path, key, value) {
       if (path) {
         path = path.toLowerCase();
         var hElem = document.querySelector("[microID='" + path + "']");
@@ -288,9 +293,10 @@
             icon: t
           };
 
-          if (toBool(params.sys) || !elementDef[t] || toBool(elementDef[t].sys) == false) {
-            if ((elementDef[t]) && (elementDef[t].icon)) {
-              p.icon = elementDef[t].icon;
+          var def = uElements.defs[t];
+          if (toBool(params.sys) || !def || toBool(def.sys) == false) {
+            if ((def) && (def.icon)) {
+              p.icon = def.icon;
             }
             var e = micro.insertTemplate(panelObj, t, p);
             if (!e) {
@@ -300,8 +306,7 @@
           } // if
         } // if
       } // if
-    } // createElement()
-    hub.subscribe('/*/*', createElement);
+    }); // create new card
 
     hub.subscribe('/device/*?name', function (path, key, value) {
       document.title = value;
@@ -367,26 +372,33 @@
       var p0 = Promise.allSettled([micro.loadFile('/board-templates.htm'), micro.loadFile('/board-new.htm')]);
 
       // element definitions -> env.json -> config.json
-      var p1 = fetchJSON('/elements.json')
+      var p1 = fetchJSON('/$elements')
         .then(function (json) {
-          elementDef = json;
+          uElements.impl = json;
         });
+
+      // element definitions -> env.json -> config.json
+      var p2 = fetchJSON('/elements.json')
+        .then(function (json) {
+          uElements.defs = json;
+        });
+
 
       var envData;
       // element definitions -> env.json -> config.json
-      var p2 = fetchJSON('/env.json')
+      var p3 = fetchJSON('/env.json')
         .then(function (json) {
           envData = json;
         });
 
       var configData;
       // element definitions -> env.json -> config.json
-      var p3 = fetchJSON('/config.json')
+      var p4 = fetchJSON('/config.json')
         .then(function (json) {
           configData = json;
         });
 
-      Promise.allSettled([p0, p1, p2, p3]).then(function () {
+      Promise.allSettled([p0, p1, p2, p3, p4]).then(function () {
         // env data should be published before config data
         if (envData) {
           hub.write('env', JSON.stringify(envData));

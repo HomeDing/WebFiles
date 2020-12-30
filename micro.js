@@ -193,9 +193,7 @@ var MicroRegistry = (function () {
         this._state = MicroState.INIT;
         this._tco = document.getElementById('u-templates');
         if (!this._tco) {
-            var t = document.createElement('div');
-            t.id = 'u-templates';
-            this._tco = document.body.appendChild(t);
+            this._tco = createHTMLElement(document.body, 'div', { id: 'u-templates' });
         }
         if (document.readyState === 'complete') {
             this.init2();
@@ -627,11 +625,7 @@ var DisplayTextWidgetClass = (function (_super) {
             if (this._dispElem.getAttribute('grid')) {
                 this._grid = Number(this._dispElem.getAttribute('grid'));
             }
-            var e = this._elem = document.createElement('span');
-            e.className = 'text';
-            e.style.top = '0px';
-            e.style.left = '0px';
-            this._dispElem.appendChild(e);
+            this._elem = createHTMLElement(this._dispElem, 'span', { class: 'text', style: 'top:0;left:0' });
         }
         hub.subscribe(this.microid + '?*', this.newValue.bind(this), true);
         if (!this.showSys()) {
@@ -1171,11 +1165,13 @@ function getHashParams(defaults) {
     });
     return params;
 }
-function createElementX(parentNode, tagName, attr) {
-    var o = document.createElement(tagName);
+function createHTMLElement(parentNode, tag, attr) {
+    var o = document.createElement(tag);
     if (attr) {
         for (var a in attr) {
-            o.setAttribute(a, attr[a]);
+            if (attr.hasOwnProperty(a)) {
+                o.setAttribute(a, attr[a]);
+            }
         }
     }
     parentNode.appendChild(o);

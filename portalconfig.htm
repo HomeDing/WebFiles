@@ -94,7 +94,7 @@
     function startContent() {
       if (devList.length > 0) {
         var d = devList.pop();
-        var devObj = createElementX(devicesObj, 'h3');
+        var devObj = createHTMLElement(devicesObj, 'h3');
         devObj.innerText = devData[d].title + ' (' + d + ')';
         fetch('/$deviceconfig?host=' + d)
           .then(function (result) {
@@ -105,11 +105,11 @@
             for (t in data) {
               for (i in data[t]) {
                 var cnfElem = data[t][i];
-                var divObj = createElementX(devicesObj, 'div');
+                var divObj = createHTMLElement(devicesObj, 'div');
 
-                var cbObj = createElementX(divObj, 'input', { type:'checkbox', title: url + t + '/'+ i});
+                var cbObj = createHTMLElement(divObj, 'input', { type:'checkbox', title: url + t + '/'+ i});
                 var titleText = cnfElem.title || cnfElem.description || '';
-                createElementX(divObj, 'span').innerText = titleText + ' (' + t + '/' + i + ')';
+                createHTMLElement(divObj, 'span').innerText = titleText + ' (' + t + '/' + i + ')';
               }
             }
             // pre.innerText = JSON.stringify(data, null, 2);
