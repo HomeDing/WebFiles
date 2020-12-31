@@ -27,6 +27,7 @@ export class MockValue extends VirtualBaseElement {
   async doAction(action: any) {
     const step = this.config.step;
     const v = this.state.value;
+    if (action.value != null) { this.state.value = action.value; }
     if (action.up != null) { this.state.value = Number(v) + Number(action.up) * step; }
     if (action.down != null) { this.state.value = Number(v) - Number(action.down) * step; }
     super.doAction(action);
@@ -91,6 +92,20 @@ export class MockBL0937 extends VirtualBaseElement {
   }
 }
 
+
+export class MockStandard extends VirtualBaseElement {
+  constructor(typeId: string, config: any) {
+    super(typeId, config);
+    this.state.value = 0;
+  }
+
+  async doAction(action: any) {
+    super.doAction(action);
+    if (action.value != null) { this.state.value = action.value; }
+  }
+} // class MockStandard
+
+
 export function register() {
   registerVirtual('device', MockDevice);
   registerVirtual('dstime', MockTime);
@@ -98,6 +113,8 @@ export function register() {
 
   registerVirtual('switch', MockSwitch);
   registerVirtual('value', MockValue);
+  registerVirtual('digitalout', MockStandard);
+  registerVirtual('neo', MockStandard);
 
   registerVirtual('bl0937', MockBL0937);
 }

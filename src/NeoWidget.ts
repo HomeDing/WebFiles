@@ -9,7 +9,8 @@
 
 @MicroControl('neo')
 class NeoWidgetClass extends GenericWidgetClass {
-  x16(d: string): string {
+  private colObj: HTMLElement | null = null;
+  private x16(d: string): string {
     let x = Number(d).toString(16);
     if (x.length === 1) {
       x = '0' + x;
@@ -17,8 +18,21 @@ class NeoWidgetClass extends GenericWidgetClass {
     return (x);
   }
 
+  connectedCallback() {
+    super.connectedCallback();
+    this.colObj = this.querySelector('.color') as HTMLElement;
+  } // connectedCallback
+
+  // visualize any new data for the widget.
+  newData(_path: string, key: string | null, value: string | null) {
+    if ((key == 'value') && (this.colObj) && (value)) {
+      this.colObj.style.backgroundColor = value.replace('x', '#');
+    }
+    super.newData(_path, key, value);
+  }
+
   on_click(e: MouseEvent) {
-    const src: HTMLElement | null = e.srcElement as HTMLElement;
+    const src = e.target as HTMLElement;
     if (src.className === 'hueband') {
       const color = 'hsl(' + Math.round(e.offsetX) + ', 100%, 50%)';
       src.style.backgroundColor = color;
