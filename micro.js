@@ -860,19 +860,12 @@ var NeoWidgetClass = (function (_super) {
         _this.colObj = null;
         return _this;
     }
-    NeoWidgetClass.prototype.x16 = function (d) {
-        var x = Number(d).toString(16);
-        if (x.length === 1) {
-            x = '0' + x;
-        }
-        return (x);
-    };
     NeoWidgetClass.prototype.connectedCallback = function () {
         _super.prototype.connectedCallback.call(this);
         this.colObj = this.querySelector('.color');
     };
     NeoWidgetClass.prototype.newData = function (_path, key, value) {
-        if ((key == 'value') && (this.colObj) && (value)) {
+        if ((key === 'value') && (this.colObj) && (value)) {
             this.colObj.style.backgroundColor = value.replace('x', '#');
         }
         _super.prototype.newData.call(this, _path, key, value);
@@ -892,6 +885,13 @@ var NeoWidgetClass = (function (_super) {
         else {
             _super.prototype.on_click.call(this, e);
         }
+    };
+    NeoWidgetClass.prototype.x16 = function (d) {
+        var x = Number(d).toString(16);
+        if (x.length === 1) {
+            x = '0' + x;
+        }
+        return (x);
     };
     NeoWidgetClass = __decorate([
         MicroControl('neo')

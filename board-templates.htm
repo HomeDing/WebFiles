@@ -92,11 +92,12 @@
     <span class="setconfig"></span>
   </div>
   <div class="block Element">
-    <div>
-      <button u-action="value" value="1">On</button>
+    <span class="u-bool ux-value" u-active="value" style="position: absolute;top:0.5rem;right:0.5rem"></span>
+    <div class="form-group">
       <button u-action="value" value="0">Off</button>
+      <button u-action="value" value="1">On</button>
+      <label>last:</label><span u-text="value"></span>
     </div>
-    <div class="form-group"><label>last value:</label><span u-text="value"></span></div>
   </div>
 </div>
 
