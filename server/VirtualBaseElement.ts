@@ -15,7 +15,7 @@ export class VirtualBaseElement {
   typeId: string;
 
   config: any;
-  state: any = { active: 1 };
+  state: any = { active: true };
 
   constructor(typeId: string, config: any) {
     this.typeId = typeId;

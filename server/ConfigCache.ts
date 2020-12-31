@@ -19,7 +19,7 @@ export class ConfigCache {
   async get(hostname: string) {
     const host: string = hostname.replace(/\.local/, '');
     if (!this.netConfigs[host]) {
-      const req = await fetch(`http://${hostname}/config.json`);
+      const req = await fetch(`http://${hostname}/config.json`, { timeout: 4000 });
       this.netConfigs[host] = await req.json();
     }
     return (this.netConfigs[host]);
