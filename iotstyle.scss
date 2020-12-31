@@ -301,7 +301,7 @@ svg.button {
   }
 }
 
-// ===== Header =====
+// ===== Page Layout =====
 
 // The header in the micro css is used to display the primary icon of the device, the name and links to important pages.
 
@@ -495,6 +495,8 @@ main {
   }
 }
 
+// ===== forms =====
+
 a + a,
 a + button,
 a + label,
@@ -567,7 +569,6 @@ button,
 
   > label {
     display: inline-block;
-    border: 0.1rem solid transparent;
     font-size: 1.25em;
     height: 1.4em;
     padding: 0 0.4em;
@@ -580,8 +581,9 @@ button,
 
   > label {
     display: inline-block;
-    text-align: right;
     margin-right: $gutter;
+    border: $u-output-border;
+    text-align: right;
     width: 8em;
   }
 
@@ -736,7 +738,7 @@ option[disabled] { color: $u-disabled;}
   display: inline-block;
   width: 100%;
 
-  > label, > label {
+  > label {
     display: inline-block;
     padding: 0 0.2em;
     margin-bottom: 0.5rem;

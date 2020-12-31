@@ -856,7 +856,9 @@ var modal = new ModalDialogClass();
 var NeoWidgetClass = (function (_super) {
     __extends(NeoWidgetClass, _super);
     function NeoWidgetClass() {
-        return _super !== null && _super.apply(this, arguments) || this;
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.colObj = null;
+        return _this;
     }
     NeoWidgetClass.prototype.x16 = function (d) {
         var x = Number(d).toString(16);
@@ -865,8 +867,18 @@ var NeoWidgetClass = (function (_super) {
         }
         return (x);
     };
+    NeoWidgetClass.prototype.connectedCallback = function () {
+        _super.prototype.connectedCallback.call(this);
+        this.colObj = this.querySelector('.color');
+    };
+    NeoWidgetClass.prototype.newData = function (_path, key, value) {
+        if ((key == 'value') && (this.colObj) && (value)) {
+            this.colObj.style.backgroundColor = value.replace('x', '#');
+        }
+        _super.prototype.newData.call(this, _path, key, value);
+    };
     NeoWidgetClass.prototype.on_click = function (e) {
-        var src = e.srcElement;
+        var src = e.target;
         if (src.className === 'hueband') {
             var color = 'hsl(' + Math.round(e.offsetX) + ', 100%, 50%)';
             src.style.backgroundColor = color;

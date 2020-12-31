@@ -164,11 +164,11 @@ button.secondary, .button.secondary { background-color: #777777; border-color: #
 
 .btn-group > *:last-child { border-top-right-radius: 0.2em; border-bottom-right-radius: 0.2em; }
 
-.btn-group > label { display: inline-block; border: 0.1rem solid transparent; font-size: 1.25em; height: 1.4em; padding: 0 0.4em; }
+.btn-group > label { display: inline-block; font-size: 1.25em; height: 1.4em; padding: 0 0.4em; }
 
 .form-group { display: flex; }
 
-.form-group > label { display: inline-block; text-align: right; margin-right: 0.5rem; width: 8em; }
+.form-group > label { display: inline-block; margin-right: 0.5rem; border: 0.1rem solid transparent; text-align: right; width: 8em; }
 
 .form-group > input, .form-group > span, .form-group > select { display: inline-block; width: 12em; font-size: 1em; }
 
@@ -217,9 +217,9 @@ option[disabled] { color: #808080; }
 /* === SWITCH === */
 .u-slider { display: inline-block; width: 100%; }
 
-.u-slider > label, .u-slider > label { display: inline-block; padding: 0 0.2em; margin-bottom: 0.5rem; vertical-align: top; font-size: 1.4rem; cursor: pointer; }
+.u-slider > label { display: inline-block; padding: 0 0.2em; margin-bottom: 0.5rem; vertical-align: top; font-size: 1.4rem; cursor: pointer; }
 
-.u-slider > label > img, .u-slider > label > svg.icon, .u-slider > label > img, .u-slider > label > svg.icon { width: 1.2em !important; height: 1.2em !important; }
+.u-slider > label > img, .u-slider > label > svg.icon { width: 1.2em !important; height: 1.2em !important; }
 
 .u-slider > .box { position: relative; cursor: pointer; display: inline-block; width: 3rem; height: 1.7rem; border: 0.125rem solid #666666; border-radius: 1.25rem; background-color: #dddddd; padding: 0.125rem; }
 
