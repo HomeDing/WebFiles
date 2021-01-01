@@ -79,11 +79,11 @@ class SliderWidgetClass extends GenericWidgetClass {
     if (src != null) {
 
       if (src.classList.contains('up')) {
-        // alert('plus');
         this.dispatchAction('up', '1');
+
       } else if (src.classList.contains('down')) {
-        // alert('plus');
         this.dispatchAction('down', '1');
+
       } else {
         super.on_click(e);
       }

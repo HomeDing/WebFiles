@@ -45,12 +45,10 @@ class MicroHub {
     const rn = matchPath.toLocaleLowerCase();
 
     // build a regexp pattern that will match the event names
-    const re =
-      '^' +
-      rn
-        .replace(/(\[|\]|\/|\?)/g, '\\$1')
-        .replace(/\*\*/g, '\\S{0,}')
-        .replace(/\*/g, '[^/?]*') +
+    const re = '^' + rn
+      .replace(/(\[|\]|\/|\?)/g, '\\$1')
+      .replace(/\*\*/g, '\\S{0,}')
+      .replace(/\*/g, '[^/?]*') +
       '$';
 
     const newEntry: HubEntry = {
