@@ -24,7 +24,7 @@ $u-off: red;
 
 // ===== Sizes =====
 
-$white-space: 1rem;
+$white-space: 16px;
 $gutter: $white-space/2;
 
 $u-btn-radius: 0.2em;
@@ -441,8 +441,8 @@ main {
   min-width: 376px;
 
   &.small {
-    width: 188px;
-    min-width: 188px;
+    width: 184px;
+    min-width: 184px;
   }
 
   img.active, svg.active {
@@ -461,8 +461,12 @@ main {
       float: left;
       margin-right: $gutter;
       overflow:hidden;
+      &.small {
+        width: 1.25rem;
+        height: 1.25rem;
+      }
     }
-
+  
     h3 {
       margin: 0 0 $gutter 0;
     }
