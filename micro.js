@@ -997,21 +997,19 @@ var SliderWidgetClass = (function (_super) {
         }
     };
     SliderWidgetClass.prototype.on_click = function (e) {
-        var src = e.srcElement;
-        while (src != null && src.classList.length === 0) {
+        var src = e.target;
+        while (src != null && src != this) {
+            if (src.tagName === 'LABEL' && src.classList.contains('up')) {
+                this.dispatchAction('up', '1');
+                break;
+            }
+            else if (src.tagName === 'LABEL' && src.classList.contains('down')) {
+                this.dispatchAction('down', '1');
+                break;
+            }
             src = src.parentElement;
         }
-        if (src != null) {
-            if (src.classList.contains('up')) {
-                this.dispatchAction('up', '1');
-            }
-            else if (src.classList.contains('down')) {
-                this.dispatchAction('down', '1');
-            }
-            else {
-                _super.prototype.on_click.call(this, e);
-            }
-        }
+        _super.prototype.on_click.call(this, e);
     };
     SliderWidgetClass.prototype.on_mousedown = function (evt) {
         if (evt.target === this._handle) {
@@ -1266,11 +1264,10 @@ var MicroHub = (function () {
         if (replay === void 0) { replay = false; }
         var h = this._registrationsId;
         var rn = matchPath.toLocaleLowerCase();
-        var re = '^' +
-            rn
-                .replace(/(\[|\]|\/|\?)/g, '\\$1')
-                .replace(/\*\*/g, '\\S{0,}')
-                .replace(/\*/g, '[^/?]*') +
+        var re = '^' + rn
+            .replace(/(\[|\]|\/|\?)/g, '\\$1')
+            .replace(/\*\*/g, '\\S{0,}')
+            .replace(/\*/g, '[^/?]*') +
             '$';
         var newEntry = {
             id: h,
