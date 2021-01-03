@@ -153,19 +153,12 @@ app.get('/', function (req, res, _next) {
   res.redirect('/index.htm');
 });
 
+
 // ----- enable buildin setup pages -----
 
-app.get('/\\$setup.htm', function (req, res) {
-  res.sendFile(path.join(__dirname, './setup.htm'));
-});
-
-app.get('/\\$update.htm', function (req, res) {
-  res.sendFile(path.join(__dirname, './update.htm'));
-});
-
-app.get('/\\$upload.htm', function (req, res) {
-  res.sendFile(path.join(__dirname, './upload.htm'));
-});
+app.get('/\\$setup*', function (req, res) { res.sendFile(path.join(process.cwd(), 'setup.htm')); });
+app.get('/\\$update*', function (req, res) { res.sendFile(path.join(process.cwd(), 'update.htm')); });
+app.get('/\\$upload*', function (req, res) { res.sendFile(path.join(process.cwd(), 'upload.htm')); });
 
 
 //#region ===== Upload files service ====
@@ -294,8 +287,7 @@ app.get(/^\/\$board$/, noCache, async function (req, res) {
 
 app.delete('/:fn', function (req, res) {
   const filename = req.params.fn;
-  log.info('DELETE: %s', filename);
-  log.info('DELETE: not implemented.');
+  log.info('DELETE: %s not implemented.', filename);
   res.send('done');
 });
 
