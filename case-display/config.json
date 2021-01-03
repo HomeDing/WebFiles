@@ -1,93 +1,7 @@
 {
-  "diag": {
-    "0": {
-      "description": "ota"
-    }
-  },
   "time": {
     "clock": {
       "onminute": "displaytext/time?value=$v"
-    }
-  },
-  "value": {
-    "bright": {
-      "min": 0,
-      "max": 100,
-      "value": 15,
-      "onvalue": "neo/D5?brightness=$v"
-    },
-    "tout": {
-      "type": "string",
-      "description": "outside temperature",
-      "onvalue": "log/tout?value=$v,displaytext/tout?value=$v"
-    },
-    "hout": {
-      "type": "string",
-      "description": "outside humidity",
-      "onvalue": "log/hout?value=$v,displaytext/hout?value=$v"
-    }
-  },
-  "neo": {
-    "D5": {
-      "loglevel": 1,
-      "pin": "D5",
-      "mode": "flow",
-      "value": "0",
-      "count": 9
-    }
-  },
-  "webbutton": {
-    "flow": {
-      "description": "flow",
-      "onClick": "neo/D5?mode=flow"
-    },
-    "red": {
-      "description": "red",
-      "onClick": "neo/D5?value=red"
-    },
-    "green": {
-      "description": "green",
-      "onClick": "neo/D5?value=green"
-    },
-    "ok": {
-      "description": "off",
-      "onClick": "neo/D5?value=black"
-    }
-  },
-  "weatherfeed": {
-    "home": {
-      "loglevel": 1,
-      "host": "api.openweathermap.org",
-      "get": "/data/2.5/onecall?units=metric&${loc}&exclude=current,hourly&appid=${key}&lang=en",
-      "key": "835653bf60675caf2c8e6a797f2a0ac2",
-      "loc": "lat=50.23&lon=8.65",
-      "readtime": "2h",
-      "actions": [
-        {
-          "path": "daily[0]/temp/day",
-          "onvalue": "displaytext/t0?value=$v"
-        },
-        {
-          "path": "daily[0]/humidity",
-          "onvalue": "displaytext/h0?value=$v"
-        },
-        {
-          "path": "daily[0]/weather[0]/description",
-          "onvalue": "displaytext/d0?value=$v"
-        },
-        {
-          "path": "daily[1]/temp/day",
-          "onvalue": "displaytext/t1?value=$v"
-        },
-        {
-          "path": "daily[1]/humidity",
-          "onvalue": "displaytext/h1?value=$v"
-        },
-        {
-          "path": "daily[1]/weather[0]/description",
-          "onvalue": "displaytext/d1?value=$v"
-        }
-      ]
     }
   },
   "displaytext": {
@@ -164,20 +78,6 @@
       "y0": 38,
       "x1": 127,
       "y1": 38
-    }
-  },
-  "log": {
-    "tout": {
-      "description": "Outside temperature",
-      "filesize": "10000",
-      "filename": "/log-tout.txt",
-      "value": "31.30"
-    },
-    "hout": {
-      "description": "outside humidity",
-      "filesize": "10000",
-      "filename": "/log-hout.txt",
-      "value": "39.70"
     }
   }
 }

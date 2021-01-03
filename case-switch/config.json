@@ -4,18 +4,15 @@
       "pin": "D3",
       "inverse": 1,
       "pullup": 1,
-      "onLow": "switch/relais?toggle=1"
+      "onLow": "switch/relay?toggle=1"
     }
   },
   "switch": {
-    "relais": {
-      "value": 0,
+    "relay": {
+      "title": "power",
       "description": "main power control",
-      "onValue": "digitalout/d6?value=$v"
-    },
-    "dummy": {
       "value": 0,
-      "description": "main power control"
+      "onValue": "digitalout/d6?value=$v"
     }
   },
   "digitalout": {
@@ -28,52 +25,13 @@
     "0": {
       "onTime": "18:30:00",
       "offTime": "22:55:00",
-      "onOn": "rfsend/a1?value=1,rfsendm/a2?value=1",
-      "onOff": "rfsend/a1?value=0,rfsend/a2?value=0,rfsend/aa?value=0"
-    }
-  },
-  "rfsend": {
-    "i1": {
-      "pin": "D3",
-      "codeOn": "s_#_###__#_#__#_##_#_###_#__#____x",
-      "codeOff": "s_#_###__#_#__#_##_#_###_#_______x",
-      "description": "Stern."
+      "onValue": "switch/relay?toggle=$v"
     }
   },
   "webbutton": {
-    "flow": {
-      "description": "von Mama",
-      "onClick": "switch/relais?toggle=1,switch/dummy?toggle=1"
-    },
-    "red": {
-      "description": "Dringend kommen",
-      "onClick": "switch/relais?value=1"
-    }
-  },
-  "timer": {
-    "water": {
-      "type": "LOOP",
-      "waittime": "200s",
-      "pulsetime": "15m",
-      "cycletime": "01:00:00",
-      "onon": "digitalout/relais?on,device/0?log=on",
-      "onoff": "digitalout/relais?off,device/0?log=off",
-      "description": "Water timing"
-    }
-  },
-  "value": {
-    "volume": {
-      "description": "current volume value",
-      "min": 0,
-      "max": 15,
-      "value": 3,
-      "onValue": "radio/r?volume=$v"
-    }
-  },
-  "and": {
-    "both": {
-      "description": "timed and enabled",
-      "onValue": "radio/r?volume=$v"
+    "d3": {
+      "description": "toggle",
+      "onClick": "switch/relay?toggle=1,switch/dummy?toggle=1"
     }
   },
   "bl0937": {

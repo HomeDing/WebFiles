@@ -1,24 +1,63 @@
-{"device/0": {"active":"true","name":"dispding","title":"","description":"IoT Dev-Device for sending RF Signals","safemode":"false","sd":"true","nextboot":"4294966678"},
-"ota/0": {"active":"true"},
-"ssdp/0": {"active":"true"},
-"ntptime/on": {"active":"true","now":"2020-08-21 14:42:43"},
-"displayssd1306/0": {"active":"true"},
-"diag/0": {"active":"true"},
-"time/clock": {"active":"true"},
-"value/bright": {"active":"true","value":"15"},
-"value/tout": {"active":"true","value":"30.90"},
-"value/hout": {"active":"true","value":"39.70"},
-"neo/d5": {"active":"true","value":"0","brightness":"15"},
-"weatherfeed/home": {"active":"true"},
-"displaytext/time": {"active":"true","value":"14:42"},
-"displaytext/t0": {"active":"true","value":"32.35"},
-"displaytext/h0": {"active":"true","value":"35"},
-"displaytext/d0": {"active":"true","value":"light rain"},
-"displaytext/t1": {"active":"true","value":"25.42"},
-"displaytext/h1": {"active":"true","value":"40"},
-"displaytext/d1": {"active":"true","value":"light rain"},
-"displaytext/tout": {"active":"true","value":"30.90"},
-"displaytext/hout": {"active":"true","value":"39.70"},
-"displayline/h1": {"active":"true"},
-"log/tout": {"active":"true","value":"30.90"},
-"log/hout": {"active":"true","value":"39.70"}}
+{
+  "device/0": {
+    "active": "true",
+    "name": "dispding",
+    "title": "displaytest",
+    "description": "Test case with display elements",
+    "safemode": "false",
+    "sd": "true",
+    "nextboot": "4294966678"
+  },
+  "ota/0": {
+    "active": "true"
+  },
+  "ntptime/on": {
+    "active": "true",
+    "now": "2020-08-21 14:42:43"
+  },
+  "displayssd1306/0": {
+    "active": "true"
+  },
+  "time/clock": {
+    "active": "true"
+  },
+  "displaytext/time": {
+    "active": "true",
+    "value": "14:42"
+  },
+  "displaytext/t0": {
+    "active": "true",
+    "value": "32.35"
+  },
+  "displaytext/h0": {
+    "active": "true",
+    "value": "35"
+  },
+  "displaytext/d0": {
+    "active": "true",
+    "value": "light rain"
+  },
+  "displaytext/t1": {
+    "active": "true",
+    "value": "25.42"
+  },
+  "displaytext/h1": {
+    "active": "true",
+    "value": "40"
+  },
+  "displaytext/d1": {
+    "active": "true",
+    "value": "light rain"
+  },
+  "displaytext/tout": {
+    "active": "true",
+    "value": "30.90"
+  },
+  "displaytext/hout": {
+    "active": "true",
+    "value": "39.70"
+  },
+  "displayline/h1": {
+    "active": "true"
+  }
+}
