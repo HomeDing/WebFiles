@@ -74,28 +74,27 @@ class SliderWidgetClass extends GenericWidgetClass {
 
 
   on_click(e: MouseEvent) {
-    let src: HTMLElement | null = e.srcElement as HTMLElement;
-    while (src != null && src.classList.length === 0) { src = src.parentElement; }
-    if (src != null) {
+    let src: HTMLElement | null = e.target as HTMLElement;
 
-      if (src.classList.contains('up')) {
+    while (src != null && src != this) {
+      if (src.tagName === 'LABEL' && src.classList.contains('up')) {
         this.dispatchAction('up', '1');
+        break;
 
-      } else if (src.classList.contains('down')) {
+      } else if (src.tagName === 'LABEL' && src.classList.contains('down')) {
         this.dispatchAction('down', '1');
-
-      } else {
-        super.on_click(e);
+        break;
       }
-    }
-    // if (src == o) this.dispatchAction('toggle', '1');
-  }
+      src = src.parentElement;
+    } // while
+    super.on_click(e);
+  } // on_click
 
   on_mousedown(evt: MouseEvent) {
     if (evt.target === this._handle) {
       this.MoveStart(evt);
     } // if
-  } // onmousedown()
+  } // on_mousedown()
 
   MoveStart(evt: MouseEvent) {
     /// <summary>Start sliding the knob.</summary>
