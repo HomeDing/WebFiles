@@ -46,7 +46,7 @@
     "pack:minimal": "node packminimal.js",
     "pack:icons": "node packicons.js",
     "pack:embed": "node packembedweb.js",
-    "pack": "npm run pack:dist && npm run pack:minimal && npm run pack:embed",
+    "pack": "npm run pack:icons && npm run pack:dist && npm run pack:minimal && npm run pack:embed",
     "prestart": "npm run build",
     "start": "node server.js"
   },

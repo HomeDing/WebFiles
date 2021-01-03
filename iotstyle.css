@@ -84,6 +84,8 @@ svg.button .object { fill: #304878; fill-opacity: 1; }
 
 svg.button .connect { fill: #00cc00; fill-opacity: 1; }
 
+svg.icon { user-select: none; }
+
 .u-header { display: flex; padding: 0.4rem; flex-direction: row; flex-wrap: nowrap; align-items: flex-start; }
 
 .u-header a, .u-header h1, .u-header img, .u-header span { font-size: 2rem; align-self: center; margin-top: 0; margin-bottom: 0; padding: 0; vertical-align: middle; }

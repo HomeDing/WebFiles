@@ -71,7 +71,18 @@ const srcAssets = [
   'manifest.json',
   'browserconfig.xml',
 
-  'i/*.svg',
+  'i/no.svg',
+  'i/device.svg',
+  'i/default.svg',
+  'i/start.svg',
+  'i/stop.svg',
+  'i/minus.svg',
+  'i/plus.svg',
+  'i/config.svg',
+  'i/ide.svg',
+  'i/menui.svg',
+  'i/reload.svg',
+
   'icons.svg'
 ];
 

@@ -136,6 +136,22 @@
   </div>
 </div>
 
+<div class="col card" u-control="reference" microID="${id}" u-is="generic">
+  <div class="block header">
+    <svg class="icon"><use xlink:href="./icons.svg#value"/></svg>
+    <h3 u-text="title"></h3>
+    <h4 u-text="description"></h4>
+    <span class="activeState" u-active="active"></span>
+    <span class="setconfig"></span>
+  </div>
+
+  <div class="block Element">
+    <span class="u-bool ux-value" u-active="value" style="position: absolute;top:0.5rem;right:0.5rem"></span>
+    <div class="form-group"><label>Reference:</label><span u-text="reference"></span></div>
+    <div class="form-group"><label>Value:</label><span u-text="value"></span></div>
+  </div>
+</div>
+
 <div class="col card" u-control="pwmout" u-is="pwmout" microID="${id}">
   <div class="block header">
     <svg class="icon"><use xlink:href="./icons.svg#pwmout"/></svg>

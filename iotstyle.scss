@@ -301,6 +301,10 @@ svg.button {
   }
 }
 
+svg.icon {
+  user-select: none;
+}
+
 // ===== Page Layout =====
 
 // The header in the micro css is used to display the primary icon of the device, the name and links to important pages.

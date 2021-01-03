@@ -10,7 +10,7 @@
 
 <body style="width:300px">
   <h1>Web Update</h1>
-  <table style="width:300px" >
+  <table style="width:300px">
     <tr>
       <td><progress value=0 max=1></progress></td>
     </tr>
@@ -22,7 +22,8 @@
     </tr>
   </table>
   <hr>
-  <p style="text-align: right;"><a href="/updateicons.htm" title="next step" style="text-decoration: none;">&gt;&gt;&gt;</a></p>
+  <p style="text-align: right;"><a href="/updateicons.htm" title="next step"
+      style="text-decoration: none;">&gt;&gt;&gt;</a></p>
   <script>
     var repo = 'https://homeding.github.io/';
     var eStart = document.querySelector('button');
@@ -48,7 +49,7 @@
     log('loading from:\n' + repo);
 
     // fetch list of files
-    function doStart() {
+    function doS() {
       work.status = 'w'; // wait
       fetch(repo + 'list.txt' + seed)
         .then(function (result) {
@@ -61,11 +62,11 @@
           work.files = work.list.length;
           next();
         });
-    } // doStart()
+    } // doS()
 
 
     // grab next file
-    function doFile() {
+    function doF() {
       work.status = 'w'; // wait
       var theItem = work.list.shift();
 
@@ -92,30 +93,24 @@
             fetch('/', { method: 'POST', body: formData }).then(next);
           });
       };
-    } // doFile()
+    } // doF()
 
-
-    function step() {
-      if (work.status == '0') { // not yet started
-        // fetch file list;
-        doStart();
-      } else if (work.status == 'r') { // run
-        if (work.list.length == 0)
-          work.status = 'e';
-        else
-          doFile();
-      } else if (work.status == 'e') { // end
-        if (timer) {
-          window.clearInterval(timer);
-          log('done');
-          window.location.href = '/';
-        }
-        timer = 0;
-      }
-    }
 
     eStart.addEventListener('click', function () {
-      timer = window.setInterval(step, 330);
+      timer = window.setInterval(function () {
+        if (work.status == '0') { // not yet started
+          // fetch file list;
+          doS();
+        } else if (work.status == 'r') { // run
+          if (work.list.length == 0)
+            work.status = 'e';
+          else
+            doF();
+        } else if (work.status == 'e') { // end
+          window.clearInterval(timer);
+          log('done');
+        }
+      }, 330);
     });
   </script>
 </body>
