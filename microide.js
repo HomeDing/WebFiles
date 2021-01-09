@@ -132,7 +132,7 @@ function startUpload(filename, contentType, content) {
   } // if 
 
   objHTTP.addEventListener("readystatechange", function (p) {
-    if ((objHTTP.readyState == 4) && (objHTTP.status >= 200) && (objHTTP.status < 300)) {
+    if ((objHTTP.readyState === 4) && (objHTTP.status >= 200) && (objHTTP.status < 300)) {
       window.setTimeout(handleReloadFS, 200);
       progressObj.classList.add("fadeout");
     } // if
@@ -196,7 +196,7 @@ function drop(e) {
   });
 
   xmlHttp.addEventListener("readystatechange", function (p) {
-    if ((xmlHttp.readyState == 4) && (xmlHttp.status >= 200) && (xmlHttp.status < 300)) {
+    if ((xmlHttp.readyState === 4) && (xmlHttp.status >= 200) && (xmlHttp.status < 300)) {
       window.setTimeout(handleReloadFS, 100);
       progressObj.classList.add("fadeout");
       // fade progress

@@ -63,7 +63,8 @@ h4 {
   margin: 0 0 $white-space 0;
   min-height: 1rem;
 
-  > img, > svg {
+  > img,
+  > svg {
     // assume image in text containers to be inline icons
     height: 1em;
 
@@ -85,12 +86,10 @@ a:visited {
   }
 }
 
-p> a
-p>a:visited {
+p > a
+p > a:visited {
   text-decoration: underline;
 }
-
-
 
 h1,
 h2,
@@ -130,7 +129,7 @@ h4 {
   height: 100%;
   transition: opacity 0.3s ease-in-out;
 
-  &.hidden  {
+  &.hidden {
     visibility: hidden;
     opacity: 0;
   }
@@ -188,7 +187,7 @@ h4 {
 }
   
 .modalObject {
-  position: fixed !important; 
+  position: fixed !important;
   z-index: 2 !important;
   margin: 0 !important;
   transition: all 0.3s ease-in-out !important;
@@ -213,6 +212,7 @@ h4 {
   margin-right: 0;
   margin-left: 0;
   padding: $white-space;
+
   @media (max-width: 720px) {
     padding: 0;
   }
@@ -226,11 +226,12 @@ h4 {
   align-items: flex-start;
   margin: 0 0.1rem 0 -$gutter;
   clear: both;
-  padding: 0px;
+  padding: 0;
 
   &.wrap {
     flex-wrap: wrap;
   }
+
   @media (max-width: 720px) {
     margin:0;
   }
@@ -249,6 +250,7 @@ h4 {
 .col-6 {
   flex: 0 0 auto;
   margin: $gutter 0 0 $gutter;
+
   @media (max-width: 720px) {
     margin-left:1px;
   }
@@ -532,13 +534,15 @@ button,
   user-select: none;
   -ms-user-select: none;
 
-  & :visited {
-    color: white;
-  }
   & :focus {
     border-color: $u-focus;
     background-color: $u-focus;
   }
+
+  & :visited {
+    color: white;
+  }
+
   &:disabled {
     border: 0.1rem solid $u-disabled;
     background-color: $u-disabled;
@@ -808,8 +812,8 @@ option[disabled] { color: $u-disabled;}
     box-sizing: border-box;
     display: inline-block;
     position: absolute;
-    top: 0px;
-    left: 0px;
+    top: 0;
+    left: 0;
     height: 10px;
     overflow: hidden;
     background-color: transparent;
