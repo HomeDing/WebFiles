@@ -16,32 +16,31 @@ class DisplayLineWidgetClass extends GenericWidgetClass {
   _y0 = 0;
   _y1 = 0;
 
+  private updateElem() {
+    if (this._elem) {
+      this._elem.style.top = this._y0 + 'px';
+      this._elem.style.left = this._x0 + 'px';
+      this._elem.style.width = (this._x1 - this._x0) + 'px';
+      this._elem.style.height = (this._y1 - this._y0) + 'px';
+    }
+  } // updateElem()
+
+
   connectedCallback() {
     super.connectedCallback();
 
     this._dispElem = document.querySelector('#panel .display');
     hub.subscribe(this.microid + '?*', this.newValue.bind(this), true);
+
+    if (this._dispElem) {
+      this._elem = createHTMLElement(this._dispElem, 'span', { class: 'line' });
+      this.updateElem();
+    }
     if (!this.showSys()) {
       this.style.display = 'none';
     }
+
   } // connectedCallback
-
-
-  updateDisp() {
-    if (this._dispElem) {
-      if (!this._elem) {
-        this._elem = document.createElement('span');
-        this._dispElem.appendChild(this._elem);
-      }
-      if (this._elem) {
-        this._elem.className = 'line';
-        this._elem.style.top = this._y0 + 'px';
-        this._elem.style.left = this._x0 + 'px';
-        this._elem.style.width = (this._x1 - this._x0) + 'px';
-        this._elem.style.height = (this._y1 - this._y0) + 'px';
-      }
-    }
-  } // updateDisp
 
 
   newValue(_path: string, key: string | null, value: string | null) {
@@ -49,7 +48,7 @@ class DisplayLineWidgetClass extends GenericWidgetClass {
       if ((<any>this)['_' + key] != null) {
         (<any>this)['_' + key] = value;
       }
-      this.updateDisp();
+      this.updateElem();
     }
   } // newValue
 }

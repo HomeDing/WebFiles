@@ -16,50 +16,48 @@ class DisplayDotWidgetClass extends GenericWidgetClass {
   _y = 0;
   _value = false;
 
+
+  private updateElem() {
+    if (this._elem) {
+      this._elem.style.top = this._y + 'px';
+      this._elem.style.left = this._x + 'px';
+      this._elem.classList.toggle('active', this._value);
+    }
+  } // updateElem()
+
+
   connectedCallback() {
     super.connectedCallback();
 
     this._dispElem = document.querySelector('#panel .display');
     hub.subscribe(this.microid + '?*', this.newValue.bind(this), true);
+
+    if (this._dispElem) {
+      this._elem = createHTMLElement(this._dispElem, 'span', { class: 'dot' });
+      this.updateElem();
+    }
+
     if (!this.showSys()) {
       this.style.display = 'none';
     }
   } // connectedCallback
 
 
-  updateDisp(create: boolean) {
-    if (this._dispElem) {
-      if (create && !this._elem) {
-        this._elem = document.createElement('span');
-        this._dispElem.appendChild(this._elem);
-      }
-      if (this._elem) {
-        this._elem.className = 'dot';
-        this._elem.style.top = this._y + 'px';
-        this._elem.style.left = this._x + 'px';
-        this._elem.classList.toggle('active', this._value);
-      }
-    }
-  } // updateDisp
-
-
   newValue(_path: string, key: string | null, value: string | null) {
     if (key && value) {
       if (key === 'active' && !this._elem) {
-        this.updateDisp(true);
+        this.updateElem();
 
       } else if (key === 'value') {
         this._value = toBool(value);
-        this.updateDisp(false);
 
       } else if (key === 'x') {
         this._x = Number(value);
-        this.updateDisp(false);
 
       } else if (key === 'y') {
         this._y = Number(value);
-        this.updateDisp(false);
       }
+      this.updateElem();
     }
   } // newValue
 }
