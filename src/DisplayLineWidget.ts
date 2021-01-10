@@ -16,16 +16,6 @@ class DisplayLineWidgetClass extends GenericWidgetClass {
   _y0 = 0;
   _y1 = 0;
 
-  private updateElem() {
-    if (this._elem) {
-      this._elem.style.top = this._y0 + 'px';
-      this._elem.style.left = this._x0 + 'px';
-      this._elem.style.width = (this._x1 - this._x0) + 'px';
-      this._elem.style.height = (this._y1 - this._y0) + 'px';
-    }
-  } // updateElem()
-
-
   connectedCallback() {
     super.connectedCallback();
 
@@ -51,6 +41,16 @@ class DisplayLineWidgetClass extends GenericWidgetClass {
       this.updateElem();
     }
   } // newValue
+
+
+  private updateElem() {
+    if (this._elem) {
+      this._elem.style.top = this._y0 + 'px';
+      this._elem.style.left = this._x0 + 'px';
+      this._elem.style.width = (this._x1 - this._x0) + 'px';
+      this._elem.style.height = (this._y1 - this._y0) + 'px';
+    }
+  } // updateElem()
 }
 
 // End.

@@ -17,15 +17,6 @@ class DisplayDotWidgetClass extends GenericWidgetClass {
   _value = false;
 
 
-  private updateElem() {
-    if (this._elem) {
-      this._elem.style.top = this._y + 'px';
-      this._elem.style.left = this._x + 'px';
-      this._elem.classList.toggle('active', this._value);
-    }
-  } // updateElem()
-
-
   connectedCallback() {
     super.connectedCallback();
 
@@ -60,6 +51,16 @@ class DisplayDotWidgetClass extends GenericWidgetClass {
       this.updateElem();
     }
   } // newValue
+
+
+  private updateElem() {
+    if (this._elem) {
+      this._elem.style.top = this._y + 'px';
+      this._elem.style.left = this._x + 'px';
+      this._elem.classList.toggle('active', this._value);
+    }
+  } // updateElem()
 }
+
 
 // End.
