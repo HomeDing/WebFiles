@@ -515,45 +515,40 @@ var DisplayDotWidgetClass = (function (_super) {
         _this._value = false;
         return _this;
     }
+    DisplayDotWidgetClass.prototype.updateElem = function () {
+        if (this._elem) {
+            this._elem.style.top = this._y + 'px';
+            this._elem.style.left = this._x + 'px';
+            this._elem.classList.toggle('active', this._value);
+        }
+    };
     DisplayDotWidgetClass.prototype.connectedCallback = function () {
         _super.prototype.connectedCallback.call(this);
         this._dispElem = document.querySelector('#panel .display');
         hub.subscribe(this.microid + '?*', this.newValue.bind(this), true);
+        if (this._dispElem) {
+            this._elem = createHTMLElement(this._dispElem, 'span', { class: 'dot' });
+            this.updateElem();
+        }
         if (!this.showSys()) {
             this.style.display = 'none';
-        }
-    };
-    DisplayDotWidgetClass.prototype.updateDisp = function (create) {
-        if (this._dispElem) {
-            if (create && !this._elem) {
-                this._elem = document.createElement('span');
-                this._dispElem.appendChild(this._elem);
-            }
-            if (this._elem) {
-                this._elem.className = 'dot';
-                this._elem.style.top = this._y + 'px';
-                this._elem.style.left = this._x + 'px';
-                this._elem.classList.toggle('active', this._value);
-            }
         }
     };
     DisplayDotWidgetClass.prototype.newValue = function (_path, key, value) {
         if (key && value) {
             if (key === 'active' && !this._elem) {
-                this.updateDisp(true);
+                this.updateElem();
             }
             else if (key === 'value') {
                 this._value = toBool(value);
-                this.updateDisp(false);
             }
             else if (key === 'x') {
                 this._x = Number(value);
-                this.updateDisp(false);
             }
             else if (key === 'y') {
                 this._y = Number(value);
-                this.updateDisp(false);
             }
+            this.updateElem();
         }
     };
     DisplayDotWidgetClass = __decorate([
@@ -573,27 +568,24 @@ var DisplayLineWidgetClass = (function (_super) {
         _this._y1 = 0;
         return _this;
     }
+    DisplayLineWidgetClass.prototype.updateElem = function () {
+        if (this._elem) {
+            this._elem.style.top = this._y0 + 'px';
+            this._elem.style.left = this._x0 + 'px';
+            this._elem.style.width = (this._x1 - this._x0) + 'px';
+            this._elem.style.height = (this._y1 - this._y0) + 'px';
+        }
+    };
     DisplayLineWidgetClass.prototype.connectedCallback = function () {
         _super.prototype.connectedCallback.call(this);
         this._dispElem = document.querySelector('#panel .display');
         hub.subscribe(this.microid + '?*', this.newValue.bind(this), true);
+        if (this._dispElem) {
+            this._elem = createHTMLElement(this._dispElem, 'span', { class: 'line' });
+            this.updateElem();
+        }
         if (!this.showSys()) {
             this.style.display = 'none';
-        }
-    };
-    DisplayLineWidgetClass.prototype.updateDisp = function () {
-        if (this._dispElem) {
-            if (!this._elem) {
-                this._elem = document.createElement('span');
-                this._dispElem.appendChild(this._elem);
-            }
-            if (this._elem) {
-                this._elem.className = 'line';
-                this._elem.style.top = this._y0 + 'px';
-                this._elem.style.left = this._x0 + 'px';
-                this._elem.style.width = (this._x1 - this._x0) + 'px';
-                this._elem.style.height = (this._y1 - this._y0) + 'px';
-            }
         }
     };
     DisplayLineWidgetClass.prototype.newValue = function (_path, key, value) {
@@ -601,7 +593,7 @@ var DisplayLineWidgetClass = (function (_super) {
             if (this['_' + key] != null) {
                 this['_' + key] = value;
             }
-            this.updateDisp();
+            this.updateElem();
         }
     };
     DisplayLineWidgetClass = __decorate([
