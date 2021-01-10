@@ -8,3 +8,6 @@ dist-server
 uploads
 _*
 desktop.ini
+
+server/*.js
+server/*.js.map

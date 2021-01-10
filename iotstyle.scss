@@ -507,7 +507,12 @@ main {
   }
 }
 
-// ===== forms =====
+
+// ===== forms elements=====
+
+select, option { padding: 0; }
+
+option[disabled] { color: $u-disabled; }
 
 a + a,
 a + button,
@@ -624,9 +629,6 @@ button,
     border: $u-output-border;
   }
 }
-
-select,option { padding: 0 }
-option[disabled] { color: $u-disabled; }
 
 .form-group:not(:last-child) {
   margin-bottom: $gutter;

@@ -146,6 +146,10 @@ main { transition: margin-left 0.2s; }
 
 .card > hr { background-color: rgba(0, 0, 0, 0.125); border: 0; height: 1px; padding: 0; margin: 0; }
 
+select, option { padding: 0; }
+
+option[disabled] { color: #808080; }
+
 a + a, a + button, a + label, label + a, label + button, label + label, button + a, button + button, button + label { margin-left: 8px; }
 
 button, .button { display: inline-block; font-size: 1.25em; min-width: 4em; height: 1.4em; padding: 0 0.25em; border-radius: 0.2em; border: 0.1rem solid #304878; background-color: #304878; color: white; cursor: pointer; user-select: none; -ms-user-select: none; }
@@ -181,10 +185,6 @@ button.secondary, .button.secondary { background-color: #777777; border-color: #
 .form-group > input { padding: 0 0.1em; }
 
 .form-group > span { border: 0.1rem solid transparent; }
-
-select, option { padding: 0; }
-
-option[disabled] { color: #808080; }
 
 .form-group:not(:last-child) { margin-bottom: 8px; }
 
