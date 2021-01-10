@@ -3,7 +3,7 @@
 // ===== Colors =====
 
 $u-background: #dddddd;
-$u-bordercolor: #666666;
+$u-borderColor: #666666;
 
 $u-primary: #304878; // active objects
 $u-focus: #4466ee; // active object with focus
@@ -12,7 +12,7 @@ $u-text: #111111; // any text
 $u-heading: #304878; // any headlines
 $u-connect: #00cc00; // connectivity / net
 
-$u-cardbackground: white; // #d4dced; // connectivity / net
+$u-cardBackground: white; // #d4dced; // connectivity / net
 $u-card-border: none; // 0.1rem solid $u-primary;
 $u-card-radius: 0; // 0.4rem;
 
@@ -32,7 +32,7 @@ $u-input-border: 0.1rem solid #304878;
 $u-output-border: 0.1rem solid transparent;
 
 // ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
-$font-sans-serif: ui-sans-serif, sans-serif;
+$font-sans-serif: Arial, ui-sans-serif, sans-serif;
 
 // ===== main =====
 
@@ -95,7 +95,7 @@ h1,
 h2,
 h3,
 h4 {
-  font-family: Arial;
+  font-family: $font-sans-serif;
   color: $u-heading;
 }
 
@@ -396,7 +396,7 @@ svg.icon {
 
 // <nav> is a vertical menu that can slide in and out by using some scripting.
 // <nav> is used together with <main> for content
-// inpage class: nav is beside main content, not overlap
+// `inpage` class: nav is beside main content, not overlap
 // open class: nav is visible, maybe main needs to shift
 
 nav {
@@ -440,7 +440,7 @@ main {
   position: relative;
   display: flex;
   flex-direction: column;
-  background-color: $u-cardbackground;
+  background-color: $u-cardBackground;
   border: $u-card-border;
   border-radius: $u-card-radius;
   width: 376px;
@@ -481,7 +481,7 @@ main {
     }
 
     &.header {
-      background-image: linear-gradient(to bottom, $u-cardbackground, darken($u-cardbackground, 10%));
+      background-image: linear-gradient(to bottom, $u-cardBackground, darken($u-cardBackground, 10%));
       border-top-right-radius: $u-card-radius;
       border-top-left-radius: $u-card-radius;
       min-height: 3.6rem;
@@ -623,6 +623,11 @@ button,
 
 option[disabled] { color: $u-disabled;}
 
+select {padding: 0;  text-align: left;
+}
+option {padding: 0;}
+
+
 .form-group:not(:last-child) {
   margin-bottom: $gutter;
 }
@@ -708,7 +713,7 @@ option[disabled] { color: $u-disabled;}
   height: 64px;
 }
 
-// show something on the right side of the card vizualizing the actual value of the element
+// show something on the right side of the card visualizing the actual value of the element
 
 .ux-value {
   position: absolute;
@@ -769,7 +774,7 @@ option[disabled] { color: $u-disabled;}
     display: inline-block;
     width: 3rem;
     height: 1.7rem;
-    border: 0.125rem solid $u-bordercolor;
+    border: 0.125rem solid $u-borderColor;
     border-radius: 1.25rem;
     background-color: $u-background;
     padding: 0.125rem;
@@ -805,7 +810,7 @@ option[disabled] { color: $u-disabled;}
   margin: auto;
   width: 128px;
   height: 64px;
-  border: 2px solid $u-bordercolor;
+  border: 2px solid $u-borderColor;
   zoom: 2;
 
   > span {
