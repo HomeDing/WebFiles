@@ -90,9 +90,9 @@ svg.icon { user-select: none; }
 
 .u-header a, .u-header h1, .u-header img, .u-header span { font-size: 2rem; align-self: center; margin-top: 0; margin-bottom: 0; padding: 0; vertical-align: middle; }
 
-.u-header img + * { margin-left: 0.2rem; }
-
 .u-header > * + * { margin-left: 0.6rem; }
+
+.u-header img + * { margin-left: 0.2rem; }
 
 .u-header .icon { width: 3rem; height: 3rem; }
 
@@ -204,9 +204,9 @@ button.secondary, .button.secondary { background-color: #777777; border-color: #
 
 .u-bool { display: inline-block; height: 1.4rem; width: 1.4rem; border-radius: 0.7rem; text-align: center; background-color: silver; }
 
-.u-bool[value='1'] { background-image: linear-gradient(145deg, #1aff1a, green); }
+.u-bool[value="1"] { background-image: linear-gradient(145deg, #1aff1a, green); }
 
-.u-bool[value='0'] { background-image: linear-gradient(145deg, #ff9999, red); }
+.u-bool[value="0"] { background-image: linear-gradient(145deg, #ff9999, red); }
 
 .ux-levelbar { display: inline-block; border-color: #304878; border-style: solid; border-width: 1px; width: 32px; height: 64px; }
 

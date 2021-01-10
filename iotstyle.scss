@@ -162,12 +162,12 @@ h4 {
       width: 40px;
       height: 40px;
     }
-    
+
     &::before {
       top: 0;
       right: 0;
     }
-    
+
     &::after {
       bottom: 0;
       left: 0;
@@ -186,7 +186,7 @@ h4 {
     z-index: 3 !important;
   }
 }
-  
+
 .modalObject {
   position: fixed !important;
   z-index: 2 !important;
@@ -215,7 +215,6 @@ h4 {
     padding: 0;
   }
 }
-
 
 .row {
   display: flex;
@@ -305,7 +304,6 @@ svg.icon {
   user-select: none;
 }
 
-
 // ===== Page Layout =====
 
 // The header in the micro css is used to display the primary icon of the device, the name and links to important pages.
@@ -329,12 +327,12 @@ svg.icon {
     vertical-align: middle;
   }
 
-  img + * {
-    margin-left: 0.2rem;
-  }
-
   > * + * {
     margin-left: 0.6rem;
+  }
+
+  img + * {
+    margin-left: 0.2rem;
   }
 
   .icon {
@@ -355,7 +353,6 @@ svg.icon {
   }
 }
 
-
 // u-navbar is a horizontal always visible menu just below the header.
 
 .u-navbar {
@@ -363,7 +360,7 @@ svg.icon {
   padding: $gutter $white-space;
   margin-bottom: $gutter;
   height: 3rem;
-  
+
   &.nogutter {
     margin: 0;
   }
@@ -393,7 +390,6 @@ svg.icon {
   }
 }
 
-
 // <nav> is a vertical menu that can slide in and out by using some scripting.
 // <nav> is used together with <main> for content
 // `inpage` class: nav is beside main content, not overlap
@@ -412,7 +408,7 @@ nav {
   &.inpage {
     position: absolute;
   }
-  
+
   &.open {
     left: 0;
   }
@@ -425,14 +421,13 @@ nav {
   }
 
   @media print {
-    display: none
+    display: none;
   }
 }
 
 main {
   transition: margin-left 0.2s;
 }
-
 
 // ===== Cards =====
 
@@ -451,7 +446,8 @@ main {
     min-width: 184px;
   }
 
-  img.active, svg.active {
+  img.active,
+  svg.active {
     background-color: limegreen;
   }
 
@@ -473,7 +469,7 @@ main {
         height: 1.25rem;
       }
     }
-  
+
     h3 {
       margin: 0 0 $gutter 0;
     }
@@ -483,7 +479,11 @@ main {
     }
 
     &.header {
-      background-image: linear-gradient(to bottom, $u-cardBackground, darken($u-cardBackground, 10%));
+      background-image: linear-gradient(
+        to bottom,
+        $u-cardBackground,
+        darken($u-cardBackground, 10%)
+      );
       border-top-right-radius: $u-card-radius;
       border-top-left-radius: $u-card-radius;
       min-height: 3.6rem;
@@ -493,7 +493,7 @@ main {
         height: 3rem;
         float: left;
         margin-right: $gutter;
-        overflow:hidden;
+        overflow: hidden;
       }
     }
   }
@@ -507,12 +507,16 @@ main {
   }
 }
 
-
 // ===== forms elements=====
 
-select, option { padding: 0; }
+select,
+option {
+  padding: 0;
+}
 
-option[disabled] { color: $u-disabled; }
+option[disabled] {
+  color: $u-disabled;
+}
 
 a + a,
 a + button,
@@ -686,7 +690,6 @@ button,
   }
 }
 
-
 // ===== Value indicators for the web UI =====
 // using ux- prefix.
 
@@ -699,11 +702,11 @@ button,
   background-color: silver;
 }
 
-.u-bool[value='1'] {
+.u-bool[value="1"] {
   background-image: linear-gradient(145deg, lighten($u-on, 30%), $u-on);
 }
 
-.u-bool[value='0'] {
+.u-bool[value="0"] {
   background-image: linear-gradient(145deg, lighten($u-off, 30%), $u-off);
 }
 
@@ -866,4 +869,3 @@ button,
     display: initial;
   }
 }
-
