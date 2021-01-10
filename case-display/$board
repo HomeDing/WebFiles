@@ -57,6 +57,10 @@
     "active": "true",
     "value": "39.70"
   },
+  "displaydot/d": {
+    "active": "true",
+    "value": "1"
+  },
   "displayline/h1": {
     "active": "true"
   }

@@ -72,9 +72,16 @@
       "description": "outside temp"
     }
   },
+  "displayDot": {
+    "d": {
+      "x": 42,
+      "y": 2,
+      "description": "Display the value"
+    }
+  },
   "displayline": {
     "h1": {
-      "x0": 0,
+      "x0": 1,
       "y0": 38,
       "x1": 127,
       "y1": 38
