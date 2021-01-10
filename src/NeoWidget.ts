@@ -1,4 +1,4 @@
-// NeoWidget.ts: Widget Behavior implementation for Switch Elements
+// NeoWidget.ts: Widget Behavior implementation for Neo Elements
 
 // This file is part of the Widget implementation for the HomeDing Library
 // implementing the Web UI corresponding to an internal configured element.

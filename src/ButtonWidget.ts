@@ -1,4 +1,4 @@
-// SwitchWidget.ts: Widget Behavior implementation for Button@MicroControl("timer") Elements
+// ButtonWidget.ts: Widget Behavior implementation for Button Elements
 
 // This file is part of the Widget implementation for the HomeDing Library
 // implementing the Web UI corresponding to an internal configured element.

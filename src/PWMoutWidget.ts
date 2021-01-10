@@ -1,4 +1,4 @@
-// SwitchWidget.ts: Widget Behavior implementation for PWMOut Elements
+// PWMOutWidget.ts: Widget Behavior implementation for PWMOut Elements
 
 // This file is part of the Widget implementation for the HomeDing Library
 // implementing the Web UI corresponding to an internal configured element.

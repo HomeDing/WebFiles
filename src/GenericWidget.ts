@@ -1,4 +1,4 @@
-// ding.js: Behaviors for Elements
+// GenericWidget.ts: Basic Behaviors implementation for Elements
 
 /// <reference path="micro.ts" />
 /// <reference path="microControls.ts" />

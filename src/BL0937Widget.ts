@@ -1,4 +1,4 @@
-// NeoWidget.ts: Widget Behavior implementation for Switch Elements
+// BL0937Widget.ts: Widget Behavior implementation for BL0937 Elements
 
 // This file is part of the Widget implementation for the HomeDing Library
 // implementing the Web UI corresponding to an internal configured element.

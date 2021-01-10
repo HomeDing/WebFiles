@@ -1,4 +1,4 @@
-// DisplayTextWidget.ts: Widget Behavior implementation for DisplayText Elements
+// DisplayDotWidget.ts: Widget Behavior implementation for DisplayDot Elements
 
 // This file is part of the Widget implementation for the HomeDing Library
 // implementing the Web UI corresponding to an internal configured element.

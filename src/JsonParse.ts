@@ -1,4 +1,4 @@
-// === recursive JSON object parser
+// JsonParser.ts: Recursive JSON object parser
 // Traverse / Scan a complex object and send all nodes with attributes to a receiver function. */
 
 // See also:
