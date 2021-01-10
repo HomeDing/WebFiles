@@ -74,19 +74,20 @@ h4 {
   }
 }
 
-a,
-a:visited {
-  text-decoration: none;
-  cursor: pointer;
-  color: $u-primary;
-
+a {
   & :hover,
   & :focus {
     color: $u-focus;
   }
+
+  & :visited {
+    text-decoration: none;
+    cursor: pointer;
+    color: $u-primary;
+  }
 }
 
-p > a
+p > a,
 p > a:visited {
   text-decoration: underline;
 }
@@ -133,7 +134,7 @@ h4 {
     visibility: hidden;
     opacity: 0;
   }
-  
+
   #modalBack {
     position: absolute;
     width: 100%;
@@ -193,9 +194,6 @@ h4 {
   transition: all 0.3s ease-in-out !important;
 }
 
-
-
-
 // ===== Grid Design with grid of 6 =====
 
 .container {
@@ -233,7 +231,7 @@ h4 {
   }
 
   @media (max-width: 720px) {
-    margin:0;
+    margin: 0;
   }
 
   &.nogutter {
@@ -252,7 +250,7 @@ h4 {
   margin: $gutter 0 0 $gutter;
 
   @media (max-width: 720px) {
-    margin-left:1px;
+    margin-left: 1px;
   }
 }
 
@@ -307,6 +305,7 @@ svg.icon {
   user-select: none;
 }
 
+
 // ===== Page Layout =====
 
 // The header in the micro css is used to display the primary icon of the device, the name and links to important pages.
@@ -354,10 +353,10 @@ svg.icon {
     text-align: center;
     z-index: 3 !important;
   }
-
 }
 
-// u-navbar is a horizontal always visible menu just below the header. 
+
+// u-navbar is a horizontal always visible menu just below the header.
 
 .u-navbar {
   background-color: $u-navbar;
@@ -370,13 +369,13 @@ svg.icon {
   }
 
   > * {
-    display:inline-block;
+    display: inline-block;
     font-size: 1.5em;
     min-width: 2em !important;
-    height:1.4em;
+    height: 1.4em;
     color: $u-navbar-text !important;
     vertical-align: top;
-    border:0.1em solid $u-navbar;
+    border: 0.1em solid $u-navbar;
   }
 
   > button:hover,
@@ -390,9 +389,10 @@ svg.icon {
   }
 
   @media print {
-    display: none
-  }  
+    display: none;
+  }
 }
+
 
 // <nav> is a vertical menu that can slide in and out by using some scripting.
 // <nav> is used together with <main> for content
@@ -417,7 +417,7 @@ nav {
     left: 0;
   }
 
-  &.inpage.open+main {
+  &.inpage.open + main {
     margin-left: 280px;
     @media print {
       margin-left: 0;
@@ -426,7 +426,7 @@ nav {
 
   @media print {
     display: none
-  }  
+  }
 }
 
 main {
@@ -466,7 +466,8 @@ main {
       height: 5rem;
       float: left;
       margin-right: $gutter;
-      overflow:hidden;
+      overflow: hidden;
+
       &.small {
         width: 1.25rem;
         height: 1.25rem;
@@ -476,6 +477,7 @@ main {
     h3 {
       margin: 0 0 $gutter 0;
     }
+
     h4 {
       margin: 0;
     }
@@ -570,10 +572,12 @@ button,
     margin: 0;
     border-radius: 0;
   }
+
   > *:first-child {
     border-top-left-radius: $u-btn-radius;
     border-bottom-left-radius: $u-btn-radius;
   }
+
   > *:last-child {
     border-top-right-radius: $u-btn-radius;
     border-bottom-right-radius: $u-btn-radius;
@@ -621,12 +625,8 @@ button,
   }
 }
 
-option[disabled] { color: $u-disabled;}
-
-select {padding: 0;  text-align: left;
-}
-option {padding: 0;}
-
+select,option { padding: 0 }
+option[disabled] { color: $u-disabled; }
 
 .form-group:not(:last-child) {
   margin-bottom: $gutter;
@@ -655,7 +655,8 @@ option {padding: 0;}
     width: 10rem;
   }
 
-  > svg, > img {
+  > svg,
+  > img {
     position: relative;
     left: 1rem;
     top: 0.4rem;
@@ -682,6 +683,7 @@ option {padding: 0;}
     width: 4rem;
   }
 }
+
 
 // ===== Value indicators for the web UI =====
 // using ux- prefix.
@@ -762,7 +764,9 @@ option {padding: 0;}
     vertical-align: top;
     font-size: 1.4rem;
     cursor: pointer;
-    > img, > svg.icon {
+
+    > img,
+    > svg.icon {
       width: 1.2em !important;
       height: 1.2em !important;
     }
@@ -793,6 +797,7 @@ option {padding: 0;}
   &.u-switch > .box > .handle {
     transition: left 0.2s cubic-bezier(0.25, 0.1, 0.25, 1);
   }
+
   &.u-switch.active > .box > .handle {
     left: 1.3rem;
   }
@@ -822,20 +827,23 @@ option {padding: 0;}
     height: 10px;
     overflow: hidden;
     background-color: transparent;
-    // background-color: yellow;
   }
+
   > span.text {
     font-size: 10px;
     line-height: 10px;
   }
+
   > span.dot {
     height: 10px;
     width: 10px;
     border-radius: 50%;
   }
+
   > span.line {
     border-top: 1px solid black;
   }
+
   > span.dot.active {
     background-color: green;
   }
@@ -848,7 +856,6 @@ option {padding: 0;}
 }
 
 @media (max-width: 767px) {
-
   .hidden-xs {
     display: none;
   }
