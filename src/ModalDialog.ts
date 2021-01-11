@@ -15,7 +15,7 @@ class ModalDialogClass {
     const scope = this;
     window.addEventListener('load', function () {
       scope._mObj = document.getElementById('modal');
-      scope._cObj = document.getElementById('modalContainer');
+      scope._cObj = document.getElementById('container');
     });
   } // constructor()
 
@@ -58,7 +58,7 @@ class ModalDialogClass {
       this._placeholderObj = p;
 
       // make obj free floating over dialog
-      obj.classList.add('modalObject');
+      obj.classList.add('modal-object');
       obj.style.top = r.top + 'px';
       obj.style.left = r.left + 'px';
       obj.style.width = r.width + 'px';
@@ -102,7 +102,7 @@ class ModalDialogClass {
       if (this._focusObj && this._placeholderObj && this._placeholderObj.parentElement) {
         // restore styling of focusObj
         this._focusObj.setAttribute('style', this._focusStyle || '');
-        this._focusObj.classList.remove('modalObject');
+        this._focusObj.classList.remove('modal-object');
         this._placeholderObj.parentElement.removeChild(this._placeholderObj);
       } // if
       this._cObj.innerHTML = '';

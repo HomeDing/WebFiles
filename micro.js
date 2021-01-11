@@ -515,13 +515,6 @@ var DisplayDotWidgetClass = (function (_super) {
         _this._value = false;
         return _this;
     }
-    DisplayDotWidgetClass.prototype.updateElem = function () {
-        if (this._elem) {
-            this._elem.style.top = this._y + 'px';
-            this._elem.style.left = this._x + 'px';
-            this._elem.classList.toggle('active', this._value);
-        }
-    };
     DisplayDotWidgetClass.prototype.connectedCallback = function () {
         _super.prototype.connectedCallback.call(this);
         this._dispElem = document.querySelector('#panel .display');
@@ -536,10 +529,7 @@ var DisplayDotWidgetClass = (function (_super) {
     };
     DisplayDotWidgetClass.prototype.newValue = function (_path, key, value) {
         if (key && value) {
-            if (key === 'active' && !this._elem) {
-                this.updateElem();
-            }
-            else if (key === 'value') {
+            if (key === 'value') {
                 this._value = toBool(value);
             }
             else if (key === 'x') {
@@ -549,6 +539,13 @@ var DisplayDotWidgetClass = (function (_super) {
                 this._y = Number(value);
             }
             this.updateElem();
+        }
+    };
+    DisplayDotWidgetClass.prototype.updateElem = function () {
+        if (this._elem) {
+            this._elem.style.top = this._y + 'px';
+            this._elem.style.left = this._x + 'px';
+            this._elem.classList.toggle('active', this._value);
         }
     };
     DisplayDotWidgetClass = __decorate([
@@ -568,14 +565,6 @@ var DisplayLineWidgetClass = (function (_super) {
         _this._y1 = 0;
         return _this;
     }
-    DisplayLineWidgetClass.prototype.updateElem = function () {
-        if (this._elem) {
-            this._elem.style.top = this._y0 + 'px';
-            this._elem.style.left = this._x0 + 'px';
-            this._elem.style.width = (this._x1 - this._x0) + 'px';
-            this._elem.style.height = (this._y1 - this._y0) + 'px';
-        }
-    };
     DisplayLineWidgetClass.prototype.connectedCallback = function () {
         _super.prototype.connectedCallback.call(this);
         this._dispElem = document.querySelector('#panel .display');
@@ -594,6 +583,14 @@ var DisplayLineWidgetClass = (function (_super) {
                 this['_' + key] = value;
             }
             this.updateElem();
+        }
+    };
+    DisplayLineWidgetClass.prototype.updateElem = function () {
+        if (this._elem) {
+            this._elem.style.top = this._y0 + 'px';
+            this._elem.style.left = this._x0 + 'px';
+            this._elem.style.width = (this._x1 - this._x0) + 'px';
+            this._elem.style.height = (this._y1 - this._y0) + 'px';
         }
     };
     DisplayLineWidgetClass = __decorate([
@@ -776,7 +773,7 @@ var ModalDialogClass = (function () {
         var scope = this;
         window.addEventListener('load', function () {
             scope._mObj = document.getElementById('modal');
-            scope._cObj = document.getElementById('modalContainer');
+            scope._cObj = document.getElementById('container');
         });
     }
     ModalDialogClass.prototype.isOpen = function () {
@@ -803,7 +800,7 @@ var ModalDialogClass = (function () {
             p.style.height = r.height + 'px';
             obj.parentElement.insertBefore(p, obj);
             this._placeholderObj = p;
-            obj.classList.add('modalObject');
+            obj.classList.add('modal-object');
             obj.style.top = r.top + 'px';
             obj.style.left = r.left + 'px';
             obj.style.width = r.width + 'px';
@@ -835,7 +832,7 @@ var ModalDialogClass = (function () {
             this._mObj.classList.add('hidden');
             if (this._focusObj && this._placeholderObj && this._placeholderObj.parentElement) {
                 this._focusObj.setAttribute('style', this._focusStyle || '');
-                this._focusObj.classList.remove('modalObject');
+                this._focusObj.classList.remove('modal-object');
                 this._placeholderObj.parentElement.removeChild(this._placeholderObj);
             }
             this._cObj.innerHTML = '';

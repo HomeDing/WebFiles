@@ -43,6 +43,7 @@ class DisplayLineWidgetClass extends GenericWidgetClass {
   } // newValue
 
 
+  // update the html inside the display to reflect the properties.
   private updateElem() {
     if (this._elem) {
       this._elem.style.top = this._y0 + 'px';
@@ -51,6 +52,7 @@ class DisplayLineWidgetClass extends GenericWidgetClass {
       this._elem.style.height = (this._y1 - this._y0) + 'px';
     }
   } // updateElem()
-}
+
+} // class DisplayLineWidgetClass
 
 // End.

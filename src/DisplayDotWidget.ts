@@ -17,6 +17,7 @@ class DisplayDotWidgetClass extends GenericWidgetClass {
   _value = false;
 
 
+  // When the card is created also create a html tag inside the display.
   connectedCallback() {
     super.connectedCallback();
 
@@ -34,12 +35,10 @@ class DisplayDotWidgetClass extends GenericWidgetClass {
   } // connectedCallback
 
 
+  // new value is set in the element.
   newValue(_path: string, key: string | null, value: string | null) {
     if (key && value) {
-      if (key === 'active' && !this._elem) {
-        this.updateElem();
-
-      } else if (key === 'value') {
+      if (key === 'value') {
         this._value = toBool(value);
 
       } else if (key === 'x') {
@@ -53,14 +52,15 @@ class DisplayDotWidgetClass extends GenericWidgetClass {
   } // newValue
 
 
+  // update the html inside the display to reflect the properties.
   private updateElem() {
     if (this._elem) {
       this._elem.style.top = this._y + 'px';
       this._elem.style.left = this._x + 'px';
       this._elem.classList.toggle('active', this._value);
-    }
+    } // if
   } // updateElem()
-}
 
+} // class DisplayDotWidgetClass
 
 // End.
