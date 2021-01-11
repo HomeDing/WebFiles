@@ -3,16 +3,16 @@
 // ===== Colors =====
 
 $u-background: #dddddd;
-$u-borderColor: #666666;
+$u-border-color: #666666;
 
 $u-primary: #304878; // active objects
 $u-focus: #4466ee; // active object with focus
-$u-disabled: #808080; // disabled objects
+$u-disabled: gray; // disabled objects
 $u-text: #111111; // any text
 $u-heading: #304878; // any headlines
 $u-connect: #00cc00; // connectivity / net
 
-$u-cardBackground: white; // #d4dced; // connectivity / net
+$u-card-background: white; // #d4dced; // connectivity / net
 $u-card-border: none; // 0.1rem solid $u-primary;
 $u-card-radius: 0; // 0.4rem;
 
@@ -38,11 +38,11 @@ $font-sans-serif: Arial, ui-sans-serif, sans-serif;
 
 html,
 body {
-  padding: 0;
   margin: 0;
+  padding: 0;
+  color: $u-text;
   font-family: $font-sans-serif;
   font-size: 1em;
-  color: $u-text;
 }
 
 body {
@@ -75,12 +75,12 @@ h4 {
 }
 
 a {
-  & :hover,
-  & :focus {
+  &:hover,
+  &:focus {
     color: $u-focus;
   }
 
-  & :visited {
+  &:visited {
     text-decoration: none;
     cursor: pointer;
     color: $u-primary;
@@ -135,7 +135,7 @@ h4 {
     opacity: 0;
   }
 
-  #modalBack {
+  #back {
     position: absolute;
     width: 100%;
     height: 100%;
@@ -143,7 +143,7 @@ h4 {
     opacity: 0.75;
   }
 
-  #modalContainer {
+  #container {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -155,7 +155,7 @@ h4 {
 
     &::before,
     &::after {
-      content: "";
+      content: '';
       position: absolute;
       background-color: red;
       z-index: -1;
@@ -187,7 +187,7 @@ h4 {
   }
 }
 
-.modalObject {
+.modal-object {
   position: fixed !important;
   z-index: 2 !important;
   margin: 0 !important;
@@ -285,23 +285,25 @@ h4 {
   flex-basis: 100%;
 }
 
-svg.button {
-  width: 2em;
-  height: 2em;
+svg {
+  &.button {
+    width: 2em;
+    height: 2em;
 
-  .object {
-    fill: $u-primary;
-    fill-opacity: 1;
+    .object {
+      fill: $u-primary;
+      fill-opacity: 1;
+    }
+
+    .connect {
+      fill: $u-connect;
+      fill-opacity: 1;
+    }
   }
 
-  .connect {
-    fill: $u-connect;
-    fill-opacity: 1;
+  &.icon {
+    user-select: none;
   }
-}
-
-svg.icon {
-  user-select: none;
 }
 
 // ===== Page Layout =====
@@ -356,10 +358,10 @@ svg.icon {
 // u-navbar is a horizontal always visible menu just below the header.
 
 .u-navbar {
-  background-color: $u-navbar;
-  padding: $gutter $white-space;
   margin-bottom: $gutter;
+  padding: $gutter $white-space;
   height: 3rem;
+  background-color: $u-navbar;
 
   &.nogutter {
     margin: 0;
@@ -375,14 +377,16 @@ svg.icon {
     border: 0.1em solid $u-navbar;
   }
 
-  > button:hover,
-  .button:hover {
-    border-color: $u-focus;
-    background-color: $u-focus;
-  }
+  > button,
+  > .button {
+    &:hover {
+      border-color: $u-focus;
+      background-color: $u-focus;
+    }
 
-  > button.func {
-    float: right;
+    &.func {
+      float: right;
+    }
   }
 
   @media print {
@@ -402,7 +406,7 @@ nav {
   z-index: 1;
   left: -280px;
   transition: all 0.2s;
-  padding: 1rem 0.2rem 0.2rem 0.2rem;
+  padding: 1rem 0.2rem 0.2rem;
   background-color: white;
 
   &.inpage {
@@ -435,7 +439,7 @@ main {
   position: relative;
   display: flex;
   flex-direction: column;
-  background-color: $u-cardBackground;
+  background-color: $u-card-background;
   border: $u-card-border;
   border-radius: $u-card-radius;
   width: 376px;
@@ -446,9 +450,11 @@ main {
     min-width: 184px;
   }
 
-  img.active,
-  svg.active {
-    background-color: limegreen;
+  img,
+  svg {
+    &.active {
+      background-color: limegreen;
+    }
   }
 
   > .block {
@@ -479,11 +485,9 @@ main {
     }
 
     &.header {
-      background-image: linear-gradient(
-        to bottom,
-        $u-cardBackground,
-        darken($u-cardBackground, 10%)
-      );
+      background-image: linear-gradient(to bottom,
+      $u-card-background,
+      darken($u-card-background, 10%));
       border-top-right-radius: $u-card-radius;
       border-top-left-radius: $u-card-radius;
       min-height: 3.6rem;
@@ -502,8 +506,8 @@ main {
     background-color: rgba(0, 0, 0, 0.125);
     border: 0;
     height: 1px;
-    padding: 0;
     margin: 0;
+    padding: 0;
   }
 }
 
@@ -543,14 +547,13 @@ button,
   color: white;
   cursor: pointer;
   user-select: none;
-  -ms-user-select: none;
 
-  & :focus {
+  &:focus {
     border-color: $u-focus;
     background-color: $u-focus;
   }
 
-  & :visited {
+  &:visited {
     color: white;
   }
 
@@ -639,7 +642,7 @@ button,
 }
 
 .invalid {
-  border: 2px solid #ff0000 !important;
+  border: 2px solid #ff1111 !important;
   background-color: #ffcccc !important;
 }
 
@@ -702,11 +705,11 @@ button,
   background-color: silver;
 }
 
-.u-bool[value="1"] {
+.u-bool[value='1'] {
   background-image: linear-gradient(145deg, lighten($u-on, 30%), $u-on);
 }
 
-.u-bool[value="0"] {
+.u-bool[value='0'] {
   background-image: linear-gradient(145deg, lighten($u-off, 30%), $u-off);
 }
 
@@ -771,7 +774,7 @@ button,
     cursor: pointer;
 
     > img,
-    > svg.icon {
+    > .icon {
       width: 1.2em !important;
       height: 1.2em !important;
     }
@@ -783,7 +786,7 @@ button,
     display: inline-block;
     width: 3rem;
     height: 1.7rem;
-    border: 0.125rem solid $u-borderColor;
+    border: 0.125rem solid $u-border-color;
     border-radius: 1.25rem;
     background-color: $u-background;
     padding: 0.125rem;
@@ -820,7 +823,7 @@ button,
   margin: auto;
   width: 128px;
   height: 64px;
-  border: 2px solid $u-borderColor;
+  border: 2px solid $u-border-color;
   zoom: 2;
 
   > span {
@@ -832,25 +835,25 @@ button,
     height: 10px;
     overflow: hidden;
     background-color: transparent;
-  }
 
-  > span.text {
-    font-size: 10px;
-    line-height: 10px;
-  }
+    &.text {
+      font-size: 10px;
+      line-height: 10px;
+    }
 
-  > span.dot {
-    height: 10px;
-    width: 10px;
-    border-radius: 50%;
-  }
+    &.dot {
+      height: 10px;
+      width: 10px;
+      border-radius: 50%;
 
-  > span.line {
-    border-top: 1px solid black;
-  }
+      &.active {
+        background-color: green;
+      }
+    }
 
-  > span.dot.active {
-    background-color: green;
+    &.line {
+      border-top: 1px solid black;
+    }
   }
 } // #display
 

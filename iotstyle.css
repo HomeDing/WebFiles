@@ -1,4 +1,4 @@
-html, body { padding: 0; margin: 0; font-family: Arial, ui-sans-serif, sans-serif; font-size: 1em; color: #111111; }
+html, body { margin: 0; padding: 0; color: #111111; font-family: Arial, ui-sans-serif, sans-serif; font-size: 1em; }
 
 body { background-color: #dddddd; }
 
@@ -10,9 +10,9 @@ p > img, p > svg, pre > img, pre > svg, h1 > img, h1 > svg, h2 > img, h2 > svg, 
 
 p > img:first-child, p > svg:first-child, pre > img:first-child, pre > svg:first-child, h1 > img:first-child, h1 > svg:first-child, h2 > img:first-child, h2 > svg:first-child, h3 > img:first-child, h3 > svg:first-child, h4 > img:first-child, h4 > svg:first-child { margin-right: 0.2em; }
 
-a :hover, a :focus { color: #4466ee; }
+a:hover, a:focus { color: #4466ee; }
 
-a :visited { text-decoration: none; cursor: pointer; color: #304878; }
+a:visited { text-decoration: none; cursor: pointer; color: #304878; }
 
 p > a, p > a:visited { text-decoration: underline; }
 
@@ -28,19 +28,19 @@ h4 { font-size: 0.8em; min-height: 0.8rem; }
 
 #modal.hidden { visibility: hidden; opacity: 0; }
 
-#modal #modalBack { position: absolute; width: 100%; height: 100%; background-color: #dddddd; opacity: 0.75; }
+#modal #back { position: absolute; width: 100%; height: 100%; background-color: #dddddd; opacity: 0.75; }
 
-#modal #modalContainer { position: absolute; top: 50%; left: 50%; min-width: 100px; min-height: 100px; transform: translateX(-50%) translateY(-50%); padding: 0.5em; background-color: white; }
+#modal #container { position: absolute; top: 50%; left: 50%; min-width: 100px; min-height: 100px; transform: translateX(-50%) translateY(-50%); padding: 0.5em; background-color: white; }
 
-#modal #modalContainer::before, #modal #modalContainer::after { content: ""; position: absolute; background-color: red; z-index: -1; width: 40px; height: 40px; }
+#modal #container::before, #modal #container::after { content: ''; position: absolute; background-color: red; z-index: -1; width: 40px; height: 40px; }
 
-#modal #modalContainer::before { top: 0; right: 0; }
+#modal #container::before { top: 0; right: 0; }
 
-#modal #modalContainer::after { bottom: 0; left: 0; }
+#modal #container::after { bottom: 0; left: 0; }
 
 #modal .closedlg { position: absolute; top: 0.4rem; right: 0.4rem; height: 1.8rem; width: 1.8rem; font-size: 1.6rem; background-color: red; text-align: center; z-index: 3 !important; }
 
-.modalObject { position: fixed !important; z-index: 2 !important; margin: 0 !important; transition: all 0.3s ease-in-out !important; }
+.modal-object { position: fixed !important; z-index: 2 !important; margin: 0 !important; transition: all 0.3s ease-in-out !important; }
 
 .container { margin-right: 2rem; margin-left: 2rem; }
 
@@ -104,13 +104,13 @@ svg.icon { user-select: none; }
 
 .u-navbar > * { display: inline-block; font-size: 1.5em; min-width: 2em !important; height: 1.4em; color: white !important; vertical-align: top; border: 0.1em solid #304878; }
 
-.u-navbar > button:hover, .u-navbar .button:hover { border-color: #4466ee; background-color: #4466ee; }
+.u-navbar > button:hover, .u-navbar > .button:hover { border-color: #4466ee; background-color: #4466ee; }
 
-.u-navbar > button.func { float: right; }
+.u-navbar > button.func, .u-navbar > .button.func { float: right; }
 
 @media print { .u-navbar { display: none; } }
 
-nav { position: fixed; min-height: 100%; width: 280px; z-index: 1; left: -280px; transition: all 0.2s; padding: 1rem 0.2rem 0.2rem 0.2rem; background-color: white; }
+nav { position: fixed; min-height: 100%; width: 280px; z-index: 1; left: -280px; transition: all 0.2s; padding: 1rem 0.2rem 0.2rem; background-color: white; }
 
 nav.inpage { position: absolute; }
 
@@ -148,17 +148,17 @@ main { transition: margin-left 0.2s; }
 
 select, option { padding: 0; }
 
-option[disabled] { color: #808080; }
+option[disabled] { color: gray; }
 
 a + a, a + button, a + label, label + a, label + button, label + label, button + a, button + button, button + label { margin-left: 8px; }
 
-button, .button { display: inline-block; font-size: 1.25em; min-width: 4em; height: 1.4em; padding: 0 0.25em; border-radius: 0.2em; border: 0.1rem solid #304878; background-color: #304878; color: white; cursor: pointer; user-select: none; -ms-user-select: none; }
+button, .button { display: inline-block; font-size: 1.25em; min-width: 4em; height: 1.4em; padding: 0 0.25em; border-radius: 0.2em; border: 0.1rem solid #304878; background-color: #304878; color: white; cursor: pointer; user-select: none; }
 
-button :focus, .button :focus { border-color: #4466ee; background-color: #4466ee; }
+button:focus, .button:focus { border-color: #4466ee; background-color: #4466ee; }
 
-button :visited, .button :visited { color: white; }
+button:visited, .button:visited { color: white; }
 
-button:disabled, .button:disabled { border: 0.1rem solid #808080; background-color: #808080; }
+button:disabled, .button:disabled { border: 0.1rem solid gray; background-color: gray; }
 
 button.active, .button.active { background-color: #acc1e4 !important; border-color: #203050 !important; }
 
@@ -188,7 +188,7 @@ button.secondary, .button.secondary { background-color: #777777; border-color: #
 
 .form-group:not(:last-child) { margin-bottom: 8px; }
 
-.invalid { border: 2px solid #ff0000 !important; background-color: #ffcccc !important; }
+.invalid { border: 2px solid #ff1111 !important; background-color: #ffcccc !important; }
 
 .valid { border: 2px solid #00cc00 !important; background-color: #ccffcc !important; }
 
@@ -204,9 +204,9 @@ button.secondary, .button.secondary { background-color: #777777; border-color: #
 
 .u-bool { display: inline-block; height: 1.4rem; width: 1.4rem; border-radius: 0.7rem; text-align: center; background-color: silver; }
 
-.u-bool[value="1"] { background-image: linear-gradient(145deg, #1aff1a, green); }
+.u-bool[value='1'] { background-image: linear-gradient(145deg, #1aff1a, green); }
 
-.u-bool[value="0"] { background-image: linear-gradient(145deg, #ff9999, red); }
+.u-bool[value='0'] { background-image: linear-gradient(145deg, #ff9999, red); }
 
 .ux-levelbar { display: inline-block; border-color: #304878; border-style: solid; border-width: 1px; width: 32px; height: 64px; }
 
@@ -225,7 +225,7 @@ button.secondary, .button.secondary { background-color: #777777; border-color: #
 
 .u-slider > label { display: inline-block; padding: 0 0.2em; margin-bottom: 0.5rem; vertical-align: top; font-size: 1.4rem; cursor: pointer; }
 
-.u-slider > label > img, .u-slider > label > svg.icon { width: 1.2em !important; height: 1.2em !important; }
+.u-slider > label > img, .u-slider > label > .icon { width: 1.2em !important; height: 1.2em !important; }
 
 .u-slider > .box { position: relative; cursor: pointer; display: inline-block; width: 3rem; height: 1.7rem; border: 0.125rem solid #666666; border-radius: 1.25rem; background-color: #dddddd; padding: 0.125rem; }
 
@@ -246,9 +246,9 @@ button.secondary, .button.secondary { background-color: #777777; border-color: #
 
 .display > span.dot { height: 10px; width: 10px; border-radius: 50%; }
 
-.display > span.line { border-top: 1px solid black; }
-
 .display > span.dot.active { background-color: green; }
+
+.display > span.line { border-top: 1px solid black; }
 
 /* === Responsive Utilities === */
 .display-xs { display: none; }

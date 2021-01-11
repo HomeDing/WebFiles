@@ -1,0 +1,11 @@
+{
+  "extends": "stylelint-config-sass-guidelines",
+  "rules": {
+    "color-named": "always-where-possible",
+    "color-hex-length": "long",
+    "max-nesting-depth": 3,
+    "order/properties-alphabetical-order": null,
+    "selector-max-id": 2,
+    "selector-no-qualifying-type": [true, { "ignore": ["class", "attribute"]  } ]
+  }
+}
