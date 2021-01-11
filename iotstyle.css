@@ -98,11 +98,13 @@ svg.icon { user-select: none; }
 
 .u-header .close { position: absolute; top: 1rem; right: 1rem; height: 1.8rem; width: 1.8rem; font-size: 1.6rem; background-color: red; text-align: center; z-index: 3 !important; }
 
-.u-navbar { background-color: #304878; padding: 8px 16px; margin-bottom: 8px; height: 3rem; }
+.u-navbar { margin-bottom: 8px; padding: 8px 16px; height: 2.8rem; background-color: #304878; }
 
 .u-navbar.nogutter { margin: 0; }
 
 .u-navbar > * { display: inline-block; font-size: 1.5em; min-width: 2em !important; height: 1.4em; color: white !important; vertical-align: top; border: 0.1em solid #304878; }
+
+.u-navbar > button, .u-navbar > .button { text-decoration: none; }
 
 .u-navbar > button:hover, .u-navbar > .button:hover { border-color: #4466ee; background-color: #4466ee; }
 
@@ -144,7 +146,7 @@ main { transition: margin-left 0.2s; }
 
 .card > .block.header .icon { width: 3rem; height: 3rem; float: left; margin-right: 8px; overflow: hidden; }
 
-.card > hr { background-color: rgba(0, 0, 0, 0.125); border: 0; height: 1px; padding: 0; margin: 0; }
+.card > hr { background-color: rgba(0, 0, 0, 0.125); border: 0; height: 1px; margin: 0; padding: 0; }
 
 select, option { padding: 0; }
 
@@ -152,7 +154,7 @@ option[disabled] { color: gray; }
 
 a + a, a + button, a + label, label + a, label + button, label + label, button + a, button + button, button + label { margin-left: 8px; }
 
-button, .button { display: inline-block; font-size: 1.25em; min-width: 4em; height: 1.4em; padding: 0 0.25em; border-radius: 0.2em; border: 0.1rem solid #304878; background-color: #304878; color: white; cursor: pointer; user-select: none; }
+button, .button { display: inline-block; font-size: 1.25em; min-width: 4em; height: 1.4em; padding: 0.1em 0.2em; border-radius: 0.2em; border: 0.1em solid #304878; background-color: #304878; color: white; cursor: pointer; user-select: none; }
 
 button:focus, .button:focus { border-color: #4466ee; background-color: #4466ee; }
 

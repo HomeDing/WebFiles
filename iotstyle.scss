@@ -360,7 +360,7 @@ svg {
 .u-navbar {
   margin-bottom: $gutter;
   padding: $gutter $white-space;
-  height: 3rem;
+  height: 2.8rem;
   background-color: $u-navbar;
 
   &.nogutter {
@@ -379,6 +379,8 @@ svg {
 
   > button,
   > .button {
+    text-decoration: none;
+
     &:hover {
       border-color: $u-focus;
       background-color: $u-focus;
@@ -540,9 +542,9 @@ button,
   font-size: 1.25em;
   min-width: 4em;
   height: 1.4em;
-  padding: 0 0.25em;
+  padding: 0.1em 0.2em;
   border-radius: $u-btn-radius;
-  border: 0.1rem solid $u-primary;
+  border: 0.1em solid $u-primary;
   background-color: $u-primary;
   color: white;
   cursor: pointer;
