@@ -76,7 +76,7 @@ class SliderWidgetClass extends GenericWidgetClass {
   on_click(e: MouseEvent) {
     let src: HTMLElement | null = e.target as HTMLElement;
 
-    while (src != null && src != this) {
+    while (src && src !== this) {
       if (src.tagName === 'LABEL' && src.classList.contains('up')) {
         this.dispatchAction('up', '1');
         break;
