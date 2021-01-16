@@ -27,10 +27,6 @@
       user-select: none;
       -ms-user-select: none;
     }
-
-    .hueband {
-      background: linear-gradient(to right, #ff0000 0%, #ffff00 17%, #00ff00 33%, #00ffff 50%, #0000ff 67%, #ff00ff 83%, #ff0000 100%);
-    }
   </style>
   <script src="/micro.js"></script>
 </head>
@@ -178,10 +174,22 @@
           <h4>${id} - <span u-text="description"></span></h4>
           <div class="form-group"><label>value:</label><span u-text="value"></span><span class="color"
               style="width:6rem;"></span></div>
-          <div class="hueband" style="height:1.4rem;width:100%;margin-bottom: 0.4rem;"></div>
+          <div class="hueband"><div class="point"></div></div>
+          <div class="brightband"><div class="point"></div></div>
           <button u-action="mode" value="flow">flow</button>
           <button u-action="mode" value="wheel">wheel</button>
           <button u-action="mode" value="pulse">pulse</button>
+        </div>
+      </div>
+
+      <div class="col card" u-control="my9291" id="${id}" u-is="neo" microID="${id}">
+        <div class="block">
+          <h4>${id} - <span u-text="description"></span></h4>
+          <div class="form-group"><label>value:</label><span u-text="value"></span><span class="color"
+              style="width:6rem;"></span></div>
+          <div class="hueband"><div class="point"></div></div>
+          <div class="brightband"><div class="point"></div></div>
+          <div class="whiteband"><div class="point"></div></div>
         </div>
       </div>
 
@@ -205,6 +213,13 @@
     var panelObj = document.getElementById('panel');
     var updateTimer;
 
+    // Element type reuse
+    var alias = {
+      "sht20": "dht",
+      "displaysh1106": "displayssd1306",
+      "my9291": "neo"
+    };
+
     hub.subscribe('/*/*', function (path, key, value) {
       if (path) {
         path = path.toLowerCase();
@@ -217,7 +232,10 @@
           };
 
           var e = micro.insertTemplate(panelObj, t, p);
-          // if (!e) { micro.insertTemplate(panelObj, 'generic', p); }
+          if (!e) {
+            t = alias[t] || 'generic';
+            e = micro.insertTemplate(panelObj, t, p);
+          }
         } // if
       } // if
     });

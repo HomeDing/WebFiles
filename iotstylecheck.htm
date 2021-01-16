@@ -23,7 +23,7 @@
 
   <script src="/micro.js"></script>
   <style>
-        span.activeState,
+    span.activeState,
     span.setconfig {
       position: absolute;
       top: 0.5rem;
@@ -46,7 +46,6 @@
       right: 2.2rem;
       background-image: url(/i/config.svg);
     }
-
   </style>
 </head>
 
@@ -67,6 +66,23 @@
     </div>
 
     <div class="row">
+      <div class="col">
+        <blockquote>
+          <h1>Page Header &lt;h1&gt;</h1>
+          <h2>Chapter headings &lt;h2&gt;</h2>
+          <h3>Topic headings &lt;h3&gt;</h3>
+          <h4>Subtitles &lt;h4&gt;</h4>
+          <p>Normal floating text with <a href="#">links</a>.</p>
+          <li>Use <code>class="hidden-xs"</code> to hide text elements.</li>
+          </ul>
+      </div>
+    </div>
+
+
+
+
+
+    <div class="row">
       <h2 class="col">Cards:</h2>
     </div>
 
@@ -79,13 +95,14 @@
           <h3>Setup Pages</h3>
         </div>
         <div class="block">
-          <p><a href="$setup.htm">WiFi Setup</a></p>
-          <p><a href="$boot.htm">Web Update</a></p>
-          <p><a href="$upload.htm">File Upload</a></p>
-          <p><a href="updateicons.htm">Update FavIcons</a></p>
-          <p><a href="/panel.htm">Panel</a></p>
+          <p>Links: <a href="$setup.htm">WiFi Setup</a> <a href="$boot.htm">Web Update</a><a href="$upload.htm">File Upload</a></p>
+          <p><a href="updateicons.htm">Update FavIcons</a><a href="/panel.htm">Panel</a></p>
+        </div>
+        <div class="block">
+          <button>action</button><button disabled>disabled</button>
         </div>
       </div>
+
 
       <div class="col card" u-control="timer" microID="${id}" u-is="timer">
         <div class="block header">
@@ -176,70 +193,424 @@
     </div>
 
     <div class="row wrap">
-      <div class="col card small"><div class="block"><h3>analog</h3><svg class="icon"><use xlink:href="icons.svg#analog"/></svg></div></div>
-      <div class="col card small"><div class="block"><h3>and</h3><svg class="icon"><use xlink:href="icons.svg#and"/></svg></div></div>
-      <div class="col card small"><div class="block"><h3>bme680</h3><svg class="icon"><use xlink:href="icons.svg#bme680"/></svg></div></div>
-      <div class="col card small"><div class="block"><h3>bmp280</h3><svg class="icon"><use xlink:href="icons.svg#bmp280"/></svg></div></div>
-      <div class="col card small"><div class="block"><h3>bulb</h3><svg class="icon"><use xlink:href="icons.svg#bulb"/></svg></div></div>
-      <div class="col card small"><div class="block"><h3>button</h3><svg class="icon"><use xlink:href="icons.svg#button"/></svg></div></div>
-      <div class="col card small"><div class="block"><h3>config</h3><svg class="icon"><use xlink:href="icons.svg#config"/></svg></div></div>
-      <div class="col card small"><div class="block"><h3>dcftime</h3><svg class="icon"><use xlink:href="icons.svg#dcftime"/></svg></div></div>
-      <div class="col card small"><div class="block"><h3>default</h3><svg class="icon"><use xlink:href="icons.svg#default"/></svg></div></div>
-      <div class="col card small"><div class="block"><h3>device</h3><svg class="icon"><use xlink:href="icons.svg#device"/></svg></div></div>
-      <div class="col card small"><div class="block"><h3>dht</h3><svg class="icon"><use xlink:href="icons.svg#dht"/></svg></div></div>
-      <div class="col card small"><div class="block"><h3>digitalin</h3><svg class="icon"><use xlink:href="icons.svg#digitalin"/></svg></div></div>
-      <div class="col card small"><div class="block"><h3>digitalout</h3><svg class="icon"><use xlink:href="icons.svg#digitalout"/></svg></div></div>
-      <div class="col card small"><div class="block"><h3>displaybar</h3><svg class="icon"><use xlink:href="icons.svg#displaybar"/></svg></div></div>
-      <div class="col card small"><div class="block"><h3>displaydot</h3><svg class="icon"><use xlink:href="icons.svg#displaydot"/></svg></div></div>
-      <div class="col card small"><div class="block"><h3>displaylcd</h3><svg class="icon"><use xlink:href="icons.svg#displaylcd"/></svg></div></div>
-      <div class="col card small"><div class="block"><h3>displayline</h3><svg class="icon"><use xlink:href="icons.svg#displayline"/></svg></div></div>
-      <div class="col card small"><div class="block"><h3>displaysh1106</h3><svg class="icon"><use xlink:href="icons.svg#displaysh1106"/></svg></div></div>
-      <div class="col card small"><div class="block"><h3>displayssd1306</h3><svg class="icon"><use xlink:href="icons.svg#displayssd1306"/></svg></div></div>
-      <div class="col card small"><div class="block"><h3>displaytext</h3><svg class="icon"><use xlink:href="icons.svg#displaytext"/></svg></div></div>
-      <div class="col card small"><div class="block"><h3>door</h3><svg class="icon"><use xlink:href="icons.svg#door"/></svg></div></div>
-      <div class="col card small"><div class="block"><h3>ds18b20</h3><svg class="icon"><use xlink:href="icons.svg#ds18b20"/></svg></div></div>
-      <div class="col card small"><div class="block"><h3>dstime</h3><svg class="icon"><use xlink:href="icons.svg#dstime"/></svg></div></div>
-      <div class="col card small"><div class="block"><h3>edit</h3><svg class="icon"><use xlink:href="icons.svg#edit"/></svg></div></div>
-      <div class="col card small"><div class="block"><h3>element</h3><svg class="icon"><use xlink:href="icons.svg#element"/></svg></div></div>
-      <div class="col card small"><div class="block"><h3>ide</h3><svg class="icon"><use xlink:href="icons.svg#ide"/></svg></div></div>
-      <div class="col card small"><div class="block"><h3>led</h3><svg class="icon"><use xlink:href="icons.svg#led"/></svg></div></div>
-      <div class="col card small"><div class="block"><h3>log</h3><svg class="icon"><use xlink:href="icons.svg#log"/></svg></div></div>
-      <div class="col card small"><div class="block"><h3>max7219</h3><svg class="icon"><use xlink:href="icons.svg#max7219"/></svg></div></div>
-      <div class="col card small"><div class="block"><h3>menu</h3><svg class="icon"><use xlink:href="icons.svg#menu"/></svg></div></div>
-      <div class="col card small"><div class="block"><h3>menui</h3><svg class="icon"><use xlink:href="icons.svg#menui"/></svg></div></div>
-      <div class="col card small"><div class="block"><h3>minus</h3><svg class="icon"><use xlink:href="icons.svg#minus"/></svg></div></div>
-      <div class="col card small"><div class="block"><h3>neo</h3><svg class="icon"><use xlink:href="icons.svg#neo"/></svg></div></div>
-      <div class="col card small"><div class="block"><h3>no</h3><svg class="icon"><use xlink:href="icons.svg#no"/></svg></div></div>
-      <div class="col card small"><div class="block"><h3>ntptime</h3><svg class="icon"><use xlink:href="icons.svg#ntptime"/></svg></div></div>
-      <div class="col card small"><div class="block"><h3>ota</h3><svg class="icon"><use xlink:href="icons.svg#ota"/></svg></div></div>
-      <div class="col card small"><div class="block"><h3>pin</h3><svg class="icon"><use xlink:href="icons.svg#pin"/></svg></div></div>
-      <div class="col card small"><div class="block"><h3>pined</h3><svg class="icon"><use xlink:href="icons.svg#pined"/></svg></div></div>
-      <div class="col card small"><div class="block"><h3>plus</h3><svg class="icon"><use xlink:href="icons.svg#plus"/></svg></div></div>
-      <div class="col card small"><div class="block"><h3>pms</h3><svg class="icon"><use xlink:href="icons.svg#pms"/></svg></div></div>
-      <div class="col card small"><div class="block"><h3>power</h3><svg class="icon"><use xlink:href="icons.svg#power"/></svg></div></div>
-      <div class="col card small"><div class="block"><h3>pwmout</h3><svg class="icon"><use xlink:href="icons.svg#pwmout"/></svg></div></div>
-      <div class="col card small"><div class="block"><h3>radio</h3><svg class="icon"><use xlink:href="icons.svg#radio"/></svg></div></div>
-      <div class="col card small"><div class="block"><h3>reload</h3><svg class="icon"><use xlink:href="icons.svg#reload"/></svg></div></div>
-      <div class="col card small"><div class="block"><h3>remote</h3><svg class="icon"><use xlink:href="icons.svg#remote"/></svg></div></div>
-      <div class="col card small"><div class="block"><h3>rfsend</h3><svg class="icon"><use xlink:href="icons.svg#rfsend"/></svg></div></div>
-      <div class="col card small"><div class="block"><h3>rotary</h3><svg class="icon"><use xlink:href="icons.svg#rotary"/></svg></div></div>
-      <div class="col card small"><div class="block"><h3>schedule</h3><svg class="icon"><use xlink:href="icons.svg#schedule"/></svg></div></div>
-      <div class="col card small"><div class="block"><h3>serialcmd</h3><svg class="icon"><use xlink:href="icons.svg#serialcmd"/></svg></div></div>
-      <div class="col card small"><div class="block"><h3>socket</h3><svg class="icon"><use xlink:href="icons.svg#socket"/></svg></div></div>
-      <div class="col card small"><div class="block"><h3>ssdp</h3><svg class="icon"><use xlink:href="icons.svg#ssdp"/></svg></div></div>
-      <div class="col card small"><div class="block"><h3>start</h3><svg class="icon"><use xlink:href="icons.svg#start"/></svg></div></div>
-      <div class="col card small"><div class="block"><h3>stop</h3><svg class="icon"><use xlink:href="icons.svg#stop"/></svg></div></div>
-      <div class="col card small"><div class="block"><h3>switch</h3><svg class="icon"><use xlink:href="icons.svg#switch"/></svg></div></div>
-      <div class="col card small"><div class="block"><h3>time</h3><svg class="icon"><use xlink:href="icons.svg#time"/></svg></div></div>
-      <div class="col card small"><div class="block"><h3>timer</h3><svg class="icon"><use xlink:href="icons.svg#timer"/></svg></div></div>
-      <div class="col card small"><div class="block"><h3>value</h3><svg class="icon"><use xlink:href="icons.svg#value"/></svg></div></div>
-      <div class="col card small"><div class="block"><h3>washing</h3><svg class="icon"><use xlink:href="icons.svg#washing"/></svg></div></div>
-      <div class="col card small"><div class="block"><h3>weatherfeed</h3><svg class="icon"><use xlink:href="icons.svg#weatherfeed"/></svg></div></div>
+      <div class="col card small">
+        <div class="block">
+          <h3>analog</h3><svg class="icon">
+            <use xlink:href="icons.svg#analog" />
+          </svg>
+        </div>
+      </div>
+      <div class="col card small">
+        <div class="block">
+          <h3>and</h3><svg class="icon">
+            <use xlink:href="icons.svg#and" />
+          </svg>
+        </div>
+      </div>
+      <div class="col card small">
+        <div class="block">
+          <h3>bme680</h3><svg class="icon">
+            <use xlink:href="icons.svg#bme680" />
+          </svg>
+        </div>
+      </div>
+      <div class="col card small">
+        <div class="block">
+          <h3>bmp280</h3><svg class="icon">
+            <use xlink:href="icons.svg#bmp280" />
+          </svg>
+        </div>
+      </div>
+      <div class="col card small">
+        <div class="block">
+          <h3>bulb</h3><svg class="icon">
+            <use xlink:href="icons.svg#bulb" />
+          </svg>
+        </div>
+      </div>
+      <div class="col card small">
+        <div class="block">
+          <h3>button</h3><svg class="icon">
+            <use xlink:href="icons.svg#button" />
+          </svg>
+        </div>
+      </div>
+      <div class="col card small">
+        <div class="block">
+          <h3>config</h3><svg class="icon">
+            <use xlink:href="icons.svg#config" />
+          </svg>
+        </div>
+      </div>
+      <div class="col card small">
+        <div class="block">
+          <h3>dcftime</h3><svg class="icon">
+            <use xlink:href="icons.svg#dcftime" />
+          </svg>
+        </div>
+      </div>
+      <div class="col card small">
+        <div class="block">
+          <h3>default</h3><svg class="icon">
+            <use xlink:href="icons.svg#default" />
+          </svg>
+        </div>
+      </div>
+      <div class="col card small">
+        <div class="block">
+          <h3>device</h3><svg class="icon">
+            <use xlink:href="icons.svg#device" />
+          </svg>
+        </div>
+      </div>
+      <div class="col card small">
+        <div class="block">
+          <h3>dht</h3><svg class="icon">
+            <use xlink:href="icons.svg#dht" />
+          </svg>
+        </div>
+      </div>
+      <div class="col card small">
+        <div class="block">
+          <h3>digitalin</h3><svg class="icon">
+            <use xlink:href="icons.svg#digitalin" />
+          </svg>
+        </div>
+      </div>
+      <div class="col card small">
+        <div class="block">
+          <h3>digitalout</h3><svg class="icon">
+            <use xlink:href="icons.svg#digitalout" />
+          </svg>
+        </div>
+      </div>
+      <div class="col card small">
+        <div class="block">
+          <h3>displaybar</h3><svg class="icon">
+            <use xlink:href="icons.svg#displaybar" />
+          </svg>
+        </div>
+      </div>
+      <div class="col card small">
+        <div class="block">
+          <h3>displaydot</h3><svg class="icon">
+            <use xlink:href="icons.svg#displaydot" />
+          </svg>
+        </div>
+      </div>
+      <div class="col card small">
+        <div class="block">
+          <h3>displaylcd</h3><svg class="icon">
+            <use xlink:href="icons.svg#displaylcd" />
+          </svg>
+        </div>
+      </div>
+      <div class="col card small">
+        <div class="block">
+          <h3>displayline</h3><svg class="icon">
+            <use xlink:href="icons.svg#displayline" />
+          </svg>
+        </div>
+      </div>
+      <div class="col card small">
+        <div class="block">
+          <h3>displaysh1106</h3><svg class="icon">
+            <use xlink:href="icons.svg#displaysh1106" />
+          </svg>
+        </div>
+      </div>
+      <div class="col card small">
+        <div class="block">
+          <h3>displayssd1306</h3><svg class="icon">
+            <use xlink:href="icons.svg#displayssd1306" />
+          </svg>
+        </div>
+      </div>
+      <div class="col card small">
+        <div class="block">
+          <h3>displaytext</h3><svg class="icon">
+            <use xlink:href="icons.svg#displaytext" />
+          </svg>
+        </div>
+      </div>
+      <div class="col card small">
+        <div class="block">
+          <h3>door</h3><svg class="icon">
+            <use xlink:href="icons.svg#door" />
+          </svg>
+        </div>
+      </div>
+      <div class="col card small">
+        <div class="block">
+          <h3>ds18b20</h3><svg class="icon">
+            <use xlink:href="icons.svg#ds18b20" />
+          </svg>
+        </div>
+      </div>
+      <div class="col card small">
+        <div class="block">
+          <h3>dstime</h3><svg class="icon">
+            <use xlink:href="icons.svg#dstime" />
+          </svg>
+        </div>
+      </div>
+      <div class="col card small">
+        <div class="block">
+          <h3>edit</h3><svg class="icon">
+            <use xlink:href="icons.svg#edit" />
+          </svg>
+        </div>
+      </div>
+      <div class="col card small">
+        <div class="block">
+          <h3>element</h3><svg class="icon">
+            <use xlink:href="icons.svg#element" />
+          </svg>
+        </div>
+      </div>
+      <div class="col card small">
+        <div class="block">
+          <h3>ide</h3><svg class="icon">
+            <use xlink:href="icons.svg#ide" />
+          </svg>
+        </div>
+      </div>
+      <div class="col card small">
+        <div class="block">
+          <h3>led</h3><svg class="icon">
+            <use xlink:href="icons.svg#led" />
+          </svg>
+        </div>
+      </div>
+      <div class="col card small">
+        <div class="block">
+          <h3>log</h3><svg class="icon">
+            <use xlink:href="icons.svg#log" />
+          </svg>
+        </div>
+      </div>
+      <div class="col card small">
+        <div class="block">
+          <h3>max7219</h3><svg class="icon">
+            <use xlink:href="icons.svg#max7219" />
+          </svg>
+        </div>
+      </div>
+      <div class="col card small">
+        <div class="block">
+          <h3>menu</h3><svg class="icon">
+            <use xlink:href="icons.svg#menu" />
+          </svg>
+        </div>
+      </div>
+      <div class="col card small">
+        <div class="block">
+          <h3>menui</h3><svg class="icon">
+            <use xlink:href="icons.svg#menui" />
+          </svg>
+        </div>
+      </div>
+      <div class="col card small">
+        <div class="block">
+          <h3>minus</h3><svg class="icon">
+            <use xlink:href="icons.svg#minus" />
+          </svg>
+        </div>
+      </div>
+      <div class="col card small">
+        <div class="block">
+          <h3>neo</h3><svg class="icon">
+            <use xlink:href="icons.svg#neo" />
+          </svg>
+        </div>
+      </div>
+      <div class="col card small">
+        <div class="block">
+          <h3>no</h3><svg class="icon">
+            <use xlink:href="icons.svg#no" />
+          </svg>
+        </div>
+      </div>
+      <div class="col card small">
+        <div class="block">
+          <h3>ntptime</h3><svg class="icon">
+            <use xlink:href="icons.svg#ntptime" />
+          </svg>
+        </div>
+      </div>
+      <div class="col card small">
+        <div class="block">
+          <h3>ota</h3><svg class="icon">
+            <use xlink:href="icons.svg#ota" />
+          </svg>
+        </div>
+      </div>
+      <div class="col card small">
+        <div class="block">
+          <h3>pin</h3><svg class="icon">
+            <use xlink:href="icons.svg#pin" />
+          </svg>
+        </div>
+      </div>
+      <div class="col card small">
+        <div class="block">
+          <h3>pined</h3><svg class="icon">
+            <use xlink:href="icons.svg#pined" />
+          </svg>
+        </div>
+      </div>
+      <div class="col card small">
+        <div class="block">
+          <h3>plus</h3><svg class="icon">
+            <use xlink:href="icons.svg#plus" />
+          </svg>
+        </div>
+      </div>
+      <div class="col card small">
+        <div class="block">
+          <h3>pms</h3><svg class="icon">
+            <use xlink:href="icons.svg#pms" />
+          </svg>
+        </div>
+      </div>
+      <div class="col card small">
+        <div class="block">
+          <h3>power</h3><svg class="icon">
+            <use xlink:href="icons.svg#power" />
+          </svg>
+        </div>
+      </div>
+      <div class="col card small">
+        <div class="block">
+          <h3>pwmout</h3><svg class="icon">
+            <use xlink:href="icons.svg#pwmout" />
+          </svg>
+        </div>
+      </div>
+      <div class="col card small">
+        <div class="block">
+          <h3>radio</h3><svg class="icon">
+            <use xlink:href="icons.svg#radio" />
+          </svg>
+        </div>
+      </div>
+      <div class="col card small">
+        <div class="block">
+          <h3>reload</h3><svg class="icon">
+            <use xlink:href="icons.svg#reload" />
+          </svg>
+        </div>
+      </div>
+      <div class="col card small">
+        <div class="block">
+          <h3>remote</h3><svg class="icon">
+            <use xlink:href="icons.svg#remote" />
+          </svg>
+        </div>
+      </div>
+      <div class="col card small">
+        <div class="block">
+          <h3>rfsend</h3><svg class="icon">
+            <use xlink:href="icons.svg#rfsend" />
+          </svg>
+        </div>
+      </div>
+      <div class="col card small">
+        <div class="block">
+          <h3>rotary</h3><svg class="icon">
+            <use xlink:href="icons.svg#rotary" />
+          </svg>
+        </div>
+      </div>
+      <div class="col card small">
+        <div class="block">
+          <h3>schedule</h3><svg class="icon">
+            <use xlink:href="icons.svg#schedule" />
+          </svg>
+        </div>
+      </div>
+      <div class="col card small">
+        <div class="block">
+          <h3>serialcmd</h3><svg class="icon">
+            <use xlink:href="icons.svg#serialcmd" />
+          </svg>
+        </div>
+      </div>
+      <div class="col card small">
+        <div class="block">
+          <h3>socket</h3><svg class="icon">
+            <use xlink:href="icons.svg#socket" />
+          </svg>
+        </div>
+      </div>
+      <div class="col card small">
+        <div class="block">
+          <h3>ssdp</h3><svg class="icon">
+            <use xlink:href="icons.svg#ssdp" />
+          </svg>
+        </div>
+      </div>
+      <div class="col card small">
+        <div class="block">
+          <h3>start</h3><svg class="icon">
+            <use xlink:href="icons.svg#start" />
+          </svg>
+        </div>
+      </div>
+      <div class="col card small">
+        <div class="block">
+          <h3>stop</h3><svg class="icon">
+            <use xlink:href="icons.svg#stop" />
+          </svg>
+        </div>
+      </div>
+      <div class="col card small">
+        <div class="block">
+          <h3>switch</h3><svg class="icon">
+            <use xlink:href="icons.svg#switch" />
+          </svg>
+        </div>
+      </div>
+      <div class="col card small">
+        <div class="block">
+          <h3>time</h3><svg class="icon">
+            <use xlink:href="icons.svg#time" />
+          </svg>
+        </div>
+      </div>
+      <div class="col card small">
+        <div class="block">
+          <h3>timer</h3><svg class="icon">
+            <use xlink:href="icons.svg#timer" />
+          </svg>
+        </div>
+      </div>
+      <div class="col card small">
+        <div class="block">
+          <h3>value</h3><svg class="icon">
+            <use xlink:href="icons.svg#value" />
+          </svg>
+        </div>
+      </div>
+      <div class="col card small">
+        <div class="block">
+          <h3>washing</h3><svg class="icon">
+            <use xlink:href="icons.svg#washing" />
+          </svg>
+        </div>
+      </div>
+      <div class="col card small">
+        <div class="block">
+          <h3>weatherfeed</h3><svg class="icon">
+            <use xlink:href="icons.svg#weatherfeed" />
+          </svg>
+        </div>
+      </div>
     </div>
   </div>
 
-    <script>
-    </script>
+  <script>
+  </script>
 </body>
 
 </html>

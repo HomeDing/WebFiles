@@ -52,10 +52,6 @@
       user-select: none;
       -ms-user-select: none;
     }
-
-    .hueband {
-      background: linear-gradient(to right, #ff0000 0%, #ffff00 17%, #00ff00 33%, #00ffff 50%, #0000ff 67%, #ff00ff 83%, #ff0000 100%);
-    }
   </style>
   <script src="/micro.js"></script>
 </head>
@@ -194,6 +190,23 @@
         </div>
       </div>
 
+      <div class="col card" u-control="my9291" id="${id}" u-is="neo" microID="${id}">
+        <div class="block header">
+          <svg class="icon"><use xlink:href="./icons.svg#neo" /></svg>
+          <h3 u-text="title"></h3>
+          <h4 u-text="description"></h4>
+          <span class="activeState" u-active="active"></span>
+          <span class="setconfig"></span>
+        </div>
+        <div class="block">
+          <div class="form-group"><label>value:</label><span u-text="value"></span><span class="color"
+              style="width:6rem;"></span></div>
+          <div class="hueband"><div class="point"></div></div>
+          <div class="brightband"><div class="point"></div></div>
+          <div class="whiteband"><div class="point"></div></div>
+        </div>
+      </div>
+
       <div class="col card" u-control="bl0937" id="${id}" u-is="bl0937" microID="${id}">
         <div class="block header">
           <svg class="icon"><use xlink:href="./icons.svg#default"/></svg>
@@ -259,7 +272,7 @@
     });
 
     // Element type reuse
-    alias = {
+    var alias = {
       "sht20": "dht",
       "displaysh1106": "displayssd1306"
     };
@@ -298,9 +311,9 @@
     });
 
 
-     /** 
-     * @param {number} timeout time to next fetch in msecs.
-     */
+    /**
+    * @param {number} timeout time to next fetch in msecs.
+    */
     function updateAsap(timeout) {
       if (!timeout) timeout = 50;
 

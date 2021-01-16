@@ -859,6 +859,33 @@ button,
   }
 } // #display
 
+/* === Light input === */
+
+.hueband, .brightband,
+.whiteband {
+  height: 1.4rem;
+  width: 100%;
+  border: 1px solid gray;
+  margin-bottom: 0.8rem;
+
+  .point {
+    position: relative;
+    width: 0;
+    height: 0;
+    border-color: transparent transparent gray transparent;
+    border-width: 0 8px 12px 8px;
+    border-style: solid;
+  }
+}
+
+.hueband {
+  background: linear-gradient(to right, #ff0000 0%, #ffff00 17%, #00ff00 33%, #00ffff 50%, #0000ff 67%, #ff00ff 83%, #ff0000 100%);
+}
+
+.whiteband, .brightband {
+  background: linear-gradient(to right, black 0%, white 100%);
+}
+
 /* === Responsive Utilities === */
 
 .display-xs {

@@ -2,6 +2,7 @@
 
 // This file is part of the Widget implementation for the HomeDing Library
 // implementing the Web UI corresponding to an internal configured element.
+// Support hue, brightness and white bands for single `WWRRGGBB` value.
 
 /// <reference path="micro.ts" />
 /// <reference path="microControls.ts" />
@@ -11,19 +12,23 @@
 class NeoWidgetClass extends GenericWidgetClass {
   private colObj: HTMLElement | null = null;
   private hueObj: HTMLElement | null = null;
+  private brightObj: HTMLElement | null = null;
   private whiteObj: HTMLElement | null = null;
   private _value = '00000000';
+  private _brightness = 0;
 
   connectedCallback() {
     super.connectedCallback();
     this.colObj = this.querySelector('.color') as HTMLElement;
     this.hueObj = this.querySelector('.hueband') as HTMLElement;
+    this.brightObj = this.querySelector('.brightband') as HTMLElement;
     this.whiteObj = this.querySelector('.whiteband') as HTMLElement;
   } // connectedCallback
 
   // visualize any new data for the widget.
   newData(_path: string, key: string | null, value: string | null) {
-    if ((key === 'value') && (value)) {
+    if (!value) {
+    } else if (key === 'value') {
       // normalize value
       value = value.replace('x', '');
       if (value.length === 6) {
@@ -31,19 +36,29 @@ class NeoWidgetClass extends GenericWidgetClass {
       } else if (value.length === 8) {
         this._value = value;
       }
+      const rgb = this._value.substr(2);
 
-      if (this.colObj) {
-        this.colObj.style.backgroundColor = `#${this._value.substr(2)}`;
+      this.setPoint(this.hueObj, this.rgbToHue(rgb));
+      this.setPoint(this.whiteObj, parseInt(this._value.substr(0, 2), 16) / 256);
+      if (this.brightObj) {
+        const lg = `linear-gradient(to right, black 0%, #${rgb} 100%)`;
+        this.brightObj.style.background = lg;
       }
 
-      this.setHuePoint(value);
-      this.setWhitePoint(value);
+      if (this.colObj) {
+        this.colObj.style.backgroundColor = `#${rgb}`;
+      }
+
+    } else if (key === 'brightness') {
+      this._brightness = parseInt(value, 10);
+      this.setPoint(this.brightObj, this._brightness / 100);
     }
     super.newData(_path, key, value);
   }
 
   on_click(e: MouseEvent) {
     const src = e.target as HTMLElement;
+    let col = '';
 
     if (src === this.hueObj) {
       const x = Math.round(e.offsetX * 360 / src.clientWidth);
@@ -53,23 +68,25 @@ class NeoWidgetClass extends GenericWidgetClass {
         src.style.backgroundColor = color;
         const ccol = document.defaultView.getComputedStyle(src, null).backgroundColor;
         const l = String(ccol).replace(/[^0-9,]/g, '').split(',');
-        let col = 'x' + this.x16(l[0]) + this.x16(l[1]) + this.x16(l[2]);
+        col = 'x' + this.x16(l[0]) + this.x16(l[1]) + this.x16(l[2]);
         if (this.whiteObj) {
           col = 'x' + this._value.substr(0, 2) + col.substr(1);
         } // if
-        this.setHuePoint(col);
-        this.dispatchAction('value', col);
       }
 
     } else if (src === this.whiteObj) {
       const x = Math.min(255, Math.round(e.offsetX * 256 / src.clientWidth));
-      const col = 'x' + this.x16(x) + this._value.substr(2);
-      this.setWhitePoint(col);
-      this.dispatchAction('value', col);
-      // const color = 'hsl(' + x + ', 100%, 50%)';
+      col = 'x' + this.x16(x) + this._value.substr(2);
+
+    } else if (src === this.brightObj) {
+      const x = Math.min(100, Math.round(e.offsetX * 100 / src.clientWidth));
+      this.dispatchAction('brightness', String(x));
 
     } else {
       super.on_click(e);
+    }
+    if (col.length > 0) {
+      this.dispatchAction('value', col);
     }
   }
 
@@ -117,18 +134,6 @@ class NeoWidgetClass extends GenericWidgetClass {
     }
   }
 
-  private setHuePoint(rgb: string) {
-    if (this.hueObj) {
-      const hue = this.rgbToHue(rgb);
-      this.setPoint(this.hueObj, hue);
-    }
-  } // setHuePoint()
-
-  private setWhitePoint(_rgb: string) {
-    if (this.whiteObj) {
-      this.setPoint(this.whiteObj, parseInt(this._value.substr(0, 2), 16) / 256);
-    }
-  }
 
   private x16(d: any): string {
     let x = Number(d).toString(16);

@@ -93,6 +93,7 @@ export class MockBL0937 extends VirtualBaseElement {
 }
 
 
+// support changing the state by action - some properties 
 export class MockStandard extends VirtualBaseElement {
   constructor(typeId: string, config: any) {
     super(typeId, config);
@@ -102,6 +103,7 @@ export class MockStandard extends VirtualBaseElement {
   async doAction(action: any) {
     super.doAction(action);
     if (action.value != null) { this.state.value = action.value; }
+    if (action.brightness != null) { this.state.brightness = action.brightness; }
   }
 } // class MockStandard
 
@@ -115,6 +117,8 @@ export function register() {
   registerVirtual('value', MockValue);
   registerVirtual('digitalout', MockStandard);
   registerVirtual('neo', MockStandard);
+  registerVirtual('my9291', MockStandard);
+  registerVirtual('p9813', MockStandard);
 
   registerVirtual('bl0937', MockBL0937);
 }

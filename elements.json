@@ -166,10 +166,24 @@
     "events": ["value"]
   },
 
+  "light": {
+    "properties": ["loglevel", "description", "pin", "duration"],
+    "events": ["value", "enable", "brightness"]
+  },
+
+  "my9291": {
+    "properties": ["loglevel", "description", "datapin", "clockpin"],
+    "events": ["value", "enable", "brightness"]
+  },
+
+  "p9813": {
+    "properties": ["loglevel", "description", "datapin", "clockpin"],
+    "events": ["value", "enable", "brightness"]
+  },
+
   "neo": {
-    "properties": ["loglevel", "description", "pin", "duration", "count", "value", "mode", "brightness"],
-    "events": ["value", "mode", "brightness"],
-    "actions": []
+    "properties": ["loglevel", "description", "pin", "duration", "count"],
+    "events": ["value", "mode", "brightness"]
   },
 
   "alarm": {
