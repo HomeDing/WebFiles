@@ -174,8 +174,8 @@
           <h4>${id} - <span u-text="description"></span></h4>
           <div class="form-group"><label>value:</label><span u-text="value"></span><span class="color"
               style="width:6rem;"></span></div>
-          <div class="hueband"><div class="point"></div></div>
-          <div class="brightband"><div class="point"></div></div>
+          <input type="range" max="359" class="band hue">
+          <input type="range" max="100" class="band bright">
           <button u-action="mode" value="flow">flow</button>
           <button u-action="mode" value="wheel">wheel</button>
           <button u-action="mode" value="pulse">pulse</button>
@@ -186,10 +186,10 @@
         <div class="block">
           <h4>${id} - <span u-text="description"></span></h4>
           <div class="form-group"><label>value:</label><span u-text="value"></span><span class="color"
-              style="width:6rem;"></span></div>
-          <div class="hueband"><div class="point"></div></div>
-          <div class="brightband"><div class="point"></div></div>
-          <div class="whiteband"><div class="point"></div></div>
+            style="width:6rem;"></span></div>
+          <input type="range" max="359" class="band hue">
+          <input type="range" max="100" class="band bright">
+          <input type="range" max="255" class="band white">
         </div>
       </div>
 
@@ -233,7 +233,7 @@
 
           var e = micro.insertTemplate(panelObj, t, p);
           if (!e) {
-            t = alias[t] || 'generic';
+            t = alias[t]; // || 'generic';
             e = micro.insertTemplate(panelObj, t, p);
           }
         } // if

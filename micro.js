@@ -851,15 +851,14 @@ var NeoWidgetClass = (function (_super) {
         _this.brightObj = null;
         _this.whiteObj = null;
         _this._value = '00000000';
-        _this._brightness = 0;
         return _this;
     }
     NeoWidgetClass.prototype.connectedCallback = function () {
         _super.prototype.connectedCallback.call(this);
         this.colObj = this.querySelector('.color');
-        this.hueObj = this.querySelector('.hueband');
-        this.brightObj = this.querySelector('.brightband');
-        this.whiteObj = this.querySelector('.whiteband');
+        this.hueObj = this.querySelector('.hue');
+        this.brightObj = this.querySelector('.bright');
+        this.whiteObj = this.querySelector('.white');
     };
     NeoWidgetClass.prototype.newData = function (_path, key, value) {
         if (!value) {
@@ -873,8 +872,12 @@ var NeoWidgetClass = (function (_super) {
                 this._value = value;
             }
             var rgb = this._value.substr(2);
-            this.setPoint(this.hueObj, this.rgbToHue(rgb));
-            this.setPoint(this.whiteObj, parseInt(this._value.substr(0, 2), 16) / 256);
+            if (this.hueObj) {
+                this.hueObj.value = String(this.rgbToHue(rgb));
+            }
+            if (this.whiteObj) {
+                this.whiteObj.value = String(parseInt(this._value.substr(0, 2), 16));
+            }
             if (this.brightObj) {
                 var lg = "linear-gradient(to right, black 0%, #" + rgb + " 100%)";
                 this.brightObj.style.background = lg;
@@ -884,37 +887,31 @@ var NeoWidgetClass = (function (_super) {
             }
         }
         else if (key === 'brightness') {
-            this._brightness = parseInt(value, 10);
-            this.setPoint(this.brightObj, this._brightness / 100);
+            if (this.brightObj) {
+                this.brightObj.value = value;
+            }
         }
         _super.prototype.newData.call(this, _path, key, value);
     };
-    NeoWidgetClass.prototype.on_click = function (e) {
-        var src = e.target;
+    NeoWidgetClass.prototype.on_input = function (e) {
+        var tar = e.target;
         var col = '';
-        if (src === this.hueObj) {
-            var x = Math.round(e.offsetX * 360 / src.clientWidth);
-            var color = 'hsl(' + x + ', 100%, 50%)';
-            if (document && document.defaultView) {
-                src.style.backgroundColor = color;
-                var ccol = document.defaultView.getComputedStyle(src, null).backgroundColor;
-                var l = String(ccol).replace(/[^0-9,]/g, '').split(',');
-                col = 'x' + this.x16(l[0]) + this.x16(l[1]) + this.x16(l[2]);
-                if (this.whiteObj) {
-                    col = 'x' + this._value.substr(0, 2) + col.substr(1);
-                }
+        console.log(tar.value);
+        if (tar === this.hueObj) {
+            var color = "hsl(" + tar.value + ", 100%, 50%)";
+            tar.style.backgroundColor = color;
+            var bc = getComputedStyle(tar, null).backgroundColor;
+            var l = String(bc).replace(/[^0-9,]/g, '').split(',');
+            col = 'x' + this.x16(l[0]) + this.x16(l[1]) + this.x16(l[2]);
+            if (this.whiteObj) {
+                col = 'x' + this._value.substr(0, 2) + col.substr(1);
             }
         }
-        else if (src === this.whiteObj) {
-            var x = Math.min(255, Math.round(e.offsetX * 256 / src.clientWidth));
-            col = 'x' + this.x16(x) + this._value.substr(2);
+        else if (tar === this.whiteObj) {
+            col = 'x' + this.x16(tar.value) + this._value.substr(2);
         }
-        else if (src === this.brightObj) {
-            var x = Math.min(100, Math.round(e.offsetX * 100 / src.clientWidth));
-            this.dispatchAction('brightness', String(x));
-        }
-        else {
-            _super.prototype.on_click.call(this, e);
+        else if (tar === this.brightObj) {
+            this.dispatchAction('brightness', tar.value);
         }
         if (col.length > 0) {
             this.dispatchAction('value', col);
@@ -931,29 +928,18 @@ var NeoWidgetClass = (function (_super) {
             var min = Math.min(r, g, b);
             var d = max - min;
             if (d > 0) {
-                switch (max) {
-                    case r:
-                        hue = (g - b) / d + (g < b ? 6 : 0);
-                        break;
-                    case g:
-                        hue = (b - r) / d + 2;
-                        break;
-                    case b:
-                        hue = (r - g) / d + 4;
-                        break;
+                if (max === r) {
+                    hue = (g - b) / d + (g < b ? 6 : 0);
+                }
+                else if (max === g) {
+                    hue = (b - r) / d + 2;
+                }
+                else if (max === b) {
+                    hue = (r - g) / d + 4;
                 }
             }
         }
-        return (hue / 6);
-    };
-    NeoWidgetClass.prototype.setPoint = function (bandObj, v) {
-        if (bandObj) {
-            var pObj = bandObj.querySelector('.point');
-            if (pObj) {
-                pObj.style.top = bandObj.offsetHeight - 4 + "px";
-                pObj.style.left = Math.round((bandObj.offsetWidth * v) - pObj.offsetWidth / 2) + "px";
-            }
-        }
+        return (Math.round(hue * 60) % 360);
     };
     NeoWidgetClass.prototype.x16 = function (d) {
         var x = Number(d).toString(16);

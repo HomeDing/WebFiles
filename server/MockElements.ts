@@ -93,7 +93,7 @@ export class MockBL0937 extends VirtualBaseElement {
 }
 
 
-// support changing the state by action - some properties 
+// support changing the state by action - some properties
 export class MockStandard extends VirtualBaseElement {
   constructor(typeId: string, config: any) {
     super(typeId, config);
