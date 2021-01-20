@@ -5,7 +5,6 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-
   <title>Board</title>
 
   <link rel="icon" type="image/png" href="/favicon48.png" sizes="48x48">
@@ -18,8 +17,8 @@
   <link rel="manifest" href="/manifest.json" />
   <meta name="theme-color" content="#ffffff" />
   <link rel="icon" type="image/png" href="/favicon48.png" sizes="48x48">
-
   <link Content-Type="text/css" href="/iotstyle.css" rel="stylesheet" />
+  <script src="/micro.js"></script>
 
   <style>
     img,
@@ -28,7 +27,6 @@
       -ms-user-select: none;
     }
   </style>
-  <script src="/micro.js"></script>
 </head>
 
 <body>
@@ -211,13 +209,13 @@
 
   <script>
     var panelObj = document.getElementById('panel');
-    var updateTimer;
+    var timer;
 
     // Element type reuse
     var alias = {
       "sht20": "dht",
       "displaysh1106": "displayssd1306",
-      "my9291": "neo"
+      "p9813": "neo"
     };
 
     hub.subscribe('/*/*', function (path, key, value) {
@@ -246,16 +244,15 @@
     });
 
     function updateAsap(ev) {
-      if (updateTimer)
-        window.clearTimeout(updateTimer);
-      updateTimer = null;
-      updateTimer = window.setTimeout(updateState, 20);
+      if (timer)
+        window.clearTimeout(timer);
+      timer = window.setTimeout(updateState, 20);
     }
 
     function updateState(ev) {
-      if (updateTimer)
-        window.clearTimeout(updateTimer);
-      updateTimer = null;
+      if (timer)
+        window.clearTimeout(timer);
+      timer = null;
 
       fetch('/$board')
         .then(function (result) {
@@ -265,7 +262,7 @@
           hub.publishObj(json);
         })
         .then(function (json) {
-          updateTimer = window.setTimeout(updateState, 4000);
+          timer = window.setTimeout(updateState, 4000);
         });
     } // updateState()
 

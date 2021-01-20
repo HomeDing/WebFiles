@@ -37,93 +37,106 @@ Array.prototype.unique = function () {
 
 logInfo(`Starting...`);
 
-// create fresh dist folder
-shell.rm('-rf', distFolder);
-shell.mkdir(distFolder);
 
 // array with files that get copied as they are
-const srcAssets = [
-  'browserconfig.xml',
-  'manifest.json',
-  'spinner.gif',
-
-  'favicon.svg',
-  'favicon48.png',
-  'favicon192.png',
-  'favicon270.png',
-  'favicon512.png',
-
-  'i/start.svg',
-  'i/stop.svg',
-  'i/plus.svg',
-  'i/minus.svg',
-  'i/default.svg',
-  'i/ide.svg'
+const assets = [
+  { m: 'xml', src: 'browserconfig.xml' },
+  { m: 'json', src: 'manifest.json' },
+  { m: 'c', src: 'spinner-mini.gif', tar: 'spinner.gif' },
+  { m: 'xml', src: 'favicon.svg' },
+  { m: 'c', src: 'favicon48.png' },
+  { m: 'c', src: 'favicon192.png' },
+  { m: 'c', src: 'favicon270.png' },
+  { m: 'c', src: 'favicon512.png' },
+  { m: 'xml', src: 'i/start.svg' },
+  { m: 'xml', src: 'i/stop.svg' },
+  { m: 'xml', src: 'i/plus.svg' },
+  { m: 'xml', src: 'i/minus.svg' },
+  { m: 'xml', src: 'i/default.svg' },
+  { m: 'xml', src: 'i/ide.svg' },
+  { m: 'css', src: 'iotstyle.scss', tar: 'iotstyle.css' },
+  { m: 'm', src: 'updateicons.htm' },
+  { m: 'm', src: 'ding.htm' },
+  { m: 'm', src: 'microide.htm' },
+  { m: 'js', src: 'microide.js' },
+  { m: 'js', src: 'micro.js' }
 ];
 
-// create sub-folders
-srcAssets
-  .filter(name => (name.indexOf('/') > 0))
-  .map(name => distFolder + '/' + name.split('/')[0])
-  .unique()
-  .forEach(foldername => shell.mkdir(foldername));
-logInfo(`new ${distFolder} folder created.`);
+// create fresh dist folders
+shell.rm('-rf', distFolder);
+shell.mkdir(distFolder);
+shell.mkdir(distFolder + '/i');
 
-// copy all file assets
-srcAssets
-  .filter(name => (name.indexOf('/') < 0))
-  .forEach(filename => shell.cp(filename, distFolder));
+
+// process all assets
+assets
+  // .filter(name => (name.indexOf('/') < 0))
+
+  .forEach(op => {
+    let txt;
+
+    if (!op.tar) { op.tar = op.src; }
+
+    switch (op.m) {
+      case 'c': // copy
+        shell.cp(op.src, distFolder + '/' + op.tar);
+        break;
+
+      case 'm': // minify html
+        txt = shell.cat(op.src).stdout;
+        txt = minify(txt, {
+          collapseWhitespace: true,
+          removeComments: true,
+          removeTagWhitespace: true,
+          minifyCSS: true,
+          minifyJS: true,
+          quoteCharacter: "\'"
+        });
+        shell.ShellString(txt).to(distFolder + '/' + op.tar);
+        break;
+
+      case 'js': // minify javascript
+        txt = shell.cat(op.src).stdout;
+        txt = uglify.minify(txt, {
+          compress: { drop_console: true, drop_debugger: true },
+          mangle: true,
+          output: { indent_level: 0, beautify: false }
+        }).code;
+        shell.ShellString(txt).to(distFolder + '/' + op.tar);
+        break;
+
+      case 'json': // minify json
+        txt = shell.cat(op.src).stdout;
+        txt = JSON.stringify(JSON.parse(txt), null, 0);
+        shell.ShellString(txt).to(distFolder + '/' + op.tar);
+        break;
+
+      case 'css': // minify css
+        txt = sass.renderSync({
+          file: 'iotstyle.scss',
+          outputStyle: 'compressed',
+          sourceMap: false
+        }).css;
+        shell.ShellString(txt).to(distFolder + '/' + op.tar);
+        break;
+
+      case 'xml': // minify xml
+        txt = shell.cat(op.src).stdout;
+        txt = txt.replace(/([\>])\s+/g, '$1');
+        shell.ShellString(txt).to(distFolder + '/' + op.tar);
+        break;
+
+      default:
+        break;
+    }
+  });
+
 logInfo(`Files copied.`);
 
-// copy all folder assets
-srcAssets
-  .filter(name => (name.indexOf('/') > 0))
-  .forEach(name => shell.cp(name, distFolder + '/' + name.split('/')[0]));
-logInfo(`Images copied.`);
-
-// ===== SCSS =====
-
-var result = sass.renderSync({
-  file: 'iotstyle.scss',
-  outputStyle: 'compressed',
-  sourceMap: false
-});
-shell.ShellString(result.css).to(`${distFolder}/iotstyle.css`);
-
-// ===== minify HTML =====
-
-["microide.htm", "ding.htm"]
-  .forEach(name => {
-    const c = shell.cat(name).stdout;
-    const txt = minify(c, {
-      collapseWhitespace: true,
-      removeComments: true,
-      removeTagWhitespace: true,
-      minifyCSS: true,
-      minifyJS: true,
-      quoteCharacter: "\'"
-    });
-    shell.ShellString(txt).to(`${distFolder}/${name}`);
-  });
-
-// ===== uglify Javascript =====
-
-["microide.js", "micro.js"]
-  .forEach(name => {
-    const c = shell.cat(name).stdout;
-    const res = uglify.minify(c, {
-      compress: { drop_console: true, drop_debugger: true },
-      mangle: true,
-      output: { indent_level: 0, beautify: false }
-    });
-    shell.ShellString(res.code).to(`${distFolder}/${name}`);
-  });
-
+// ===== minify JSON =====
 
 shell.cat('oldlist.txt').to(distFolder + '/list.txt');
 shell.ls('-R', distFolder).grep(/^.*\..*$/).toEnd(distFolder + '/list.txt');
 logInfo(`list.txt file written.`);
 
-
 logInfo(`done.`);
-

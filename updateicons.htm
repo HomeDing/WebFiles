@@ -18,7 +18,7 @@
           <option selected disabled>select...</option>
         </select>
         <progress value=0 max=1 style="width:12em"></progress>
-        <div id='info'>.</div>
+        <div id='info'>&nbsp;</div>
       </td>
     </tr>
     <tr>
@@ -60,19 +60,20 @@
 
     selObj.addEventListener('input', function (evt) {
       iname = evt.srcElement.value;
-      eImg.src = '/i/' + iname + '.svg';
+      eImg.src = repo + evt.srcElement.value + '/favicon.svg';
     });
 
     // list of files
     function doStart() {
       if (!iname) {
-        log('select a icon name...');
+        log('select an icon name...');
       } else {
         log('loading ' + iname + ' icons');
-        work.list = ['favicon.svg', 'favicon48.png', 'favicon144.png', 'favicon180.png', 'favicon192.png', 'favicon270.png', 'favicon512.png'];
+        work.list = ['favicon.svg', 'favicon48.png', // 'favicon144.png', 'favicon180.png', 
+          'favicon192.png', 'favicon270.png', 'favicon512.png'];
         work.files = work.list.length;
-        work.status = 'r'; // run
-        timer = window.setInterval(step, 330);
+        work.status = 'r';
+        timer = window.setInterval(step, 200);
       }
     } // doStart()
 
@@ -118,7 +119,6 @@
         if (timer) {
           window.clearInterval(timer);
           log('done');
-          // window.location.href = '/';
         }
         timer = 0;
       }
