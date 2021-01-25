@@ -1,5 +1,6 @@
 // Collection of mocking virtual elements
 
+import Logger from './Logger';
 import { register as registerVirtual, VirtualBaseElement } from './VirtualBaseElement';
 
 export class MockSwitch extends VirtualBaseElement {
@@ -45,7 +46,7 @@ export class MockDevice extends VirtualBaseElement {
   }
 
   async doAction(action: any) {
-    if (action.log !== null) { console.log('>>', action.log); }
+    if (action.log !== null) { Logger.info('>>', action.log); }
     super.doAction(action);
   }
 } // MockDevice

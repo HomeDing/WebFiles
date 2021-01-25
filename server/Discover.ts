@@ -2,6 +2,7 @@
 
 import express from 'express';
 
+import Logger from './Logger';
 import { ConfigCache } from './ConfigCache';
 
 const mDns = require('mdns-js');
@@ -27,22 +28,22 @@ function addDevice(data: any) {
   const now = new Date();
   const host: string = data.host.replace(/\.local/, '');
   const isNew = (!netDevices[host]);
-  // console.log(`>>${JSON.stringify(data.addresses)} - ${host} - ${data.fullname}`);
+  // Logger.trace(`>>${JSON.stringify(data.addresses)} - ${host} - ${data.fullname}`);
+
+  // update always when mdns package has come around.
+  const item: any = netDevices[host] = {
+    host: data.host,
+    title: host
+  };
+
+  // add also key/values
+  data.txt.forEach(function (e: string) {
+    const p = e.split('=');
+    item[p[0]] = p[1];
+  });
 
   if (isNew) {
-    const item: any = netDevices[host] = {
-      host: data.host,
-      title: host
-    };
-
-    // add also key/values
-    data.txt.forEach(function (e: string) {
-      const p = e.split('=');
-      item[p[0]] = p[1];
-    });
-
-    console.log(`add ${host}`);
-    console.log(Object.keys(netDevices).join(' '));
+    Logger.info(`add ${host}`, Object.keys(netDevices).join(','));
   }
   netDevices[host].ts = now;
 } // addDevice()
@@ -52,20 +53,19 @@ function addDevice(data: any) {
  * Setup the mDNS browser and start discovering devices.
  */
 function startDiscovery() {
-  // console.log(`>>START`);
+  // Logger.trace(`>>START`);
   const now = new Date();
   if (mDnsBrowser) { mDnsBrowser.stop(); }
 
   // clear out old devices, not responding since 90secs.
   for (const host in netDevices) {
-    // console.log(`old ${host} : ${netDevices[host]}`);
-    // console.log(now.valueOf() - netDevices[host].valueOf());
+    // Logger.trace(`old ${host} : ${netDevices[host]}`);
+    // Logger.trace(now.valueOf() - netDevices[host].valueOf());
 
     if (now.valueOf() - netDevices[host].ts.valueOf() > 90 * 1000) {
-      console.log(`drop ${host}`);
       delete netDevices[host];
       ConfigCache.getInstance().remove(host);
-      console.log(Object.keys(netDevices).join(' '));
+      Logger.info(`drop ${host}`, ':', Object.keys(netDevices).join(' '));
     }
   } // for
 
@@ -76,7 +76,10 @@ function startDiscovery() {
 } // startDiscovery()
 
 
+// there is one DeviceDiscovery only.
 export class DeviceDiscovery {
+  private static _instance: DeviceDiscovery;
+
   private options = { refresh: 20 };
 
   constructor(options: any = {}) {
@@ -89,6 +92,17 @@ export class DeviceDiscovery {
     setInterval(startDiscovery, this.options.refresh * 1000);
   }
 
+  public static getInstance(): DeviceDiscovery {
+    if (!DeviceDiscovery._instance) {
+      DeviceDiscovery._instance = new DeviceDiscovery();
+    }
+    return DeviceDiscovery._instance;
+  }
+
+  // return true when a device is online by sending mDNS announcements.
+  isOnline(host: string): boolean {
+    return (!!netDevices[host]);
+  }
 
   // express function: list all found devices.
   handleDevices(req: express.Request, res: express.Response) {

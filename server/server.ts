@@ -2,28 +2,14 @@
 // https://github.com/microsoft/TypeScript-Node-Starter/blob/master/src/app.ts
 
 import express from 'express';
-import debug from 'debug';
 import fs from 'fs';
 import path from 'path';
 
+import Logger from './Logger';
 
-// import debug = require('debug');
 // import { start } from 'repl';
 
-// ===== LOGGING =====
-
-const logServer = debug('server');
-const log = {
-  info: logServer.extend('info'),
-  error: logServer.extend('error'),
-  send: logServer.extend('send')
-};
-
-log.info.log = console.log.bind(console);
-log.error.log = console.error.bind(console);
-log.send.log = console.log.bind(console);
-
-console.log('Homeding Portal Server is starting...');
+Logger.info('Homeding Portal Server is starting...');
 
 // ===== Express web server =====
 
@@ -33,22 +19,23 @@ const app: express.Application = express();
 
 import yargs from 'yargs';
 
-debug.enable('server:info');
-// debug.enable('*');
 
 const options = yargs
   .usage('Usage: $0 -c <case name>')
   .usage('  HomeDing Portal server')
   .option('c', { alias: 'case', describe: 'Simulate case', type: 'string', demandOption: false, default: null })
+  .option('m', { alias: 'monitor', describe: 'monitor the requests', type: 'boolean', demandOption: false, default: false })
   .option('v', { alias: 'verbose', describe: 'Verbose logging', type: 'boolean', demandOption: false, default: false })
   .argv;
 
+Logger.enable('hd:error');
+
 if (options.verbose) {
-  debug.enable('*');
-  log.info('This processor architecture is ' + process.arch);
-  log.info('This platform is ' + process.platform);
-  log.info('dir: ' + __dirname);
-  log.info('cwd: ' + process.cwd());
+  Logger.enable('*');
+  Logger.info('This processor architecture is ' + process.arch);
+  Logger.info('This platform is ' + process.platform);
+  Logger.info('dir: ' + __dirname);
+  Logger.info('cwd: ' + process.cwd());
 }
 
 
@@ -75,12 +62,12 @@ if (options.case) {
   boardFileName = caseFolder + '$board';
 
   if (!fs.existsSync(boardFileName)) {
-    console.log(`The configuration folder ${boardFileName} could not be found.`);
+    Logger.info(`The configuration folder ${boardFileName} could not be found.`);
     caseFolder = null;
     boardFileName = '';
 
   } else {
-    console.log(`Starting case ${options.case} ...`);
+    Logger.info(`Starting case ${options.case} ...`);
 
     // ===== env and config information
     allConfig = Object.assign({},
@@ -95,7 +82,7 @@ if (options.case) {
   }
 } else {
   // no mock-case
-  console.log(`Starting...`);
+  Logger.info(`Starting...`);
 
   // ===== env and config information
   allConfig = Object.assign({},
@@ -120,15 +107,18 @@ function noCache(_req: express.Request, res: express.Response, next: express.Nex
   next();
 } // noCache
 
+
 /**
  * Express middleware to report all URLS with time taken.
  */
-app.use(function (req, res, next) {
-  const startTime = process.hrtime();
-  next();
-  const duration = process.hrtime(startTime);
-  log.info(`url=${req.originalUrl} time=${duration}`);
-});
+if (options.monitor) {
+  app.use(function (req, res, next) {
+    const startTime = process.hrtime();
+    next();
+    const duration = process.hrtime(startTime);
+    Logger.info(`url=${req.originalUrl} time=${duration}`);
+  });
+}
 
 //#endregion
 
@@ -137,7 +127,7 @@ app.use(function (req, res, next) {
 
 import { DeviceDiscovery } from './Discover';
 
-const dService = new DeviceDiscovery({});
+const dService = DeviceDiscovery.getInstance();
 app.get(/^\/\$devices$/, noCache, dService.handleDevices);
 
 import { ConfigCache } from './ConfigCache';
@@ -149,7 +139,7 @@ app.get(/^\/\$deviceconfig$/, noCache, ccInstance.handle.bind(ccInstance));
 
 // ----- enable start page redirect -----
 app.get('/', function (req, res, _next) {
-  log.info('redirect...');
+  Logger.info('redirect...');
   res.redirect('/index.htm');
 });
 
@@ -195,7 +185,7 @@ app.post('/', upload.any(), function (req, res) {
 //#endregion
 
 
-//#region ===== Setup mocking nd proxy elements =====
+//#region ===== Setup mocking and proxy elements =====
 
 if (options.case) { mock.register(); }
 proxy.register();
@@ -283,11 +273,16 @@ app.get(/^\/\$board$/, noCache, async function (req, res) {
 });
 
 
+app.get(/^\/\$flush$/, noCache, async function (req, res) {
+  ccInstance.flush();
+  res.send();
+});
+
 // ===== serving file system
 
 app.delete('/:fn', function (req, res) {
   const filename = req.params.fn;
-  log.info('DELETE: %s not implemented.', filename);
+  Logger.info('DELETE: %s not implemented.', filename);
   res.send('done');
 });
 
@@ -302,14 +297,14 @@ app.use(express.static(process.cwd(), { index: false }));
 // ----- enable error reports -----
 
 // app.use(function (err: any, req: express.Request, res: express.Response, _next) {
-//   log.error(err.stack);
+//   Logger.error(err.stack);
 //   res.status(500).send('Something broke!');
 // });
 
 // // ----- enable 404 responses -----
 
 app.use(function (req, res) {
-  log.error(`could not find ${req.originalUrl}: 404`);
+  Logger.error(`could not find ${req.originalUrl}: 404`);
   res.status(404).send('Sorry cant find that!');
 });
 
@@ -323,8 +318,8 @@ module.exports = {
   start: function () {
     const port: number = app.get('port');
     app.listen(port, () => {
-      console.log('Web Server started.');
-      console.log(`open http://localhost:${port}/`);
+      Logger.info('Web Server started.');
+      Logger.info(`open http://localhost:${port}/`);
     });
   }
 };

@@ -4,12 +4,22 @@ import { register as registerVirtual, VirtualBaseElement } from './VirtualBaseEl
 import fetch from 'node-fetch';
 import { ConfigCache } from './ConfigCache';
 
+// logging setup
+import debug from 'debug';
+const logServer = debug('proxy');
+const log = {
+  info: logServer.extend('info'),
+  error: logServer.extend('error'),
+  send: logServer.extend('send')
+};
+
 export class ProxyElement extends VirtualBaseElement {
   private url: string;
   private host: string;
   private configJson: any = null;
   private online = false;
   private nextTry = Date.now();
+  private configs = ConfigCache.getInstance();
 
   constructor(typeId: string, config: any) {
     super(typeId, config); // will be proxy/xxx in type/ID
@@ -21,26 +31,13 @@ export class ProxyElement extends VirtualBaseElement {
     this.host = url[2];
     this.type = url[4];
     this.id = url[5];
-    this.typeId = this.type + '/' + this.id;
+    this.url = `${baseurl}/$board/${this.type}/${this.id}`;
 
-    this.url = baseurl + '/$board/' + this.typeId;
+    // create a unique id to be used on the board.
+    this.typeId = `${this.type}/${this.host}-${this.id}`;
 
     // extract config for element state
     this.state = { url: baseurl };
-    // const cc = ConfigCache.getInstance().get(this.host);
-
-    // fetch(baseurl + '/config.json', { timeout: 4000 })
-    //   .then(function (result) {
-    //     return (result.json());
-    //   }).then(function (json) {
-    //     const st = json[scope.type][scope.id];
-    //     scope.state = Object.assign(scope.state, st);
-    //   }).catch(function (err) {
-    //     this.online = false;
-    //     this.nextTry = now + (10 * 1000);
-    //     console.log(err);
-
-    //   });
   }
 
 
@@ -50,7 +47,7 @@ export class ProxyElement extends VirtualBaseElement {
       this.online = false;
 
       if (!this.configJson) {
-        const conf = await ConfigCache.getInstance().get(this.host);
+        const conf = await this.configs.get(this.host);
         if (conf?.[this.type]?.[this.id]) {
           this.configJson = conf[this.type][this.id];
           this.state = Object.assign(this.state, this.configJson);
@@ -62,11 +59,11 @@ export class ProxyElement extends VirtualBaseElement {
         try {
           const r = await fetch(this.url, { timeout: 4000 });
           const j = await r.json();
-          const rs = j[this.typeId];
+          const rs = j[`${this.type}/${this.id}`];
           this.state = Object.assign(this.state, rs);
           this.online = true;
         } catch (e) {
-          console.log(e);
+          log.error(e);
         } finally {
         }
       }
