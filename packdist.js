@@ -8,6 +8,8 @@ const yargs = require('yargs');
 const debug = require('debug');
 const shell = require('shelljs');
 
+const uglify = require("uglify-js");
+
 const distFolder = "dist";
 
 // ===== Command line support =====
@@ -25,27 +27,15 @@ const logInfo = debug('iot:info');
 const logTrace = debug('iot:trace');
 debug.log = console.log.bind(console);
 
-Array.prototype.unique = function () {
-  return this.filter(function (value, index, self) {
-    return self.indexOf(value) === index;
-  });
-}
-
 logInfo(`Starting...`);
 
-
 // array with files that get copied as they are
-//   'es6-promise.auto.js', removed
-const srcAssets = [
+const assets = [
   'index.htm',
   'iotstyle.css',
   'spinner.gif',
 
-  'micro.js',
-
-  'elements.json',
-
-  'microide.*',
+  'microide.htm',
 
   'board.htm',
   'board-new.htm',
@@ -58,8 +48,6 @@ const srcAssets = [
 
   'microsvg.js',
   'elementsvg.js',
-  'lineChart.js',
-  'pieChart.js',
 
   'element.svg',
   'lineChart.svg',
@@ -68,7 +56,6 @@ const srcAssets = [
   'favicon*.png',
   'updateicons.htm',
 
-  'manifest.json',
   'browserconfig.xml',
 
   'i/no.svg',
@@ -86,33 +73,44 @@ const srcAssets = [
   'icons.svg'
 ];
 
-const builtinAssets = [
-  'boot.htm',
-  'upload.htm',
-  'setup.htm'
-];
 
-
-// create fresh dist folder
+// create fresh dist folders
 shell.rm('-rf', distFolder);
 shell.mkdir(distFolder);
-
-// create sub-folders
-srcAssets
-  .filter(name => (name.indexOf('/') > 0))
-  .map(name => distFolder + '/' + name.split('/')[0])
-  .unique()
-  .forEach(foldername => shell.mkdir(foldername));
+shell.mkdir(distFolder + '/i');
 logInfo(`new ${distFolder} folder created.`);
 
+
 // copy all file assets
-srcAssets
+assets
   .filter(name => (name.indexOf('/') < 0))
   .forEach(filename => shell.cp(filename, distFolder));
 logInfo(`Files copied.`);
 
+// ===== uglify/minify Javascript =====
+
+["microide.js", "micro.js", 'lineChart.js', 'pieChart.js']
+  .forEach(name => {
+    const c = shell.cat(name).stdout;
+    const res = uglify.minify(c, {
+      compress: { drop_console: true, drop_debugger: true },
+      mangle: true,
+      output: { indent_level: 0, beautify: false }
+    });
+    shell.ShellString(res.code).to(`${distFolder}/${name}`);
+  });
+
+// ===== minify JSON =====
+
+['elements.json', 'manifest.json']
+  .forEach(name => {
+    const data = JSON.parse(shell.cat(name).stdout);
+    shell.ShellString(JSON.stringify(data)).to(`${distFolder}/${name}`);
+  });
+
+
 // copy all folder assets
-srcAssets
+assets
   .filter(name => (name.indexOf('/') > 0))
   .forEach(name => shell.cp(name, distFolder + '/' + name.split('/')[0]));
 logInfo(`Images copied.`);
