@@ -155,7 +155,7 @@ h4 {
 
     &::before,
     &::after {
-      content: '';
+      content: "";
       position: absolute;
       background-color: red;
       z-index: -1;
@@ -302,6 +302,7 @@ svg {
   }
 
   &.icon {
+    -ms-user-select: none;
     user-select: none;
   }
 }
@@ -367,19 +368,11 @@ svg {
     margin: 0;
   }
 
-  > * {
-    display: inline-block;
-    font-size: 1.5em;
-    min-width: 2em !important;
-    height: 1.4em;
-    color: $u-navbar-text !important;
-    vertical-align: top;
-    border: 0.1em solid $u-navbar;
-  }
-
   > button,
   > .button {
     text-decoration: none;
+    min-width: 2em !important;
+    color: $u-navbar-text !important;
 
     &:hover {
       border-color: $u-focus;
@@ -487,9 +480,11 @@ main {
     }
 
     &.header {
-      background-image: linear-gradient(to bottom,
-      $u-card-background,
-      darken($u-card-background, 10%));
+      background-image: linear-gradient(
+        to bottom,
+        $u-card-background,
+        darken($u-card-background, 10%)
+      );
       border-top-right-radius: $u-card-radius;
       border-top-left-radius: $u-card-radius;
       min-height: 3.6rem;
@@ -548,6 +543,7 @@ button,
   background-color: $u-primary;
   color: white;
   cursor: pointer;
+  -ms-user-select: none;
   user-select: none;
 
   &:focus {
@@ -707,11 +703,11 @@ button,
   background-color: silver;
 }
 
-.u-bool[value='1'] {
+.u-bool[value="1"] {
   background-image: linear-gradient(145deg, lighten($u-on, 30%), $u-on);
 }
 
-.u-bool[value='0'] {
+.u-bool[value="0"] {
   background-image: linear-gradient(145deg, lighten($u-off, 30%), $u-off);
 }
 
@@ -880,7 +876,16 @@ button,
   }
 
   &.hue {
-    background: linear-gradient(to right, #ff0000 0%, #ffff00 17%, #00ff00 33%, #00ffff 50%, #0000ff 67%, #ff00ff 83%, #ff0000 100%);
+    background: linear-gradient(
+      to right,
+      #ff0000 0%,
+      #ffff00 17%,
+      #00ff00 33%,
+      #00ffff 50%,
+      #0000ff 67%,
+      #ff00ff 83%,
+      #ff0000 100%
+    );
   }
   &.white,
   &.bright {
