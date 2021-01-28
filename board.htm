@@ -48,8 +48,8 @@
 
     img,
     #panel {
-      user-select: none;
       -ms-user-select: none;
+      user-select: none;
     }
   </style>
   <script src="/micro.js"></script>
@@ -73,27 +73,23 @@
     <div id="panel" class="row wrap"></div>
 
     <div id="u-templates" style="display:none">
+      <div class="cardheader block header">
+        <svg class="icon"><use xlink:href="./icons.svg#${type}" /></svg>
+        <h3 u-text="title"></h3>
+        <h4 u-text="description"></h4>
+        <span class="activeState" u-active="active"></span>
+        <span class="setconfig"></span>
+      </div>
+
       <div class="col card" u-control="generic" u-is="generic" microID="${id}">
-        <div class="block header">
-          <svg class="icon"><use xlink:href="./icons.svg#no"/></svg>
-          <h3 u-text="title">--</h3>
-          <h4 u-text="description"></h4>
-          <span class="activeState" u-active="active"></span>
-          <span class="setconfig"></span>
-        </div>
+        <div u-is="include" ref=".cardheader"></div>
         <div class="block">
           <div class="form-group"><label>Value:</label><span u-text="value"></span></div>
         </div>
       </div>
 
       <div class="col card" u-control="schedule" id="${id}" u-is="generic" microID="${id}">
-        <div class="block header">
-          <svg class="icon"><use xlink:href="./icons.svg#schedule"/></svg>
-          <h3 u-text="title"></h3>
-          <h4 u-text="description"></h4>
-          <span class="activeState" u-active="active"></span>
-          <span class="setconfig"></span>
-        </div>
+        <div u-is="include" ref=".cardheader"></div>
         <div class="block">
           <span class="u-bool ux-value" u-active="value"></span>
           <div class="form-group"><label>Start:</label><span u-text="ontime"></span></div>
@@ -102,13 +98,7 @@
       </div>
 
       <div class="col card" u-control="dstime" id="${id}" u-is="dstime" microID="${id}">
-        <div class="block header">
-          <svg class="icon"><use xlink:href="./icons.svg#time"/></svg>
-          <h3 u-text="title"></h3>
-          <h4 u-text="description"></h4>
-          <span class="activeState" u-active="active"></span>
-          <span class="setconfig"></span>
-        </div>
+        <div u-is="include" ref=".cardheader"></div>
         <div class="block">
           <div class="form-group"><label>ReadTime:</label><input u-value="readtime" type="time" step="1" /></div>
           <div class="form-group"><label>Now:</label><span u-text="now"></span></div>
@@ -118,13 +108,7 @@
       </div>
 
       <div class="col card" u-control="switch" id="${id}" u-is="switch" microID="${id}">
-        <div class="block header">
-          <svg class="icon"><use xlink:href="./icons.svg#switch"/></svg>
-          <h3 u-text="title"></h3>
-          <h4 u-text="description"></h4>
-          <span class="activeState" u-active="active"></span>
-          <span class="setconfig"></span>
-        </div>
+        <div u-is="include" ref=".cardheader"></div>
         <div class="block">
           <span class="u-bool ux-value" u-active="value"></span>
           <div class="u-slider u-switch" u-active="value">
@@ -138,13 +122,7 @@
       </div>
 
       <div class="col card" u-control="value" u-is="slider" microID="${id}">
-        <div class="block header">
-          <svg class="icon"><use xlink:href="./icons.svg#value"/></svg>
-          <h3 u-text="title"></h3>
-          <h4 u-text="description"></h4>
-          <span class="activeState" u-active="active"></span>
-          <span class="setconfig"></span>
-        </div>
+        <div u-is="include" ref=".cardheader"></div>
         <div class="block">
           <div class="form-group"><label>value:</label><span u-text="value"></span></div>
           <div class="u-slider">
@@ -158,13 +136,7 @@
       </div>
 
       <div class="col card" u-control="and" id="${id}" u-is="generic" microID="${id}">
-        <div class="block header">
-          <svg class="icon"><use xlink:href="./icons.svg#and"/></svg>
-          <h3 u-text="title"></h3>
-          <h4 u-text="description"></h4>
-          <span class="activeState" u-active="active"></span>
-          <span class="setconfig"></span>
-        </div>
+        <div u-is="include" ref=".cardheader"></div>
         <div class="block">
           <span class="u-bool ux-value" u-active="value"></span>
           <div class="form-group"><label>value:</label><span u-text="value"></span></div>
@@ -172,13 +144,7 @@
       </div>
 
       <div class="col card" u-control="neo" id="${id}" u-is="neo" microID="${id}">
-        <div class="block header">
-          <svg class="icon"><use xlink:href="./icons.svg#neo"/></svg>
-          <h3 u-text="title"></h3>
-          <h4 u-text="description"></h4>
-          <span class="activeState" u-active="active"></span>
-          <span class="setconfig"></span>
-        </div>
+        <div u-is="include" ref=".cardheader"></div>
         <div class="block">
           <div class="form-group"><label>value:</label><span u-text="value"></span><span class="color"
               style="width:6rem;"></span></div>
@@ -192,13 +158,7 @@
       </div>
 
       <div class="col card" u-control="light" id="${id}" u-is="neo" microID="${id}">
-        <div class="block header">
-          <svg class="icon"><use xlink:href="./icons.svg#neo" /></svg>
-          <h3 u-text="title"></h3>
-          <h4 u-text="description"></h4>
-          <span class="activeState" u-active="active"></span>
-          <span class="setconfig"></span>
-        </div>
+        <div u-is="include" ref=".cardheader"></div>
         <div class="block">
           <div class="form-group"><label>value:</label><span u-text="value"></span><span class="color"
               style="width:6rem;"></span></div>
@@ -209,13 +169,7 @@
       </div>
 
       <div class="col card" u-control="bl0937" id="${id}" u-is="bl0937" microID="${id}">
-        <div class="block header">
-          <svg class="icon"><use xlink:href="./icons.svg#default"/></svg>
-          <h3 u-text="title"></h3>
-          <h4 u-text="description"></h4>
-          <span class="activeState" u-active="active"></span>
-          <span class="setconfig"></span>
-        </div>
+        <div u-is="include" ref=".cardheader"></div>
         <div class="block">
           <table style="width:100%;font-size:2rem">
             <tr>

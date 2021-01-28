@@ -122,14 +122,7 @@
 </div>
 
 <div class="col card" u-control="digitalout" microID="${id}" u-is="generic">
-  <div class="block header">
-    <svg class="icon"><use xlink:href="./icons.svg#digitalout"/></svg>
-    <h3 u-text="title"></h3>
-    <h4 u-text="description"></h4>
-    <span class="activeState" u-active="active"></span>
-    <span class="setconfig"></span>
-  </div>
-
+  <div u-is="include" ref=".cardheader"></div>
   <div class="block Element">
     <span class="u-bool ux-value" u-active="value" style="position: absolute;top:0.5rem;right:0.5rem"></span>
     <div class="form-group"><label>Value:</label><span u-text="value"></span></div>
@@ -137,14 +130,7 @@
 </div>
 
 <div class="col card" u-control="reference" microID="${id}" u-is="generic">
-  <div class="block header">
-    <svg class="icon"><use xlink:href="./icons.svg#value"/></svg>
-    <h3 u-text="title"></h3>
-    <h4 u-text="description"></h4>
-    <span class="activeState" u-active="active"></span>
-    <span class="setconfig"></span>
-  </div>
-
+  <div u-is="include" ref=".cardheader"></div>
   <div class="block Element">
     <span class="u-bool ux-value" u-active="value" style="position: absolute;top:0.5rem;right:0.5rem"></span>
     <div class="form-group"><label>Reference:</label><span u-text="reference"></span></div>
@@ -153,13 +139,7 @@
 </div>
 
 <div class="col card" u-control="pwmout" u-is="pwmout" microID="${id}">
-  <div class="block header">
-    <svg class="icon"><use xlink:href="./icons.svg#pwmout"/></svg>
-    <h3 u-text="title"></h3>
-    <h4 u-text="description"></h4>
-    <span class="activeState" u-active="active"></span>
-    <span class="setconfig"></span>
-  </div>
+  <div u-is="include" ref=".cardheader"></div>
   <div class="block" style="position: relative;min-height: 5rem">
     <span class="ux-levelbar ux-value"></span>
     <div style="font-size: 2rem"><span u-text="value"></span> / <span u-text="range"></span></div>
@@ -167,13 +147,7 @@
 </div>
 
 <div class="col card" u-control="log" u-is="log" microID="${id}">
-  <div class="block header">
-    <svg class="icon"><use xlink:href="./icons.svg#log"/></svg>
-    <h3 u-text="title"></h3>
-    <h4 u-text="description"></h4>
-    <span class="activeState" u-active="active"></span>
-    <span class="setconfig"></span>
-  </div>
+  <div u-is="include" ref=".cardheader"></div>
   <div class="block">
     <object data="lineChart.svg" type="image/svg+xml" style="width:100%"></object>
   </div>
@@ -196,39 +170,21 @@
 </div>
 
 <div class="col card hidden" u-control="displaytext" u-is="displaytext" microID="${id}">
-  <div class="block header">
-    <svg class="icon"><use xlink:href="./icons.svg#displaytext"/></svg>
-    <h3 u-text="title"></h3>
-    <h4 u-text="description"></h4>
-    <span class="activeState" u-active="active"></span>
-    <span class="setconfig"></span>
-  </div>
+  <div u-is="include" ref=".cardheader"></div>
   <div class="block">
     <div class="form-group"><label>Value:</label><span u-text="value"></span></div>
   </div>
 </div>
 
 <div class="col card hidden" u-control="displaydot" u-is="displaydot" microID="${id}">
-  <div class="block header">
-    <svg class="icon"><use xlink:href="./icons.svg#displaydot"/></svg>
-    <h3 u-text="title"></h3>
-    <h4 u-text="description"></h4>
-    <span class="activeState" u-active="active"></span>
-    <span class="setconfig"></span>
-  </div>
+  <div u-is="include" ref=".cardheader"></div>
   <div class="block">
     <div class="form-group"><label>Value:</label><span u-text="value"></span></div>
   </div>
 </div>
 
 <div class="col card hidden" u-control="displayline" u-is="displayline" microID="${id}">
-  <div class="block header">
-    <svg class="icon"><use xlink:href="./icons.svg#displayline"/></svg>
-    <h3 u-text="title"></h3>
-    <h4 u-text="description"></h4>
-    <span class="activeState" u-active="active"></span>
-    <span class="setconfig"></span>
-  </div>
+  <div u-is="include" ref=".cardheader"></div>
   <div class="block">
     (<span u-text="x0"></span>,<span u-text="y0"></span>) /
     (<span u-text="x1"></span>,<span u-text="y1"></span>)
