@@ -246,7 +246,7 @@ let obs = new MutationObserver(function (mutationsList: MutationRecord[], _obser
   for (const mutation of mutationsList) {
     mutation.addedNodes.forEach(n => {
       const e = <Element>n;
-      if (e.getAttribute && e.getAttribute('u-is')) { 
+      if (e.getAttribute && e.getAttribute('u-is')) {
         micro.attach(<HTMLElement>n);
       }
     });

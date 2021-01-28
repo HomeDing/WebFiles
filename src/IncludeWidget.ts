@@ -15,9 +15,9 @@ class IncludeWidgetClass extends MicroControlClass {
 
   connectedCallback() {
     this.query = this.getAttribute('ref');
-    
-    const obj = document.querySelector("#u-templates " + this.query);
-    console.log("included.", this.query, obj);
+
+    const obj = document.querySelector('u-templates ' + this.query);
+    console.log('included.', this.query, obj);
 
     if (obj) {
       const e = obj.cloneNode(true) as HTMLElement;

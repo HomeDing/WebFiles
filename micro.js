@@ -666,8 +666,8 @@ var IncludeWidgetClass = (function (_super) {
     }
     IncludeWidgetClass.prototype.connectedCallback = function () {
         this.query = this.getAttribute('ref');
-        var obj = document.querySelector("#u-templates " + this.query);
-        console.log("included.", this.query, obj);
+        var obj = document.querySelector('u-templates ' + this.query);
+        console.log('included.', this.query, obj);
         if (obj) {
             var e = obj.cloneNode(true);
             var root = this.parentElement;
