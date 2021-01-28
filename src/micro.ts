@@ -130,6 +130,7 @@ class MicroRegistry {
         (<any>e).params = props; // dialog parameters
         this._setPlaceholders(e, props);
         root.appendChild(e);
+        root.querySelectorAll('[u-is]').forEach(el => micro.attach(el as HTMLElement));
         root.querySelectorAll('[data-src]:not([src])').forEach(el => this.loadDataImage(el as HTMLElement));
       } // if
     } // if
@@ -244,7 +245,10 @@ const micro = new MicroRegistry();
 let obs = new MutationObserver(function (mutationsList: MutationRecord[], _observer) {
   for (const mutation of mutationsList) {
     mutation.addedNodes.forEach(n => {
-      if ((<Element>n).getAttribute && (<Element>n).getAttribute('u-is')) { micro.attach(<HTMLElement>n); }
+      const e = <Element>n;
+      if (e.getAttribute && e.getAttribute('u-is')) { 
+        micro.attach(<HTMLElement>n);
+      }
     });
   }
 });

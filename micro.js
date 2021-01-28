@@ -124,6 +124,7 @@ var MicroRegistry = (function () {
                 e.params = props;
                 this._setPlaceholders(e, props);
                 root.appendChild(e);
+                root.querySelectorAll('[u-is]').forEach(function (el) { return micro.attach(el); });
                 root.querySelectorAll('[data-src]:not([src])').forEach(function (el) { return _this.loadDataImage(el); });
             }
         }
@@ -229,7 +230,8 @@ var obs = new MutationObserver(function (mutationsList, _observer) {
     for (var _i = 0, mutationsList_1 = mutationsList; _i < mutationsList_1.length; _i++) {
         var mutation = mutationsList_1[_i];
         mutation.addedNodes.forEach(function (n) {
-            if (n.getAttribute && n.getAttribute('u-is')) {
+            var e = n;
+            if (e.getAttribute && e.getAttribute('u-is')) {
                 micro.attach(n);
             }
         });
@@ -655,6 +657,28 @@ var DisplayTextWidgetClass = (function (_super) {
     ], DisplayTextWidgetClass);
     return DisplayTextWidgetClass;
 }(GenericWidgetClass));
+var IncludeWidgetClass = (function (_super) {
+    __extends(IncludeWidgetClass, _super);
+    function IncludeWidgetClass() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.query = null;
+        return _this;
+    }
+    IncludeWidgetClass.prototype.connectedCallback = function () {
+        this.query = this.getAttribute('ref');
+        var obj = document.querySelector("#u-templates " + this.query);
+        console.log("included.", this.query, obj);
+        if (obj) {
+            var e = obj.cloneNode(true);
+            var root = this.parentElement;
+            root === null || root === void 0 ? void 0 : root.replaceChild(e, this);
+        }
+    };
+    IncludeWidgetClass = __decorate([
+        MicroControl('include')
+    ], IncludeWidgetClass);
+    return IncludeWidgetClass;
+}(MicroControlClass));
 function jsonParse(obj, cbFunc) {
     function _jsonParse(path, key, value) {
         var path2 = key ? path + '/' + key : path;
