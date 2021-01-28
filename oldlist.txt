@@ -13,6 +13,7 @@
 -favicon558.png
 -polyfill.js
 -es6-promise.auto.js
+-manifest.json
 -ft/css.svg
 -ft/dir.svg
 -ft/file.svg

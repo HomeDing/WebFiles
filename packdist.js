@@ -102,7 +102,7 @@ logInfo(`Files copied.`);
 
 // ===== minify JSON =====
 
-['elements.json', 'manifest.json']
+['elements.json', 'site.webmanifest']
   .forEach(name => {
     const data = JSON.parse(shell.cat(name).stdout);
     shell.ShellString(JSON.stringify(data)).to(`${distFolder}/${name}`);
