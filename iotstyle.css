@@ -158,7 +158,7 @@ button:focus, .button:focus { border-color: #4466ee; background-color: #4466ee; 
 
 button:visited, .button:visited { color: white; }
 
-button:disabled, .button:disabled { border: 0.1rem solid gray; background-color: gray; }
+button:disabled, button:disabled:focus, .button:disabled, .button:disabled:focus { border: 0.1rem solid gray; background-color: gray; }
 
 button.active, .button.active { background-color: #acc1e4 !important; border-color: #203050 !important; }
 

@@ -31,7 +31,7 @@ They are linked direct or indirect to the index.htm file
   <meta name="msapplication-TileColor" content="#2b5797">
   <meta name="msapplication-TileImage" content="/favicon144.png">
   <meta name="theme-color" content="#ffffff">
-  <link rel="manifest" href="/manifest.json">
+  <link rel="manifest" href="/site.webmanifest">
 ```
 
 ### In the manifest file
