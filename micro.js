@@ -468,6 +468,125 @@ var ButtonWidgetClass = (function (_super) {
     ], ButtonWidgetClass);
     return ButtonWidgetClass;
 }(GenericWidgetClass));
+var ColorWidgetClass = (function (_super) {
+    __extends(ColorWidgetClass, _super);
+    function ColorWidgetClass() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.colObj = null;
+        _this.hueObj = null;
+        _this.brightObj = null;
+        _this.whiteObj = null;
+        _this._value = '00000000';
+        return _this;
+    }
+    ColorWidgetClass.prototype.connectedCallback = function () {
+        _super.prototype.connectedCallback.call(this);
+        this.colObj = this.querySelector('.color');
+        this.hueObj = this.querySelector('.hue');
+        this.brightObj = this.querySelector('.bright');
+        this.whiteObj = this.querySelector('.white');
+    };
+    ColorWidgetClass.prototype.newData = function (_path, key, value) {
+        if (!value) {
+        }
+        else if (key === 'value') {
+            value = value.replace('x', '');
+            if (value.length === 6) {
+                this._value = "00" + value;
+            }
+            else if (value.length === 8) {
+                this._value = value;
+            }
+            var rgb = this._value.substr(2);
+            if (this.hueObj) {
+                this.hueObj.value = String(this.rgbToHue(rgb));
+            }
+            if (this.whiteObj) {
+                this.whiteObj.value = String(parseInt(this._value.substr(0, 2), 16));
+            }
+            if (this.brightObj) {
+                var lg = "linear-gradient(to right, black 0%, #" + rgb + " 100%)";
+                this.brightObj.style.background = lg;
+            }
+            if (this.colObj) {
+                this.colObj.style.backgroundColor = "#" + rgb;
+            }
+        }
+        else if (key === 'config') {
+            if (this.whiteObj && (value === 'RGB')) {
+                this.whiteObj.style.display = 'none';
+            }
+            else if (this.whiteObj && (value === 'WRGB')) {
+                this.whiteObj.style.display = '';
+            }
+        }
+        else if (key === 'brightness') {
+            if (this.brightObj) {
+                this.brightObj.value = value;
+            }
+        }
+        _super.prototype.newData.call(this, _path, key, value);
+    };
+    ColorWidgetClass.prototype.on_input = function (e) {
+        var tar = e.target;
+        var col = '';
+        console.log(tar.value);
+        if (tar === this.hueObj) {
+            var color = "hsl(" + tar.value + ", 100%, 50%)";
+            tar.style.backgroundColor = color;
+            var bc = getComputedStyle(tar, null).backgroundColor;
+            var l = String(bc).replace(/[^0-9,]/g, '').split(',');
+            col = 'x' + this.x16(l[0]) + this.x16(l[1]) + this.x16(l[2]);
+            if (this.whiteObj) {
+                col = 'x' + this._value.substr(0, 2) + col.substr(1);
+            }
+        }
+        else if (tar === this.whiteObj) {
+            col = 'x' + this.x16(tar.value) + this._value.substr(2);
+        }
+        else if (tar === this.brightObj) {
+            this.dispatchAction('brightness', tar.value);
+        }
+        if (col.length > 0) {
+            this.dispatchAction('value', col);
+        }
+    };
+    ColorWidgetClass.prototype.rgbToHue = function (color) {
+        var hue = 0;
+        if (color && color.length >= 6) {
+            var rgb = color.substr(color.length - 6);
+            var r = parseInt(rgb.substr(0, 2), 16) / 255;
+            var g = parseInt(rgb.substr(2, 2), 16) / 255;
+            var b = parseInt(rgb.substr(4, 2), 16) / 255;
+            var max = Math.max(r, g, b);
+            var min = Math.min(r, g, b);
+            var d = max - min;
+            if (d > 0) {
+                if (max === r) {
+                    hue = (g - b) / d + (g < b ? 6 : 0);
+                }
+                else if (max === g) {
+                    hue = (b - r) / d + 2;
+                }
+                else if (max === b) {
+                    hue = (r - g) / d + 4;
+                }
+            }
+        }
+        return (Math.round(hue * 60) % 360);
+    };
+    ColorWidgetClass.prototype.x16 = function (d) {
+        var x = Number(d).toString(16);
+        if (x.length === 1) {
+            x = '0' + x;
+        }
+        return (x);
+    };
+    ColorWidgetClass = __decorate([
+        MicroControl('color')
+    ], ColorWidgetClass);
+    return ColorWidgetClass;
+}(GenericWidgetClass));
 var DSTimeWidgetClass = (function (_super) {
     __extends(DSTimeWidgetClass, _super);
     function DSTimeWidgetClass() {
@@ -666,7 +785,7 @@ var IncludeWidgetClass = (function (_super) {
     }
     IncludeWidgetClass.prototype.connectedCallback = function () {
         this.query = this.getAttribute('ref');
-        var obj = document.querySelector('u-templates ' + this.query);
+        var obj = document.querySelector('#u-templates ' + this.query);
         console.log('included.', this.query, obj);
         if (obj) {
             var e = obj.cloneNode(true);
@@ -866,117 +985,6 @@ var ModalDialogClass = (function () {
     return ModalDialogClass;
 }());
 var modal = new ModalDialogClass();
-var NeoWidgetClass = (function (_super) {
-    __extends(NeoWidgetClass, _super);
-    function NeoWidgetClass() {
-        var _this = _super !== null && _super.apply(this, arguments) || this;
-        _this.colObj = null;
-        _this.hueObj = null;
-        _this.brightObj = null;
-        _this.whiteObj = null;
-        _this._value = '00000000';
-        return _this;
-    }
-    NeoWidgetClass.prototype.connectedCallback = function () {
-        _super.prototype.connectedCallback.call(this);
-        this.colObj = this.querySelector('.color');
-        this.hueObj = this.querySelector('.hue');
-        this.brightObj = this.querySelector('.bright');
-        this.whiteObj = this.querySelector('.white');
-    };
-    NeoWidgetClass.prototype.newData = function (_path, key, value) {
-        if (!value) {
-        }
-        else if (key === 'value') {
-            value = value.replace('x', '');
-            if (value.length === 6) {
-                this._value = "00" + value;
-            }
-            else if (value.length === 8) {
-                this._value = value;
-            }
-            var rgb = this._value.substr(2);
-            if (this.hueObj) {
-                this.hueObj.value = String(this.rgbToHue(rgb));
-            }
-            if (this.whiteObj) {
-                this.whiteObj.value = String(parseInt(this._value.substr(0, 2), 16));
-            }
-            if (this.brightObj) {
-                var lg = "linear-gradient(to right, black 0%, #" + rgb + " 100%)";
-                this.brightObj.style.background = lg;
-            }
-            if (this.colObj) {
-                this.colObj.style.backgroundColor = "#" + rgb;
-            }
-        }
-        else if (key === 'brightness') {
-            if (this.brightObj) {
-                this.brightObj.value = value;
-            }
-        }
-        _super.prototype.newData.call(this, _path, key, value);
-    };
-    NeoWidgetClass.prototype.on_input = function (e) {
-        var tar = e.target;
-        var col = '';
-        console.log(tar.value);
-        if (tar === this.hueObj) {
-            var color = "hsl(" + tar.value + ", 100%, 50%)";
-            tar.style.backgroundColor = color;
-            var bc = getComputedStyle(tar, null).backgroundColor;
-            var l = String(bc).replace(/[^0-9,]/g, '').split(',');
-            col = 'x' + this.x16(l[0]) + this.x16(l[1]) + this.x16(l[2]);
-            if (this.whiteObj) {
-                col = 'x' + this._value.substr(0, 2) + col.substr(1);
-            }
-        }
-        else if (tar === this.whiteObj) {
-            col = 'x' + this.x16(tar.value) + this._value.substr(2);
-        }
-        else if (tar === this.brightObj) {
-            this.dispatchAction('brightness', tar.value);
-        }
-        if (col.length > 0) {
-            this.dispatchAction('value', col);
-        }
-    };
-    NeoWidgetClass.prototype.rgbToHue = function (color) {
-        var hue = 0;
-        if (color && color.length >= 6) {
-            var rgb = color.substr(color.length - 6);
-            var r = parseInt(rgb.substr(0, 2), 16) / 255;
-            var g = parseInt(rgb.substr(2, 2), 16) / 255;
-            var b = parseInt(rgb.substr(4, 2), 16) / 255;
-            var max = Math.max(r, g, b);
-            var min = Math.min(r, g, b);
-            var d = max - min;
-            if (d > 0) {
-                if (max === r) {
-                    hue = (g - b) / d + (g < b ? 6 : 0);
-                }
-                else if (max === g) {
-                    hue = (b - r) / d + 2;
-                }
-                else if (max === b) {
-                    hue = (r - g) / d + 4;
-                }
-            }
-        }
-        return (Math.round(hue * 60) % 360);
-    };
-    NeoWidgetClass.prototype.x16 = function (d) {
-        var x = Number(d).toString(16);
-        if (x.length === 1) {
-            x = '0' + x;
-        }
-        return (x);
-    };
-    NeoWidgetClass = __decorate([
-        MicroControl('neo')
-    ], NeoWidgetClass);
-    return NeoWidgetClass;
-}(GenericWidgetClass));
 var PWMOutWidgetClass = (function (_super) {
     __extends(PWMOutWidgetClass, _super);
     function PWMOutWidgetClass() {

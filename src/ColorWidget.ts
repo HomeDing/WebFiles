@@ -1,4 +1,4 @@
-// NeoWidget.ts: Widget Behavior implementation for Neo Elements
+// ColorWidget.ts: Widget Behavior implementation for the Color Element.
 
 // This file is part of the Widget implementation for the HomeDing Library
 // implementing the Web UI corresponding to an internal configured element.
@@ -8,8 +8,8 @@
 /// <reference path="microControls.ts" />
 /// <reference path="GenericWidget.ts" />
 
-@MicroControl('neo')
-class NeoWidgetClass extends GenericWidgetClass {
+@MicroControl('color')
+class ColorWidgetClass extends GenericWidgetClass {
   private colObj: HTMLElement | null = null;
   private hueObj: HTMLInputElement | null = null;
   private brightObj: HTMLInputElement | null = null;
@@ -47,6 +47,13 @@ class NeoWidgetClass extends GenericWidgetClass {
 
       if (this.colObj) {
         this.colObj.style.backgroundColor = `#${rgb}`;
+      }
+
+    } else if (key === 'config') {
+      if (this.whiteObj && (value === 'RGB')) {
+        this.whiteObj.style.display = 'none';
+      } else if (this.whiteObj && (value === 'WRGB')) {
+        this.whiteObj.style.display = '';
       }
 
     } else if (key === 'brightness') {
