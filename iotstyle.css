@@ -257,7 +257,7 @@ button.secondary, .button.secondary { background-color: #777777; border-color: #
 
 .band.hue { background: linear-gradient(to right, #ff0000 0%, #ffff00 17%, #00ff00 33%, #00ffff 50%, #0000ff 67%, #ff00ff 83%, #ff0000 100%); }
 
-.band.white, .band.bright { background: linear-gradient(to right, black 0%, white 100%); }
+.band.white, .band.lightness, .band.saturation { background: linear-gradient(to right, black 0%, white 100%); }
 
 /* === Responsive Utilities === */
 .display-xs { display: none; }

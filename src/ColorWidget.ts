@@ -12,17 +12,29 @@
 class ColorWidgetClass extends GenericWidgetClass {
   private colObj: HTMLElement | null = null;
   private hueObj: HTMLInputElement | null = null;
-  private brightObj: HTMLInputElement | null = null;
+  private lightObj: HTMLInputElement | null = null;
+  private satObj: HTMLInputElement | null = null;
   private whiteObj: HTMLInputElement | null = null;
+  private _hvalue = '00ff0000';
   private _value = '00000000';
+  private _hue = 127;
+  private _lightness = 127;
+  private _saturation = 255;
+  private _white = 127;
+  private _hasWhite = false;
 
   connectedCallback() {
     super.connectedCallback();
     this.colObj = this.querySelector('.color') as HTMLElement;
     this.hueObj = this.querySelector('.hue') as HTMLInputElement;
-    this.brightObj = this.querySelector('.bright') as HTMLInputElement;
+    this.satObj = this.querySelector('.band.saturation') as HTMLInputElement;
+    this.lightObj = this.querySelector('.band.lightness') as HTMLInputElement;
     this.whiteObj = this.querySelector('.white') as HTMLInputElement;
   } // connectedCallback
+
+  updateBands() {
+
+  }
 
   // visualize any new data for the widget.
   newData(_path: string, key: string | null, value: string | null) {
@@ -36,13 +48,18 @@ class ColorWidgetClass extends GenericWidgetClass {
         this._value = value;
       }
       const rgb = this._value.substr(2);
+      const hue = this.rgbToHue(rgb);
 
       if (this.hueObj) { this.hueObj.value = String(this.rgbToHue(rgb)); }
       if (this.whiteObj) { this.whiteObj.value = String(parseInt(this._value.substr(0, 2), 16)); }
+      this._hvalue = this.hslToRGB(hue, 100, 50);
 
-      if (this.brightObj) {
-        const lg = `linear-gradient(to right, black 0%, #${rgb} 100%)`;
-        this.brightObj.style.background = lg;
+      if (this.satObj) {
+        this.satObj.style.background = `linear-gradient(to right, #808080 0%, #${this._hvalue} 100%)`;
+      }
+
+      if (this.lightObj) {
+        this.lightObj.style.background = `linear-gradient(to right, #000 0%, #${this._hvalue} 50%, #fff 100%)`;
       }
 
       if (this.colObj) {
@@ -50,14 +67,10 @@ class ColorWidgetClass extends GenericWidgetClass {
       }
 
     } else if (key === 'config') {
-      if (this.whiteObj && (value === 'RGB')) {
-        this.whiteObj.style.display = 'none';
-      } else if (this.whiteObj && (value === 'WRGB')) {
-        this.whiteObj.style.display = '';
+      this._hasWhite = (value === 'WRGB');
+      if (this.whiteObj) {
+        this.whiteObj.style.display = this._hasWhite ? '' : 'none';
       }
-
-    } else if (key === 'brightness') {
-      if (this.brightObj) { this.brightObj.value = value; }
     }
     super.newData(_path, key, value);
   }
@@ -66,30 +79,29 @@ class ColorWidgetClass extends GenericWidgetClass {
     const tar = e.target as HTMLInputElement;
     let col = '';
 
-    console.log(tar.value);
     if (tar === this.hueObj) {
-      const color = `hsl(${tar.value}, 100%, 50%)`;
+      this._hue = parseInt(tar.value, 10);
+      this._hvalue = this.hslToRGB(this._hue, 100, 50);
 
-      // use backgroundColor to convert to hsl to rgb format
-      tar.style.backgroundColor = color;
-      const bc = getComputedStyle(tar, null).backgroundColor;
-      const l = String(bc).replace(/[^0-9,]/g, '').split(',');
-      col = 'x' + this.x16(l[0]) + this.x16(l[1]) + this.x16(l[2]);
+    } else if (tar === this.lightObj) {
+      this._lightness = parseInt(tar.value, 10);
+      this.dispatchAction('lightness', tar.value);
 
-      if (this.whiteObj) {
-        col = 'x' + this._value.substr(0, 2) + col.substr(1);
-      } // if
+    } else if (tar === this.satObj) {
+      this._saturation = parseInt(tar.value, 10);
+      this.dispatchAction('saturation', tar.value);
 
     } else if (tar === this.whiteObj) {
-      col = 'x' + this.x16(tar.value) + this._value.substr(2);
-
-    } else if (tar === this.brightObj) {
-      this.dispatchAction('brightness', tar.value);
+      this._white = parseInt(tar.value, 10);
     }
 
-    if (col.length > 0) {
-      this.dispatchAction('value', col);
-    }
+    // calculate the new color value
+    col = 'x' + this.hslToRGB(this._hue, Math.round(this._saturation * 100 / 255), Math.round(this._lightness * 100 / 255));
+
+    if (this._hasWhite) {
+      col = 'x' + this.x16(this._white) + col.substr(1);
+    } // if
+    this.dispatchAction('value', col);
   } // on_input
 
 
@@ -121,6 +133,21 @@ class ColorWidgetClass extends GenericWidgetClass {
     } // if
     return (Math.round(hue * 60) % 360);
   } // rgbToHue
+
+
+  // calculate rgb from hsl using builtin style function
+  private hslToRGB(h: number, s: number, l: number): string {
+    const obj = this.hueObj || this;
+
+    // calculate the new color value
+    // use backgroundColor to convert to hsl to rgb format
+    obj.style.backgroundColor = `hsl(${h}, ${s}%, ${l}%)`;
+    const bc = getComputedStyle(obj, null).backgroundColor;
+    // format to 'rrggbb'
+    const v = String(bc).replace(/[^0-9,]/g, '').split(',');
+    const col = this.x16(v[0]) + this.x16(v[1]) + this.x16(v[2]);
+    return (col);
+  } // hslToRGB
 
 
   private x16(d: any): string {

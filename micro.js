@@ -308,6 +308,11 @@ var GenericWidgetClass = (function (_super) {
                 setAttr(elem, 'u-action', value ? value : '');
             });
         }, this);
+        this.querySelectorAll("span[u-color='" + key + "']").forEach(function (elem) {
+            var col = value ? value.replace(/^x/, '#') : '#888';
+            col = col.replace(/^#\S{2}(\S{6})$/, '#$1');
+            elem.style.backgroundColor = col;
+        });
     };
     GenericWidgetClass.prototype.dispatchNext = function () {
         var _this = this;
@@ -474,17 +479,27 @@ var ColorWidgetClass = (function (_super) {
         var _this = _super !== null && _super.apply(this, arguments) || this;
         _this.colObj = null;
         _this.hueObj = null;
-        _this.brightObj = null;
+        _this.lightObj = null;
+        _this.satObj = null;
         _this.whiteObj = null;
+        _this._hvalue = '00ff0000';
         _this._value = '00000000';
+        _this._hue = 127;
+        _this._lightness = 127;
+        _this._saturation = 255;
+        _this._white = 127;
+        _this._hasWhite = false;
         return _this;
     }
     ColorWidgetClass.prototype.connectedCallback = function () {
         _super.prototype.connectedCallback.call(this);
         this.colObj = this.querySelector('.color');
         this.hueObj = this.querySelector('.hue');
-        this.brightObj = this.querySelector('.bright');
+        this.satObj = this.querySelector('.band.saturation');
+        this.lightObj = this.querySelector('.band.lightness');
         this.whiteObj = this.querySelector('.white');
+    };
+    ColorWidgetClass.prototype.updateBands = function () {
     };
     ColorWidgetClass.prototype.newData = function (_path, key, value) {
         if (!value) {
@@ -498,31 +513,28 @@ var ColorWidgetClass = (function (_super) {
                 this._value = value;
             }
             var rgb = this._value.substr(2);
+            var hue = this.rgbToHue(rgb);
             if (this.hueObj) {
                 this.hueObj.value = String(this.rgbToHue(rgb));
             }
             if (this.whiteObj) {
                 this.whiteObj.value = String(parseInt(this._value.substr(0, 2), 16));
             }
-            if (this.brightObj) {
-                var lg = "linear-gradient(to right, black 0%, #" + rgb + " 100%)";
-                this.brightObj.style.background = lg;
+            this._hvalue = this.hslToRGB(hue, 100, 50);
+            if (this.satObj) {
+                this.satObj.style.background = "linear-gradient(to right, #808080 0%, #" + this._hvalue + " 100%)";
+            }
+            if (this.lightObj) {
+                this.lightObj.style.background = "linear-gradient(to right, #000 0%, #" + this._hvalue + " 50%, #fff 100%)";
             }
             if (this.colObj) {
                 this.colObj.style.backgroundColor = "#" + rgb;
             }
         }
         else if (key === 'config') {
-            if (this.whiteObj && (value === 'RGB')) {
-                this.whiteObj.style.display = 'none';
-            }
-            else if (this.whiteObj && (value === 'WRGB')) {
-                this.whiteObj.style.display = '';
-            }
-        }
-        else if (key === 'brightness') {
-            if (this.brightObj) {
-                this.brightObj.value = value;
+            this._hasWhite = (value === 'WRGB');
+            if (this.whiteObj) {
+                this.whiteObj.style.display = this._hasWhite ? '' : 'none';
             }
         }
         _super.prototype.newData.call(this, _path, key, value);
@@ -530,26 +542,26 @@ var ColorWidgetClass = (function (_super) {
     ColorWidgetClass.prototype.on_input = function (e) {
         var tar = e.target;
         var col = '';
-        console.log(tar.value);
         if (tar === this.hueObj) {
-            var color = "hsl(" + tar.value + ", 100%, 50%)";
-            tar.style.backgroundColor = color;
-            var bc = getComputedStyle(tar, null).backgroundColor;
-            var l = String(bc).replace(/[^0-9,]/g, '').split(',');
-            col = 'x' + this.x16(l[0]) + this.x16(l[1]) + this.x16(l[2]);
-            if (this.whiteObj) {
-                col = 'x' + this._value.substr(0, 2) + col.substr(1);
-            }
+            this._hue = parseInt(tar.value, 10);
+            this._hvalue = this.hslToRGB(this._hue, 100, 50);
+        }
+        else if (tar === this.lightObj) {
+            this._lightness = parseInt(tar.value, 10);
+            this.dispatchAction('lightness', tar.value);
+        }
+        else if (tar === this.satObj) {
+            this._saturation = parseInt(tar.value, 10);
+            this.dispatchAction('saturation', tar.value);
         }
         else if (tar === this.whiteObj) {
-            col = 'x' + this.x16(tar.value) + this._value.substr(2);
+            this._white = parseInt(tar.value, 10);
         }
-        else if (tar === this.brightObj) {
-            this.dispatchAction('brightness', tar.value);
+        col = 'x' + this.hslToRGB(this._hue, Math.round(this._saturation * 100 / 255), Math.round(this._lightness * 100 / 255));
+        if (this._hasWhite) {
+            col = 'x' + this.x16(this._white) + col.substr(1);
         }
-        if (col.length > 0) {
-            this.dispatchAction('value', col);
-        }
+        this.dispatchAction('value', col);
     };
     ColorWidgetClass.prototype.rgbToHue = function (color) {
         var hue = 0;
@@ -574,6 +586,14 @@ var ColorWidgetClass = (function (_super) {
             }
         }
         return (Math.round(hue * 60) % 360);
+    };
+    ColorWidgetClass.prototype.hslToRGB = function (h, s, l) {
+        var obj = this.hueObj || this;
+        obj.style.backgroundColor = "hsl(" + h + ", " + s + "%, " + l + "%)";
+        var bc = getComputedStyle(obj, null).backgroundColor;
+        var v = String(bc).replace(/[^0-9,]/g, '').split(',');
+        var col = this.x16(v[0]) + this.x16(v[1]) + this.x16(v[2]);
+        return (col);
     };
     ColorWidgetClass.prototype.x16 = function (d) {
         var x = Number(d).toString(16);

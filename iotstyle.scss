@@ -889,7 +889,8 @@ button,
   }
 
   &.white,
-  &.bright {
+  &.lightness,
+  &.saturation {
     background: linear-gradient(to right, black 0%, white 100%);
   }
 }
