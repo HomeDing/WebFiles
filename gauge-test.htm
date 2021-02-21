@@ -28,10 +28,10 @@
     <h1>Gauge Charts</h1>
     <p>
       <button id="doClear">clear</button>
-      <button id="doDraw1">draw1</button>
-      <button id="doDraw2">draw2</button>
-      <button id="doDraw3">draw3</button>
-      <!-- <button id="doDraw4">draw4</button> -->
+      <button id="doCase1a">Room</button>
+      <button id="doCase1b">Outside</button>
+      <button id="doCase2">Humidity</button>
+      <button id="doCase3">Height</button>
     </p>
 
     <object id="testChart" data="gaugeChart.svg" type="image/svg+xml"
@@ -87,7 +87,7 @@ chartAPI.setOptions({
 
     function chartClear() { chartAPI.clear(); }
 
-    function chartDraw1() {
+    function case1a() {
       chartAPI.setOptions({
         title: "Room Temperature",
         units: "°C",
@@ -95,9 +95,9 @@ chartAPI.setOptions({
         maximum: 45,
         segments: [
           {
-            value: 18, color: 'white'
+            value: 18, color: '#aaaadd'
           }, {
-            value: 22, color: '#44ff44'
+            value: 22, color: '#33cc33'
           }, {
             color: '#ff4444'
           }
@@ -107,7 +107,31 @@ chartAPI.setOptions({
       chartAPI.draw(26.7);
     }
 
-    function chartDraw2() {
+    function case1b() {
+      chartAPI.setOptions({
+        title: "Outside Temperature",
+        units: "°C",
+        minimum: -20,
+        maximum: 55,
+        segments: [
+          {
+            value: -2, color: '#aaaaee'
+          },
+          {
+            value: 8, color: 'white'
+          },
+          {
+            value: 33, color: '#33aa33'
+          }, {
+            color: '#ff4444'
+          }
+        ]
+      });
+
+      chartAPI.draw(2.5);
+    }
+
+    function case2() {
       chartAPI.setOptions({
         title: "Room Humidity",
         units: "%",
@@ -127,7 +151,7 @@ chartAPI.setOptions({
       chartAPI.draw(44.2);
     }
 
-    function chartDraw3() {
+    function case3() {
       chartAPI.setOptions({
         title: "Height",
         units: "mm",
@@ -139,13 +163,14 @@ chartAPI.setOptions({
 
     window.addEventListener('load', function () {
       chartAPI = chartObj.getSVGDocument().api;
-      chartDraw1();
+      case1a();
 
       document.getElementById('doClear').addEventListener('click', chartClear);
 
-      document.getElementById('doDraw1').addEventListener('click', chartDraw1);
-      document.getElementById('doDraw2').addEventListener('click', chartDraw2);
-      document.getElementById('doDraw3').addEventListener('click', chartDraw3);
+      document.getElementById('doCase1a').addEventListener('click', case1a);
+      document.getElementById('doCase1b').addEventListener('click', case1b);
+      document.getElementById('doCase2').addEventListener('click', case2);
+      document.getElementById('doCase3').addEventListener('click', case3);
 
     });
   </script>
