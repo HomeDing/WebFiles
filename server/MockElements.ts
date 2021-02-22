@@ -118,6 +118,7 @@ export function register() {
   registerVirtual('value', MockValue);
   registerVirtual('digitalout', MockStandard);
   registerVirtual('neo', MockStandard);
+  registerVirtual('color', MockStandard);
   registerVirtual('my9291', MockStandard);
   registerVirtual('p9813', MockStandard);
 

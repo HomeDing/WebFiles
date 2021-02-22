@@ -92,15 +92,17 @@
 
     function startContent() {
       if (devList.length > 0) {
-        var d = devList.pop();
-        var devObj = createHTMLElement(devicesObj, 'h3');
-        devObj.innerText = devData[d].title + ' (' + d + ')';
-        fetch('/$deviceconfig?host=' + d)
+        var deviceName = devList.pop();
+
+        var deviceHeader = createHTMLElement(devicesObj, 'h3');
+        deviceHeader.innerText = devData[deviceName].title + ' (' + deviceName + ')';
+
+        fetch('/api/config/' + deviceName)
           .then(function (result) {
             return result.json();
           })
           .then(function (data) {
-            var url = 'http://' + devData[d].host + '/$board/';
+            var url = 'http://' + devData[deviceName].host + '/$board/';
             for (t in data) {
               for (i in data[t]) {
                 var cnfElem = data[t][i];
@@ -108,7 +110,7 @@
 
                 var cbObj = createHTMLElement(divObj, 'input', { type:'checkbox', title: url + t + '/'+ i});
                 var titleText = cnfElem.title || cnfElem.description || '';
-                createHTMLElement(divObj, 'span').innerText = titleText + ' (' + t + '/' + i + ')';
+                createHTMLElement(divObj, 'span').innerText = '(' + t + '/' + i + ') ' + titleText;
               }
             }
             // pre.innerText = JSON.stringify(data, null, 2);
@@ -121,7 +123,7 @@
     }
 
     function loadDevices() {
-      fetch('/$devices')
+      fetch('/api/discovery')
         .then(function (result) {
           return result.json();
         })

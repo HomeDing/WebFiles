@@ -7,6 +7,11 @@ import path from 'path';
 
 import Logger from './Logger';
 
+import { DeviceDiscovery } from './Discover';
+import { ConfigCache } from './ConfigCache';
+
+import * as settings from './settings.json';
+
 // import { start } from 'repl';
 
 Logger.info('Homeding Portal Server is starting...');
@@ -14,6 +19,9 @@ Logger.info('Homeding Portal Server is starting...');
 // ===== Express web server =====
 
 const app: express.Application = express();
+const api: express.Router = express.Router();
+
+app.use('/api', api);
 
 // ===== Startup =====
 
@@ -123,16 +131,13 @@ if (options.monitor) {
 //#endregion
 
 
-// ===== List locally discovered devices
+// ===== Bind api services
 
-import { DeviceDiscovery } from './Discover';
+const discoveryService = DeviceDiscovery.createInstance(settings.discovery);
+api.use('/discovery', discoveryService.router);
 
-const dService = DeviceDiscovery.getInstance();
-app.get(/^\/\$devices$/, noCache, dService.handleDevices);
-
-import { ConfigCache } from './ConfigCache';
-const ccInstance = ConfigCache.getInstance();
-app.get(/^\/\$deviceconfig$/, noCache, ccInstance.handle.bind(ccInstance));
+const configService = ConfigCache.createInstance(settings.config || {});
+api.use('/config', noCache, configService.router);
 
 
 // ===============================================================================================
@@ -254,7 +259,6 @@ app.get('/\\$board/:type/:id', noCache, async function (req, res) {
 
 
 app.get(/^\/\$board$/, noCache, async function (req, res) {
-  // hardsleep(800);
   if (!boardState) {
     boardState = {};
     if (caseFolder) {
@@ -274,7 +278,7 @@ app.get(/^\/\$board$/, noCache, async function (req, res) {
 
 
 app.get(/^\/\$flush$/, noCache, async function (req, res) {
-  ccInstance.flush();
+  configService.flush();
   res.send();
 });
 

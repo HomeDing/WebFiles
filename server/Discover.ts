@@ -80,36 +80,51 @@ function startDiscovery() {
 export class DeviceDiscovery {
   private static _instance: DeviceDiscovery;
 
-  private options = { refresh: 20 };
+
+  // ===== expose the router to be used in express  =====
+  public router = express.Router();
+
+
+  private defaultOptions: any = { refresh: 2 * 60 };
+  private options: any = {};
+
 
   constructor(options: any = {}) {
-    this.options = Object.assign(this.options, options);
+    this.options = Object.assign({}, this.defaultOptions, options);
 
     mDns.excludeInterface('0.0.0.0');
+
+    // express function: list all found devices.
+    this.router.get('', (_req, res) => { res.json(netDevices); });
 
     // start discovery now and every 30 secs.
     startDiscovery();
     setInterval(startDiscovery, this.options.refresh * 1000);
   }
 
-  public static getInstance(): DeviceDiscovery {
-    if (!DeviceDiscovery._instance) {
-      DeviceDiscovery._instance = new DeviceDiscovery();
-    }
+
+  // create a instance of the DeviceDiscovery service.
+  // This method should nly be called once.
+  public static createInstance(options: any = {}): DeviceDiscovery {
+    DeviceDiscovery._instance = new DeviceDiscovery(options);
     return DeviceDiscovery._instance;
   }
 
+
+  // return current instance of the DeviceDiscovery
+  public static getInstance(): DeviceDiscovery {
+    return DeviceDiscovery._instance;
+  }
+
+
+  // ===== expose some methods for direct use =====
+
   // return true when a device is online by sending mDNS announcements.
-  isOnline(host: string): boolean {
+  public isOnline(host: string): boolean {
     return (!!netDevices[host]);
   }
 
-  // express function: list all found devices.
-  handleDevices(req: express.Request, res: express.Response) {
-    res.json(netDevices);
-  }
-
-  list() {
+  public list() {
     return (netDevices);
   }
 }

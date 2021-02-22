@@ -137,7 +137,7 @@
 
 
     function loadDevices() {
-      fetch('/$devices')
+      fetch('/api/discovery')
         .then(function (result) {
           return result.json();
         })

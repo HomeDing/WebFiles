@@ -9,22 +9,53 @@ import Logger from './Logger';
 export class ConfigCache {
   private static _instance: ConfigCache;
 
+  // ===== expose the router to be used in express  =====
+
+  public router = express.Router();
+
+  private defaultOptions: any = { timeout: 4000 };
+  private options: any = {};
+
   private dService = DeviceDiscovery.getInstance();
 
   // cache for device configurations
   private netConfigs: { [hostname: string]: any } = {};
 
+
+  constructor(options: any = {}) {
+    this.options = Object.assign({}, this.defaultOptions, options);
+
+    // express function: list all found devices.
+    this.router.get('/', async (req, res) => {
+      res.json({});
+    });
+
+    // express function: list all found devices.
+    this.router.get('/:hostname', async (req, res) => {
+      let cnf = {};
+      if (req.params.hostname) {
+        cnf = await this.get(req.params.hostname);
+      }
+      res.json(cnf);
+
+    });
+
+  }
+
+  // create a instance of the DeviceDiscovery service.
+  // This method should nly be called once.
+  public static createInstance(options: any = {}): ConfigCache {
+    ConfigCache._instance = new ConfigCache(options);
+    return (ConfigCache._instance);
+  }
+
   public static getInstance(): ConfigCache {
-    if (!ConfigCache._instance) {
-      ConfigCache._instance = new ConfigCache();
-    }
-    return ConfigCache._instance;
+    return (ConfigCache._instance);
   }
 
   async flush() {
     this.netConfigs = {};
   }
-
 
   async get(hostname: string) {
     const host: string = hostname.replace(/\.local/, '');
@@ -34,7 +65,7 @@ export class ConfigCache {
     } else if (!this.netConfigs[host]) {
       try {
         const url = `http://${hostname}/config.json`;
-        const req = await fetch(url, { timeout: 8000 });
+        const req = await fetch(url, { timeout: this.options.timeout });
         const txt = await req.text();
         // const j = await req.json();
         this.netConfigs[host] = JSON.parse(txt);

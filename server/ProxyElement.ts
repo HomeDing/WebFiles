@@ -13,12 +13,15 @@ const log = {
   send: logServer.extend('send')
 };
 
+
 export class ProxyElement extends VirtualBaseElement {
+  // eslint-disable-next-line no-unused-vars
   private url: string;
   private host: string;
   private configJson: any = null;
-  private online = false;
-  private nextTry = Date.now();
+  // private canRequest = false;
+  private requested = false; // set true when a state request is on the way.
+  private nextTry = 0;
   private configs = ConfigCache.getInstance();
 
   constructor(typeId: string, config: any) {
@@ -42,15 +45,22 @@ export class ProxyElement extends VirtualBaseElement {
 
 
   async getState(): Promise<any> {
-    if ((this.online) || (Date.now() > this.nextTry)) {
+
+    if (!this.requested && (Date.now() > this.nextTry)) {
+
       // fetch configuration
-      this.online = false;
+      this.requested = true;
+      this.nextTry = Date.now() + (10 * 1000);
 
       if (!this.configJson) {
-        const conf = await this.configs.get(this.host);
-        if (conf?.[this.type]?.[this.id]) {
-          this.configJson = conf[this.type][this.id];
-          this.state = Object.assign(this.state, this.configJson);
+        try {
+          const conf = await this.configs.get(this.host);
+          if (conf?.[this.type]?.[this.id]) {
+            this.configJson = conf[this.type][this.id];
+            this.state = Object.assign(this.state, this.configJson);
+          }
+        } catch (e) {
+          log.error('getConfig', e);
         }
       }
 
@@ -61,15 +71,11 @@ export class ProxyElement extends VirtualBaseElement {
           const j = await r.json();
           const rs = j[`${this.type}/${this.id}`];
           this.state = Object.assign(this.state, rs);
-          this.online = true;
         } catch (e) {
-          log.error(e);
-        } finally {
+          log.error('getState', e);
         }
       }
-      if (!this.online) {
-        this.nextTry = Date.now() + (10 * 1000);
-      }
+      this.requested = false;
     }
     return (this.state);
   } // getState()
@@ -80,6 +86,7 @@ export class ProxyElement extends VirtualBaseElement {
     for (const a in action) {
       if (action.hasOwnProperty(a)) {
         await fetch(this.url + '?' + a + '=' + action[a], { timeout: 4000 });
+        this.nextTry = 0; // asap.
       }
     }
   }
