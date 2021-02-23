@@ -8,6 +8,18 @@
 /// <reference path="microControls.ts" />
 /// <reference path="GenericWidget.ts" />
 
+interface HslType {
+  h: number;  // 0...359
+  s: number;  // 0...255 as %
+  l: number;   // 0...255 as %
+}
+
+interface RGBType {
+  r: number;  // 0...255
+  g: number;  // 0...255 
+  b: number;   // 0...255
+}
+
 @MicroControl('color')
 class ColorWidgetClass extends GenericWidgetClass {
   private colObj: HTMLElement | null = null;
@@ -47,23 +59,25 @@ class ColorWidgetClass extends GenericWidgetClass {
       } else if (value.length === 8) {
         this._value = value;
       }
-      const rgb = this._value.substr(2);
-      const hue = this.rgbToHue(rgb);
+      const col = this._value.substr(2);
+      const hsl = this.rgbToHsl(this.rgb(col));
+      this._hvalue = this.hslToRGB(hsl.h, 100, 50);
 
-      if (this.hueObj) { this.hueObj.value = String(this.rgbToHue(rgb)); }
-      if (this.whiteObj) { this.whiteObj.value = String(parseInt(this._value.substr(0, 2), 16)); }
-      this._hvalue = this.hslToRGB(hue, 100, 50);
-
+      if (this.hueObj) { this.hueObj.value = String(hsl.h); }
       if (this.satObj) {
+        this.satObj.value = String(hsl.s);
         this.satObj.style.background = `linear-gradient(to right, #808080 0%, #${this._hvalue} 100%)`;
       }
-
       if (this.lightObj) {
+        this.lightObj.value = String(hsl.l);
         this.lightObj.style.background = `linear-gradient(to right, #000 0%, #${this._hvalue} 50%, #fff 100%)`;
       }
 
+      if (this.whiteObj) { this.whiteObj.value = String(parseInt(this._value.substr(0, 2), 16)); }
+
+
       if (this.colObj) {
-        this.colObj.style.backgroundColor = `#${rgb}`;
+        this.colObj.style.backgroundColor = `#${col}`;
       }
 
     } else if (key === 'config') {
@@ -105,34 +119,50 @@ class ColorWidgetClass extends GenericWidgetClass {
   } // on_input
 
 
-  // rgb in format xRRGGBB, #RRGGBB, nnRRGGBB, #nnRRGGBB
-  // hue in range 0...359
-  private rgbToHue(color: string): number {
-    let hue = 0;
+  // convert from #??rrggbb to RGBType
+  private rgb(color: string): RGBType {
+    const rgb = { r: 0, g: 0, b: 0 };
 
     // only last 6 chars of interest...
     if (color && color.length >= 6) {
-      const rgb = color.substr(color.length - 6);
+      const col = color.substr(color.length - 6);
+      rgb.r = parseInt(col.substr(0, 2), 16);
+      rgb.g = parseInt(col.substr(2, 2), 16);
+      rgb.b = parseInt(col.substr(4, 2), 16);
+    }
+    return (rgb);
+  } // rgb()
 
-      const r = parseInt(rgb.substr(0, 2), 16) / 255;
-      const g = parseInt(rgb.substr(2, 2), 16) / 255;
-      const b = parseInt(rgb.substr(4, 2), 16) / 255;
 
-      const max = Math.max(r, g, b);
-      const min = Math.min(r, g, b);
-      const d = max - min;
-      if (d > 0) {
-        if (max === r) {
-          hue = (g - b) / d + (g < b ? 6 : 0);
-        } else if (max === g) {
-          hue = (b - r) / d + 2;
-        } else if (max === b) {
-          hue = (r - g) / d + 4;
-        }
+
+  // rgb in format xRRGGBB, #RRGGBB, nnRRGGBB, #nnRRGGBB
+  // hue in range 0...359
+
+  // returns an object with {h,s,l}
+  private rgbToHsl(rgb: RGBType): HslType {
+    const hsl: HslType = { h: 0, s: 0, l: 0 };
+
+    const max = Math.max(rgb.r, rgb.g, rgb.b);
+    const min = Math.min(rgb.r, rgb.g, rgb.b);
+    const d = max - min;
+    const s = max + min;
+
+    hsl.l = Math.round(s / 2);
+
+    if (d > 0) {
+      let hue = 0;
+      hsl.s = Math.round(255 * (hsl.l > 127 ? d / (510 - s) : d / s));
+      if (max === rgb.r) {
+        hue = (rgb.g - rgb.b) / d + (rgb.g < rgb.b ? 6 : 0);
+      } else if (max === rgb.g) {
+        hue = (rgb.b - rgb.r) / d + 2;
+      } else if (max === rgb.b) {
+        hue = (rgb.r - rgb.g) / d + 4;
       }
-    } // if
-    return (Math.round(hue * 60) % 360);
-  } // rgbToHue
+      hsl.h = Math.round(hue * 60) % 360;
+    }
+    return (hsl);
+  } // rgbToHsl
 
 
   // calculate rgb from hsl using builtin style function

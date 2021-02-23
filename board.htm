@@ -149,10 +149,20 @@
           <div class="form-group"><label>value:</label><span u-text="value"></span><span class="color"
               style="width:6rem;"></span></div>
           <input type="range" max="359" class="band hue">
-          <input type="range" max="100" class="band bright">
+          <input type="range" max="255" class="band saturation" u-value="saturation">
+          <input type="range" max="255" class="band lightness" u-value="lightness">
           <input type="range" max="255" class="band white">
-          <button u-action="mode" value="fade">fade</button><button u-action="mode" value="fix">fix</button><button u-action="mode" value="pulse">pulse</button><button u-action="mode" value="wheel">wheel</button>
-          <!-- <button u-action="mode" value="flow">flow</button> -->
+          <button u-action="mode" value="fade">fade</button><button u-action="mode" value="fix">fix</button><button
+            u-action="mode" value="pulse">pulse</button><button u-action="mode" value="wheel">wheel</button>
+        </div>
+      </div>
+
+      <div class="col card" u-control="light" id="${id}" u-is="generic" microID="${id}">
+        <div u-is="include" ref=".cardheader"></div>
+        <div class="block">
+          <span u-color="value" style="width:4rem;height:4rem;float:right;border:1px solid black;border-radius:50%;"></span>
+          <div class="form-group"><label>value:</label><span u-text="value"></span></div>
+          <div class="form-group"><label>brightness:</label><span u-text="brightness"></span></div>
         </div>
       </div>
 

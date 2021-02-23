@@ -98,7 +98,7 @@ export class MockBL0937 extends VirtualBaseElement {
 export class MockStandard extends VirtualBaseElement {
   constructor(typeId: string, config: any) {
     super(typeId, config);
-    this.state.value = 0;
+    this.state.value = config.value || 0;
   }
 
   async doAction(action: any) {

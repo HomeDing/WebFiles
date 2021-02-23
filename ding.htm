@@ -166,6 +166,19 @@
         </div>
       </div>
 
+      <div class="col card" u-control="color" id="${id}" u-is="color" microID="${id}">
+        <div class="block">
+          <h4>${id} - <span u-text="description"></span></h4>
+          <div class="form-group"><label>value:</label><span u-text="value"></span><span class="color"
+              style="width:6rem;"></span></div>
+          <input type="range" max="359" class="band hue">
+          <input type="range" max="100" class="band bright">
+          <input type="range" max="255" class="band white">
+          <button u-action="mode" value="fade">fade</button><button u-action="mode" value="fix">fix</button><button u-action="mode" value="pulse">pulse</button><button u-action="mode" value="wheel">wheel</button>
+          <!-- <button u-action="mode" value="flow">flow</button> -->
+        </div>
+      </div>
+
       <div class="col card" u-control="neo" id="${id}" u-is="neo" microID="${id}">
         <div class="block">
           <h4>${id} - <span u-text="description"></span></h4>
