@@ -1,0 +1,8 @@
+{
+  "discovery": {
+    "refresh": "60"
+  },
+  "config": {
+    "timeout": 3000
+  }
+}
