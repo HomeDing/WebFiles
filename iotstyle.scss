@@ -555,7 +555,8 @@ button,
     color: white;
   }
 
-  &:disabled, &:disabled:focus {
+  &:disabled,
+  &:disabled:focus {
     border: 0.1rem solid $u-disabled;
     background-color: $u-disabled;
   }
