@@ -115,10 +115,13 @@ assets
   .forEach(name => shell.cp(name, distFolder + '/' + name.split('/')[0]));
 logInfo(`Images copied.`);
 
-// create list file
-shell.cat('oldlist.txt').to(distFolder + '/list.txt');
-shell.ls('-R', distFolder).grep(/^.*\..*$/).toEnd(distFolder + '/list.txt');
+// ===== create list file =====
+
+let listText =
+  shell.cat('oldlist.txt').stdout +
+  shell.ls('-R', distFolder).grep(/^.*\..*$/).stdout;
+shell.ShellString(listText).to(distFolder + '/list.txt');
+
 logInfo(`list.txt file written.`);
 
 logInfo(`done.`);
-

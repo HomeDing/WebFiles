@@ -133,10 +133,13 @@ assets
 
 logInfo(`Files copied.`);
 
-// ===== minify JSON =====
+// ===== create list file =====
 
-shell.cat('oldlist.txt').to(distFolder + '/list.txt');
-shell.ls('-R', distFolder).grep(/^.*\..*$/).toEnd(distFolder + '/list.txt');
+let listText =
+  shell.cat('oldlist.txt').stdout +
+  shell.ls('-R', distFolder).grep(/^.*\..*$/).stdout;
+shell.ShellString(listText).to(distFolder + '/list.txt');
+
 logInfo(`list.txt file written.`);
 
 logInfo(`done.`);

@@ -74,7 +74,9 @@
 
     <div id="u-templates" style="display:none">
       <div class="cardheader block header">
-        <svg class="icon"><use xlink:href="./icons.svg#${type}" /></svg>
+        <svg class="icon">
+          <use xlink:href="./icons.svg#${type}" />
+        </svg>
         <h3 u-text="title"></h3>
         <h4 u-text="description"></h4>
         <span class="activeState" u-active="active"></span>
@@ -126,11 +128,15 @@
         <div class="block">
           <div class="form-group"><label>value:</label><span u-text="value"></span></div>
           <div class="u-slider">
-            <label class="down"><svg class="icon"><use xlink:href="./icons.svg#minus"/></svg></label>
+            <label class="down"><svg class="icon">
+                <use xlink:href="./icons.svg#minus" />
+              </svg></label>
             <div class="box" style="width:240px">
               <div class="handle"></div>
             </div>
-            <label class="up"><svg class="icon"><use xlink:href="./icons.svg#plus"/></svg></label>
+            <label class="up"><svg class="icon">
+                <use xlink:href="./icons.svg#plus" />
+              </svg></label>
           </div>
         </div>
       </div>
@@ -160,7 +166,8 @@
       <div class="col card" u-control="light" id="${id}" u-is="generic" microID="${id}">
         <div u-is="include" ref=".cardheader"></div>
         <div class="block">
-          <span u-color="value" style="width:4rem;height:4rem;float:right;border:1px solid black;border-radius:50%;"></span>
+          <span u-color="value"
+            style="width:4rem;height:4rem;float:right;border:1px solid black;border-radius:50%;"></span>
           <div class="form-group"><label>value:</label><span u-text="value"></span></div>
           <div class="form-group"><label>brightness:</label><span u-text="brightness"></span></div>
         </div>
@@ -201,6 +208,9 @@
     var sysObj = document.getElementById('sysButton');
     var refreshState = ''; // nothing in progress
     var updateTimer;
+    var DEBUG_STARTTIME = Date.now();
+
+    var REFRESH_IDLEINTERVALL = 4000;
 
     // Element definitions and list of implemented elements
     var uElements = {
@@ -293,7 +303,7 @@
               })
               .finally(function (json) {
                 refreshState = '';
-                updateAsap(4000);
+                updateAsap(REFRESH_IDLEINTERVALL);
               });
           }, timeout);
       }
@@ -346,7 +356,7 @@
         if (configData) {
           // adjust title locally
           for (var t in configData) for (var i in configData[t]) {
-            if (! configData[t][i].title) configData[t][i].title = t + '/' + i;
+            if (!configData[t][i].title) configData[t][i].title = t + '/' + i;
           }
           hub.write('config', JSON.stringify(configData));
           hub.publishObj(configData);
