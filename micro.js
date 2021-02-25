@@ -319,9 +319,7 @@ var GenericWidgetClass = (function (_super) {
         if (this.actions) {
             var a = this.actions.shift();
             if (a) {
-                console.log('dispatch:', a);
                 fetch(a).then(function () {
-                    console.log('dispatchNext:', '.');
                     if (_this.actions.length > 0) {
                         debounce(_this.dispatchNext.bind(_this))();
                     }
