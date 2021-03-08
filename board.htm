@@ -238,8 +238,8 @@
     var alias = {
       "sht20": "dht",
       "displaysh1106": "displayssd1306"
+      ,"neo": "light",
       // ,
-      // "p9813": "light",
       // "my9291": "light"
     };
 
@@ -284,6 +284,7 @@
       if (!timeout) timeout = 50;
 
       if (refreshState == 'w') {
+        console.log("updateAsap:", Date.now() - DEBUG_STARTTIME, "cancel timer");
         // cancel longer running request
         window.clearTimeout(updateTimer);
         refreshState = '';
@@ -293,13 +294,18 @@
         refreshState = 'w';
         updateTimer = window.setTimeout(
           function () {
+            console.log("updateAsap:", Date.now() - DEBUG_STARTTIME, "start fetch");
             refreshState = 'f';
             fetch('/$board')
               .then(function (result) {
                 return result.json();
               })
               .then(function (json) {
+                console.log("updateAsap:", Date.now() - DEBUG_STARTTIME, "got json");
                 hub.publishObj(json);
+              })
+              .catch(function (err) {
+                console.log("updateAsap:", Date.now() - DEBUG_STARTTIME, "err", err);
               })
               .finally(function (json) {
                 refreshState = '';

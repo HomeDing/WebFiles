@@ -3,16 +3,13 @@
 -favicon144.png
 -favicon16.png
 -favicon180.png
--favicon192.png
--favicon270.png
 -favicon270d.png
 -favicon270w.png
 -favicon32.png
--favicon48.png
--favicon512.png
 -favicon558.png
 -polyfill.js
 -es6-promise.auto.js
+-list.txt
 -manifest.json
 -ft/css.svg
 -ft/dir.svg
