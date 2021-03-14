@@ -35,10 +35,10 @@ class GenericWidgetClass extends MicroControlClass {
     }
 
     // active card
-    if (key == 'active') {
+    if (key === 'active') {
       this.classList.toggle('active', toBool(value));
     }
-    
+
     // u-active flags
     ['span', 'div'].forEach(function (this: GenericWidgetClass, elType) {
       this.querySelectorAll(elType + `[u-active='${key}']`).forEach(function (elem) {

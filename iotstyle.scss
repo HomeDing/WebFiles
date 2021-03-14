@@ -247,6 +247,12 @@ h4 {
 
   &.nogutter {
     margin: 0;
+    padding: 0;
+
+    > .col {
+      margin: 0;
+      padding: 0;
+    }
   }
 }
 
@@ -263,16 +269,6 @@ h4 {
   @media (max-width: 720px) {
     margin-left: 1px;
   }
-}
-
-.row.nogutter {
-  margin: 0;
-  padding: 0;
-}
-
-.row.nogutter > .col {
-  margin: 0;
-  padding: 0;
 }
 
 .col.stretch {
@@ -331,6 +327,7 @@ svg {
 
 .u-header {
   margin-bottom: 0;
+
   img {
     margin-right: $gutter;
   }
@@ -411,6 +408,7 @@ nav {
 
   &.inpage.open + main {
     margin-left: 280px;
+
     @media print {
       margin-left: 0;
     }
@@ -852,7 +850,7 @@ button,
     background-color: transparent;
 
     &.text {
-      color:$u-text;
+      color: $u-text;
       font-size: 10px;
       line-height: 10px;
     }
