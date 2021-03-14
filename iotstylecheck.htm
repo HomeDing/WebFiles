@@ -21,6 +21,7 @@
   <link Content-Type="text/css" href="/iotstyle.css" rel="stylesheet" />
 
   <script src="/micro.js"></script>
+  <script src="http://localhost:35729/livereload.js?snipver=1"></script>
   <style>
     span.activeState,
     span.setconfig {
@@ -44,6 +45,10 @@
       position: absolute;
       right: 2.2rem;
       background-image: url(/i/config.svg);
+    }
+
+    svg {
+      fill: red !important;
     }
   </style>
 </head>
@@ -94,7 +99,8 @@
           <h3>Setup Pages</h3>
         </div>
         <div class="block">
-          <p>Links: <a href="$setup.htm">WiFi Setup</a> <a href="$boot.htm">Web Update</a><a href="$upload.htm">File Upload</a></p>
+          <p>Links: <a href="$setup.htm">WiFi Setup</a> <a href="$boot.htm">Web Update</a><a href="$upload.htm">File
+              Upload</a></p>
           <p><a href="updateicons.htm">Update FavIcons</a><a href="/panel.htm">Panel</a></p>
         </div>
         <div class="block">
@@ -134,18 +140,49 @@
 
       <div class="col card">
         <div class="block header">
+          <svg class="icon">
+            <use xlink:href="./icons.svg#timer" />
+          </svg>
           <h3>.block.header</h3>
           <!-- <p> 376 px</p> -->
-          <span>min-height: 3.6rem;</span>
+          <h4>min-height: 3.6rem;</h4>
         </div>
         <div class="block">
           <h3>.col.card</h3>
           <p>width: 376 px</p>
+          <p>height:variable</p>
+        </div>
+      </div>
+
+    </div>
+    <hr />
+
+    <div class="row wrap">
+      <div class="col card small active">
+        <div class="block header">
+          <svg class="icon">
+            <use xlink:href="./icons.svg#timer" />
+          </svg>
+          <h3>.block.head</h3>
+          <!-- <p> 376 px</p> -->
+          <h4>h4-text</h4>
+        </div>
+        <div class="block">
+          <h3>.col.card.small</h3>
+          <p>width: 184 px</p>
           <p>height:valiable</p>
         </div>
       </div>
 
       <div class="col card small">
+        <div class="block header">
+          <svg class="icon">
+            <use xlink:href="./icons.svg#timer" />
+          </svg>
+          <h3>.block.head</h3>
+          <!-- <p> 376 px</p> -->
+          <h4>h4-text</h4>
+        </div>
         <div class="block">
           <h3>.col.card.small</h3>
           <p>width: 184 px</p>
@@ -178,13 +215,21 @@
         </div>
       </div>
 
-      <div class="col card small">
+      <div class="col card small active">
         <div class="block">
           <h3>Small</h3>
+          <h4>with active</h4>
           <span class="u-bool ux-value" value="1" style="position: absolute;top:0.5rem;right:0.5rem"></span>
         </div>
       </div>
 
+      <div class="col card small">
+        <div class="block">
+          <h3>Small</h3>
+          <h4>not active</h4>
+          <span class="u-bool ux-value" value="1" style="position: absolute;top:0.5rem;right:0.5rem"></span>
+        </div>
+      </div>
     </div>
 
     <div class="row">
@@ -194,36 +239,43 @@
     <div class="row wrap">
       <div class="col card small">
         <div class="block">
+          <h3>add</h3><svg class="icon">
+            <use href="icons.svg#add" />
+          </svg>
+        </div>
+      </div>
+      <div class="col card small">
+        <div class="block">
           <h3>analog</h3><svg class="icon">
-            <use xlink:href="icons.svg#analog" />
+            <use href="icons.svg#analog" />
           </svg>
         </div>
       </div>
       <div class="col card small">
         <div class="block">
           <h3>and</h3><svg class="icon">
-            <use xlink:href="icons.svg#and" />
+            <use href="icons.svg#and" />
           </svg>
         </div>
       </div>
       <div class="col card small">
         <div class="block">
           <h3>bme680</h3><svg class="icon">
-            <use xlink:href="icons.svg#bme680" />
+            <use href="icons.svg#bme680" />
           </svg>
         </div>
       </div>
       <div class="col card small">
         <div class="block">
           <h3>bmp280</h3><svg class="icon">
-            <use xlink:href="icons.svg#bmp280" />
+            <use href="icons.svg#bmp280" />
           </svg>
         </div>
       </div>
       <div class="col card small">
         <div class="block">
           <h3>bulb</h3><svg class="icon">
-            <use xlink:href="icons.svg#bulb" />
+            <use href="icons.svg#bulb" />
           </svg>
         </div>
       </div>
@@ -497,6 +549,13 @@
         <div class="block">
           <h3>reload</h3><svg class="icon">
             <use xlink:href="icons.svg#reload" />
+          </svg>
+        </div>
+      </div>
+      <div class="col card small">
+        <div class="block">
+          <h3>remove</h3><svg class="icon">
+            <use xlink:href="icons.svg#remove" />
           </svg>
         </div>
       </div>

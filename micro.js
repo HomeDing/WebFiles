@@ -281,6 +281,9 @@ var GenericWidgetClass = (function (_super) {
                     .replace('\n}', ''));
             }
         }
+        if (key == 'active') {
+            this.classList.toggle('active', toBool(value));
+        }
         ['span', 'div'].forEach(function (elType) {
             this.querySelectorAll(elType + ("[u-active='" + key + "']")).forEach(function (elem) {
                 var b = toBool(value);

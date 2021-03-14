@@ -34,6 +34,11 @@ class GenericWidgetClass extends MicroControlClass {
       }
     }
 
+    // active card
+    if (key == 'active') {
+      this.classList.toggle('active', toBool(value));
+    }
+    
     // u-active flags
     ['span', 'div'].forEach(function (this: GenericWidgetClass, elType) {
       this.querySelectorAll(elType + `[u-active='${key}']`).forEach(function (elem) {
@@ -75,67 +80,67 @@ class GenericWidgetClass extends MicroControlClass {
   } // newData()
 
 
-dispatchNext() {
-  if (this.actions) {
-    const a = this.actions.shift();
-    if (a) {
-      fetch(a).then(() => {
-        if (this.actions.length > 0) {
-          debounce(this.dispatchNext.bind(this))();
-        } else {
-          // @ts-ignore
-          if (updateAsap) { updateAsap(); }
-        } // if
-      });
+  dispatchNext() {
+    if (this.actions) {
+      const a = this.actions.shift();
+      if (a) {
+        fetch(a).then(() => {
+          if (this.actions.length > 0) {
+            debounce(this.dispatchNext.bind(this))();
+          } else {
+            // @ts-ignore
+            if (updateAsap) { updateAsap(); }
+          } // if
+        });
+      }
+    }
+  } // dispatchNext()
+
+
+  // send an action to the board and dispatch to the element
+  dispatchAction(prop: string | null, val: string | null) {
+    if (prop !== null && val !== null) {
+      if (prop.includes('/')) {
+        // list of actions with optional value placeholder
+        prop.replace('${v}', encodeURI(val));
+        prop.split(',').forEach((a) => this.actions.push('/$board/' + a));
+      } else {
+        // simple set one property to this element
+        this.actions.push(`/$board${this.microid}?${prop}=${encodeURI(val)}`);
+      }
+      debounce(this.dispatchNext.bind(this))();
+    }
+  } // dispatchAction()
+
+  showSys(): boolean {
+    const p = getHashParams({ sys: false }).sys;
+    return (toBool(p));
+  }
+
+
+  // send changed value of property as an action to the board
+  on_change(e: Event) {
+    const src = e.target as HTMLInputElement;
+    this.dispatchAction(src.getAttribute('u-value'), src.value);
+  }
+
+  // send an action to the board
+  // + change config mode
+  on_click(e: MouseEvent) {
+    const src = e.target as HTMLElement;
+    const a = src.getAttribute('u-action');
+    if (src && a) { this.dispatchAction(a, (<any>src)['value']); }
+
+    if (src.classList.contains('setconfig')) {
+      modal.open('configelementdlg', this.data);
+
+    } else if (src.classList.contains('setactive')) {
+      this.dispatchAction(toBool(this.data.active) ? 'stop' : 'start', '1');
+
+    } else if (src.tagName === 'H3') {
+      modal.openFocus(this);
     }
   }
-} // dispatchNext()
-
-
-// send an action to the board and dispatch to the element
-dispatchAction(prop: string | null, val: string | null) {
-  if (prop !== null && val !== null) {
-    if (prop.includes('/')) {
-      // list of actions with optional value placeholder
-      prop.replace('${v}', encodeURI(val));
-      prop.split(',').forEach((a) => this.actions.push('/$board/' + a));
-    } else {
-      // simple set one property to this element
-      this.actions.push(`/$board${this.microid}?${prop}=${encodeURI(val)}`);
-    }
-    debounce(this.dispatchNext.bind(this))();
-  }
-} // dispatchAction()
-
-showSys(): boolean {
-  const p = getHashParams({ sys: false }).sys;
-  return (toBool(p));
-}
-
-
-// send changed value of property as an action to the board
-on_change(e: Event) {
-  const src = e.target as HTMLInputElement;
-  this.dispatchAction(src.getAttribute('u-value'), src.value);
-}
-
-// send an action to the board
-// + change config mode
-on_click(e: MouseEvent) {
-  const src = e.target as HTMLElement;
-  const a = src.getAttribute('u-action');
-  if (src && a) { this.dispatchAction(a, (<any>src)['value']); }
-
-  if (src.classList.contains('setconfig')) {
-    modal.open('configelementdlg', this.data);
-
-  } else if (src.classList.contains('setactive')) {
-    this.dispatchAction(toBool(this.data.active) ? 'stop' : 'start', '1');
-
-  } else if (src.tagName === 'H3') {
-    modal.openFocus(this);
-  }
-}
 } // GenericWidgetClass
 
 // End.

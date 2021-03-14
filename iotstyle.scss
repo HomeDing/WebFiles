@@ -3,37 +3,44 @@
 // ===== Colors =====
 // hue of 220 is signature of this style
 
-$u-background: white;
-$u-border-color: #666666;
+$u-background: #f0f0f0;
+$u-primary: hsl(220, 80, 30); // active objects
 
-$u-primary: #304878; // active objects
+$u-border-color: #555555;
+$u-border-color-active: hsl(220, 100, 30);
+
 $u-focus: #4466ee; // active object with focus
 $u-disabled: gray; // disabled objects
 $u-text: #111111; // any text
-$u-heading: #304878; // any headlines
+$u-heading: $u-primary; // any headlines
 $u-connect: #00cc00; // connectivity / net
 
-$u-card-background: hsl(220, 0, 90);
+$u-card-background: hsl(220, 0, 85);
 
 $u-card-background-active: hsl(220, 80, 55);
 $u-card-color-active: white;
 $u-card-border: none;
 $u-card-radius: 0.4rem;
 
-$u-navbar: #304878;
-$u-navbar-text: white;
-
-$u-on: green;
+$u-on: lighten(green, 10%);
 $u-off: red;
+
+$u-border: 1px solid $u-border-color;
+$u-border-none: 1px solid transparent;
+$u-border-active: 1px solid $u-border-color-active;
+
+$u-navbar: $u-primary;
+$u-navbar-text: white;
 
 // ===== Sizes =====
 
 $white-space: 1em;
 $gutter: $white-space/2;
+$gutter2: $white-space/4;
 
 $u-btn-radius: 0.2em;
-$u-input-border: 0.1rem solid #304878;
-$u-output-border: 0.1rem solid transparent;
+$u-input-border: $u-border;
+$u-output-border: $u-border-none;
 
 // ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
 $font-sans-serif: Arial, ui-sans-serif, sans-serif;
@@ -60,7 +67,6 @@ body {
 // ===== Text containers =====
 p,
 pre,
-h1,
 h2,
 h3,
 h4 {
@@ -96,7 +102,7 @@ p > a:visited {
   text-decoration: underline;
 }
 
-h1,
+// h1 Page title is always inside u-header
 h2,
 h3,
 h4 {
@@ -105,7 +111,6 @@ h4 {
   color: $u-heading;
 }
 
-// h1 Page title always inside u-header
 // Chapter
 h2 {
   font-size: 1.6em;
@@ -322,33 +327,12 @@ svg {
 
 // ===== Page Layout =====
 
-// The header in the micro css is used to display the primary icon of the device, the name and links to important pages.
+// The header in the micro css is used to display the primary icon of the device and title.
 
 .u-header {
-  display: flex;
-  padding: 0.4rem;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  align-items: flex-start;
-
-  a,
-  h1,
-  img,
-  span {
-    font-size: 2rem;
-    align-self: center;
-    margin-top: 0;
-    margin-bottom: 0;
-    padding: 0;
-    vertical-align: middle;
-  }
-
-  > * + * {
-    margin-left: 0.6rem;
-  }
-
-  img + * {
-    margin-left: 0.2rem;
+  margin-bottom: 0;
+  img {
+    margin-right: $gutter;
   }
 
   .icon {
@@ -356,45 +340,45 @@ svg {
     height: 3rem;
   }
 
-  .close {
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
-    height: 1.8rem;
-    width: 1.8rem;
-    font-size: 1.6rem;
-    background-color: red;
-    text-align: center;
-    z-index: 3 !important;
+  h1 {
+    margin: 0;
+    font-size: 2.4rem;
+    font-family: $font-sans-serif;
+    font-weight: bold;
+    color: invert($color: $u-background);
   }
 }
 
 // u-navbar is a horizontal always visible menu just below the header.
 
 .u-navbar {
-  margin-bottom: $gutter;
+  margin-bottom: 0;
   padding: $gutter $white-space;
   height: 2.8rem;
   background-color: $u-navbar;
 
-  &.nogutter {
-    margin: 0;
+  > .gap {
+    flex-grow: 2;
   }
 
   > button,
   > .button {
     text-decoration: none;
-    min-width: 2em !important;
+    min-width: 2em;
     color: $u-navbar-text !important;
 
     &:hover {
       border-color: $u-focus;
       background-color: $u-focus;
     }
+  }
 
-    &.func {
-      float: right;
-    }
+  > img.button,
+  > svg.button {
+    padding: 0;
+    min-width: 1.4em !important;
+    width: 1.4em !important;
+    height: 1.4em !important;
   }
 
   @media print {
@@ -470,8 +454,16 @@ main {
       color: $u-card-color-active;
     }
 
-    svg {
+    svg.icon {
       filter: brightness(600%);
+    }
+
+    .border {
+      border-color: $u-border-color-active;
+    }
+
+    .band::-webkit-slider-thumb {
+      border-color: $u-border-color-active transparent;
     }
 
     > .block.header {
@@ -502,7 +494,7 @@ main {
     position: relative;
     flex: 1 1 auto;
     padding: $gutter $white-space;
-    min-height: 3em;
+    min-height: 2em;
 
     &.header {
       background-image: linear-gradient(
@@ -518,6 +510,10 @@ main {
       h4 {
         margin-bottom: 0;
       }
+    }
+
+    &.footer {
+      padding: 0 $white-space $gutter $white-space;
     }
   }
 
@@ -541,15 +537,9 @@ option[disabled] {
   color: $u-disabled;
 }
 
-a + a,
-a + button,
-a + label,
-label + a,
-label + button,
-label + label,
-button + a,
-button + button,
-button + label {
+* + a,
+* + button,
+* + label {
   margin-left: $gutter;
 }
 
@@ -557,7 +547,7 @@ button,
 .button {
   display: inline-block;
   font-size: 1.25em;
-  min-width: 4em;
+  min-width: 3.6em;
   height: 1.4em;
   padding: 0.1em 0.2em;
   border-radius: $u-btn-radius;
@@ -836,6 +826,10 @@ button,
   text-align: right;
 }
 
+.border {
+  border: $u-border;
+}
+
 /* === Display Element === */
 .display {
   position: relative;
@@ -881,19 +875,20 @@ button,
 /* === Light input sliders === */
 
 .band {
+  appearance: none;
   -webkit-appearance: none;
   outline: none;
   height: 1.4rem;
   width: 100%;
-  border: 1px solid gray;
   margin-bottom: 0.8rem;
 
   &::-webkit-slider-thumb {
     appearance: none;
+    -webkit-appearance: none;
     width: 0;
     height: 0;
-    border-color: gray transparent gray transparent;
-    border-width: 1rem 8px 1rem 8px;
+    border-color: $u-border-color transparent;
+    border-width: 1.2em 0.5em;
     border-style: solid;
     margin-top: -0.1rem;
   }
