@@ -250,7 +250,7 @@ button.secondary, .button.secondary { background-color: #777777; border-color: #
 
 .display > span { box-sizing: border-box; display: inline-block; position: absolute; top: 0; left: 0; height: 10px; overflow: hidden; background-color: transparent; }
 
-.display > span.text { font-size: 10px; line-height: 10px; }
+.display > span.text { color: #111111; font-size: 10px; line-height: 10px; }
 
 .display > span.dot { height: 10px; width: 10px; border-radius: 50%; }
 
@@ -259,9 +259,9 @@ button.secondary, .button.secondary { background-color: #777777; border-color: #
 .display > span.line { border-top: 1px solid black; }
 
 /* === Light input sliders === */
-.band { appearance: none; -webkit-appearance: none; outline: none; height: 1.4rem; width: 100%; margin-bottom: 0.8rem; }
+.band { -webkit-appearance: none; appearance: none; outline: none; height: 1.4rem; width: 100%; margin-bottom: 0.8rem; }
 
-.band::-webkit-slider-thumb { appearance: none; -webkit-appearance: none; width: 0; height: 0; border-color: #555555 transparent; border-width: 1.2em 0.5em; border-style: solid; margin-top: -0.1rem; }
+.band::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 0; height: 0; border-color: #555555 transparent; border-width: 1.2em 0.5em; border-style: solid; margin-top: -0.1rem; }
 
 .band.hue { background: linear-gradient(to right, #ff0000 0%, #ffff00 17%, #00ff00 33%, #00ffff 50%, #0000ff 67%, #ff00ff 83%, #ff0000 100%); }
 

@@ -90,11 +90,11 @@
     _add: function (k, isEvent, isAction) {
       var g = createHTMLElement(this._blk, 'div', { class: 'form-group' });
       createHTMLElement(g, 'label').textContent = k + ':';
-      createHTMLElement(g, 'img', { src: (isEvent ? '/i/start.svg' : '/i/no.svg'), style:'height:1em;width:1em' });
+      createHTMLElement(g, 'img', { src: (isEvent ? '/i/start.svg' : '/i/no.svg'), style: 'height:1em;width:1em' });
       var i = createHTMLElement(g, 'input', { name: k });
       if (this.params[k.toLowerCase()] !== undefined)
         i.value = this.params[k.toLowerCase()];
-      createHTMLElement(g, 'img', { src: (isAction ? '/i/start.svg' : '/i/no.svg'), style:'height:1em;width:1em' });
+      createHTMLElement(g, 'img', { src: (isAction ? '/i/start.svg' : '/i/no.svg'), style: 'height:1em;width:1em' });
     }, // add()
 
     connectedCallback: function () {
@@ -103,9 +103,11 @@
       this._id = this.params.id.split('/')[2];
 
       // get implemented elements and populate the dropdown
+      var ps = [].concat([], uElements.defs["element"].properties, uElements.defs[this._type].properties);
+      for (n in ps) this._add(ps[n], false, false);
+
       var d = uElements.defs[this._type];
       if (d) {
-        for (n in d.properties) this._add(d.properties[n], false, false);
         for (n in d.events) this._add(d.events[n], true, false);
         for (n in d.actions) this._add(d.actions[n], false, true);
       }

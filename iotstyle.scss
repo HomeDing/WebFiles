@@ -852,6 +852,7 @@ button,
     background-color: transparent;
 
     &.text {
+      color:$u-text;
       font-size: 10px;
       line-height: 10px;
     }
@@ -875,16 +876,16 @@ button,
 /* === Light input sliders === */
 
 .band {
-  appearance: none;
   -webkit-appearance: none;
+  appearance: none;
   outline: none;
   height: 1.4rem;
   width: 100%;
   margin-bottom: 0.8rem;
 
   &::-webkit-slider-thumb {
-    appearance: none;
     -webkit-appearance: none;
+    appearance: none;
     width: 0;
     height: 0;
     border-color: $u-border-color transparent;
