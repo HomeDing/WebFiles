@@ -188,7 +188,7 @@
 
   "neo": {
     "properties": ["pin", "duration", "count"],
-    "events": ["value", "mode", "brightness"]
+    "events": ["value", "enable", "mode", "brightness"]
   },
 
   "alarm": {
