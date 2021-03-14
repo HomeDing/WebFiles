@@ -41,7 +41,7 @@
       </div>
 
       <div class="col-6" u-control="device" u-is="generic" microID="${id}">
-        <div class="u-header">
+        <div class="row u-header">
           <a href="/" title="Start-Page"><img class="icon" src="/favicon.svg" /></a>
           <h1><span u-text="name"> </span></h1>
         </div>
@@ -169,7 +169,7 @@
       <div class="col card" u-control="color" id="${id}" u-is="color" microID="${id}">
         <div class="block">
           <h4>${id} - <span u-text="description"></span></h4>
-          <div class="form-group"><label>value:</label><span u-text="value"></span><span class="color"
+          <div class="form-group"><label>value:</label><span u-text="value"></span><span class="color border"
               style="width:6rem;"></span></div>
           <input type="range" max="359" class="band hue">
           <input type="range" max="255" class="band saturation" u-value="saturation">

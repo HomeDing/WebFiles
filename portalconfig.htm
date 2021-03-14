@@ -56,23 +56,31 @@
       margin-bottom: 0.3em;
     }
 
-    #devices > h3 {
+    #devices>h3 {
       margin: 0.5rem 0;
     }
 
-    #devices > div {
+    #devices>div {
       margin: 0.2rem 0 0.2rem 1rem;
+    }
+
+    .card {
+      height: 6rem;
+    }
+    .card .block .icon {
+      height: 2rem;
+      width: 2rem;
     }
   </style>
 </head>
 
 <body>
   <div class="container-fluid">
-    <div class="u-header">
+    <div class="row u-header">
       <a href="/" title="Start-Page"><img class="icon" src="/favicon.svg" /></a>
       <h1>Portal Config</h1>
     </div>
-    <div class="u-navbar">
+    <div class="row u-navbar">
       <a class="button" href="/portal.htm">Portal</a>
     </div>
 
@@ -89,6 +97,27 @@
     var devicesObj = document.querySelector('#devices');
     var devList = [];
     var devData = {};
+    var uElements = {};
+
+    function createUseElement(parentNode, iconName) {
+      var svgObj = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      svgObj.setAttribute('class', 'icon');
+
+      var useObj = document.createElementNS('http://www.w3.org/2000/svg', 'use');
+      useObj.setAttribute('href', 'icons.svg#' + iconName);
+      svgObj.appendChild(useObj);
+      parentNode.appendChild(svgObj);
+      return (svgObj);
+    }
+
+    // initiate a fetch with JSON response expected.
+    async function fetchJSON(url, options) {
+      var p = fetch(url, options)
+        .then(function (result) {
+          return (result.json());
+        });
+      return (p)
+    }
 
     function startContent() {
       if (devList.length > 0) {
@@ -96,6 +125,8 @@
 
         var deviceHeader = createHTMLElement(devicesObj, 'h3');
         deviceHeader.innerText = devData[deviceName].title + ' (' + deviceName + ')';
+
+        var deviceRow = createHTMLElement(devicesObj, 'div', {class:'row wrap'});
 
         fetch('/api/config/' + deviceName)
           .then(function (result) {
@@ -105,12 +136,17 @@
             var url = 'http://' + devData[deviceName].host + '/$board/';
             for (t in data) {
               for (i in data[t]) {
-                var cnfElem = data[t][i];
-                var divObj = createHTMLElement(devicesObj, 'div');
+                if ((uElements[t]) && (!uElements[t].sys)) {
+                  var cnfElem = data[t][i];
+                  var divObj = createHTMLElement(deviceRow, 'div', { class: 'col card small' });
+                  var bObj = createHTMLElement(divObj, 'div', { class: 'block' });
 
-                var cbObj = createHTMLElement(divObj, 'input', { type:'checkbox', title: url + t + '/'+ i});
-                var titleText = cnfElem.title || cnfElem.description || '';
-                createHTMLElement(divObj, 'span').innerText = '(' + t + '/' + i + ') ' + titleText;
+                  createUseElement(bObj, t);
+
+                  var cbObj = createHTMLElement(bObj, 'input', { type: 'checkbox', title: url + t + '/' + i });
+                  var titleText = cnfElem.title || cnfElem.description || '';
+                  createHTMLElement(bObj, 'span').innerText = '(' + t + '/' + i + ') ' + titleText;
+                }
               }
             }
             // pre.innerText = JSON.stringify(data, null, 2);
@@ -123,15 +159,24 @@
     }
 
     function loadDevices() {
-      fetch('/api/discovery')
+      var p2 = fetchJSON('/elements.json')
+        .then(function (json) {
+          uElements = json;
+        });
+
+      var p1 = fetch('/api/discovery')
         .then(function (result) {
           return result.json();
         })
         .then(function (data) {
           devData = data;
           devList = Object.keys(data);
-          window.setTimeout(startContent, 10);
         });
+
+      Promise.allSettled([p1, p2]).then(function () {
+        window.setTimeout(startContent, 10);
+      });
+
     } // loadDevices()
 
     window.addEventListener('load', loadDevices);
