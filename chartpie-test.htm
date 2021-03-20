@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <title>Pie Chart Test</title>
+
+  <link Content-Type="text/css" href="/iotstyle.css" rel="stylesheet" />
+  <style>
+    pre.code {
+      display: block;
+      margin: 0.5em 0;
+      border: solid 1px black;
+      padding: 0.2em;
+      font-family: Courier New, Courier, monospace;
+      font-size: 0.75em;
+      line-height: 1.2;
+      color: black;
+      background-color: rgb(255, 255, 240);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1>Pie Charts</h1>
+    <p> <button id="doClear">clear</button> <button id="doDraw1">draw1</button> <button id="doDraw2">draw2</button>
+      <button id="doDraw3">draw3</button> <button id="doDraw4">draw4</button>
+    </p>
+    <p>
+      <input type="checkbox" id="showTitle">showTitle&nbsp;
+      <input type="checkbox" id="showValue" checked>showValue&nbsp;
+      <input type="checkbox" id="showPercentage">showPercentage&nbsp;
+    </p>
+    <p>API Documentation available at <a href="https://homeding.github.io/#page=microchart-pie.md">https://homeding.github.io/#page=microchart-pie.md</a></p>
+
+    <h3>Pie Chart</h3>
+    <object id="chartpie" data="chartpie.svg" type="image/svg+xml" style="width:300px;height:300px;"></object>
+
+    <h3>Pie Chart Data</h3>
+
+    <p>The data passed to the draw function:</p>
+    <pre id="theData" class="code"></pre>
+
+    <h3>Pie Chart Options</h3>
+    <p>The current options:</p>
+    <pre id="theOptions" class="code"></pre>
+  </div>
+
+  <script>
+    var chartObj = document.getElementById('chartpie');
+    var chartAPI;
+
+    function pieClear() {
+      chartAPI.clear();
+      document.querySelector('#theOptions').textContent = '';
+      document.querySelector('#theData').textContent = '';
+
+    }
+
+    function pieOptions(colors) {
+      var opts = {
+        showTitle: document.querySelector('#showTitle').checked,
+        showValue: document.querySelector('#showValue').checked,
+        showPercentage: document.querySelector('#showPercentage').checked
+      };
+      if (colors) opts.colors = colors;
+      chartAPI.setOptions(opts);
+      document.querySelector('#theOptions').textContent = JSON.stringify(opts, null, 2);
+    }
+
+    // draw pie with colors at values
+    function pieDraw1() {
+      pieOptions();
+      var data = [
+        { title: 'used', value: 800000, color: 'rgb(0,0,128)' },
+        { title: 'reserved', value: 200000, color: 'hsl(180,50%,50%)' },
+        { title: 'available', value: 1200000, color: 'silver' }
+      ];
+      chartAPI.draw(data);
+      document.querySelector('#theData').textContent = JSON.stringify(data, null, 2);
+    }
+
+    // draw pie with colors in options
+    function pieDraw2() {
+      pieOptions("red,blue,yellow,green");
+      var data = [
+        { title: "Used", value: 60 },
+        { title: "reserved", value: 30 },
+        { title: "Available", value: 12 },
+        { title: "alert", value: 8 }];
+      chartAPI.draw(data);
+      document.querySelector('#theData').textContent = JSON.stringify(data, null, 2);
+    }
+
+    // draw pie with default colors
+    function pieDraw3() {
+      pieOptions("");
+      var data = [
+        { title: "Text", value: 8 },
+        { title: "Images", value: 16 },
+        { title: "Documents", value: 12 },
+        { title: "Binaries", value: 4 },
+        { title: "Audio", value: 4 },
+        { title: "Movies", value: 3 }];
+      chartAPI.draw(data);
+      document.querySelector('#theData').textContent = JSON.stringify(data, null, 2);
+    }
+
+    // draw pie with colors in various formats
+    function pieDraw4() {
+      pieOptions(["black", "hsl(220,50%,10%)", "#111"]);
+      var data = [
+        { title: "dogs", value: 8 },
+        { title: "cats", value: 16 },
+        { title: "birds", value: 2 }];
+      chartAPI.draw(data);
+      document.querySelector('#theData').textContent = JSON.stringify(data, null, 2);
+    }
+
+    window.addEventListener('load', function () {
+      chartAPI = chartObj.getSVGDocument().api;
+      pieDraw1();
+
+      document.getElementById('doClear').addEventListener('click', pieClear);
+      document.getElementById('doDraw1').addEventListener('click', pieDraw1);
+      document.getElementById('doDraw2').addEventListener('click', pieDraw2);
+      document.getElementById('doDraw3').addEventListener('click', pieDraw3);
+      document.getElementById('doDraw4').addEventListener('click', pieDraw4);
+
+    });
+  </script>
+</body>
+
+</html>

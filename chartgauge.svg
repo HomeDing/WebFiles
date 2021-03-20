@@ -35,5 +35,5 @@
 
   </g>
   <script href="microsvg.js" />
-  <script href="gaugeChart.js"/>
+  <script href="chartgauge.js"/>
 </svg>

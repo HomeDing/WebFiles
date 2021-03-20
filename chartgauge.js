@@ -50,11 +50,6 @@ function _drawSegment(start, end, color) {
 
 // expose API functions.
 document['api'] = {
-  clear: function () {
-    // Clear the output value. No value text, needle in outside position.
-    this.draw(null);
-  }, // _clear()
-
   setOptions: function (opts) {
     this.options = Object.assign({}, this.defaultOptions, opts);
 
@@ -78,20 +73,29 @@ document['api'] = {
     });
   }, // _setOptions()
 
+
   draw: function (value) {
     var valueObj = document.querySelector('#value');
+    var v = Number(value);
     var r;
-    if (value) {
-      value = Math.max(this.options.minimum, value);
-      value = Math.min(this.options.maximum, value);
 
+    if ((value == null) || isNaN(value)) {
+      r = -20;
+      valueObj.textContent = '';
+
+    } else if (v < this.options.minimum) {
+      r = -20;
+      valueObj.textContent = value;
+
+    } else if (v > this.options.maximum) {
+      r = 200;
+      valueObj.textContent = value;
+
+    } else {
+      // calc rotation
+      r = 180 * (v - this.options.minimum) / (this.options.maximum - this.options.minimum);
       // set text
       valueObj.textContent = value;
-      // calc rotation
-      r = 180 * (value - this.options.minimum) / (this.options.maximum - this.options.minimum);
-    } else {
-      valueObj.textContent = '';
-      r = -20;
     }
 
     // set needle
@@ -99,6 +103,12 @@ document['api'] = {
     rotate.setRotate(r, 0, 0);
     needleObj.transform.baseVal.replaceItem(rotate, 1);
   }, // _draw()  
+
+
+  // Clear the output value. No value text, needle in outside position.
+  clear: function () {
+    this.draw(null);
+  }, // _clear()
 
   defaultOptions: {
     segments: [
