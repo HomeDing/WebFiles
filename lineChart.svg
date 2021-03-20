@@ -37,7 +37,7 @@
   <g id="v-labels" transform="matrix(1,0,0,-1,0,41)"></g>
   <g id="h-labels" transform="matrix(1,0,0,-1,12,46)"></g>
 
-  <!-- region for the linechart is 136*40 starting in 0/0 -->
+  <!-- region for the chartline is 136*40 starting in 0/0 -->
   <!-- <polyline marker-end="url(#arrow)" marker-start="url(#circle)" marker-mid="url(#circle)" /> -->
   <g id="panel" transform="matrix(1,0,0,-1,12,40)">
     <rect class="panel-back" width="128" height="36" />
@@ -55,6 +55,6 @@
   </g>
 
   <script href="microsvg.js" ></script>
-  <script href="lineChart.js" ></script>
+  <script href="chartline.js" ></script>
 </svg>
 

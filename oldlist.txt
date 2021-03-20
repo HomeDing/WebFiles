@@ -72,3 +72,5 @@
 -i/weatherfeed.svg
 -i/sht20.svg
 -clock.svg
+-lineChart.svg
+-pieChart.svg

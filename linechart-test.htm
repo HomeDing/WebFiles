@@ -30,7 +30,7 @@
     <p> <button id="doClear">clear</button> <button id="doDraw1">draw1</button> <button id="doDraw2">draw2</button>
       <button id="doDraw3">draw3</button> <button id="doDraw4">draw4</button></p>
 
-    <object id="lineChart" data="lineChart.svg" type="image/svg+xml" style="width:800px;height:300px"></object>
+    <object id="chartline" data="chartline.svg" type="image/svg+xml" style="width:800px;height:300px"></object>
     <hr />
 
     <p>Line charts can plot lines based on x/y data points on a 2-dimensional panel. </p>
@@ -114,7 +114,7 @@ interface GraphsData {
 </pre>
 
     <pre class="code">
-  draw(n, data) -> dataset[n] -> depending VAxis, HAxis, linechart.
+  draw(n, data) -> dataset[n] -> depending VAxis, HAxis, chartline.
 </pre>
 
     <h3>Line Chart Data</h3>
@@ -165,7 +165,7 @@ interface GraphsData {
   <hr />
 
   <script>
-    var chartObj = document.getElementById('lineChart');
+    var chartObj = document.getElementById('chartline');
     var chartAPI;
 
     function lineClear() { chartAPI.clear(); }

@@ -1,0 +1,38 @@
+{
+  "background-color" : "peachpuff",
+  "graphs": [
+    {
+      // chart-definition
+      "id": 0,
+      "type": "line",
+      "color": "darkblue",
+      "showIndicator": true
+    },
+    {
+      // add a horizontal line 
+      "id": 1,
+      "type": "hline",
+      "color": "red",
+      "data": 0, // data is a simple number, can be included in the options
+      "mustShow": true
+    },
+    {
+      // Vertical axis ruler
+      "type": "vaxis",
+      "format": "number",
+      "datasets": "all", // data set (charts) to be analyzed, default "all"
+      "range": "auto", // auto algorithm is used, "man": data given range is used.. In any case the min and max of the y values from the data is included as well.
+      "data": [
+        -2,
+        50
+      ] // data is an array of numbers that will be included in the range.
+    },
+    { // Horizontal axis ruler
+      "type": "haxis",
+      "format": "date", // x-values are used as Date values 
+      "datasets": "0", // data set (charts) to be analyzed, default "all"
+      "range": "auto", // auto algorithm is used, "man": data given range is used.. In any case the min and max of the y values from the data is included as well.
+      "data": [ -2, 50 ] // data is an array of numbers that will be included in the range.
+    }
+  ]
+}

@@ -25,7 +25,7 @@
 
 <body>
   <div class="container">
-    <h1>Gauge Charts</h1>
+    <h1>Gauge Chart Test Page</h1>
     <p>
       <button id="doClear">clear</button>
       <button id="doCase1a">Room</button>
@@ -34,114 +34,85 @@
       <button id="doCase3">Height</button>
     </p>
     <p>
-      <button onclick="chartAPI.clear();" >clear</button>
-      <button onclick="chartAPI.draw('x');" >NaN</button>
-      <button onclick="chartAPI.draw(0);" >0</button>
-      <button onclick="chartAPI.draw(1);" >1</button>
-      <button onclick="chartAPI.draw(10);" >10</button>
-      <button onclick="chartAPI.draw(35);" >35</button>
-      <button onclick="chartAPI.draw(100);" >100</button>
+      <button onclick="chartAPI.clear();">clear</button>
+      <button onclick="chartAPI.draw('x');">NaN</button>
+      <button onclick="chartAPI.draw(0);">0</button>
+      <button onclick="chartAPI.draw(1);">1</button>
+      <button onclick="chartAPI.draw(10);">10</button>
+      <button onclick="chartAPI.draw(35);">35</button>
+      <button onclick="chartAPI.draw(100);">100</button>
     </p>
 
+    <p>API Documentation available at <a
+        href="https://homeding.github.io/#page=microchart-gauge.md">https://homeding.github.io/#page=microchart-gauge.md</a>
+    </p>
+
+    <h3>Gauge Chart</h3>
     <object id="testChart" data="chartgauge.svg" type="image/svg+xml"
       style="width:300px;height:300px;background-color:#cccccc"></object>
 
-    <hr />
+    <h3>Pie Chart Data</h3>
+    <p>The data passed to the draw function:</p>
+    <pre id="theData" class="code"></pre>
 
-    <h3>Gauge Chart Data</h3>
-
-    <p>The data passed to the draw function is a single value only:</p>
-    <pre class="code">
-chartAPI.draw(12.8);
-</pre>
-
-    <h3>Gauge Chart Options</h3>
-
-    <p>Using the options the look of the gauge can be setup.</p>
-
-    <ul>
-      <li><b>title</b> - This text will be displayed on top of the gauge. </li>
-      <li><b>units</b> - This text will be displayed below the actual value. </li>
-      <li><b>minimum</b> - This text will be displayed at the start point of the gauge.</li>
-      <li><b>maximum</b> - This text will be displayed at the end point of the gauge.</li>
-      <li><b>segments</b> - This array contains upper value and color of gauge segments.</li>
-    </ul>
-
-    <pre class="code">
-chartAPI.setOptions({
-  title: "Room Temperature",
-  units: "°C",
-  minimum: 5,
-  maximum: 45,
-  segments: [
-    {
-      value: 18,
-      color: 'white'
-    }, {
-      value: 22,
-      color: '#44ff44'
-    }, {
-      color: '#ff4444'
-    }
-
-  ]
-});
-</pre>
-
+    <h3>Pie Chart Options</h3>
+    <p>The current options:</p>
+    <pre id="theOptions" class="code"></pre>
   </div>
 
   <script>
     var chartObj = document.getElementById('testChart');
     var chartAPI;
 
-    function chartClear() { chartAPI.clear(); }
+    function chartClear() {
+      chartAPI.clear();
+      document.querySelector('#theOptions').textContent = '';
+      document.querySelector('#theData').textContent = '';
+    }
 
     function case1a() {
-      chartAPI.setOptions({
+      var opts = {
         title: "Room Temperature",
         units: "°C",
         minimum: 5,
         maximum: 45,
         segments: [
-          {
-            value: 18, color: '#aaaadd'
-          }, {
-            value: 22, color: '#33cc33'
-          }, {
-            color: '#ff4444'
-          }
+          { value: 18, color: '#aaaadd' },
+          { value: 22, color: '#33cc33' },
+          { color: '#ff4444' }
         ]
-      });
+      };
+      var data = 26.7;
 
-      chartAPI.draw(26.7);
+      chartAPI.setOptions(opts);
+      chartAPI.draw(data);
+      document.querySelector('#theOptions').textContent = JSON.stringify(opts, null, 2);
+      document.querySelector('#theData').textContent = JSON.stringify(data, null, 2);
     }
 
     function case1b() {
-      chartAPI.setOptions({
+      var opts = {
         title: "Outside Temperature",
         units: "°C",
         minimum: -20,
         maximum: 55,
         segments: [
-          {
-            value: -2, color: '#aaaaee'
-          },
-          {
-            value: 8, color: 'white'
-          },
-          {
-            value: 33, color: '#33aa33'
-          }, {
-            color: '#ff4444'
-          }
+          { value: -2, color: '#aaaaee' },
+          { value: 8, color: 'white' },
+          { value: 33, color: '#33aa33' },
+          { color: '#ff4444' }
         ]
-      });
+      };
+      var data = 2.5;
 
-      chartAPI.draw(2.5);
+      chartAPI.setOptions(opts);
+      chartAPI.draw(data);
+      document.querySelector('#theOptions').textContent = JSON.stringify(opts, null, 2);
+      document.querySelector('#theData').textContent = JSON.stringify(data, null, 2);
     }
 
     function case2() {
-      chartAPI.setOptions({
+      var opts = {
         title: "Room Humidity",
         units: "%",
         minimum: 0,
@@ -155,19 +126,28 @@ chartAPI.setOptions({
             color: '#ff4444'
           }
         ]
-      });
+      };
+      var data = 44.2;
 
-      chartAPI.draw(44.2);
+      chartAPI.setOptions(opts);
+      chartAPI.draw(data);
+      document.querySelector('#theOptions').textContent = JSON.stringify(opts, null, 2);
+      document.querySelector('#theData').textContent = JSON.stringify(data, null, 2);
     }
 
     function case3() {
-      chartAPI.setOptions({
+      var opts ={
         title: "Height",
         units: "mm",
         minimum: 0,
         maximum: 1000
-      });
-      chartAPI.draw(640);
+      };
+      var data = 640;
+
+      chartAPI.setOptions(opts);
+      chartAPI.draw(data);
+      document.querySelector('#theOptions').textContent = JSON.stringify(opts, null, 2);
+      document.querySelector('#theData').textContent = JSON.stringify(data, null, 2);
     }
 
     window.addEventListener('load', function () {

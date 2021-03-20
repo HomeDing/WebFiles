@@ -21,7 +21,6 @@
   <link Content-Type="text/css" href="/iotstyle.css" rel="stylesheet" />
 
   <style>
-    span.activeState,
     span.setconfig {
       position: absolute;
       top: 0.5rem;
@@ -30,19 +29,11 @@
       background-size: 1.4rem;
     }
 
-    span.activeState {
-      right: 0.5rem;
-      background-image: url(/i/stop.svg);
-    }
-
-    span.activeState.active {
-      background-image: url(/i/start.svg);
-    }
-
     span.setconfig {
       position: absolute;
-      right: 2.2rem;
+      right: 0.5rem;
       background-image: url(/i/config.svg);
+      filter: brightness(600%);
     }
 
 
@@ -77,11 +68,10 @@
     <div id="u-templates" style="display:none">
       <div class="cardheader block header">
         <svg class="icon">
-          <use xlink:href="./icons.svg#${type}" />
+          <use href="./icons.svg#${type}" />
         </svg>
         <h3 u-text="title"></h3>
         <h4 u-text="description"></h4>
-        <span class="activeState" u-active="active"></span>
         <span class="setconfig"></span>
       </div>
 
@@ -131,13 +121,13 @@
           <div class="form-group"><label>value:</label><span u-text="value"></span></div>
           <div class="u-slider">
             <label class="down"><svg class="icon">
-                <use xlink:href="./icons.svg#minus" />
+                <use href="./icons.svg#minus" />
               </svg></label>
             <div class="box" style="width:240px">
               <div class="handle"></div>
             </div>
             <label class="up"><svg class="icon">
-                <use xlink:href="./icons.svg#plus" />
+                <use href="./icons.svg#plus" />
               </svg></label>
           </div>
         </div>

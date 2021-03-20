@@ -1,8 +1,7 @@
 <div class="col card" u-control="dht" id="${id}" microID="${id}" u-is="generic">
   <div class="block"><svg class="icon">
-      <use xlink:href="./icons.svg#dht" />
+      <use href="./icons.svg#dht" />
     </svg>
-    <span class="activeState setactive" u-active="active"></span>
     <span class="setconfig"></span>
     <table>
       <tr>
@@ -27,9 +26,8 @@
 
 <div class="col card" u-control="bme680" id="${id}" microID="${id}" u-is="generic">
   <div class="block"><svg class="icon">
-      <use xlink:href="./icons.svg#bme680" />
+      <use href="./icons.svg#bme680" />
     </svg>
-    <span class="activeState" u-active="active"></span>
     <span class="setconfig"></span>
     <table>
       <tr>
@@ -62,11 +60,10 @@
 <div class="col card" u-control="timer" microID="${id}" u-is="timer">
   <div class="block header">
     <svg class="icon">
-      <use xlink:href="./icons.svg#timer" />
+      <use href="./icons.svg#timer" />
     </svg>
     <h3 u-text="title"></h3>
     <h4 u-text="description"></h4>
-    <span class="activeState" u-active="active"></span>
     <span class="setconfig"></span>
   </div>
   <div class="block"><span class="u-bool ux-value" u-active="value"
@@ -89,11 +86,10 @@
 <div class="col card" u-control="rfsend" microID="${id}" u-is="generic">
   <div class="block header">
     <svg class="icon">
-      <use xlink:href="./icons.svg#rfsend" />
+      <use href="./icons.svg#rfsend" />
     </svg>
     <h3 u-text="title"></h3>
     <h4 u-text="description"></h4>
-    <span class="activeState" u-active="active"></span>
     <span class="setconfig"></span>
   </div>
   <div class="block Element">
@@ -109,11 +105,10 @@
 <div class="col card" u-control="button" microID="${id}" u-is="button">
   <div class="block header">
     <svg class="icon">
-      <use xlink:href="./icons.svg#button" />
+      <use href="./icons.svg#button" />
     </svg>
     <h3 u-text="title"></h3>
     <h4 u-text="description"></h4>
-    <span class="activeState" u-active="active"></span>
     <span class="setconfig"></span>
   </div>
   <div class="block"><button u-text="description">.</button></div>
@@ -150,7 +145,7 @@
 
 <div class="col card" u-control="log" u-is="log" microID="${id}">
   <div u-is="include" ref=".cardheader"></div>
-  <div class="block"><object data="lineChart.svg" type="image/svg+xml" style="width:100%"></object></div>
+  <div class="block"><object data="chartline.svg" type="image/svg+xml" style="width:100%"></object></div>
 </div>
 
 <!-- Display -->

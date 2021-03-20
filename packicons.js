@@ -1,5 +1,7 @@
 // packicons.js
 // combine all /i/*.svg files into the icons.svg file.
+// to reduce number of downloads.
+// not used on minimal board 
 
 // using https://github.com/svgstore/svgstore
 

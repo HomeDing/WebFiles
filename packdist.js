@@ -50,10 +50,8 @@ const assets = [
   'elementsvg.js',
 
   'element.svg',
-  'lineChart.svg',
-  'pieChart.svg',
-  'favicon.svg',
-  'favicon*.png',
+  'chartline.svg',
+  'chartpie.svg',
   'updateicons.htm',
 
   'browserconfig.xml',
@@ -89,7 +87,7 @@ logInfo(`Files copied.`);
 
 // ===== uglify/minify Javascript =====
 
-["microide.js", "micro.js", 'lineChart.js', 'pieChart.js']
+["microide.js", "micro.js", 'chartline.js', 'chartpie.js']
   .forEach(name => {
     const c = shell.cat(name).stdout;
     const res = uglify.minify(c, {

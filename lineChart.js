@@ -139,7 +139,7 @@ function calcOuterBox(box, graph) {
 
 // ====== Line Charts
 
-LineChartClass = function (options) {
+chartlineClass = function (options) {
   options = Object.assign({ linetype: "line", color: "black" }, options);
   return {
     type: 'line',
@@ -219,7 +219,7 @@ LineChartClass = function (options) {
         }
 
         this.svgObj = createSVGNode(panelObj, 'path', {
-          class: 'linechart',
+          class: 'chartline',
           style: 'stroke:' + this.color,
           d: points.join(' ')
         });
@@ -454,7 +454,7 @@ function _addChart(type, options) {
   options = Object.assign({}, options);
 
   if (type === 'line') {
-    newClass = new LineChartClass(options);
+    newClass = new chartlineClass(options);
     isData = true;
 
   } else if (type == 'hline') {
