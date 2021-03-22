@@ -1,4 +1,5 @@
 // Gauge-Chart micro charts implementation.
+// @file chartgauge.js
 //
 // Copyright (c) by Matthias Hertel, http://www.mathertel.de
 // This work is licensed under a BSD 3-Clause license.

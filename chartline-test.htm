@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <title>Line Charts</title>
+
+  <link Content-Type="text/css" href="/iotstyle.css" rel="stylesheet" />
+  <style>
+    pre.code {
+      display: block;
+      margin: 0.5em 0;
+      border: solid 1px black;
+      padding: 0.2em;
+      font-family: Courier New, Courier, monospace;
+      font-size: 0.75em;
+      line-height: 1.2;
+      color: black;
+      background-color: rgb(255, 255, 240);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1>Line Charts</h1>
+
+    <p> <button id="doClear">clear</button> <button id="doDraw1">draw1</button> <button id="doDraw2">draw2</button>
+      <button id="doDraw3">draw3</button> <button id="doDraw4">draw4</button>
+    </p>
+    <p>
+      <input type="checkbox" id="useBezier">useBezier&nbsp;
+      <input type="checkbox" id="useMarkers">useMarkers&nbsp;
+    </p>
+
+    <p>API Documentation available at <a
+        href="https://homeding.github.io/#page=microchart-line.md">https://homeding.github.io/#page=microchart-line.md</a>
+    </p>
+
+    <object id="chartline" data="chartline.svg" type="image/svg+xml" style="width:800px;height:300px"></object>
+
+    <h3>The phases of drawing</h3>
+
+    <p>The draw function will not actual create the chart; this is deferred to allow some adjustments by the ruler
+      graphs. E.g. when data in the range 1-99 is in use the VAxis may change the range to 0-100 so some good data
+      levels can be displayed in the ruler area.
+    </p>
+
+    <ul>
+      <li>When new data is added or data is modified the drawing process is deferred by using a timer.
+        This timer enables to add all required elements before actual creating the full chart.
+      </li>
+      <li>The the box containing all data points is calculated and stored in the displayBox.
+        When the displayBox was not changed the rulers do not have to be re-created but the data bound graphs will.
+      </li>
+      <li>
+        All graphs now can be drawn using the scale of the displayBox.
+      </li>
+    </ul>
+
+    <h3>Line Chart Colors</h3>
+
+    <p>Any color can be used in the color properties that is understood by SVG.
+      It can passed in the options when crating a chart of a hLine.</p>
+  </div>
+
+  <script>
+    var chartObj = document.getElementById('chartline');
+    var chartAPI;
+
+    function lineClear() { chartAPI.clear(); }
+
+    function lineDraw1() {
+      chartAPI.clear();
+      var chart = chartAPI.add('line', {
+        linetype: document.querySelector('#useBezier').checked ? 'bezier' : 'line',
+        marker: document.querySelector('#useMarkers').checked
+      });
+
+      chartAPI.add('VAxis');
+      chartAPI.add('HAxis');
+      chartAPI.add('hline', { data: 0 });
+
+      var data = [{ x: 0, y: 2 }, { x: 1, y: 4 }, { x: 2, y: 6 }, { x: 3, y: 5 }, { x: 4, y: 7 }];
+      chartAPI.draw(chart, data);
+    }
+
+    function lineDraw2() {
+      chartAPI.clear();
+      var chart = chartAPI.add('line', {
+        linetype: document.querySelector('#useBezier').checked ? 'bezier' : 'steps',
+        marker: document.querySelector('#useMarkers').checked,
+        color: 'red'
+      });
+
+      chartAPI.add('VAxis');
+      chartAPI.add('HAxis');
+
+      var data = [{ x: 0, y: 2 }, { x: 1, y: 5 }, { x: 2, y: 4 }, { x: 3, y: 6 }, { x: 4, y: 5 }, { x: 5, y: 7 }];
+      chartAPI.draw(chart, data);
+    }
+
+    function lineDraw3() {
+      chartAPI.clear();
+      var chart = chartAPI.add('line', { linetype: 'line' });
+
+      chartAPI.add('vaxis');
+      chartAPI.add('haxis');
+      chartAPI.add('hlINE', { data: 0 });
+      chartAPI.add('indicator', { yFormat: 'num:3' });
+
+      var data = [];
+      for (n = 0; n < 300; n++) {
+        data.push({ x: n, y: Math.sin(n / 10) * 16 })
+      }
+      chartAPI.draw(chart, data);
+    }
+
+    function lineDraw4() {
+      chartAPI.clear();
+      var now = Date.now() / 1000;
+
+      var chart = chartAPI.add('line', { linetype: 'line', color: 'green' });
+
+      chartAPI.add(['VAxis',
+        { type: 'HAxis', options: { format: 'datetime', color: 'green' } },
+        { type: 'hline', options: { data: 0, color: 'lime' } },
+        { type: 'hline', options: { data: 2, color: 'transparent' } },
+        { type: 'hline', options: { data: -2, color: 'transparent' } },
+        { type: 'indicator', options: { xFormat: 'datetime', yFormat: 'num:5', color: 'blue' } }]);
+
+      var data = [];
+      for (n = 0; n < 300; n++) {
+        data.push({ x: now + n, y: Math.sin(n / 12) })
+      }
+      chartAPI.draw(chart, data);
+    }
+
+    window.addEventListener('load', function () {
+      chartAPI = chartObj.getSVGDocument().api;
+      lineDraw1();
+
+      document.getElementById('doClear').addEventListener('click', lineClear);
+      document.getElementById('doDraw1').addEventListener('click', lineDraw1);
+      document.getElementById('doDraw2').addEventListener('click', lineDraw2);
+      document.getElementById('doDraw3').addEventListener('click', lineDraw3);
+      document.getElementById('doDraw4').addEventListener('click', lineDraw4);
+
+    });
+  </script>
+</body>
+
+</html>
