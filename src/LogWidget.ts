@@ -76,9 +76,11 @@ class LogWidgetClass extends GenericWidgetClass {
       if ((svgObj) && (svgObj.api)) {
         // now setup
         this.api = (this.lineSVGObj.getSVGDocument() as any).api;
-        this.lChart = this.api.addChart('line', { linetype: 'line' });
-        this.api.addVAxis();
-        this.api.addHAxis();
+        this.lChart = this.api.add('line', { linetype: 'line' });
+        this.api.add(['VAxis',
+          { type: 'hAxis', options: { format: 'datetime' } },
+          { type: 'indicator', options: { xFormat: 'datetime' } },
+        ]);
         this.loadData();
         done = true;
       }

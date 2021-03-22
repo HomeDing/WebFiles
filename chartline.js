@@ -87,21 +87,22 @@ var displayBox = minBox;
 function fmtData(form, data) {
   var txt = data;
   var f = form.split(':');
+  var n = Number(data);
   if (f[0] == 'num') {
     // convert to number with precision
-    txt = String(data.toFixed(f[1] || 0));
+    txt = String(n.toFixed(f[1] || 0));
 
   } else if (form == 'date') {
     // convert from ux timestamp (seconds since 1.1.1970) to date
-    txt = (new Date(Number(data) * 1000)).toLocaleDateString();
+    txt = (new Date(n * 1000)).toLocaleDateString();
 
   } else if (form == 'time') {
     // convert from ux timestamp (seconds since 1.1.1970) to time
-    txt = (new Date(Number(data) * 1000)).toLocaleTimeString();
+    txt = (new Date(n * 1000)).toLocaleTimeString();
 
   } else if (form == 'datetime') {
     // convert from ux timestamp (seconds since 1.1.1970) to datetime
-    txt = (new Date(Number(data) * 1000)).toLocaleString();
+    txt = (new Date(n * 1000)).toLocaleString();
 
   } // if
   return txt;
@@ -338,7 +339,7 @@ VAxisClass = function () {
       for (var n = low; n <= high; n += step) {
         createSVGNode(this.svgObj, 'text', {
           x: 11, y: -1 * (n - low) * scaleY
-        }, String(n.toFixed(prec)));
+        }, String(Number(n).toFixed(prec)));
       }
       this.redraw = false;
     }, // fDraw()

@@ -82,7 +82,7 @@ class MicroRegistry {
         for (let i = 0; i < attr.length; i++) {
           const v: string = attr[i].value;
           if (v.indexOf('${') >= 0) {
-            (obj as any)[attr[i].name] = attr[i].value = fill(v);
+            (obj as HTMLElement).setAttribute(attr[i].name, fill(v));
           } // if
         } // for
 

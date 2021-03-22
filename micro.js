@@ -90,7 +90,7 @@ var MicroRegistry = (function () {
                 for (var i = 0; i < attr.length; i++) {
                     var v = attr[i].value;
                     if (v.indexOf('${') >= 0) {
-                        obj[attr[i].name] = attr[i].value = fill(v);
+                        obj.setAttribute(attr[i].name, fill(v));
                     }
                 }
                 obj.childNodes.forEach(function (c) {
@@ -820,7 +820,6 @@ var IncludeWidgetClass = (function (_super) {
     IncludeWidgetClass.prototype.connectedCallback = function () {
         this.query = this.getAttribute('ref');
         var obj = document.querySelector('#u-templates ' + this.query);
-        console.log('included.', this.query, obj);
         if (obj) {
             var e = obj.cloneNode(true);
             var root = this.parentElement;
@@ -919,9 +918,11 @@ var LogWidgetClass = (function (_super) {
             catch (err) { }
             if ((svgObj) && (svgObj.api)) {
                 this.api = this.lineSVGObj.getSVGDocument().api;
-                this.lChart = this.api.addChart('line', { linetype: 'line' });
-                this.api.addVAxis();
-                this.api.addHAxis();
+                this.lChart = this.api.add('line', { linetype: 'line' });
+                this.api.add(['VAxis',
+                    { type: 'hAxis', options: { format: 'datetime' } },
+                    { type: 'indicator', options: { xFormat: 'datetime' } },
+                ]);
                 this.loadData();
                 done = true;
             }
