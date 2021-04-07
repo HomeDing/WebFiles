@@ -163,7 +163,6 @@
           document.getElementById('memUsed').textContent = d.fsUsedBytes;
           document.getElementById('memPart').textContent = Math.round((Number(d.fsUsedBytes) * 100) / Number(d.fsTotalBytes));
 
-          memAPI.options.includePercentage = true;
           memAPI.draw([
             {
               color: '#304878',

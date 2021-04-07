@@ -111,6 +111,8 @@ document['api'] = {
    */
   draw: function (data) {
     this.clear();
+    this.options = Object.assign(this.defaultOptions, this.options);
+
     var cl = this.options.colors;
     var cll = this.options.colors.length
 
