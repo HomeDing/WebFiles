@@ -1,28 +1,34 @@
-html, body { margin: 0; padding: 0; color: #111111; font-family: Arial, ui-sans-serif, sans-serif; font-size: 1em; }
+html, body { margin: 0; padding: 0; color: #111111; font-family: Arial, ui-sans-serif, sans-serif; font-size: 1em; background-color: #f0f0f0; }
 
-body { background-color: #f0f0f0; }
+@media (prefers-color-scheme: dark) { html, body { background: #333333; color: #eeeeee; } }
 
 * { box-sizing: border-box; }
 
-p, pre, h2, h3, h4 { margin: 0 0 1em 0; min-height: 1rem; }
+p, pre, code, h2, h3, h4 { margin: 0 0 1em 0; min-height: 1rem; }
 
-p > img, p > svg, pre > img, pre > svg, h2 > img, h2 > svg, h3 > img, h3 > svg, h4 > img, h4 > svg { height: 1em; }
+p > img, p > svg, pre > img, pre > svg, code > img, code > svg, h2 > img, h2 > svg, h3 > img, h3 > svg, h4 > img, h4 > svg { height: 1em; }
 
-p > img:first-child, p > svg:first-child, pre > img:first-child, pre > svg:first-child, h2 > img:first-child, h2 > svg:first-child, h3 > img:first-child, h3 > svg:first-child, h4 > img:first-child, h4 > svg:first-child { margin-right: 0.2em; }
+p > img:first-child, p > svg:first-child, pre > img:first-child, pre > svg:first-child, code > img:first-child, code > svg:first-child, h2 > img:first-child, h2 > svg:first-child, h3 > img:first-child, h3 > svg:first-child, h4 > img:first-child, h4 > svg:first-child { margin-right: 0.2em; }
 
-a:hover, a:focus { color: #4466ee; }
-
-a:visited { text-decoration: none; cursor: pointer; color: #0f388a; }
+a { color: inherit; text-decoration: none; cursor: pointer; }
 
 p > a, p > a:visited { text-decoration: underline; }
 
 h2, h3, h4 { font-family: Arial, ui-sans-serif, sans-serif; font-weight: bold; color: #0f388a; }
+
+@media (prefers-color-scheme: dark) { h2, h3, h4 { color: #eeeeee; } }
 
 h2 { font-size: 1.6em; min-height: 1.6em; }
 
 h3 { font-size: 1.25em; min-height: 1.25em; margin-bottom: 8px; }
 
 h4 { font-size: 1em; min-height: 1em; }
+
+code, .code, code.hljs, pre code { background-color: #ffffb9; color: #111111; font-size: 16px; font-family: "Courier New", Courier, monospace; }
+
+@media print { code, .code, code.hljs, pre code { border: 1px solid #111111; } }
+
+pre code { display: block; border-radius: 0.4rem; padding: 2px; }
 
 #modal { position: fixed; visibility: visible; opacity: 1; top: 0; left: 0; width: 100%; height: 100%; transition: opacity 0.3s ease-in-out; }
 
@@ -92,7 +98,9 @@ svg.icon { -ms-user-select: none; user-select: none; }
 
 .u-header .icon { width: 3rem; height: 3rem; }
 
-.u-header h1 { margin: 0; font-size: 2.4rem; font-family: Arial, ui-sans-serif, sans-serif; font-weight: bold; color: #0f0f0f; }
+@media (prefers-color-scheme: dark) { .u-header .icon { filter: brightness(600%); } }
+
+.u-header h1 { margin: 0; font-size: 2.4rem; font-family: Arial, ui-sans-serif, sans-serif; font-weight: bold; }
 
 .u-navbar { margin-bottom: 0; padding: 0.5em 1em; height: 2.8rem; background-color: #0f388a; }
 
@@ -120,7 +128,11 @@ nav.inpage.open + main { margin-left: 280px; }
 
 main { transition: margin-left 0.2s; }
 
-.card { position: relative; display: flex; flex-direction: column; background-color: #d9d9d9; border: none; border-radius: 0.4rem; width: 23rem; min-width: 23rem; }
+.card { position: relative; display: flex; flex-direction: column; background-color: #d9d9d9; color: #111111; border: none; border-radius: 0.4rem; width: 23rem; min-width: 23rem; }
+
+@media print { .card { border: 1px solid #111111; } }
+
+.card h3, .card h4 { color: #0f388a; }
 
 .card.small { font-size: 0.8em; width: 11.25rem; min-width: 11.25rem; }
 

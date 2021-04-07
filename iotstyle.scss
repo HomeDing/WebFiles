@@ -4,6 +4,7 @@
 // hue of 220 is signature of this style
 
 $u-background: #f0f0f0;
+$u-background-dark: #333333;
 $u-primary: hsl(220, 80, 30); // active objects
 
 $u-border-color: #555555;
@@ -12,12 +13,14 @@ $u-border-color-active: hsl(220, 100, 30);
 $u-focus: #4466ee; // active object with focus
 $u-disabled: gray; // disabled objects
 $u-text: #111111; // any text
+$u-text-dark: #eeeeee; // any text in dark mode
 $u-heading: $u-primary; // any headlines
 $u-connect: #00cc00; // connectivity / net
 
 $u-card-background: hsl(220, 0, 85);
 
 $u-card-background-active: hsl(220, 80, 55);
+$u-card-color: $u-text;
 $u-card-color-active: white;
 $u-card-border: none;
 $u-card-radius: 0.4rem;
@@ -54,10 +57,15 @@ body {
   color: $u-text;
   font-family: $font-sans-serif;
   font-size: 1em;
+  background-color: $u-background;
+
+  @media (prefers-color-scheme: dark) {
+    background: $u-background-dark;
+    color: $u-text-dark;
+  }
 }
 
 body {
-  background-color: $u-background;
 }
 
 * {
@@ -67,6 +75,7 @@ body {
 // ===== Text containers =====
 p,
 pre,
+code,
 h2,
 h3,
 h4 {
@@ -85,16 +94,16 @@ h4 {
 }
 
 a {
-  &:hover,
-  &:focus {
-    color: $u-focus;
-  }
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+  // &:hover,
+  //   &:focus {
+  //     color: inherit;
+  //   }
 
-  &:visited {
-    text-decoration: none;
-    cursor: pointer;
-    color: $u-primary;
-  }
+  //   &:visited {
+  //   }
 }
 
 p > a,
@@ -109,6 +118,10 @@ h4 {
   font-family: $font-sans-serif;
   font-weight: bold;
   color: $u-heading;
+
+  @media (prefers-color-scheme: dark) {
+    color: $u-text-dark;
+  }
 }
 
 // Chapter
@@ -130,7 +143,28 @@ h4 {
   min-height: 1em;
 }
 
-// Modal dialogs and focus Object
+code,
+.code,
+code.hljs,
+pre code {
+  background-color: rgb(255, 255, 185);
+  color: $u-text;
+  font-size: 16px;
+  font-family: "Courier New", Courier, monospace;
+  @media print {
+    border: 1px solid $u-text;
+  }
+
+}
+
+pre code {
+  display: block;
+  border-radius: $u-card-radius;
+  padding: 2px;
+}
+
+
+// ===== Modal dialogs and focus Object
 
 #modal {
   position: fixed;
@@ -335,6 +369,9 @@ svg {
   .icon {
     width: 3rem;
     height: 3rem;
+    @media (prefers-color-scheme: dark) {
+      filter: brightness(600%);
+    }
   }
 
   h1 {
@@ -342,7 +379,7 @@ svg {
     font-size: 2.4rem;
     font-family: $font-sans-serif;
     font-weight: bold;
-    color: invert($color: $u-background);
+    // color: invert($color: $u-background);
   }
 }
 
@@ -430,10 +467,21 @@ main {
   display: flex;
   flex-direction: column;
   background-color: $u-card-background;
+  color: $u-card-color;
   border: $u-card-border;
   border-radius: $u-card-radius;
   width: 23rem;
   min-width: 23rem;
+
+  @media print {
+    border: 1px solid $u-text;
+    // page-break-inside:  ???;
+  }
+
+  h3,
+  h4 {
+    color: $u-heading;
+  }
 
   &.small {
     // reduced width and text size

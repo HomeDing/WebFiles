@@ -21,7 +21,7 @@
   <link Content-Type="text/css" href="/iotstyle.css" rel="stylesheet" />
 
   <script src="/micro.js"></script>
-  <script src="http://localhost:35729/livereload.js?snipver=1"></script>
+  <!-- <script src="http://localhost:35729/livereload.js?snipver=1"></script> -->
   <style>
     span.activeState,
     span.setconfig {
@@ -51,13 +51,15 @@
       fill: red !important;
     }
   </style>
+
+  </style>
 </head>
 
 <body>
   <div class="container-fluid">
     <div class="row u-header">
       <a href="/" title="Startpage"><img class="icon" src="/i/device.svg" /></a>
-      <h1>IoT Style Check Page</h1>
+      <h1>IoT Style Check Page Header</h1>
     </div>
 
     <div class="row u-navbar">
@@ -70,15 +72,23 @@
     </div>
 
     <div class="row">
-      <div class="col">
-        <blockquote>
-          <h1>Page Header &lt;h1&gt;</h1>
-          <h2>Chapter headings &lt;h2&gt;</h2>
-          <h3>Topic headings &lt;h3&gt;</h3>
-          <h4>Subtitles &lt;h4&gt;</h4>
-          <p>Normal floating text with <a href="#">links</a>.</p>
-          <li>Use <code>class="hidden-xs"</code> to hide text elements.</li>
-          </ul>
+      <div class="col-6">
+        <h2>Chapter headings &lt;h2&gt;</h2>
+        <h3>Topic headings &lt;h3&gt;</h3>
+        <h4>Subtitles &lt;h4&gt;</h4>
+        <p>Normal floating text with <a href="#">links</a>.</p>
+        <p>Use <code>class="hidden-xs"</code> and <span class="code">class="hidden-xs"</span> to hide text elements.
+        </p>
+        <h4>Code blocks:</h4>
+        <pre><code class="hljs">{
+  "device": {
+    "0": {
+      "name": "newdevice"
+    }
+  }
+}
+</code></pre>
+        </ul>
       </div>
     </div>
 
