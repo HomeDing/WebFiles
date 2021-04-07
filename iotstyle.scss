@@ -511,7 +511,12 @@ main {
     }
 
     &.footer {
-      padding: 0 $white-space $gutter $white-space;
+      padding: $gutter $white-space;
+      border-top: 1px solid rgba(0, 0, 0, 0.125);
+
+      > *:not(:first-child) {
+        margin-left: $gutter;
+      }
     }
   }
 
@@ -524,7 +529,7 @@ main {
   }
 }
 
-// ===== forms elements=====
+// ===== forms elements and groups =====
 
 select,
 option {
@@ -533,12 +538,6 @@ option {
 
 option[disabled] {
   color: $u-disabled;
-}
-
-* + a,
-* + button,
-* + label {
-  margin-left: $gutter;
 }
 
 button,
