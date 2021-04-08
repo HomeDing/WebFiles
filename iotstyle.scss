@@ -432,6 +432,11 @@ nav {
   padding: 1rem 0.2rem 0.2rem;
   background-color: white;
 
+  @media (prefers-color-scheme: dark) {
+    background: lighten($u-background-dark, 10%);
+    color: $u-text-dark;
+  }
+
   &.inpage {
     position: absolute;
   }

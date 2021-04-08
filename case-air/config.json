@@ -9,36 +9,32 @@
       "onvalue": "log/pm?value=$v"
     }
   },
-  "log": {
-    "aq": {
-      "loglevel": 2,
-      "filename": "/aq.txt",
-      "description": "Air Quality Log"
-    },
-    "hum": {
-      "loglevel": 2,
-      "filename": "/humlog.txt",
-      "description": "Humidity Log"
+  "bme680": {
+    "on": {
+      "title": "BME680 sensor",
+      "readtime": "30s",
+      "resendtime": "2m",
+      "onTemperature": "device/0?log=temp:$v,remote/display-t?value=$v",
+      "onHumidity": "device/0?log=hum:$v%,remote/display-h?value=$v"
     }
   },
   "dht": {
     "on": {
-      "type": "DHT22",
-      "description": "Temperature and Humidity sensor",
-      "pin": "D4",
-      "readtime": "30s",
-      "resendtime": "2m",
-      "onTemperature": "device/0?log=temp:$v,remote/display-t?value=$v",
-      "onHumidity": "device/0?log=hum:$v%,remote/display-h?value=$v"
+      "title": "DHT22 sensor"
     }
   },
-  "bme680": {
-    "on": {
-      "description": "BME680 sensor",
-      "readtime": "30s",
-      "resendtime": "2m",
-      "onTemperature": "device/0?log=temp:$v,remote/display-t?value=$v",
-      "onHumidity": "device/0?log=hum:$v%,remote/display-h?value=$v"
+  "log": {
+    "aq": {
+      "filename": "/aq.txt",
+      "description": "Air Quality Log"
+    },
+    "hum": {
+      "filename": "/humlog.txt",
+      "description": "Humidity Log"
+    },
+    "pm": {
+      "filename": "/pmlog.txt",
+      "description": "PM Log"
     }
   }
 }

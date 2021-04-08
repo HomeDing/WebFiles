@@ -116,6 +116,8 @@ svg.icon { -ms-user-select: none; user-select: none; }
 
 nav { position: fixed; min-height: 100%; width: 280px; z-index: 1; left: -280px; transition: all 0.2s; padding: 1rem 0.2rem 0.2rem; background-color: white; }
 
+@media (prefers-color-scheme: dark) { nav { background: #4d4d4d; color: #eeeeee; } }
+
 nav.inpage { position: absolute; }
 
 nav.open { left: 0; }
