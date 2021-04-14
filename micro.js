@@ -87,10 +87,20 @@ var MicroRegistry = (function () {
             }
             else if (obj.nodeType === Node.ELEMENT_NODE) {
                 var attr = obj.attributes;
-                for (var i = 0; i < attr.length; i++) {
-                    var v = attr[i].value;
-                    if (v.indexOf('${') >= 0) {
-                        obj.setAttribute(attr[i].name, fill(v));
+                if (obj.namespaceURI === "http://www.w3.org/2000/svg") {
+                    for (var i = 0; i < attr.length; i++) {
+                        var v = attr[i].value;
+                        if (v.indexOf('${') >= 0) {
+                            obj[attr[i].name].baseVal = fill(v);
+                        }
+                    }
+                }
+                else {
+                    for (var i = 0; i < attr.length; i++) {
+                        var v = attr[i].value;
+                        if (v.indexOf('${') >= 0) {
+                            obj.setAttribute(attr[i].name, fill(v));
+                        }
                     }
                 }
                 obj.childNodes.forEach(function (c) {
@@ -322,7 +332,9 @@ var GenericWidgetClass = (function (_super) {
         if (this.actions) {
             var a = this.actions.shift();
             if (a) {
-                fetch(a).then(function () {
+                var aa = a.split('=');
+                var aUrl = aa[0] + '=' + encodeURIComponent(aa[1]);
+                fetch(aUrl).then(function () {
                     if (_this.actions.length > 0) {
                         debounce(_this.dispatchNext.bind(_this))();
                     }
@@ -418,6 +430,37 @@ var BL0937WidgetClass = (function (_super) {
         MicroControl('bl0937')
     ], BL0937WidgetClass);
     return BL0937WidgetClass;
+}(GenericWidgetClass));
+var ButtonGroupWidgetClass = (function (_super) {
+    __extends(ButtonGroupWidgetClass, _super);
+    function ButtonGroupWidgetClass() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this._count = 0;
+        _this._blockElem = null;
+        return _this;
+    }
+    ButtonGroupWidgetClass.prototype.connectedCallback = function () {
+        _super.prototype.connectedCallback.call(this);
+        this._blockElem = this.querySelector('.block');
+    };
+    ButtonGroupWidgetClass.prototype.newData = function (path, key, value) {
+        _super.prototype.newData.call(this, path, key, value);
+        if (key && value) {
+            if (key !== 'title') {
+                if (this._count % 2 === 0) {
+                    this._blockElem = createHTMLElement(this, 'div', { 'class': 'block' });
+                }
+                if (this._blockElem) {
+                    createHTMLElement(this._blockElem, 'button', { 'u-action': value }).textContent = key;
+                }
+                this._count++;
+            }
+        }
+    };
+    ButtonGroupWidgetClass = __decorate([
+        MicroControl('buttongroup')
+    ], ButtonGroupWidgetClass);
+    return ButtonGroupWidgetClass;
 }(GenericWidgetClass));
 var ButtonWidgetClass = (function (_super) {
     __extends(ButtonWidgetClass, _super);
@@ -1348,20 +1391,6 @@ var TimerWidgetClass = (function (_super) {
             var cto = el.querySelector('.current');
             cto.style.width = Math.floor(this.time * f) + 'px';
         }
-    };
-    TimerWidgetClass.prototype.on_click = function (evt) {
-        var tar = evt.target;
-        if (tar.classList.contains('save')) {
-            var d_1 = {};
-            this.querySelectorAll('[u-value]').forEach(function (elem) {
-                var n = elem.getAttribute('u-value');
-                if (n) {
-                    d_1[n] = elem.value;
-                }
-            });
-            changeConfig(this.microid, d_1);
-        }
-        _super.prototype.on_click.call(this, evt);
     };
     TimerWidgetClass = __decorate([
         MicroControl('timer')

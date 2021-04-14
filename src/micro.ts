@@ -76,16 +76,28 @@ class MicroRegistry {
         if (obj.textContent) {
           obj.textContent = fill(obj.textContent);
         }
-      } else if (obj.nodeType === Node.ELEMENT_NODE) {
-        // HTMLElement
-        const attr = (obj as HTMLElement).attributes;
-        for (let i = 0; i < attr.length; i++) {
-          const v: string = attr[i].value;
-          if (v.indexOf('${') >= 0) {
-            (obj as HTMLElement).setAttribute(attr[i].name, fill(v));
-          } // if
-        } // for
 
+      } else if (obj.nodeType === Node.ELEMENT_NODE) {
+        const attr = (obj as HTMLElement).attributes;
+
+        if (obj.namespaceURI === "http://www.w3.org/2000/svg") {
+          // SVGElement
+          for (let i = 0; i < attr.length; i++) {
+            const v: string = attr[i].value;
+            if (v.indexOf('${') >= 0) {
+              (<any>obj)[attr[i].name].baseVal = fill(v);
+            } // if
+          } // for
+
+        } else {
+          // HTMLElement
+          for (let i = 0; i < attr.length; i++) {
+            const v: string = attr[i].value;
+            if (v.indexOf('${') >= 0) {
+              (obj as HTMLElement).setAttribute(attr[i].name, fill(v));
+            } // if
+          } // for
+        }
         obj.childNodes.forEach(c => {
           this._setPlaceholders(c, props);
         });
@@ -161,7 +173,7 @@ class MicroRegistry {
 
       for (const p in b) {
         if (p === 'on_touchstart') {
-          obj.addEventListener(p.substr(3), b[p].bind(obj), {passive: true});
+          obj.addEventListener(p.substr(3), b[p].bind(obj), { passive: true });
         } else if (p.substr(0, 3) === 'on_') {
           obj.addEventListener(p.substr(3), b[p].bind(obj), false);
         } else if (p.substr(0, 2) === 'on') {

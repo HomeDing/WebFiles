@@ -84,7 +84,11 @@ class GenericWidgetClass extends MicroControlClass {
     if (this.actions) {
       const a = this.actions.shift();
       if (a) {
-        fetch(a).then(() => {
+        // assume format "/type/id?action=value", value needs to be encoded correctly
+        // encode all special chars after = character.
+        const aa = a.split('=');
+        const aUrl = aa[0] + '=' + encodeURIComponent(aa[1]);
+        fetch(aUrl).then(() => {
           if (this.actions.length > 0) {
             debounce(this.dispatchNext.bind(this))();
           } else {

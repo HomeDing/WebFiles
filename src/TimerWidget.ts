@@ -43,18 +43,5 @@ class TimerWidgetClass extends GenericWidgetClass {
       cto.style.width = Math.floor(this.time * f) + 'px';
     }
   } // newData()}
-
-  on_click(evt: MouseEvent) {
-    const tar: HTMLElement = evt.target as HTMLElement;
-    if (tar.classList.contains('save')) {
-      const d: any = {};
-      this.querySelectorAll('[u-value]').forEach(function (elem) {
-        const n = elem.getAttribute('u-value');
-        if (n) { d[n] = (elem as HTMLInputElement).value; }
-      });
-      changeConfig(this.microid, d);
-    }
-    super.on_click(evt);
-  }
 }
 // End.
