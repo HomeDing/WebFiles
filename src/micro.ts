@@ -80,7 +80,7 @@ class MicroRegistry {
       } else if (obj.nodeType === Node.ELEMENT_NODE) {
         const attr = (obj as HTMLElement).attributes;
 
-        if (obj.namespaceURI === "http://www.w3.org/2000/svg") {
+        if (obj.namespaceURI === 'http://www.w3.org/2000/svg') {
           // SVGElement
           for (let i = 0; i < attr.length; i++) {
             const v: string = attr[i].value;
@@ -143,6 +143,7 @@ class MicroRegistry {
         this._setPlaceholders(e, props);
         root.appendChild(e);
         root.querySelectorAll('[u-is]').forEach(el => micro.attach(el as HTMLElement));
+        this._setPlaceholders(e, props); // again in case of includes
         root.querySelectorAll('[data-src]:not([src])').forEach(el => this.loadDataImage(el as HTMLElement));
       } // if
     } // if

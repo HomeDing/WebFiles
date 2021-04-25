@@ -87,7 +87,7 @@ var MicroRegistry = (function () {
             }
             else if (obj.nodeType === Node.ELEMENT_NODE) {
                 var attr = obj.attributes;
-                if (obj.namespaceURI === "http://www.w3.org/2000/svg") {
+                if (obj.namespaceURI === 'http://www.w3.org/2000/svg') {
                     for (var i = 0; i < attr.length; i++) {
                         var v = attr[i].value;
                         if (v.indexOf('${') >= 0) {
@@ -135,6 +135,7 @@ var MicroRegistry = (function () {
                 this._setPlaceholders(e, props);
                 root.appendChild(e);
                 root.querySelectorAll('[u-is]').forEach(function (el) { return micro.attach(el); });
+                this._setPlaceholders(e, props);
                 root.querySelectorAll('[data-src]:not([src])').forEach(function (el) { return _this.loadDataImage(el); });
             }
         }
@@ -311,7 +312,10 @@ var GenericWidgetClass = (function (_super) {
         }, this);
         ['input', 'select'].forEach(function (elType) {
             this.querySelectorAll(elType + '[u-value=\'' + key + '\']').forEach(function (elem) {
-                if (elem.value !== value) {
+                if (elem.type === 'radio') {
+                    elem.checked = elem.value === value;
+                }
+                else if (elem.value !== value) {
                     elem.value = value ? value : '';
                 }
             });

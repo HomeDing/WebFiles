@@ -59,7 +59,11 @@ class GenericWidgetClass extends MicroControlClass {
     // value of input and select fields
     ['input', 'select'].forEach(function (this: GenericWidgetClass, elType) {
       this.querySelectorAll(elType + '[u-value=\'' + key + '\']').forEach(function (elem) {
-        if ((elem as HTMLInputElement).value !== value) { (elem as HTMLInputElement).value = value ? value : ''; }
+        if ((elem as HTMLInputElement).type === 'radio') {
+          (<HTMLInputElement>elem).checked = (<HTMLInputElement>elem).value === value;
+        } else if ((elem as HTMLInputElement).value !== value) {
+          (elem as HTMLInputElement).value = value ? value : '';
+        }
       });
     }, this);
 

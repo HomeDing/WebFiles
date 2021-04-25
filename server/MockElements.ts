@@ -104,6 +104,7 @@ export class MockStandard extends VirtualBaseElement {
   async doAction(action: any) {
     super.doAction(action);
     if (action.value != null) { this.state.value = action.value; }
+    if (action.mode != null) { this.state.mode = action.mode; }
     if (action.brightness != null) { this.state.brightness = action.brightness; }
   }
 } // class MockStandard
@@ -116,6 +117,8 @@ export function register() {
 
   registerVirtual('switch', MockSwitch);
   registerVirtual('value', MockValue);
+  registerVirtual('timer', MockStandard);
+
   registerVirtual('digitalout', MockStandard);
   registerVirtual('neo', MockStandard);
   registerVirtual('color', MockStandard);
