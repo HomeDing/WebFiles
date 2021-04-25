@@ -140,6 +140,14 @@
         </div>
       </div>
 
+      <div class="col card" u-control="rfcodes" microID="${id}" u-is="generic">
+        <div u-is="include" ref=".cardheader"></div>
+        <div class="block Element">
+          <div><label>Last Code:</label></div>
+          <pre>[<span u-text="value" style="user-select: text;"></span>]</pre>
+        </div>
+      </div>
+
       <div class="col card" u-control="color" id="${id}" u-is="color" microID="${id}">
         <div u-is="include" ref=".cardheader"></div>
         <div class="block">
@@ -149,8 +157,9 @@
           <input type="range" max="255" class="band border saturation" u-value="saturation">
           <input type="range" max="255" class="band border lightness" u-value="lightness">
           <input type="range" max="255" class="band border white">
-          </div><div class="block footer">
-            <button u-action="mode" value="fade">fade</button><button u-action="mode" value="fix">fix</button><button
+        </div>
+        <div class="block footer">
+          <button u-action="mode" value="fade">fade</button><button u-action="mode" value="fix">fix</button><button
             u-action="mode" value="pulse">pulse</button><button u-action="mode" value="wheel">wheel</button>
         </div>
       </div>

@@ -58,63 +58,37 @@
 </div>
 
 <div class="col card" u-control="timer" microID="${id}" u-is="timer">
-  <div class="block header">
-    <svg class="icon">
-      <use href="./icons.svg#timer" />
-    </svg>
-    <h3 u-text="title"></h3>
-    <h4 u-text="description"></h4>
-    <span class="setconfig"></span>
-  </div>
-  <div class="block"><span class="u-bool ux-value" u-active="value"
-      style="position: absolute;top:0.5rem;right:0.5rem"></span>
-    <label>wait:</label><span u-text="waittime">.</span> <label>pulse:</label><span u-text="pulsetime">.</span>
-  </div>
+  <div u-is="include" ref=".cardheader"></div>
+  <span class="u-bool ux-value" u-active="value" style="top:2rem;"></span>
+  <fieldset class="block">
+    <legend>Mode</legend>
+    <input name="mode" u-value="mode" type="radio" value="off">Off</input>
+    <input name="mode" u-value="mode" type="radio" value="on">On</input>
+    <input name="mode" u-value="mode" type="radio" value="timer">Timer</input>
+  </fieldset>
   <div class="block">
     <div class="u-bar">
       <span class="pulse"></span>
       <span class="current"></span>
     </div>
   </div>
-  <div class="block footer"><button u-action="start" value="1">Start</button>
+  <div class="block footer">
+    <button u-action="start" value="1">Start</button>
     <button u-action="next" value="1">Next</button>
     <button u-action="stop" value="1">Stop</button>
   </div>
 </div>
 
-<div class="col card" u-control="rfsend" microID="${id}" u-is="generic">
-  <div class="block header">
-    <svg class="icon">
-      <use href="./icons.svg#rfsend" />
-    </svg>
-    <h3 u-text="title"></h3>
-    <h4 u-text="description"></h4>
-    <span class="setconfig"></span>
-  </div>
-  <div class="block Element">
-    <span class="u-bool ux-value" u-active="value" style="position: absolute;top:0.5rem;right:0.5rem"></span>
-    <div class="form-group">
-      <button u-action="value" value="0">Off</button>
-      <button u-action="value" value="1">On</button>
-      <label>last:</label><span u-text="value"></span>
-    </div>
-  </div>
-</div>
-
 <div class="col card" u-control="button" microID="${id}" u-is="button">
-  <div class="block header">
-    <svg class="icon">
-      <use href="./icons.svg#button" />
-    </svg>
-    <h3 u-text="title"></h3>
-    <h4 u-text="description"></h4>
-    <span class="setconfig"></span>
-  </div>
+  <div u-is="include" ref=".cardheader"></div>
   <div class="block"><button u-text="description">.</button></div>
 </div>
 
 <div class="col card small" u-control="webbutton" microID="${id}" u-is="button">
   <div class="block"><button u-text="description">.</button></div>
+</div>
+
+<div class="col card small" u-control="webbuttongroup" microID="${id}" u-is="buttongroup">
 </div>
 
 <div class="col card" u-control="digitalout" microID="${id}" u-is="generic">
