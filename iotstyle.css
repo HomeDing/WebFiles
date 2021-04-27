@@ -182,6 +182,8 @@ button.active, .button.active { background-color: #acc1e4 !important; border-col
 
 button.secondary, .button.secondary { background-color: #777777; border-color: #777777; }
 
+button + button, .button + button { margin-left: 0.5em; }
+
 .btn-group { display: flex; flex-direction: row; flex-wrap: nowrap; align-items: flex-start; }
 
 .btn-group > * { flex: 1 1 auto; margin: 0; border-radius: 0; }
@@ -243,7 +245,7 @@ button.secondary, .button.secondary { background-color: #777777; border-color: #
 
 .u-slider > label { display: inline-block; padding: 0 0.2em; margin-bottom: 0.5rem; vertical-align: top; font-size: 1.4rem; cursor: pointer; }
 
-.u-slider > label > img, .u-slider > label > .icon { width: 1.2em !important; height: 1.2em !important; }
+.u-slider > label > img, .u-slider > label > .icon { width: 1.2em !important; height: 1.2em !important; margin: 0; }
 
 .u-slider > .box { position: relative; cursor: pointer; display: inline-block; width: 3rem; height: 1.7rem; border: 0.125rem solid #555555; border-radius: 1.25rem; background-color: #f0f0f0; padding: 0.125rem; }
 
@@ -269,6 +271,10 @@ button.secondary, .button.secondary { background-color: #777777; border-color: #
 .display > span.dot.active { background-color: green; }
 
 .display > span.line { border-top: 1px solid black; }
+
+.displayinc { position: relative; margin: auto; zoom: 2; }
+
+.displayinc > .icon { width: 1.2em; height: 1.2em; margin: 0; }
 
 /* === Light input sliders === */
 .band { -webkit-appearance: none; appearance: none; outline: none; height: 1.4rem; width: 100%; margin-bottom: 0.8rem; }

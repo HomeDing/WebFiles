@@ -16,7 +16,8 @@
     "now": "2020-08-21 14:42:43"
   },
   "displayssd1306/0": {
-    "active": "true"
+    "active": "true",
+    "page": 1
   },
   "time/clock": {
     "active": "true"

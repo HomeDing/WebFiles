@@ -151,7 +151,6 @@ pre code {
   @media print {
     border: 1px solid $u-text;
   }
-
 }
 
 pre code {
@@ -159,7 +158,6 @@ pre code {
   border-radius: $u-card-radius;
   padding: 2px;
 }
-
 
 // ===== Modal dialogs and focus Object
 
@@ -629,6 +627,10 @@ button,
     background-color: #777777;
     border-color: #777777;
   }
+
+  + button {
+    margin-left: $gutter;
+  }
 }
 
 .btn-group {
@@ -835,6 +837,7 @@ button,
     > .icon {
       width: 1.2em !important;
       height: 1.2em !important;
+      margin:0;
     }
   }
 
@@ -919,6 +922,18 @@ button,
     }
   }
 } // #display
+
+.displayinc {
+  position: relative;
+  margin: auto;
+  zoom: 2;
+
+  > .icon {
+    width: 1.2em ;
+    height: 1.2em;
+    margin:0;
+  }
+} 
 
 /* === Light input sliders === */
 

@@ -18,10 +18,7 @@ class DisplayLineWidgetClass extends GenericWidgetClass {
 
   connectedCallback() {
     super.connectedCallback();
-
     this._dispElem = document.querySelector('#panel .display');
-    hub.subscribe(this.microid + '?*', this.newValue.bind(this), true);
-
     if (this._dispElem) {
       this._elem = createHTMLElement(this._dispElem, 'span', { class: 'line' });
       this.updateElem();
@@ -29,13 +26,16 @@ class DisplayLineWidgetClass extends GenericWidgetClass {
     if (!this.showSys()) {
       this.style.display = 'none';
     }
-
   } // connectedCallback
 
+  newData(path: string, key: string | null, value: string | null) {
+    super.newData(path, key, value);
+    console.info("newValue", key, value);
+    if (key && value && this._elem) {
+      if (key === 'page') {
+        this._elem.setAttribute('displayPage', value);
 
-  newValue(_path: string, key: string | null, value: string | null) {
-    if (key && value) {
-      if ((<any>this)['_' + key] != null) {
+      } else if ((<any>this)['_' + key] != null) {
         (<any>this)['_' + key] = value;
       }
       this.updateElem();

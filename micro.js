@@ -320,7 +320,7 @@ var GenericWidgetClass = (function (_super) {
                 }
             });
         }, this);
-        ['button'].forEach(function (elType) {
+        ['button', 'label'].forEach(function (elType) {
             this.querySelectorAll(elType + '[u-action=\'${' + key + '}\']').forEach(function (elem) {
                 setAttr(elem, 'u-action', value ? value : '');
             });
@@ -374,9 +374,12 @@ var GenericWidgetClass = (function (_super) {
     };
     GenericWidgetClass.prototype.on_click = function (e) {
         var src = e.target;
-        var a = src.getAttribute('u-action');
-        if (src && a) {
-            this.dispatchAction(a, src['value']);
+        var p = src;
+        while (p && !(p.getAttribute('u-action')) && p !== this) {
+            p = p.parentElement;
+        }
+        if (p) {
+            this.dispatchAction(p.getAttribute('u-action'), p.getAttribute('value'));
         }
         if (src.classList.contains('setconfig')) {
             modal.open('configelementdlg', this.data);
@@ -720,7 +723,6 @@ var DisplayDotWidgetClass = (function (_super) {
     DisplayDotWidgetClass.prototype.connectedCallback = function () {
         _super.prototype.connectedCallback.call(this);
         this._dispElem = document.querySelector('#panel .display');
-        hub.subscribe(this.microid + '?*', this.newValue.bind(this), true);
         if (this._dispElem) {
             this._elem = createHTMLElement(this._dispElem, 'span', { class: 'dot' });
             this.updateElem();
@@ -729,10 +731,14 @@ var DisplayDotWidgetClass = (function (_super) {
             this.style.display = 'none';
         }
     };
-    DisplayDotWidgetClass.prototype.newValue = function (_path, key, value) {
-        if (key && value) {
+    DisplayDotWidgetClass.prototype.newData = function (path, key, value) {
+        _super.prototype.newData.call(this, path, key, value);
+        if (key && value && this._elem) {
             if (key === 'value') {
                 this._value = toBool(value);
+            }
+            else if (key === 'page') {
+                this._elem.setAttribute('displayPage', value);
             }
             else if (key === 'x') {
                 this._x = Number(value);
@@ -770,7 +776,6 @@ var DisplayLineWidgetClass = (function (_super) {
     DisplayLineWidgetClass.prototype.connectedCallback = function () {
         _super.prototype.connectedCallback.call(this);
         this._dispElem = document.querySelector('#panel .display');
-        hub.subscribe(this.microid + '?*', this.newValue.bind(this), true);
         if (this._dispElem) {
             this._elem = createHTMLElement(this._dispElem, 'span', { class: 'line' });
             this.updateElem();
@@ -779,9 +784,14 @@ var DisplayLineWidgetClass = (function (_super) {
             this.style.display = 'none';
         }
     };
-    DisplayLineWidgetClass.prototype.newValue = function (_path, key, value) {
-        if (key && value) {
-            if (this['_' + key] != null) {
+    DisplayLineWidgetClass.prototype.newData = function (path, key, value) {
+        _super.prototype.newData.call(this, path, key, value);
+        console.info("newValue", key, value);
+        if (key && value && this._elem) {
+            if (key === 'page') {
+                this._elem.setAttribute('displayPage', value);
+            }
+            else if (this['_' + key] != null) {
                 this['_' + key] = value;
             }
             this.updateElem();
@@ -819,18 +829,22 @@ var DisplayTextWidgetClass = (function (_super) {
             if (this._dispElem.getAttribute('grid')) {
                 this._grid = Number(this._dispElem.getAttribute('grid'));
             }
-            this._elem = createHTMLElement(this._dispElem, 'span', { class: 'text', style: 'top:0;left:0' });
+            this._elem = createHTMLElement(this._dispElem, 'span', { class: 'text', style: 'top:0;left:0;display:none' });
         }
-        hub.subscribe(this.microid + '?*', this.newValue.bind(this), true);
         if (!this.showSys()) {
             this.style.display = 'none';
         }
     };
-    DisplayTextWidgetClass.prototype.newValue = function (_path, key, value) {
+    DisplayTextWidgetClass.prototype.newData = function (path, key, value) {
+        _super.prototype.newData.call(this, path, key, value);
         if (key && value && this._elem) {
             if (key === 'value') {
-                var t = "" + this._prefix + value + this._postfix;
-                this._elem.innerHTML = t.replace(/ /g, '&nbsp;');
+                var t = ("" + this._prefix + value + this._postfix).replace(/ /g, '&nbsp;');
+                if (this._elem.innerHTML != t)
+                    this._elem.innerHTML = t;
+            }
+            else if (key === 'page') {
+                this._elem.setAttribute('displayPage', value);
             }
             else if (key === 'x') {
                 var n = Number(value) * this._grid;
@@ -856,6 +870,39 @@ var DisplayTextWidgetClass = (function (_super) {
         MicroControl('displaytext')
     ], DisplayTextWidgetClass);
     return DisplayTextWidgetClass;
+}(GenericWidgetClass));
+var DisplayWidgetClass = (function (_super) {
+    __extends(DisplayWidgetClass, _super);
+    function DisplayWidgetClass() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.displayPage = "";
+        _this._dialogElem = null;
+        return _this;
+    }
+    DisplayWidgetClass.prototype.connectedCallback = function () {
+        _super.prototype.connectedCallback.call(this);
+        this._dialogElem = this.querySelector('.display');
+    };
+    DisplayWidgetClass.prototype.newData = function (path, key, value) {
+        var _this = this;
+        var _a;
+        _super.prototype.newData.call(this, path, key, value);
+        if (key && value) {
+            if (key === 'page') {
+                if (value !== this.displayPage) {
+                    this.displayPage = value;
+                    (_a = this._dialogElem) === null || _a === void 0 ? void 0 : _a.querySelectorAll(":scope > span").forEach(function (e) {
+                        var p = e.getAttribute("displayPage") || "1";
+                        e.style.display = (p === _this.displayPage) ? "" : "none";
+                    });
+                }
+            }
+        }
+    };
+    DisplayWidgetClass = __decorate([
+        MicroControl('display')
+    ], DisplayWidgetClass);
+    return DisplayWidgetClass;
 }(GenericWidgetClass));
 var IncludeWidgetClass = (function (_super) {
     __extends(IncludeWidgetClass, _super);

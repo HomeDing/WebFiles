@@ -123,9 +123,11 @@
 
 <!-- Display -->
 
-<div class="col card" u-control="displayoled" u-is="generic" microID="${id}">
-  <div class="block">
+<div class="col card" u-control="displayoled" u-is="display" microID="${id}">
+  <div class="block" style="display: flex;flex-direction: row;">
+    <label class="displayinc" u-action="addpage" value="-1"><svg class="icon"><use href="./icons.svg#minus"></use></svg></label>
     <div class="display"></div>
+    <label class="displayinc"  u-action="addpage" value="1"><svg class="icon"><use href="./icons.svg#plus"></use></svg></label>
   </div>
 </div>
 

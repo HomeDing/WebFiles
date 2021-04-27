@@ -68,7 +68,7 @@ class GenericWidgetClass extends MicroControlClass {
     }, this);
 
     // action of buttons
-    ['button'].forEach(function (this: GenericWidgetClass, elType) {
+    ['button', 'label'].forEach(function (this: GenericWidgetClass, elType) {
       this.querySelectorAll(elType + '[u-action=\'${' + key + '}\']').forEach(function (elem) {
         setAttr(elem as HTMLElement, 'u-action', value ? value : '');
       });
@@ -136,8 +136,15 @@ class GenericWidgetClass extends MicroControlClass {
   // + change config mode
   on_click(e: MouseEvent) {
     const src = e.target as HTMLElement;
-    const a = src.getAttribute('u-action');
-    if (src && a) { this.dispatchAction(a, (<any>src)['value']); }
+
+    // action may be on target or any parent element.
+    let p: HTMLElement | null = src;
+    while (p && !(p.getAttribute('u-action')) && p !== this) {
+      p = p.parentElement;
+    }
+    if (p) {
+      this.dispatchAction(p.getAttribute('u-action'), p.getAttribute('value'));
+    }
 
     if (src.classList.contains('setconfig')) {
       modal.open('configelementdlg', this.data);

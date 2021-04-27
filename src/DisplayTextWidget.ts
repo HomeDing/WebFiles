@@ -24,21 +24,25 @@ class DisplayTextWidgetClass extends GenericWidgetClass {
       if (this._dispElem.getAttribute('grid')) {
         this._grid = Number(this._dispElem.getAttribute('grid'));
       }
-      this._elem = createHTMLElement(this._dispElem, 'span', { class: 'text', style: 'top:0;left:0' });
+      this._elem = createHTMLElement(this._dispElem, 'span', { class: 'text', style: 'top:0;left:0;display:none' });
     }
 
-    hub.subscribe(this.microid + '?*', this.newValue.bind(this), true);
     if (!this.showSys()) {
       this.style.display = 'none';
     }
   }
 
-  newValue(_path: string, key: string | null, value: string | null) {
+  newData(path: string, key: string | null, value: string | null) {
+    super.newData(path, key, value);
     if (key && value && this._elem) {
 
       if (key === 'value') {
-        const t = `${this._prefix}${value}${this._postfix}`;
-        this._elem.innerHTML = t.replace(/ /g, '&nbsp;');
+        let t = `${this._prefix}${value}${this._postfix}`.replace(/ /g, '&nbsp;');
+        if (this._elem.innerHTML != t)
+          this._elem.innerHTML = t;
+
+      } else if (key === 'page') {
+        this._elem.setAttribute('displayPage', value);
 
       } else if (key === 'x') {
         const n = Number(value) * this._grid;

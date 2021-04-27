@@ -20,15 +20,11 @@ class DisplayDotWidgetClass extends GenericWidgetClass {
   // When the card is created also create a html tag inside the display.
   connectedCallback() {
     super.connectedCallback();
-
     this._dispElem = document.querySelector('#panel .display');
-    hub.subscribe(this.microid + '?*', this.newValue.bind(this), true);
-
     if (this._dispElem) {
       this._elem = createHTMLElement(this._dispElem, 'span', { class: 'dot' });
       this.updateElem();
     }
-
     if (!this.showSys()) {
       this.style.display = 'none';
     }
@@ -36,10 +32,14 @@ class DisplayDotWidgetClass extends GenericWidgetClass {
 
 
   // new value is set in the element.
-  newValue(_path: string, key: string | null, value: string | null) {
-    if (key && value) {
+  newData(path: string, key: string | null, value: string | null) {
+    super.newData(path, key, value);
+    if (key && value && this._elem) {
       if (key === 'value') {
         this._value = toBool(value);
+
+      } else if (key === 'page') {
+        this._elem.setAttribute('displayPage', value);
 
       } else if (key === 'x') {
         this._x = Number(value);

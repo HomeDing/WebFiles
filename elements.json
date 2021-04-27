@@ -45,19 +45,19 @@
 
   "displaydot": {
     "sys": "false",
-    "properties": ["x", "y", "value"],
+    "properties": ["page", "x", "y", "value"],
     "events": ["value", "clear", "redraw"]
   },
 
   "displaytext": {
     "sys": "false",
-    "properties": ["x", "y", "fontsize", "value", "prefix", "postfix"],
+    "properties": ["page", "x", "y", "fontsize", "value", "prefix", "postfix"],
     "events": ["value", "clear", "redraw"]
   },
 
   "displayline": {
     "sys": "false",
-    "properties": ["x0", "y0", "x1", "y1"],
+    "properties": ["page", "x0", "y0", "x1", "y1"],
     "events": ["redraw"]
   },
 
@@ -72,9 +72,10 @@
     "events": ["..."]
   },
 
-  "rfsend": {
-    "properties": ["pin", "codeon", "codeoff", "value"],
-    "events": ["value"]
+  "rfcodes": {
+    "properties": ["pinrx", "pintx", "received"],
+    "events": ["value"],
+    "actions": ["onvalue"]
   },
 
   "rotary": {
@@ -108,6 +109,10 @@
   "ssdp": {
     "sys": "true",
     "properties": ["manufacturer", "manufacturerurl", "modelurl", "modelnumber"]
+  },
+
+  "rtcstate": {
+    "sys": "true"
   },
 
   "displaylcd": {
