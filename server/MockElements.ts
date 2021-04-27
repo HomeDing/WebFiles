@@ -110,6 +110,50 @@ export class MockStandard extends VirtualBaseElement {
 } // class MockStandard
 
 
+// support changing the state by action - some properties
+export class MockTimer extends VirtualBaseElement {
+  restart = false;
+  startTime = Date.now();
+
+  constructor(typeId: string, config: any) {
+    super(typeId, config);
+    this.restart = Boolean(config.restart);
+    this.state.value = config.value || 0;
+    this.state.mode = config.mode || 'timer';
+  }
+
+  async doAction(action: any) {
+    super.doAction(action);
+    if (action.mode != null) { this.state.mode = action.mode; }
+    if (action.start != null) {
+      this.state.mode = "timer";
+      this.startTime = Date.now();
+    }
+  }
+
+  async getState(): Promise<any> {
+    if (this.state.mode == 'on') {
+      this.state.value = 1;
+    } else if (this.state.mode == 'off') {
+      this.state.value = 0;
+    } else {
+      const d = (Date.now() - this.startTime) / 1000;
+      this.state.time = d;
+      if (d < 20) {
+        this.state.value = 0;
+      } else if (d < 40) {
+        this.state.value = 1;
+      } else {
+        this.state.value = 0;
+        if ((d > 60) && this.restart)
+          this.startTime = Date.now();
+      }
+    }
+    return (this.state);
+  }
+} // class MockTimer
+
+
 export function register() {
   registerVirtual('device', MockDevice);
   registerVirtual('dstime', MockTime);
@@ -117,7 +161,7 @@ export function register() {
 
   registerVirtual('switch', MockSwitch);
   registerVirtual('value', MockValue);
-  registerVirtual('timer', MockStandard);
+  registerVirtual('timer', MockTimer);
 
   registerVirtual('digitalout', MockStandard);
   registerVirtual('neo', MockStandard);

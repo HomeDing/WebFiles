@@ -1,0 +1,38 @@
+{
+  "digitalin": {
+    "button": {
+      "pin": "D3",
+      "inverse": 1,
+      "pullup": 1,
+      "onLow": "switch/relay?toggle=1"
+    }
+  },
+  "switch": {
+    "relay": {
+      "title": "Water",
+      "value": 0,
+      "onValue": "digitalout/led?value=$v,digitalout/relay?value=$v"
+    }
+  },
+  "timer": {
+    "water": {
+      "title": "Water timing",
+      "mode": "timer",
+      "restart": "true",
+      "waittime": "20",
+      "pulsetime": "20",
+      "cycletime": "60",
+      "onvalue": "digitalout/relay?value=$v"
+    }
+  },
+  "digitalout": {
+    "led": {
+      "pin": "D7",
+      "inverse": "true"
+    },
+    "relay": {
+      "pin": "D6",
+      "inverse": "false"
+    }
+  }
+}

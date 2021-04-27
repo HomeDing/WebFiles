@@ -1,0 +1,6 @@
+{"device/0": {"active":"true","name":"water3","title":"Plant-Water","description":"Sonoff Basic R1 for plant water","safemode":"false","sd":"true","nextboot":"4294265231"},
+"ota/0": {"active":"true"},
+"digitalin/button": {"active":"true","value":"0"},
+"timer/water": {"active":"true","mode":"timer","time":"1164","value":"0"},
+"digitalout/led": {"active":"true","value":"0"},
+"digitalout/relais": {"active":"true","value":"0"}}
