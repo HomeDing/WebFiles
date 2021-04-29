@@ -83,8 +83,14 @@
 
       <div class="col card" u-control="schedule" id="${id}" u-is="generic" microID="${id}">
         <div u-is="include" ref=".cardheader"></div>
+        <span class="u-bool ux-value" u-active="value" style="top:2rem;"></span>
+        <fieldset class="block">
+          <legend>Mode</legend>
+          <input name="mode" u-value="mode" type="radio" value="off">Off</input>
+          <input name="mode" u-value="mode" type="radio" value="on">On</input>
+          <input name="mode" u-value="mode" type="radio" value="timer">Timer</input>
+        </fieldset>
         <div class="block">
-          <span class="u-bool ux-value" u-active="value"></span>
           <div class="form-group"><label>Start:</label><span u-text="ontime"></span></div>
           <div class="form-group"><label>End:</label><span u-text="offtime"></span></div>
         </div>
