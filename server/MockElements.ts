@@ -126,15 +126,15 @@ export class MockTimer extends VirtualBaseElement {
     super.doAction(action);
     if (action.mode != null) { this.state.mode = action.mode; }
     if (action.start != null) {
-      this.state.mode = "timer";
+      this.state.mode = 'timer';
       this.startTime = Date.now();
     }
   }
 
   async getState(): Promise<any> {
-    if (this.state.mode == 'on') {
+    if (this.state.mode === 'on') {
       this.state.value = 1;
-    } else if (this.state.mode == 'off') {
+    } else if (this.state.mode === 'off') {
       this.state.value = 0;
     } else {
       const d = (Date.now() - this.startTime) / 1000;
@@ -145,8 +145,9 @@ export class MockTimer extends VirtualBaseElement {
         this.state.value = 1;
       } else {
         this.state.value = 0;
-        if ((d > 60) && this.restart)
+        if ((d > 60) && (this.restart)) {
           this.startTime = Date.now();
+        }
       }
     }
     return (this.state);

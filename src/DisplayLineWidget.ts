@@ -30,7 +30,6 @@ class DisplayLineWidgetClass extends GenericWidgetClass {
 
   newData(path: string, key: string | null, value: string | null) {
     super.newData(path, key, value);
-    console.info("newValue", key, value);
     if (key && value && this._elem) {
       if (key === 'page') {
         this._elem.setAttribute('displayPage', value);

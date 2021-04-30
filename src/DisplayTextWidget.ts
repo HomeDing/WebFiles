@@ -37,9 +37,10 @@ class DisplayTextWidgetClass extends GenericWidgetClass {
     if (key && value && this._elem) {
 
       if (key === 'value') {
-        let t = `${this._prefix}${value}${this._postfix}`.replace(/ /g, '&nbsp;');
-        if (this._elem.innerHTML != t)
+        const t = `${this._prefix}${value}${this._postfix}`.replace(/ /g, '&nbsp;');
+        if (this._elem.innerHTML !== t) {
           this._elem.innerHTML = t;
+        }
 
       } else if (key === 'page') {
         this._elem.setAttribute('displayPage', value);

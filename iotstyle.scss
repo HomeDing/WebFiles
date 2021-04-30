@@ -148,6 +148,7 @@ pre code {
   color: $u-text;
   font-size: 16px;
   font-family: "Courier New", Courier, monospace;
+
   @media print {
     border: 1px solid $u-text;
   }
@@ -364,6 +365,7 @@ svg {
   .icon {
     width: 3rem;
     height: 3rem;
+
     @media (prefers-color-scheme: dark) {
       filter: brightness(600%);
     }
@@ -837,7 +839,7 @@ button,
     > .icon {
       width: 1.2em !important;
       height: 1.2em !important;
-      margin:0;
+      margin: 0;
     }
   }
 
@@ -881,6 +883,7 @@ button,
 }
 
 /* === Display Element === */
+
 .display {
   position: relative;
   box-sizing: content-box;
@@ -929,11 +932,11 @@ button,
   zoom: 2;
 
   > .icon {
-    width: 1.2em ;
+    width: 1.2em;
     height: 1.2em;
-    margin:0;
+    margin: 0;
   }
-} 
+}
 
 /* === Light input sliders === */
 

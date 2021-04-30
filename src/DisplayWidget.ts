@@ -9,7 +9,7 @@
 
 @MicroControl('display')
 class DisplayWidgetClass extends GenericWidgetClass {
-  displayPage = "";
+  displayPage = '';
   _dialogElem: HTMLElement | null = null;
 
   connectedCallback() {
@@ -24,10 +24,10 @@ class DisplayWidgetClass extends GenericWidgetClass {
       if (key === 'page') {
         if (value !== this.displayPage) {
           this.displayPage = value;
-          this._dialogElem?.querySelectorAll(":scope > span").forEach((e) => {
-            const p = (<HTMLElement>e).getAttribute("displayPage") || "1";
-            (<any>e).style.display = (p === this.displayPage) ? "" : "none";
-          })
+          this._dialogElem?.querySelectorAll(':scope > span').forEach((e) => {
+            const p = (<HTMLElement>e).getAttribute('displayPage') || '1';
+            (<any>e).style.display = (p === this.displayPage) ? '' : 'none';
+          });
         }
       }
     }
