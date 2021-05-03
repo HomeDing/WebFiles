@@ -786,7 +786,6 @@ var DisplayLineWidgetClass = (function (_super) {
     };
     DisplayLineWidgetClass.prototype.newData = function (path, key, value) {
         _super.prototype.newData.call(this, path, key, value);
-        console.info("newValue", key, value);
         if (key && value && this._elem) {
             if (key === 'page') {
                 this._elem.setAttribute('displayPage', value);
@@ -840,8 +839,9 @@ var DisplayTextWidgetClass = (function (_super) {
         if (key && value && this._elem) {
             if (key === 'value') {
                 var t = ("" + this._prefix + value + this._postfix).replace(/ /g, '&nbsp;');
-                if (this._elem.innerHTML != t)
+                if (this._elem.innerHTML !== t) {
                     this._elem.innerHTML = t;
+                }
             }
             else if (key === 'page') {
                 this._elem.setAttribute('displayPage', value);
@@ -875,7 +875,7 @@ var DisplayWidgetClass = (function (_super) {
     __extends(DisplayWidgetClass, _super);
     function DisplayWidgetClass() {
         var _this = _super !== null && _super.apply(this, arguments) || this;
-        _this.displayPage = "";
+        _this.displayPage = '';
         _this._dialogElem = null;
         return _this;
     }
@@ -891,9 +891,9 @@ var DisplayWidgetClass = (function (_super) {
             if (key === 'page') {
                 if (value !== this.displayPage) {
                     this.displayPage = value;
-                    (_a = this._dialogElem) === null || _a === void 0 ? void 0 : _a.querySelectorAll(":scope > span").forEach(function (e) {
-                        var p = e.getAttribute("displayPage") || "1";
-                        e.style.display = (p === _this.displayPage) ? "" : "none";
+                    (_a = this._dialogElem) === null || _a === void 0 ? void 0 : _a.querySelectorAll(':scope > span').forEach(function (e) {
+                        var p = e.getAttribute('displayPage') || '1';
+                        e.style.display = (p === _this.displayPage) ? '' : 'none';
                     });
                 }
             }
