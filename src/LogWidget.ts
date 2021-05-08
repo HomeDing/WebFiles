@@ -16,13 +16,14 @@ declare interface PromiseConstructor {
 class LogWidgetClass extends GenericWidgetClass {
   filename: string | null = null;
   lineSVGObj: HTMLObjectElement | null = null;
+  xFormat = 'datetime';
+  yFormat = 'num';
   api: any;
   lChart: any;
 
   connectedCallback() {
     super.connectedCallback();
     this.lineSVGObj = this.querySelector('object');
-    hub.subscribe(this.microid + '?*', this.newValue.bind(this), true);
   }
 
   loadData() {
@@ -79,7 +80,7 @@ class LogWidgetClass extends GenericWidgetClass {
         this.lChart = this.api.add('line', { linetype: 'line' });
         this.api.add(['VAxis',
           { type: 'hAxis', options: { format: 'datetime' } },
-          { type: 'indicator', options: { xFormat: 'datetime' } },
+          { type: 'indicator', options: { xFormat: this.xFormat, yFormat: this.yFormat } },
         ]);
         this.loadData();
         done = true;
@@ -93,10 +94,15 @@ class LogWidgetClass extends GenericWidgetClass {
   } // loadSVG()
 
 
-  newValue(_path: string, key: string | null, value: string | null) {
+  newData(path: string, key: string | null, value: string | null) {
+    super.newData(path, key, value);
     if (key === 'filename') {
       this.filename = value;
       this.loadSVG();
+    } else if (key === 'xformat') {
+      this.xFormat = <string>value;
+    } else if (key === 'yformat') {
+      this.yFormat = <string>value;
     }
   } // newValue()
 }

@@ -379,7 +379,7 @@ var GenericWidgetClass = (function (_super) {
             p = p.parentElement;
         }
         if (p) {
-            this.dispatchAction(p.getAttribute('u-action'), p.getAttribute('value'));
+            this.dispatchAction(p.getAttribute('u-action'), p.getAttribute('value') || '1');
         }
         if (src.classList.contains('setconfig')) {
             modal.open('configelementdlg', this.data);
@@ -965,12 +965,13 @@ var LogWidgetClass = (function (_super) {
         var _this = _super !== null && _super.apply(this, arguments) || this;
         _this.filename = null;
         _this.lineSVGObj = null;
+        _this.xFormat = 'datetime';
+        _this.yFormat = 'num';
         return _this;
     }
     LogWidgetClass.prototype.connectedCallback = function () {
         _super.prototype.connectedCallback.call(this);
         this.lineSVGObj = this.querySelector('object');
-        hub.subscribe(this.microid + '?*', this.newValue.bind(this), true);
     };
     LogWidgetClass.prototype.loadData = function () {
         var fName = this.filename;
@@ -1015,7 +1016,7 @@ var LogWidgetClass = (function (_super) {
                 this.lChart = this.api.add('line', { linetype: 'line' });
                 this.api.add(['VAxis',
                     { type: 'hAxis', options: { format: 'datetime' } },
-                    { type: 'indicator', options: { xFormat: 'datetime' } },
+                    { type: 'indicator', options: { xFormat: this.xFormat, yFormat: this.yFormat } },
                 ]);
                 this.loadData();
                 done = true;
@@ -1025,10 +1026,17 @@ var LogWidgetClass = (function (_super) {
             window.setTimeout(this.loadSVG.bind(this), 1000);
         }
     };
-    LogWidgetClass.prototype.newValue = function (_path, key, value) {
+    LogWidgetClass.prototype.newData = function (path, key, value) {
+        _super.prototype.newData.call(this, path, key, value);
         if (key === 'filename') {
             this.filename = value;
             this.loadSVG();
+        }
+        else if (key === 'xformat') {
+            this.xFormat = value;
+        }
+        else if (key === 'yformat') {
+            this.yFormat = value;
         }
     };
     LogWidgetClass = __decorate([

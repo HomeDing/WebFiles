@@ -143,7 +143,7 @@ class GenericWidgetClass extends MicroControlClass {
       p = p.parentElement;
     }
     if (p) {
-      this.dispatchAction(p.getAttribute('u-action'), p.getAttribute('value'));
+      this.dispatchAction(p.getAttribute('u-action'), p.getAttribute('value') || '1');
     }
 
     if (src.classList.contains('setconfig')) {
