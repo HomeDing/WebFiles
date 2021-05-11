@@ -35,7 +35,6 @@ class ModalDialogClass {
       micro.insertTemplate(this._cObj, tmplName, data);
       this._mObj.classList.remove('hidden');
       this._isOpen = true;
-      // console.log (containerObj);
     } // if
   } // open()
 

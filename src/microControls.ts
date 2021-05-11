@@ -25,7 +25,6 @@ function MicroControl(isSelector: string) {
   // this is the decorator factory
   return function(target: any) {
     // this is the decorator class
-    // console.info(`MicroControl ${target.name} registered for ${isSelector}`); // only usable in chrome.
     micro.define(isSelector, new target() as GenericWidgetClass);
     return target;
   };

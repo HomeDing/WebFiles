@@ -292,7 +292,6 @@
           if (py > src.yPos) fy -= 1;
         }
       });
-      console.log(fx, fy);
       if (fx > 0) px++;
       if (fx < 0) px--;
       if (fy > 0) py++;
@@ -337,7 +336,6 @@
           obj.querySelector('.config').addEventListener('click', function (e) {
             var t = e.target;
             while (t && !t.classList.contains('node')) t = t.parentElement;
-            console.log(t.getAttribute('data'));
           });
         }
 
@@ -404,7 +402,6 @@
 
     // start when all data is available
     Promise.all([p1, p2]).then(function () {
-      console.log("all done.");
       createNodes(envDef);
       createNodes(configDef);
       placeNodes();

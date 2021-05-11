@@ -185,12 +185,8 @@
             obj.querySelector('.memory').textContent = '-';
             obj.querySelector('.uptime').textContent = '-';
             obj.querySelector('.safemode').textContent = '-';
-
-            console.log(err);
-            // alert(err);
           })
           .finally(function () {
-            console.log("finally");
             remoteIndex++;
             window.setTimeout(updateNext, 200);
           });
