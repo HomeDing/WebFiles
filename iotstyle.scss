@@ -367,7 +367,7 @@ svg {
     height: 3rem;
 
     @media (prefers-color-scheme: dark) {
-      filter: brightness(600%);
+      // filter: brightness(600%);
     }
   }
 
@@ -503,7 +503,7 @@ main {
     }
 
     svg.icon {
-      filter: brightness(600%);
+      color: currentColor;
     }
 
     .border {
@@ -529,6 +529,7 @@ main {
     float: left;
     margin-right: $gutter;
     overflow: hidden;
+    color: $u-heading;
   }
 
   img,
@@ -605,11 +606,6 @@ button,
   -ms-user-select: none;
   user-select: none;
 
-  &:focus {
-    border-color: $u-focus;
-    background-color: $u-focus;
-  }
-
   &:visited {
     color: white;
   }
@@ -630,9 +626,15 @@ button,
     border-color: #777777;
   }
 
-  + button {
+  + button, + .button {
     margin-left: $gutter;
   }
+}
+
+*:focus {
+  outline:0;
+  border-color: $u-focus;
+  box-shadow: 0 0 0.1rem 0.2rem $u-focus;
 }
 
 .btn-group {
@@ -666,7 +668,6 @@ button,
 }
 
 .form-group {
-  // margin-bottom: $gutter;
   display: flex;
 
   > label {

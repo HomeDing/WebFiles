@@ -50,6 +50,30 @@
     svg {
       fill: red !important;
     }
+
+    input#sl[type=range] {
+      width: 3rem;
+    }
+
+    input[type=range] {
+      width: 100%;
+      height: 30px;
+      -webkit-appearance: none;
+      transition: 0.4s all ease-out;
+      border: 3px solid #555555;
+      background-color: #f0f0f0;
+      border-radius: 16px;
+    }
+
+    input[type=range]::-webkit-slider-thumb {
+      height: 24px;
+      width: 24px;
+      border-radius: 12px;
+      background: #203050;
+      border: 2px solid #f0f0f0;
+      cursor: pointer;
+      -webkit-appearance: none;
+    }
   </style>
 
   </style>
@@ -63,6 +87,7 @@
     </div>
 
     <div class="row u-navbar">
+      <svg class="button" tabindex=0><use href="./icons.svg#menu" id="menuButton" /></svg>
       <a class="button" href="/">Home</a>
       <a class="button" href="/board.htm">Board</a>
       <a class="button" href="/microide.htm">IDE</a>
@@ -77,8 +102,7 @@
         <h3>Topic headings &lt;h3&gt;</h3>
         <h4>Subtitles &lt;h4&gt;</h4>
         <p>Normal floating text with <a href="#">links</a>.</p>
-        <p>Use <code>class="hidden-xs"</code> and <span class="code">class="hidden-xs"</span> to hide text elements.
-        </p>
+        <p>Use <code>class="hidden-xs"</code> and <span class="code">class="hidden-xs"</span> to hide text elements.</p>
         <h4>Code blocks:</h4>
         <pre><code class="hljs">{
   "device": {
@@ -89,6 +113,43 @@
 }
 </code></pre>
         </ul>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="u-slider u-switch" u-active="value">
+        <label value="0">off</label>
+        <div class="box">
+          <div class="handle"></div>
+        </div>
+        <label value="1">on</label>
+      </div>
+
+      <div class="u-slider">
+        <label class="down"><svg class="icon">
+            <use href="./icons.svg#minus" />
+          </svg></label>
+        <div class="box" style="width:240px">
+          <div class="handle"></div>
+        </div>
+        <label class="up"><svg class="icon">
+            <use href="./icons.svg#plus" />
+          </svg></label>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="u-slider">
+        <label>off</label>
+        <input id="sl" type="range" min="0" max="1">
+        <label>on</label>
+      </div>
+
+    </div>
+
+    <div class="row">
+      <div>
+        <input id="sl" type="range" min="0" max="1">
       </div>
     </div>
 
@@ -178,7 +239,7 @@
         <div class="block">
           <h3>.col.card.small</h3>
           <p>width: 184 px</p>
-          <p>height:valiable</p>
+          <p>height:variable</p>
         </div>
       </div>
 
@@ -194,7 +255,7 @@
         <div class="block">
           <h3>.col.card.small</h3>
           <p>width: 184 px</p>
-          <p>height:valiable</p>
+          <p>height:variable</p>
         </div>
       </div>
 
@@ -459,13 +520,6 @@
         <div class="block">
           <h3>menu</h3><svg class="icon">
             <use xlink:href="icons.svg#menu" />
-          </svg>
-        </div>
-      </div>
-      <div class="col card small">
-        <div class="block">
-          <h3>menui</h3><svg class="icon">
-            <use xlink:href="icons.svg#menui" />
           </svg>
         </div>
       </div>

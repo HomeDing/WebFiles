@@ -98,8 +98,6 @@ svg.icon { -ms-user-select: none; user-select: none; }
 
 .u-header .icon { width: 3rem; height: 3rem; }
 
-@media (prefers-color-scheme: dark) { .u-header .icon { filter: brightness(600%); } }
-
 .u-header h1 { margin: 0; font-size: 2.4rem; font-family: Arial, ui-sans-serif, sans-serif; font-weight: bold; }
 
 .u-navbar { margin-bottom: 0; padding: 0.5em 1em; height: 2.8rem; background-color: #0f388a; }
@@ -142,7 +140,7 @@ main { transition: margin-left 0.2s; }
 
 .card.active h3, .card.active h4 { color: white; }
 
-.card.active svg.icon { filter: brightness(600%); }
+.card.active svg.icon { color: currentColor; }
 
 .card.active .border { border-color: #003399; }
 
@@ -150,7 +148,7 @@ main { transition: margin-left 0.2s; }
 
 .card.active > .block.header { background-image: linear-gradient(to bottom, #306ee8, #1754cf); }
 
-.card .icon { width: 2.75em; height: 2.75em; float: left; margin-right: 0.5em; overflow: hidden; }
+.card .icon { width: 2.75em; height: 2.75em; float: left; margin-right: 0.5em; overflow: hidden; color: #0f388a; }
 
 .card img.active, .card svg.active { background-color: limegreen; }
 
@@ -172,8 +170,6 @@ option[disabled] { color: gray; }
 
 button, .button { display: inline-block; font-size: 1.25em; min-width: 3.6em; height: 1.4em; padding: 0.1em 0.2em; border-radius: 0.2em; border: 0.1em solid #0f388a; background-color: #0f388a; color: white; cursor: pointer; -ms-user-select: none; user-select: none; }
 
-button:focus, .button:focus { border-color: #4466ee; background-color: #4466ee; }
-
 button:visited, .button:visited { color: white; }
 
 button:disabled, button:disabled:focus, .button:disabled, .button:disabled:focus { border: 0.1rem solid gray; background-color: gray; }
@@ -182,7 +178,9 @@ button.active, .button.active { background-color: #acc1e4 !important; border-col
 
 button.secondary, .button.secondary { background-color: #777777; border-color: #777777; }
 
-button + button, .button + button { margin-left: 0.5em; }
+button + button, button + .button, .button + button, .button + .button { margin-left: 0.5em; }
+
+*:focus { outline: 0; border-color: #4466ee; box-shadow: 0 0 0.1rem 0.2rem #4466ee; }
 
 .btn-group { display: flex; flex-direction: row; flex-wrap: nowrap; align-items: flex-start; }
 
