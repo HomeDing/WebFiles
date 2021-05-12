@@ -116,11 +116,13 @@
   },
 
   "displaylcd": {
-    "properties": ["address", "height"]
+    "properties": ["address", "height"],
+    "actions": ["onpage"]
   },
 
   "displaysh1106": {
-    "properties": ["address", "readtime", "resetpin", "height"]
+    "properties": ["address", "readtime", "resetpin", "height"],
+    "actions": ["onpage"]
   },
 
   "max7219": {

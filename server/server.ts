@@ -122,7 +122,7 @@ if (options.monitor) {
     const startTime = process.hrtime();
     next();
     const duration = process.hrtime(startTime);
-    Logger.info(`url=${req.originalUrl} time=${duration}`);
+    Logger.trace(`url=${req.originalUrl} time=${duration}`);
   });
 }
 

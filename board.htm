@@ -21,21 +21,14 @@
   <link Content-Type="text/css" href="/iotstyle.css" rel="stylesheet" />
 
   <style>
-    span.setconfig {
+    svg.setconfig {
       position: absolute;
       top: 0.5rem;
+      right: 0.5rem;
       height: 1.4rem;
       width: 1.4rem;
       background-size: 1.4rem;
     }
-
-    span.setconfig {
-      position: absolute;
-      right: 0.5rem;
-      background-image: url(/i/config.svg);
-      filter: brightness(600%);
-    }
-
 
     img,
     #panel {
@@ -71,7 +64,9 @@
         </svg>
         <h3 u-text="title"></h3>
         <h4 u-text="description"></h4>
-        <span class="setconfig"></span>
+        <svg class="setconfig">
+          <use href="./icons.svg#config" />
+        </svg>
       </div>
 
       <div class="col card" u-control="generic" u-is="generic" microID="${id}">
