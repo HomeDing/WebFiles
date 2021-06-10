@@ -23,7 +23,7 @@
   },
 
   "button": {
-    "properties": ["value"],
+    "properties": [],
     "events": ["value"],
     "actions": ["onclick", "ondoubleclick", "onpress"]
   },
@@ -39,19 +39,19 @@
   },
 
   "digitalout": {
-    "properties": ["pin", "inverse", "value"],
+    "properties": ["pin", "inverse"],
     "events": ["on", "off", "value"]
   },
 
   "displaydot": {
     "sys": "false",
-    "properties": ["page", "x", "y", "value"],
+    "properties": ["page", "x", "y"],
     "events": ["value", "clear", "redraw"]
   },
 
   "displaytext": {
     "sys": "false",
-    "properties": ["page", "x", "y", "fontsize", "value", "prefix", "postfix"],
+    "properties": ["page", "x", "y", "fontsize", "prefix", "postfix"],
     "events": ["value", "clear", "redraw"]
   },
 
@@ -84,19 +84,19 @@
   },
 
   "switch": {
-    "properties": ["value"],
+    "properties": [],
     "events": ["value", "toggle"],
     "actions": ["onvalue", "onhigh", "onlow"]
   },
 
   "value": {
-    "properties": ["min", "max", "value"],
+    "properties": ["min", "max"],
     "events": ["value", "up", "down"],
     "actions": ["onvalue"]
   },
 
   "map": {
-    "properties": ["value", "type", "maps/max", "maps/value", "maps/onmap"],
+    "properties": ["type", "rules/min", "rules/max", "rules/value", "rules/onvalue"],
     "events": ["value"],
     "actions": ["onvalue"]
   },
