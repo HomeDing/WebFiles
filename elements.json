@@ -15,6 +15,12 @@
     "actions": ["onvalue", "onreference", "onhigh", "onlow"]
   },
 
+  "reference": {
+    "properties": ["reference", "inverse"],
+    "events": ["value"],
+    "actions": ["onreference", "onhigh", "onlow"]
+  },
+
   "and": {
     "sys": "false",
     "properties": ["invert"],
@@ -101,6 +107,12 @@
     "actions": ["onvalue"]
   },
 
+  "scene": {
+    "properties": [],
+    "events": ["value"],
+    "actions": ["onvalue/*"]
+  },
+
   "ota": {
     "sys": "true",
     "properties": ["port", "passwd"]
@@ -150,6 +162,11 @@
     "icon": "dht",
     "properties": ["type", "address", "readtime", "warmuptime", "resendtime", "restart"],
     "actions": ["ontemperature", "onhumidity"]
+  },
+
+  "ds18b20": {
+    "properties": ["pin", "readtime", "warmuptime", "resendtime", "restart"],
+    "actions": ["ontemperature"]
   },
 
   "bme680": {
