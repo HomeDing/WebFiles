@@ -187,20 +187,17 @@
         </div>
       </div>
 
-      <div class="col card" u-control="webbutton" id="${id}" u-is="generic" microID="${id}">
-        <div class="block">
-          <button u-action="${onclick}" u-text="description"></button>
-        </div>
+      <div class="col card small" u-control="webbutton" microID="${id}" u-is="button">
+        <div class="block"><button u-text="description">.</button></div>
+      </div>
+
+      <div class="col card small" u-control="webbuttongroup" microID="${id}" u-is="buttongroup">
       </div>
     </div>
 
+
     <hr />
     <a href="/microide.htm">IDE</a>
-  </div>
-
-  <div id="modal" class="hidden">
-    <div id="back" onclick="modal.close()"></div>
-    <div id="container" style="width:260px;height:260px">Hello, this is modal</div>
   </div>
 
   <script>
@@ -226,7 +223,7 @@
 
           var e = micro.insertTemplate(panelObj, t, p);
           if (!e) {
-            t = alias[t]; // || 'generic';
+            t = alias[t] || 'generic'; // || 'generic';
             e = micro.insertTemplate(panelObj, t, p);
           }
         } // if

@@ -30,23 +30,23 @@ code, .code, code.hljs, pre code { background-color: #ffffb9; color: #111111; fo
 
 pre code { display: block; border-radius: 0.4rem; padding: 2px; }
 
-#modal { position: fixed; visibility: visible; opacity: 1; top: 0; left: 0; width: 100%; height: 100%; transition: opacity 0.3s ease-in-out; }
+div[u-control="modal"] { position: fixed; visibility: visible; opacity: 1; top: 0; left: 0; width: 100%; height: 100%; transition: opacity 0.3s ease-in-out; }
 
-#modal.hidden { visibility: hidden; opacity: 0; }
+div[u-control="modal"].hidden { visibility: hidden; opacity: 0; }
 
-#modal #back { position: absolute; width: 100%; height: 100%; background-color: #f0f0f0; opacity: 0.75; }
+div[u-control="modal"] .modalBack { position: absolute; width: 100%; height: 100%; background-color: #f0f0f0; opacity: 0.75; }
 
-#modal #container { position: absolute; top: 50%; left: 50%; min-width: 100px; min-height: 100px; transform: translateX(-50%) translateY(-50%); padding: 0.5em; background-color: white; }
+div[u-control="modal"] .modalFrame { position: absolute; top: 50%; left: 50%; min-width: 100px; min-height: 100px; transform: translateX(-50%) translateY(-50%); padding: 0.5em; background-color: white; }
 
-#modal #container::before, #modal #container::after { content: ""; position: absolute; background-color: red; z-index: -1; width: 40px; height: 40px; }
+div[u-control="modal"] .modalFrame::before, div[u-control="modal"] .modalFrame::after { content: ""; position: absolute; background-color: red; z-index: -1; width: 40px; height: 40px; }
 
-#modal #container::before { top: 0; right: 0; }
+div[u-control="modal"] .modalFrame::before { top: 0; right: 0; }
 
-#modal #container::after { bottom: 0; left: 0; }
+div[u-control="modal"] .modalFrame::after { bottom: 0; left: 0; }
 
-#modal .closedlg { position: absolute; top: 0.4rem; right: 0.4rem; height: 1.8rem; width: 1.8rem; font-size: 1.6rem; background-color: red; text-align: center; z-index: 3 !important; }
+div[u-control="modal"] .closedlg { position: absolute; top: 0.4rem; right: 0.4rem; height: 1.8rem; width: 1.8rem; font-size: 1.6rem; background-color: red; text-align: center; z-index: 3 !important; -ms-user-select: none; user-select: none; cursor: pointer; }
 
-.modal-object { position: fixed !important; z-index: 2 !important; margin: 0 !important; transition: all 0.3s ease-in-out !important; }
+.modal-object { position: fixed !important; z-index: 2 !important; margin: 0 !important; }
 
 .container { margin-right: 2rem; margin-left: 2rem; }
 

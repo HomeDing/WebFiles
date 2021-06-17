@@ -147,13 +147,13 @@ class GenericWidgetClass extends MicroControlClass {
     }
 
     if (src.classList.contains('setconfig')) {
-      modal.open('configelementdlg', this.data);
+      ModalDialogClass.open('configelementdlg', this.data);
 
     } else if (src.classList.contains('setactive')) {
       this.dispatchAction(toBool(this.data.active) ? 'stop' : 'start', '1');
 
     } else if (src.tagName === 'H3') {
-      modal.openFocus(this);
+      ModalDialogClass.openFocus(this);
     }
   }
 } // GenericWidgetClass

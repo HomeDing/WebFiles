@@ -382,13 +382,13 @@ var GenericWidgetClass = (function (_super) {
             this.dispatchAction(p.getAttribute('u-action'), p.getAttribute('value') || '1');
         }
         if (src.classList.contains('setconfig')) {
-            modal.open('configelementdlg', this.data);
+            ModalDialog2Class.open('configelementdlg', this.data);
         }
         else if (src.classList.contains('setactive')) {
             this.dispatchAction(toBool(this.data.active) ? 'stop' : 'start', '1');
         }
         else if (src.tagName === 'H3') {
-            modal.openFocus(this);
+            ModalDialog2Class.openFocus(this);
         }
     };
     GenericWidgetClass = __decorate([
@@ -1069,7 +1069,7 @@ var ModalDialogClass = (function () {
             this._isOpen = true;
         }
     };
-    ModalDialogClass.prototype.openFocus = function (obj) {
+    ModalDialogClass.prototype.focusElement = function (obj) {
         var p;
         if (!this._isOpen && (obj) && (obj.parentElement) && (this._mObj) && (this._cObj)) {
             this._focusObj = obj;
@@ -1122,6 +1122,111 @@ var ModalDialogClass = (function () {
     return ModalDialogClass;
 }());
 var modal = new ModalDialogClass();
+var ModalDialog2Class = (function (_super) {
+    __extends(ModalDialog2Class, _super);
+    function ModalDialog2Class() {
+        var _this = _super.call(this) || this;
+        _this._isOpen = false;
+        _this.params = {};
+        return _this;
+    }
+    ModalDialog2Class_1 = ModalDialog2Class;
+    ModalDialog2Class.open = function (tmplName, data) {
+        var m = micro.insertTemplate(document.body, 'modal', data);
+        m.open(tmplName, data);
+    };
+    ModalDialog2Class.openFocus = function (obj) {
+        var m = micro.insertTemplate(document.body, 'modal', {});
+        m.openFocus(obj);
+    };
+    ModalDialog2Class.next = function (tmplName, data) {
+        var m = this._stack[this._stack.length - 1];
+        m.next(tmplName, data);
+    };
+    ModalDialog2Class.save = function (data) {
+        var _a;
+        var m = this._stack[this._stack.length - 2];
+        var dlg = (_a = m._frameObj) === null || _a === void 0 ? void 0 : _a.firstElementChild;
+        if (dlg.save) {
+            dlg.save(data);
+        }
+    };
+    ModalDialog2Class.close = function () {
+        var m = this._stack[this._stack.length - 1];
+        m.close();
+    };
+    ModalDialog2Class.prototype.connectedCallback = function () {
+        _super.prototype.connectedCallback.call(this);
+        this._backObj = this.querySelector('.modalBack');
+        this._frameObj = this.querySelector('.modalFrame');
+    };
+    ModalDialog2Class.prototype.open = function (tmplName, data) {
+        ModalDialog2Class_1._stack.push(this);
+        if ((this._backObj) && (this._frameObj)) {
+            var dlg = micro.insertTemplate(this._frameObj, tmplName, data);
+            var fObj = dlg === null || dlg === void 0 ? void 0 : dlg.querySelector('input,button,select');
+            fObj === null || fObj === void 0 ? void 0 : fObj.focus();
+        }
+    };
+    ModalDialog2Class.prototype.next = function (tmplName, data) {
+        var _a;
+        if ((this._backObj) && (this._frameObj)) {
+            (_a = this._frameObj.firstElementChild) === null || _a === void 0 ? void 0 : _a.remove();
+            var dlg = micro.insertTemplate(this._frameObj, tmplName, data);
+            var fObj = dlg === null || dlg === void 0 ? void 0 : dlg.querySelector('input,button,select');
+            fObj === null || fObj === void 0 ? void 0 : fObj.focus();
+        }
+    };
+    ModalDialog2Class.prototype.openFocus = function (obj) {
+        if ((obj) && (obj.parentElement) && this._frameObj) {
+            this._focusObj = obj;
+            var r = obj.getBoundingClientRect();
+            this._placeObj = createHTMLElement(obj.parentElement, 'div', {
+                style: 'width:' + r.width + 'px;height:' + r.height + 'px',
+                class: obj.className
+            }, obj);
+            var f = 4;
+            f = Math.min(f, (window.innerWidth - 64) / r.width);
+            f = Math.min(f, (window.innerHeight - 64) / r.height);
+            var ph = createHTMLElement(this._frameObj, 'div', {
+                style: 'width:' + f * r.width + 'px;height:' + f * r.height + 'px;background-color:yellow'
+            });
+            var pr = ph.getBoundingClientRect();
+            obj.classList.add('modal-object');
+            obj.style.top = pr.top + 'px';
+            obj.style.left = pr.left + 'px';
+            obj.style.width = pr.width + 'px';
+            obj.style.height = pr.height + 'px';
+        }
+    };
+    ModalDialog2Class.prototype.on_click = function (evt) {
+        var tar = evt.target;
+        var ua = tar.getAttribute('u-action');
+        if (ua === 'close') {
+            this.close();
+        }
+    };
+    ModalDialog2Class.prototype.close = function () {
+        var _a;
+        if (this._focusObj) {
+            var o = this._focusObj;
+            o.classList.remove('modal-object');
+            o.style.top = '';
+            o.style.left = '';
+            o.style.width = '';
+            o.style.height = '';
+            (_a = this._placeObj) === null || _a === void 0 ? void 0 : _a.remove();
+        }
+        ModalDialog2Class_1._stack.pop();
+        this.remove();
+    };
+    var ModalDialog2Class_1;
+    ModalDialog2Class._stack = [];
+    ModalDialog2Class = ModalDialog2Class_1 = __decorate([
+        MicroControl('modal')
+    ], ModalDialog2Class);
+    return ModalDialog2Class;
+}(GenericWidgetClass));
 var PWMOutWidgetClass = (function (_super) {
     __extends(PWMOutWidgetClass, _super);
     function PWMOutWidgetClass() {
@@ -1402,7 +1507,8 @@ function getHashParams(defaults) {
     });
     return params;
 }
-function createHTMLElement(parentNode, tag, attr) {
+function createHTMLElement(parentNode, tag, attr, beforeNode) {
+    if (beforeNode === void 0) { beforeNode = null; }
     var o = document.createElement(tag);
     if (attr) {
         for (var a in attr) {
@@ -1411,7 +1517,12 @@ function createHTMLElement(parentNode, tag, attr) {
             }
         }
     }
-    parentNode.appendChild(o);
+    if (beforeNode) {
+        parentNode.insertBefore(o, beforeNode);
+    }
+    else {
+        parentNode.appendChild(o);
+    }
     return (o);
 }
 var TimerWidgetClass = (function (_super) {

@@ -37,6 +37,21 @@
 </div>
 
 
+<div u-control="actiondlg" u-is="actionDlg" class="card" ev="${ev}" val="${val}">
+  <div class="block header" style="height: 2em;">
+    <h2>Config ${ev}</h2>
+    <div class="closedlg" u-action="close">&#x00D7;</div>
+  </div>
+  <div class="block" style="font-size: 1.4">
+    ${ev} --- ${val}
+  </div>
+
+  <div class="block footer">
+    <button u-action="save" style="float:right">Save</button>
+  </div>
+</div>
+
+
 <script>
   // uElements.xxx from main page loading...
 
@@ -57,20 +72,17 @@
       });
     }, // connectedCallback()
 
-    onclick: function (evt /*:PointerEvent*/) {
-      var src /*:HTMLElement */ = evt.srcElement;
+    onclick: function (/** @type PointerEvent */ evt) {
+      var /** @type HTMLElement */ src = evt.srcElement;
       var ua = src.getAttribute('u-action');
 
-      if (ua === 'close') {
-        modal.close();
-
-      } else if (ua === 'next') {
+      if (ua === 'next') {
         if (this.objType.value === "0") {
           alert('Please select an implemented element type');
         } else if (this.objID.value === "") {
           alert('Please specify a name');
         } else {
-          modal.open('configelementdlg', {
+          ModalDialogClass.next('configelementdlg', {
             id: '/' + this.objType.value + '/' + this.objID.value
           });
         }
@@ -81,6 +93,7 @@
 
   micro.define("configElementDlg", {
     config: {},
+    params: {},
     /** @type HTMLElement */
     _blk: null,
     _id: '',
@@ -95,6 +108,15 @@
       createHTMLElement(g, 'img', { src: (isAction ? '/i/start.svg' : '/i/no.svg'), style: 'height:1em;width:1em' });
     }, // add()
 
+    _addAction: function (k, isEvent, isAction) {
+      var g = createHTMLElement(this._blk, 'div', { class: 'form-group' });
+      createHTMLElement(g, 'label').textContent = k + ':';
+      var i = createHTMLElement(g, 'input', { name: k, style: 'border-color:red', "u-action": 'actions', ev: k });
+      if (this.params[k.toLowerCase()] !== undefined)
+        i.value = this.params[k.toLowerCase()];
+      createHTMLElement(g, 'img', { src: '/i/start.svg', style: 'height:1em;width:1em' });
+    }, // _addAction()
+
     connectedCallback: function () {
       this._blk = this.querySelector('.block:not(.header)');
       this._type = this.params.id.split('/')[1];
@@ -107,17 +129,21 @@
       var d = uElements.defs[this._type];
       if (d) {
         for (n in d.events) this._add(d.events[n], true, false);
-        for (n in d.actions) this._add(d.actions[n], false, true);
+        for (n in d.actions) this._addAction(d.actions[n], false, true);
       }
     }, // connectedCallback()
+
+
+    save: function (data) {
+      var fld = this.querySelector('input[name="' + data.ev + '"]');
+      if (fld) fld.value = data.val;
+    },
+
 
     onclick: function (evt) {
       var ua = evt.srcElement.getAttribute('u-action');
 
-      if (ua === 'close') {
-        modal.close();
-
-      } else if (ua === 'save') {
+      if (ua === 'save') {
         // var b: HTMLElement;
         var c = {};
         var l = this._blk.querySelectorAll('input[name]');
@@ -126,9 +152,38 @@
           c[e.name] = e.value;
         });
         changeConfig(this._type + '/' + this._id, c);
-        modal.close();
+        ModalDialogClass.close();
+
+      } else if (ua === 'actions') {
+        var a = evt.srcElement.getAttribute('ev');
+        var v = evt.srcElement.value;
+        ModalDialogClass.open('actiondlg', { ev: a, val: v });
       }
     }
   }); // ConfigElementDlgBehavior
 
+  micro.define("actionDlg", {
+    config: {},
+    /** @type HTMLElement */
+    _blk: null,
+    _id: '',
+    params,
+
+    connectedCallback: function () {
+      this._blk = this.querySelector('.block:not(.header)');
+    }, // connectedCallback()
+
+    onclick: function (evt) {
+      var ua = evt.srcElement.getAttribute('u-action');
+      if (ua === 'save') {
+        debugger;
+
+        // simulate ???
+        this.params.val = 'switch/s?value=$v';
+
+        ModalDialogClass.save(this.params);
+        ModalDialogClass.close();
+      }
+    }
+  }); // actionDlgBehavior
 </script>

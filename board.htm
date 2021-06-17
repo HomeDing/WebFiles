@@ -51,6 +51,7 @@
       <a class="button" href="/microide.htm">IDE</a>
       <a class="button" href="/log.htm">Log</a>
       <span class="gap"></span>
+      <button id="testButton">(TEST)</button>
       <button id="sysButton">sys</button>
       <button id="addButton">+</button>
     </div>
@@ -58,6 +59,12 @@
     <div id="panel" class="row wrap"></div>
 
     <div id="u-templates" style="display:none">
+
+      <div u-control="modal" u-is="modal">
+        <div class="modalBack" u-action="close"></div>
+        <div class="modalFrame" class="modal-object"></div>
+      </div>
+
       <div class="cardheader block header">
         <svg class="icon">
           <use href="./icons.svg#${type}" />
@@ -193,14 +200,27 @@
           mode: <button u-action="mode" value="current">current</button>
           <button u-action="mode" value="voltage">voltage</button>
         </div>
+
+      </div>
+
+      <div u-control="testdlg" class="card">
+        <div class="block header" style="height: 2em;">
+          <h2>Test Dialog</h2>
+          <div class="closedlg" u-action="close">&#x00D7;</div>
+        </div>
+        <div class="block">
+          <p>Insert Dialog Content</p>
+          <p>Insert Dialog Content</p>
+          <p>Insert Dialog Content</p>
+          <p>Insert Dialog Content</p>
+          <p>Here.</p>
+        </div>
+        <div class="block footer">
+          <button xu-action="next" style="float:right" onclick="ModalDialogClass.open('bl0937', {});">Next</button>
+        </div>
       </div>
 
     </div>
-  </div>
-
-  <div id="modal" class="hidden">
-    <div id="back" onclick="modal.close()"></div>
-    <div id="container"></div>
   </div>
 
   <script>
@@ -232,7 +252,11 @@
     });
 
     addObj.addEventListener('click', function (evt) {
-      modal.open('newelementdlg');
+      ModalDialogClass.open('newelementdlg');
+    });
+
+    document.getElementById('testButton').addEventListener('click', function (evt) {
+      ModalDialogClass.open("testdlg", {});
     });
 
     // Element type reuse
