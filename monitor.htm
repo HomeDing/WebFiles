@@ -69,6 +69,8 @@
             <tr>
               <th>*</th>
               <th>hostname</th>
+              <th>room</th>
+              <th>title</th>
               <th>memory</th>
               <th>version</th>
               <th>uptime</th>
@@ -109,7 +111,7 @@
 
     var state = 0;
 
-    function addDevice(name) {
+    function addDevice(name, data) {
       var tab = document.querySelector('#devices');
       var r = tab.insertRow(-1);
       var c, o;
@@ -120,6 +122,13 @@
 
       c = r.insertCell(-1);
       createHTMLElement(c, 'a', { href: 'http://' + name }).innerText = name;
+
+      c = r.insertCell(-1);
+      c.innerText = data.room || '';
+
+      c = r.insertCell(-1);
+      c.innerText = data.title;
+      c.title = JSON.stringify(data, null, 2);
 
       c = r.insertCell(-1);
       c.className = 'memory';
@@ -145,7 +154,7 @@
         .then(function (json) {
           devices = Object.keys(json);
           for (var n = 0; n < devices.length; n++) {
-            remotes[n] = addDevice(devices[n]);
+            remotes[n] = addDevice(devices[n], json[devices[n]]);
           }
           window.setTimeout(updateNext, 10);
         });

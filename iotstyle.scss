@@ -224,7 +224,6 @@ div[u-control="modal"] {
   }
 }
 
-
 .modal-object {
   position: fixed !important;
   z-index: 2 !important;
@@ -621,13 +620,14 @@ button,
     border-color: #777777;
   }
 
-  + button, + .button {
+  + button,
+  + .button {
     margin-left: $gutter;
   }
 }
 
 *:focus {
-  outline:0;
+  outline: 0;
   border-color: $u-focus;
   box-shadow: 0 0 0.1rem 0.2rem $u-focus;
 }
