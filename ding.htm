@@ -223,7 +223,7 @@
 
           var e = micro.insertTemplate(panelObj, t, p);
           if (!e) {
-            t = alias[t] || 'generic'; // || 'generic';
+            t = alias[t]; // || 'generic';
             e = micro.insertTemplate(panelObj, t, p);
           }
         } // if

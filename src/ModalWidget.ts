@@ -131,7 +131,7 @@ class ModalDialogClass extends GenericWidgetClass {
 
       // size the dialog
       const ph = createHTMLElement(this._frameObj, 'div', {
-        style: 'width:' + f * r.width + 'px;height:' + f * r.height + 'px;background-color:yellow'
+        style: 'width:' + f * r.width + 'px;height:' + f * r.height + 'px'
       });
       const pr = ph.getBoundingClientRect();
 
