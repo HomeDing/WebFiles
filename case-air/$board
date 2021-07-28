@@ -23,6 +23,14 @@
     "active": "true",
     "value": "6"
   },
+  "log/aq": {
+    "active": "true",
+    "value": "6"
+  },
+  "log/hum": {
+    "active": "true",
+    "value": "45.20"
+  },
   "dht/on": {
     "active": "true",
     "temperature": "28.10",
@@ -32,7 +40,7 @@
     "active": "true",
     "temperature": "21.23",
     "humidity": "33.35",
-    "pressure":"99784",
+    "pressure":"99.784",
     "gas":"72724"
   }
 

@@ -1,0 +1,34 @@
+{
+  "device/0": {
+    "active": "true",
+    "name": "outdoor",
+    "title": "HomeDing sensor",
+    "description": "HomeDing sensor for temperature and humidity",
+    "safemode": "false",
+    "sd": "1",
+    "nextboot": "4294967241"
+  },
+  "ota/0": {
+    "active": "true"
+  },
+  "ntptime/0": {
+    "active": "true",
+    "now": "2021-07-28 08:55:32"
+  },
+  "switch/in1": {
+    "active": "true",
+    "value": "0"
+  },
+  "switch/in2": {
+    "active": "true",
+    "value": "0"
+  },
+  "and/a": {
+    "active": "true",
+    "value": "0"
+  },
+  "or/o": {
+    "active": "true",
+    "value": "1"
+  }
+}

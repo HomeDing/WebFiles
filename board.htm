@@ -139,7 +139,7 @@
         </div>
       </div>
 
-      <div class="col card" u-control="and" id="${id}" u-is="generic" microID="${id}">
+      <div class="col card" u-control="logic" id="${id}" u-is="generic" microID="${id}">
         <div u-is="include" ref=".cardheader"></div>
         <div class="block">
           <span class="u-bool ux-value" u-active="value"></span>
@@ -240,8 +240,8 @@
     var alias = {
       "sht20": "dht",
       "displayssd1306": "displayoled",
-      "displaysh1106": "displayoled"
-      , "neo": "light",
+      "displaysh1106": "displayoled",
+       "neo": "light", "and": "logic", "or": "logic"
       // ,
       // "my9291": "light"
     };

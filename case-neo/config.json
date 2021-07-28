@@ -1,6 +1,6 @@
 {
   "color": {
-    "l": {
+    "0": {
       "loglevel": 2,
       "config": "RGB",
       "mode": "fix",
@@ -26,7 +26,7 @@
       "mode": "flow"
     }
   },
-  "xmy9291": {
+  "my9291": {
     "0": {
       "pin": "2",
       "value": "0",

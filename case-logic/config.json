@@ -1,0 +1,34 @@
+{
+  "switch": {
+    "in1": {
+      "onvalue": "and/a?value[0]=$v,or/o?value[0]=$v"
+    },
+    "in2": {
+      "onvalue": "and/a?value[1]=$v,or/o?value[1]=$v"
+    }
+  },
+  "and": {
+    "a": {
+      "description": "Logical AND",
+      "invert": "false",
+      "value": [
+        "true",
+        "false"
+      ],
+      "onvalue": "device/0?log=AND:$v",
+      "title": "and/a"
+    }
+  },
+  "or": {
+    "o": {
+      "description": "Logical OR",
+      "invert": "false",
+      "value": [
+        "true",
+        "false"
+      ],
+      "onvalue": "device/0?log=OR:$v",
+      "title": "or/o"
+    }
+  }
+}
