@@ -133,8 +133,14 @@
   },
 
   "displaysh1106": {
-    "properties": ["address", "readtime", "resetpin", "height"],
+    "properties": ["address", "readtime", "resetpin", "height", "brightness"],
+    "events": ["page", "addpage", "clear"],
     "actions": ["onpage"]
+  },
+
+  "tm1627": {
+    "properties": ["datapin", "clockpin"],
+    "events": ["value", "enable", "brightness"]
   },
 
   "max7219": {
