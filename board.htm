@@ -188,6 +188,15 @@
         </div>
       </div>
 
+      <div class="col card" u-control="ina2xx" id="${id}" u-is="generic" microID="${id}">
+        <div u-is="include" ref=".cardheader"></div>
+        <div class="block">
+          <div class="form-group"><label>Voltage:</label><span u-text="voltage"></span></div>
+          <div class="form-group"><label>Current:</label><span u-text="current"></span></div>
+          <div class="form-group"><label>Power:</label><span u-text="power"></span></div>
+        </div>
+      </div>
+
       <div class="col card" u-control="bl0937" id="${id}" u-is="bl0937" microID="${id}">
         <div u-is="include" ref=".cardheader"></div>
         <div class="block">
@@ -249,7 +258,8 @@
       "sht20": "dht",
       "displayssd1306": "displayoled",
       "displaysh1106": "displayoled",
-       "neo": "light", "and": "logic", "or": "logic"
+      "neo": "light", "and": "logic", "or": "logic",
+      "ina219": "ina2xx", "ina226": "ina2xx"
       // ,
       // "my9291": "light"
     };
