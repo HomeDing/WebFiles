@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <title>Element Meta data check</title>
+
+  <link rel="icon" type="image/png" href="/favicon48.png" sizes="48x48">
+  <meta name="application-name" content="Ding" />
+  <meta name="msapplication-config" content="/browserconfig.xml" />
+  <meta name="msapplication-TileColor" content="#2b5797" />
+  <meta name="msapplication-TileImage" content="/favicon144.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon180.png" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <link rel="manifest" href="/site.webmanifest" />
+  <meta name="theme-color" content="#ffffff" />
+  <link rel="icon" type="image/png" href="/favicon48.png" sizes="48x48">
+
+  <link Content-Type="text/css" href="/iotstyle.css" rel="stylesheet" />
+
+  <script src="/micro.js"></script>
+</head>
+
+<body>
+  <div class="container-fluid">
+    <div class="row u-header">
+      <h1>Element Meta data check</h1>
+    </div>
+
+    <div class="row wrap">
+      <div class="col card">
+        <div class="block">
+          <div class="form-group">
+            <label for="elemsel">Element Type:</label>
+            <select id="elemsel">
+              <option disabled>select...</option>
+            </select>
+          </div>
+        </div>
+        <div class="block">
+          <object id="elemsvg" data="element.svg" type="image/svg+xml"></object>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    window.onerror = function (msg, url, lineNo, columnNo, error) {
+      var string = msg.toLowerCase();
+      var substring = 'script error';
+      if (string.indexOf(substring) > -1) {
+        alert('Script Error: See Browser Console for Detail');
+      } else {
+        var message = [
+          'Message: ' + msg,
+          'URL: ' + url,
+          'Line: ' + lineNo,
+          'Column: ' + columnNo,
+          'Error object: ' + JSON.stringify(error)
+        ].join(' - ');
+
+        alert(message);
+      }
+
+      return false;
+    };
+  </script>
+
+  <script>
+    var elementsData;
+    var selObj = document.getElementById('elemsel');
+    var elemsvgObj = document.getElementById('elemsvg');
+
+    function elemChange() {
+      var d = elementsData[selObj.value];
+      d.name = selObj.value;
+      elemsvgObj.getSVGDocument().api.create(d);
+    }
+
+    window.addEventListener('load', function () {
+      fetch('elements.json')
+        .then(function (result) {
+          return result.json();
+        })
+        .then(function (elList) {
+          elementsData = elList;
+          selObj.innerHTML = '';
+          for (e in elList) {
+            createHTMLElement(selObj, 'option', { value: e }).textContent = e;
+          }
+          elemChange();
+        });
+
+      selObj.addEventListener('change', elemChange);
+    });
+  </script>
+</body>
+
+</html>
