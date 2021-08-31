@@ -87,18 +87,19 @@ var MicroRegistry = (function () {
             }
             else if (obj.nodeType === Node.ELEMENT_NODE) {
                 var attr = obj.attributes;
-                if (obj.namespaceURI === 'http://www.w3.org/2000/svg') {
-                    for (var i = 0; i < attr.length; i++) {
-                        var v = attr[i].value;
-                        if (v.indexOf('${') >= 0) {
+                for (var i = 0; i < attr.length; i++) {
+                    var v = attr[i].value;
+                    if (v.indexOf('${') >= 0) {
+                        if (!obj[attr[i].name]) {
+                            console.log('0');
+                            obj.setAttribute(attr[i].name, fill(v));
+                        }
+                        else if (obj[attr[i].name].baseVal !== undefined) {
+                            console.log('1', obj[attr[i].name].baseVal);
                             obj[attr[i].name].baseVal = fill(v);
                         }
-                    }
-                }
-                else {
-                    for (var i = 0; i < attr.length; i++) {
-                        var v = attr[i].value;
-                        if (v.indexOf('${') >= 0) {
+                        else {
+                            console.log('2', obj[attr[i].name].baseVal);
                             obj.setAttribute(attr[i].name, fill(v));
                         }
                     }

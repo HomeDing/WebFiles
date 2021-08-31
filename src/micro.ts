@@ -85,14 +85,12 @@ class MicroRegistry {
           if (v.indexOf('${') >= 0) {
             if (! (<any>obj)[attr[i].name]) {
               // custom attribute
-              console.log ('0');
               (obj as HTMLElement).setAttribute(attr[i].name, fill(v));
             } else if ((<any>obj)[attr[i].name].baseVal !== undefined) {
               // svg annimated
-              console.log ('1', (<any>obj)[attr[i].name].baseVal);
               (<any>obj)[attr[i].name].baseVal = fill(v);
             } else {
-              console.log ('2', (<any>obj)[attr[i].name].baseVal);
+              // html attribute
               (obj as HTMLElement).setAttribute(attr[i].name, fill(v));
             }
           } // if
