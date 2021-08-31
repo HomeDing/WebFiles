@@ -80,24 +80,23 @@ class MicroRegistry {
       } else if (obj.nodeType === Node.ELEMENT_NODE) {
         const attr = (obj as HTMLElement).attributes;
 
-        if (obj.namespaceURI === 'http://www.w3.org/2000/svg') {
-          // SVGElement
-          for (let i = 0; i < attr.length; i++) {
-            const v: string = attr[i].value;
-            if (v.indexOf('${') >= 0) {
-              (<any>obj)[attr[i].name].baseVal = fill(v);
-            } // if
-          } // for
-
-        } else {
-          // HTMLElement
-          for (let i = 0; i < attr.length; i++) {
-            const v: string = attr[i].value;
-            if (v.indexOf('${') >= 0) {
+        for (let i = 0; i < attr.length; i++) {
+          const v: string = attr[i].value;
+          if (v.indexOf('${') >= 0) {
+            if (! (<any>obj)[attr[i].name]) {
+              // custom attribute
+              console.log ('0');
               (obj as HTMLElement).setAttribute(attr[i].name, fill(v));
-            } // if
-          } // for
-        }
+            } else if ((<any>obj)[attr[i].name].baseVal !== undefined) {
+              // svg annimated
+              console.log ('1', (<any>obj)[attr[i].name].baseVal);
+              (<any>obj)[attr[i].name].baseVal = fill(v);
+            } else {
+              console.log ('2', (<any>obj)[attr[i].name].baseVal);
+              (obj as HTMLElement).setAttribute(attr[i].name, fill(v));
+            }
+          } // if
+        } // for
         obj.childNodes.forEach(c => {
           this._setPlaceholders(c, props);
         });
