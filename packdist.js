@@ -8,7 +8,7 @@ const yargs = require('yargs');
 const debug = require('debug');
 const shell = require('shelljs');
 
-const sass = require('node-sass');
+const sass = require('sass');
 const minify = require('html-minifier').minify;
 const uglify = require("uglify-js");
 
@@ -58,7 +58,6 @@ const assets = [
   { m: 'xml', src: 'i/no.svg' },
   { m: 'xml', src: 'i/device.svg' },
   { m: 'xml', src: 'i/config.svg' },
-  { m: 'xml', src: 'i/menui.svg' },
   { m: 'xml', src: 'i/reload.svg' },
   { m: 'css', src: 'iotstyle.scss', tar: 'iotstyle.css' },
 

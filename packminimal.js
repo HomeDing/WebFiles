@@ -8,7 +8,7 @@ const yargs = require('yargs');
 const debug = require('debug');
 const shell = require('shelljs');
 
-const sass = require('node-sass');
+const sass = require('sass');
 const minify = require('html-minifier').minify;
 const uglify = require("uglify-js");
 
