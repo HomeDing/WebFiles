@@ -7,6 +7,8 @@
     "order/properties-alphabetical-order": null,
     "selector-max-id": 2,
     "selector-no-qualifying-type": [true, { "ignore": ["class", "attribute"]  } ],
-    "at-rule-allowed-list": ["use"]
+    "selector-class-pattern": "[a-zA-Z]*",
+    "at-rule-allowed-list": ["use", "media"],
+    "function-parentheses-space-inside":"never-single-line"
   }
 }
