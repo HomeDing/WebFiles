@@ -57,6 +57,7 @@
 -i/power.svg
 -i/pwmout.svg
 -i/radio.svg
+-i/reload.svg
 -i/remote.svg
 -i/rfsend.svg
 -i/rotary.svg

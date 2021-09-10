@@ -58,11 +58,13 @@ const assets = [
   { m: 'xml', src: 'i/no.svg' },
   { m: 'xml', src: 'i/device.svg' },
   { m: 'xml', src: 'i/config.svg' },
-  { m: 'xml', src: 'i/reload.svg' },
   { m: 'css', src: 'iotstyle.scss', tar: 'iotstyle.css' },
 
   { m: 'xml', src: 'chartline.svg' },
+  { m: 'js', src: 'chartline.js' },
   { m: 'xml', src: 'chartpie.svg' },
+  { m: 'js', src: 'chartpie.js' },
+  { m: 'js', src: 'microsvg.js' },
 
   { m: 'm', src: 'index.htm' },
   { m: 'm', src: 'updateicons.htm' },
@@ -71,6 +73,7 @@ const assets = [
   { m: 'm', src: 'board-new.htm' },
   { m: 'm', src: 'board-templates.htm' },
   { m: 'm', src: 'ding.htm' },
+  { m: 'c', src: 'elements.json' },
   { m: 'm', src: 'log.htm' },
   { m: 'm', src: 'panel.htm' },
   { m: 'm', src: 'panel.js' },

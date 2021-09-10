@@ -7,6 +7,8 @@ var __extends = (this && this.__extends) || (function () {
         return extendStatics(d, b);
     };
     return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
         extendStatics(d, b);
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
@@ -91,15 +93,12 @@ var MicroRegistry = (function () {
                     var v = attr[i].value;
                     if (v.indexOf('${') >= 0) {
                         if (!obj[attr[i].name]) {
-                            console.log('0');
                             obj.setAttribute(attr[i].name, fill(v));
                         }
                         else if (obj[attr[i].name].baseVal !== undefined) {
-                            console.log('1', obj[attr[i].name].baseVal);
                             obj[attr[i].name].baseVal = fill(v);
                         }
                         else {
-                            console.log('2', obj[attr[i].name].baseVal);
                             obj.setAttribute(attr[i].name, fill(v));
                         }
                     }

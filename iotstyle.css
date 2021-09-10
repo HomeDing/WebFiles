@@ -179,7 +179,6 @@ div[u-control=modal] .closedlg {
   background-color: red;
   text-align: center;
   z-index: 3 !important;
-  -ms-user-select: none;
   user-select: none;
   cursor: pointer;
 }
@@ -301,7 +300,6 @@ svg.button .connect {
   fill-opacity: 1;
 }
 svg.icon {
-  -ms-user-select: none;
   user-select: none;
 }
 
@@ -504,7 +502,6 @@ button,
   background-color: #0f388a;
   color: white;
   cursor: pointer;
-  -ms-user-select: none;
   user-select: none;
 }
 button:visited,
@@ -807,7 +804,6 @@ button + .button,
 
 /* === Light input sliders === */
 .band {
-  -webkit-appearance: none;
   appearance: none;
   outline: none;
   height: 1.4rem;
@@ -815,7 +811,6 @@ button + .button,
   margin-bottom: 0.8rem;
 }
 .band::-webkit-slider-thumb {
-  -webkit-appearance: none;
   appearance: none;
   width: 0;
   height: 0;
@@ -825,7 +820,7 @@ button + .button,
   margin-top: -0.1rem;
 }
 .band.hue {
-  background: linear-gradient(to right, #ff0000 0%, #ffff00 17%, #00ff00 33%, #00ffff 50%, #0000ff 67%, #ff00ff 83%, #ff0000 100%);
+  background: linear-gradient(to right, red 0%, yellow 17%, lime 33%, aqua 50%, blue 67%, fuchsia 83%, red 100%);
 }
 .band.white, .band.lightness, .band.saturation {
   background: linear-gradient(to right, black 0%, white 100%);
