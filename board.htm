@@ -107,32 +107,31 @@
         </div>
       </div>
 
-      <div class="col card" u-control="switch" id="${id}" u-is="switch" microID="${id}">
+      <div class="col card" u-control="switch" id="${id}" u-is="generic" microID="${id}">
         <div u-is="include" ref=".cardheader"></div>
         <div class="block">
           <span class="u-bool ux-value border" u-active="value"></span>
-          <div class="u-slider u-switch" u-active="value">
-            <label value="0">off</label>
-            <div class="box">
-              <div class="handle"></div>
-            </div>
-            <label value="1">on</label>
+          <div u-is="input">
+            <label class="down">off</label>
+            <input class="switch" u-value="value" type="range">
+            <label class="up">on</label>
           </div>
+
+          <!-- <input u-value="value"> -->
+
         </div>
       </div>
 
-      <div class="col card" u-control="value" u-is="slider" microID="${id}">
+      <div class="col card" u-control="value" id="${id}" u-is="generic" microID="${id}">
         <div u-is="include" ref=".cardheader"></div>
         <div class="block">
           <div class="form-group"><label>value:</label><span u-text="value"></span></div>
-          <div class="u-slider">
+          <div u-is="input">
             <label class="down"><svg class="icon">
                 <use href="./icons.svg#minus" />
               </svg></label>
-            <div class="box" style="width:240px">
-              <div class="handle"></div>
-            </div>
-            <label class="up"><svg class="icon">
+            <input u-value="value" type="range">
+            <label class="down"><svg class="icon">
                 <use href="./icons.svg#plus" />
               </svg></label>
           </div>
@@ -160,10 +159,10 @@
         <div class="block">
           <div class="form-group"><label>value:</label><span u-text="value"></span><span class="color border"
               style="width:6rem;"></span></div>
-          <input type="range" max="359" class="band border hue">
-          <input type="range" max="255" class="band border saturation" u-value="saturation">
-          <input type="range" max="255" class="band border lightness" u-value="lightness">
-          <input type="range" max="255" class="band border white">
+          <input type="range" max="359" style="width: 100%;" class="band hue">
+          <input type="range" max="255" style="width: 100%;" class="band saturation" u-value="saturation">
+          <input type="range" max="255" style="width: 100%;" class="band lightness" u-value="lightness">
+          <input type="range" max="255" style="width: 100%;" class="band white">
         </div>
         <div class="block footer">
           <button u-action="mode" value="fade">fade</button><button u-action="mode" value="fix">fix</button><button

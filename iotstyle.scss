@@ -141,7 +141,7 @@ pre code {
   background-color: rgb(255, 255, 185);
   color: $u-text;
   font-size: 16px;
-  font-family: 'Courier New', Courier, monospace;
+  font-family: "Courier New", Courier, monospace;
 
   @media print {
     border: 1px solid $u-text;
@@ -156,7 +156,7 @@ pre code {
 
 // ===== Modal dialogs and focus Object
 
-div[u-control='modal'] {
+div[u-control="modal"] {
   position: fixed;
   visibility: visible;
   opacity: 1;
@@ -191,7 +191,7 @@ div[u-control='modal'] {
 
     &::before,
     &::after {
-      content: '';
+      content: "";
       position: absolute;
       background-color: red;
       z-index: -1;
@@ -576,15 +576,6 @@ main {
 
 // ===== forms elements and groups =====
 
-select,
-option {
-  padding: 0;
-}
-
-option[disabled] {
-  color: $u-disabled;
-}
-
 button,
 .button {
   display: inline-block;
@@ -623,6 +614,80 @@ button,
   + .button {
     margin-left: $gutter;
   }
+}
+
+// standard input elements
+// label
+
+label,
+input,
+select {
+  display: inline-block;
+  vertical-align: top;
+  height: 1.4rem;
+  margin: 0;
+  padding: 0;
+  font-size: 1rem;
+  border: $u-input-border;
+}
+
+input,
+select {
+  width: 12rem;
+  padding: 0 0.1em;
+  background-color: white;
+}
+
+label {
+  cursor: pointer;
+  border-color: transparent;
+  > img,
+  > .icon {
+    vertical-align: middle;
+    width: 1.2rem !important;
+    height: 1.2rem !important;
+    margin: 0 !important;
+  }
+}
+
+input[type="checkbox"] {
+  width: 1.4rem;
+  margin: 0 $gutter 0 0;
+}
+
+option {
+  padding: 0;
+}
+
+option[disabled] {
+  color: $u-disabled;
+}
+
+// slider implemented using input[type=range] element
+
+input[type="range"] {
+  appearance: none;
+  width: 18rem;
+  transition: 0.4s all ease-out;
+  // border: 1px solid #555555;
+  border-radius: 0.7rem;
+
+  &::-webkit-slider-thumb {
+    appearance: none;
+    height: 16px;
+    width: 16px;
+    border-radius: 8px;
+    background: #203050;
+    border: 1px solid #f0f0f0;
+    cursor: pointer;
+  }
+}
+
+// switch = slider with range 0..1
+
+input.switch[type="range"] {
+  pointer-events: none;
+  width: 2.2rem;
 }
 
 *:focus {
@@ -664,38 +729,26 @@ button,
 .form-group {
   display: flex;
 
-  > label {
-    display: inline-block;
+  &:not(:last-child) {
+    margin-bottom: $gutter;
+  }
+
+  > label:first-child {
     margin-right: $gutter;
-    border: $u-output-border;
     text-align: right;
-    width: 8em;
+    width: 7em;
   }
 
-  > input,
-  > span,
-  > select {
-    display: inline-block;
-    width: 12em;
-    font-size: 1em;
+  > :not(:first-child) {
+    margin: 0;
+    .icon {
+      margin: 0 !important;
+    }
   }
 
-  > input,
-  > select {
-    border: $u-input-border;
+  input[type="range"] {
+    width: 9.2rem;
   }
-
-  > input {
-    padding: 0 0.1em;
-  }
-
-  > span {
-    border: $u-output-border;
-  }
-}
-
-.form-group:not(:last-child) {
-  margin-bottom: $gutter;
 }
 
 .invalid {
@@ -762,11 +815,11 @@ button,
   background-color: silver;
 }
 
-.u-bool[value='1'] {
+.u-bool[value="1"] {
   background-image: linear-gradient(145deg, lighten($u-on, 30%), $u-on);
 }
 
-.u-bool[value='0'] {
+.u-bool[value="0"] {
   background-image: linear-gradient(145deg, lighten($u-off, 30%), $u-off);
 }
 
@@ -814,59 +867,6 @@ button,
   top: 0.4em;
   height: 0.6em;
   background-color: red;
-}
-
-/* === SWITCH === */
-
-.u-slider {
-  display: inline-block;
-  width: 100%;
-
-  > label {
-    display: inline-block;
-    padding: 0 0.2em;
-    margin-bottom: 0.5rem;
-    vertical-align: top;
-    font-size: 1.4rem;
-    cursor: pointer;
-
-    > img,
-    > .icon {
-      width: 1.2em !important;
-      height: 1.2em !important;
-      margin: 0;
-    }
-  }
-
-  > .box {
-    position: relative;
-    cursor: pointer;
-    display: inline-block;
-    width: 3rem;
-    height: 1.7rem;
-    border: 0.125rem solid $u-border-color;
-    border-radius: 1.25rem;
-    background-color: $u-background;
-    padding: 0.125rem;
-
-    > .handle {
-      position: relative;
-      display: inline-block;
-      left: 0;
-      height: 1.2rem;
-      width: 1.2rem;
-      border-radius: 1.2rem;
-      background-color: #203050;
-    }
-  }
-
-  &.u-switch > .box > .handle {
-    transition: left 0.2s cubic-bezier(0.25, 0.1, 0.25, 1);
-  }
-
-  &.u-switch.active > .box > .handle {
-    left: 1.3rem;
-  }
 }
 
 .text-right {

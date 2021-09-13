@@ -45,34 +45,6 @@
       right: 2.2rem;
       background-image: url(/i/config.svg);
     }
-
-    svg {
-      fill: red !important;
-    }
-
-    input#sl[type=range] {
-      width: 3rem;
-    }
-
-    input[type=range] {
-      width: 100%;
-      height: 30px;
-      -webkit-appearance: none;
-      transition: 0.4s all ease-out;
-      border: 3px solid #555555;
-      background-color: #f0f0f0;
-      border-radius: 16px;
-    }
-
-    input[type=range]::-webkit-slider-thumb {
-      height: 24px;
-      width: 24px;
-      border-radius: 12px;
-      background: #203050;
-      border: 2px solid #f0f0f0;
-      cursor: pointer;
-      -webkit-appearance: none;
-    }
   </style>
 
   </style>
@@ -86,7 +58,9 @@
     </div>
 
     <div class="row u-navbar">
-      <svg class="button" tabindex=0><use href="./icons.svg#menu" id="menuButton" /></svg>
+      <svg class="button" tabindex=0>
+        <use href="./icons.svg#menu" id="menuButton" />
+      </svg>
       <a class="button" href="/">Home</a>
       <a class="button" href="/board.htm">Board</a>
       <a class="button" href="/microide.htm">IDE</a>
@@ -112,43 +86,6 @@
 }
 </code></pre>
         </ul>
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="u-slider u-switch" u-active="value">
-        <label value="0">off</label>
-        <div class="box">
-          <div class="handle"></div>
-        </div>
-        <label value="1">on</label>
-      </div>
-
-      <div class="u-slider">
-        <label class="down"><svg class="icon">
-            <use href="./icons.svg#minus" />
-          </svg></label>
-        <div class="box" style="width:240px">
-          <div class="handle"></div>
-        </div>
-        <label class="up"><svg class="icon">
-            <use href="./icons.svg#plus" />
-          </svg></label>
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="u-slider">
-        <label>off</label>
-        <input id="sl" type="range" min="0" max="1">
-        <label>on</label>
-      </div>
-
-    </div>
-
-    <div class="row">
-      <div>
-        <input id="sl" type="range" min="0" max="1">
       </div>
     </div>
 
@@ -197,6 +134,22 @@
               <option>{select} Select here...</option>
             </select>
           </div>
+          <div class="form-group"><label></label><label style="border: 0;"><input type="checkbox">done.</label></div>
+          <div class="form-group"><label>volume:</label>
+            <div u-is="input">
+              <label class="down"><svg class="icon"><use href="./icons.svg#minus" /></svg></label>
+              <input type="range" min="0" max="8">
+              <label class="up"><svg class="icon"><use href="./icons.svg#plus" /></svg></label>
+            </div>
+          </div>
+          <div class="form-group"><label>volume:</label>
+            <div u-is="input" u-active="value">
+              <label class="down">off</label>
+              <input class="switch" type="range">
+              <label class="up">on</label>
+            </div>
+          </div>
+          
         </div>
         <div class="block footer">
           <button u-action="start" value="1">Start</button>
@@ -264,12 +217,10 @@
             <use href="./icons.svg#timer" />
           </svg>
           <h3>.icon.small</h3>
-          <div class="u-slider u-switch" u-active="value">
-            <label value="0">off</label>
-            <div class="box">
-              <div class="handle"></div>
-            </div>
-            <label value="1">on</label>
+          <div u-is="input" u-active="value">
+            <label class="down">off</label>
+            <input class="switch" type="range">
+            <label class="up">on</label>
           </div>
         </div>
       </div>

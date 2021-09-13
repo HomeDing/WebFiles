@@ -25,7 +25,6 @@ class IncludeWidgetClass extends MicroControlClass {
     if (obj) {
       const e = obj.cloneNode(true) as HTMLElement;
       const root = this.parentElement;
-      // root?.insertBefore(e, this);
       root?.replaceChild(e, this);
     }
   } // connectedCallback

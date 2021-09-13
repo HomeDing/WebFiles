@@ -1,4 +1,4 @@
-// GenericWidget.ts: Basic Behaviors implementation for Elements
+// GenericWidget.ts: Basic Behavior implementation for UI of Elements
 
 /// <reference path="micro.ts" />
 /// <reference path="microControls.ts" />
@@ -97,7 +97,8 @@ class GenericWidgetClass extends MicroControlClass {
             debounce(this.dispatchNext.bind(this))();
           } else {
             // @ts-ignore
-            if (updateAsap) { updateAsap(); }
+            try { updateAsap() } catch { };
+            // if (updateAsap) { updateAsap(); }
           } // if
         });
       }

@@ -17,6 +17,18 @@ interface MicroControlClass extends HTMLElement {
 
 class MicroControlClass {
   connectedCallback(): void {}
+
+  /// <summary>remove all textnodes from the control to avoid unwanted spaces.</summary>
+  _clearWhitespace() {
+    let obj = <Node>this.firstChild;
+    while (obj) {
+      const nextObj = <Node>obj.nextSibling;
+      if (obj.nodeType === 3) {
+        obj.parentNode?.removeChild(obj);
+      }
+      obj = nextObj;
+    } // while
+  } // _clearWhitespace
 }
 
 // Decorator for micro-controls.

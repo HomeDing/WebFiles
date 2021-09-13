@@ -258,6 +258,17 @@ var MicroControlClass = (function () {
     function MicroControlClass() {
     }
     MicroControlClass.prototype.connectedCallback = function () { };
+    MicroControlClass.prototype._clearWhitespace = function () {
+        var _a;
+        var obj = this.firstChild;
+        while (obj) {
+            var nextObj = obj.nextSibling;
+            if (obj.nodeType === 3) {
+                (_a = obj.parentNode) === null || _a === void 0 ? void 0 : _a.removeChild(obj);
+            }
+            obj = nextObj;
+        }
+    };
     return MicroControlClass;
 }());
 function MicroControl(isSelector) {
@@ -343,9 +354,11 @@ var GenericWidgetClass = (function (_super) {
                         debounce(_this.dispatchNext.bind(_this))();
                     }
                     else {
-                        if (updateAsap) {
+                        try {
                             updateAsap();
                         }
+                        catch (_a) { }
+                        ;
                     }
                 });
             }
@@ -925,6 +938,94 @@ var IncludeWidgetClass = (function (_super) {
     ], IncludeWidgetClass);
     return IncludeWidgetClass;
 }(MicroControlClass));
+var InputWidgetClass = (function (_super) {
+    __extends(InputWidgetClass, _super);
+    function InputWidgetClass() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this._input = null;
+        _this._type = '';
+        _this._value = '';
+        return _this;
+    }
+    InputWidgetClass.prototype.connectedCallback = function () {
+        if (this.tagName === 'INPUT') {
+            this._input = this;
+        }
+        else {
+            this._input = this.querySelector('input');
+        }
+        _super.prototype.connectedCallback.call(this);
+        if (this._input) {
+            var type = this._input.getAttribute('type') || 'text';
+            if ((type === 'range') && (this._input.classList.contains('switch'))) {
+                type = 'switch';
+                this._input.min = '0';
+                this._input.max = '1';
+            }
+            this._type = type;
+            this._value = this._input.value;
+        }
+        this._clearWhitespace();
+    };
+    InputWidgetClass.prototype._check = function () {
+        if (this._input) {
+            var newVal = this._value;
+            var t = this._type;
+            if (t === 'checkbox') {
+                newVal = this._input.checked ? '1' : '0';
+            }
+            else if ((t === 'range') || (t === 'switch')) {
+                newVal = this._input.value;
+            }
+            if (newVal !== this._value) {
+                this._value = newVal;
+                this._input.dispatchEvent(new Event('change', { bubbles: true }));
+            }
+        }
+    };
+    InputWidgetClass.prototype.on_change = function () {
+        this._check();
+    };
+    InputWidgetClass.prototype.on_click = function (e) {
+        var src = e.target;
+        if (this._input) {
+            this._value = this._input.value;
+            while (src) {
+                if ((this._type === 'range') || (this._type === 'switch')) {
+                    var cl = src.classList;
+                    if (cl.contains('up')) {
+                        var nv = Number(this._input.value) + (Number((this._input.step) || 1));
+                        this._input.value = String(nv);
+                        break;
+                    }
+                    else if (cl.contains('down')) {
+                        var nv = Number(this._input.value) - (Number((this._input.step) || 1));
+                        this._input.value = String(nv);
+                        break;
+                    }
+                }
+                if (this._type === 'switch') {
+                    if (src === this._input || src === this) {
+                        this._input.value = String(1 - Number(this._input.value));
+                        break;
+                    }
+                }
+                if (src === this) {
+                    break;
+                }
+                else {
+                    src = src.parentElement;
+                }
+            }
+            this._input.focus();
+        }
+        this._check();
+    };
+    InputWidgetClass = __decorate([
+        MicroControl('input')
+    ], InputWidgetClass);
+    return InputWidgetClass;
+}(MicroControlClass));
 function jsonParse(obj, cbFunc) {
     function _jsonParse(path, key, value) {
         var path2 = key ? path + '/' + key : path;
@@ -1185,152 +1286,6 @@ var PWMOutWidgetClass = (function (_super) {
         MicroControl('pwmout')
     ], PWMOutWidgetClass);
     return PWMOutWidgetClass;
-}(GenericWidgetClass));
-var SliderWidgetClass = (function (_super) {
-    __extends(SliderWidgetClass, _super);
-    function SliderWidgetClass() {
-        var _this = _super !== null && _super.apply(this, arguments) || this;
-        _this._slider = null;
-        _this._handle = null;
-        _this._lastValue = -1;
-        _this._maxright = 100;
-        _this._x = 0;
-        _this._xOffset = 0;
-        _this.unit = 1;
-        _this._type = 'int';
-        _this.minvalue = 0;
-        _this.maxvalue = 255;
-        return _this;
-    }
-    SliderWidgetClass.prototype.connectedCallback = function () {
-        this._slider = this.querySelector('.u-slider');
-        this._handle = this.querySelector('.handle');
-        _super.prototype.connectedCallback.call(this);
-        if (this._handle) {
-            var p = this._handle.parentElement;
-            var ps = getComputedStyle(p);
-            this._maxright = p.clientWidth - this._handle.offsetWidth - parseFloat(ps.paddingLeft) - parseFloat(ps.paddingRight);
-        }
-    };
-    SliderWidgetClass.prototype._adjustHandle = function (val) {
-        if (this._handle) {
-            var left = val - this.minvalue;
-            left = Math.round(left * this._maxright / (this.maxvalue - this.minvalue));
-            left = Math.min(this._maxright, Math.max(0, left));
-            this._handle.style.left = left + 'px';
-        }
-    };
-    SliderWidgetClass.prototype.newData = function (path, key, value) {
-        _super.prototype.newData.call(this, path, key, value);
-        if (key === 'value') {
-            var v = Number(value);
-            if (v !== this._lastValue) {
-                this._adjustHandle(v);
-                this._lastValue = v;
-            }
-        }
-        else if (key === 'min') {
-            this.minvalue = Number(value);
-        }
-        else if (key === 'max') {
-            this.maxvalue = Number(value);
-        }
-        else if (key === 'step') {
-            this.unit = Number(value);
-        }
-        else if (key === 'type') {
-            this._type = value;
-            if (this._slider) {
-                if (value === 'string') {
-                    this._slider.style.display = 'none';
-                }
-            }
-        }
-    };
-    SliderWidgetClass.prototype.on_click = function (e) {
-        var src = e.target;
-        while (src && src !== this) {
-            if (src.tagName === 'LABEL' && src.classList.contains('up')) {
-                this.dispatchAction('up', '1');
-                break;
-            }
-            else if (src.tagName === 'LABEL' && src.classList.contains('down')) {
-                this.dispatchAction('down', '1');
-                break;
-            }
-            src = src.parentElement;
-        }
-        _super.prototype.on_click.call(this, e);
-    };
-    SliderWidgetClass.prototype.on_mousedown = function (evt) {
-        if (evt.target === this._handle) {
-            this.MoveStart(evt);
-        }
-    };
-    SliderWidgetClass.prototype.MoveStart = function (evt) {
-        this._xOffset = 0;
-        var obj = this._handle.offsetParent;
-        while (obj != null) {
-            this._xOffset += obj.offsetLeft;
-            obj = obj.offsetParent;
-        }
-        this._x = evt.clientX - (this._handle.offsetLeft + this._xOffset);
-        this._moveFunc = this._onmousemove.bind(this);
-        document.addEventListener('mousemove', this._moveFunc, false);
-        this._upFunc = this._onmouseup.bind(this);
-        document.addEventListener('mouseup', this._upFunc, false);
-        evt.cancelBubble = true;
-        evt.returnValue = false;
-    };
-    SliderWidgetClass.prototype._onmousemove = function (evt) {
-        var left = evt.clientX - this._x - this._xOffset;
-        left = Math.min(this._maxright, Math.max(0, left));
-        var val = Math.round(left * (this.maxvalue - this.minvalue) / this._maxright + this.minvalue);
-        val = Math.round(val / this.unit) * this.unit;
-        this._adjustHandle(val);
-        if (val !== this._lastValue) {
-            this._lastValue = val;
-            this.dispatchAction('value', String(val));
-        }
-    };
-    SliderWidgetClass.prototype._onmouseup = function (evt) {
-        evt = evt || window.event;
-        document.removeEventListener('mousemove', this._moveFunc);
-        document.removeEventListener('mouseup', this._upFunc);
-    };
-    SliderWidgetClass.prototype.on_touchstart = function (evt) {
-        var t = evt.targetTouches[0].target;
-        if (t === this._handle) {
-            console.log('TouchStart');
-        }
-    };
-    SliderWidgetClass = __decorate([
-        MicroControl('slider')
-    ], SliderWidgetClass);
-    return SliderWidgetClass;
-}(GenericWidgetClass));
-var SwitchWidgetClass = (function (_super) {
-    __extends(SwitchWidgetClass, _super);
-    function SwitchWidgetClass() {
-        return _super !== null && _super.apply(this, arguments) || this;
-    }
-    SwitchWidgetClass.prototype.on_click = function (e) {
-        var o = this.querySelector('.u-switch');
-        var src = e.srcElement;
-        while (src !== null && src !== this && src !== o) {
-            src = src.parentElement;
-        }
-        if (src === o) {
-            this.dispatchAction('toggle', '1');
-        }
-        else {
-            _super.prototype.on_click.call(this, e);
-        }
-    };
-    SwitchWidgetClass = __decorate([
-        MicroControl('switch')
-    ], SwitchWidgetClass);
-    return SwitchWidgetClass;
 }(GenericWidgetClass));
 function toBool(s) {
     if (!s) {
