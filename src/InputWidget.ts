@@ -1,5 +1,5 @@
 // InputWidget.ts: Widget Behavior implementation for enriching Input Elements
-// supporting checkbox, range (and switch) 
+// supporting checkbox, range (and switch)
 
 // This file is part of the Widget implementation for the HomeDing Library
 // implementing the Web UI corresponding to an internal configured element.

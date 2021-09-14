@@ -1148,12 +1148,17 @@ var LogWidgetClass = (function (_super) {
 var ModalDialogClass = (function (_super) {
     __extends(ModalDialogClass, _super);
     function ModalDialogClass() {
-        var _this = _super.call(this) || this;
+        var _this = _super !== null && _super.apply(this, arguments) || this;
         _this._isOpen = false;
         _this.params = {};
         return _this;
     }
     ModalDialogClass_1 = ModalDialogClass;
+    ModalDialogClass.prototype._handleEsc = function (e) {
+        if ((e.key === 'Escape') && (ModalDialogClass_1._stack[ModalDialogClass_1._stack.length - 1] === this)) {
+            this.close();
+        }
+    };
     ModalDialogClass.open = function (tmplName, data) {
         var m = micro.insertTemplate(document.body, 'modal', data);
         m.open(tmplName, data);
@@ -1186,6 +1191,8 @@ var ModalDialogClass = (function (_super) {
     ModalDialogClass.prototype.open = function (tmplName, data) {
         ModalDialogClass_1._stack.push(this);
         if ((this._backObj) && (this._frameObj)) {
+            this._keyHandler = this._handleEsc.bind(this);
+            document.addEventListener('keydown', this._keyHandler);
             var dlg = micro.insertTemplate(this._frameObj, tmplName, data);
             var fObj = dlg === null || dlg === void 0 ? void 0 : dlg.querySelector('input,button,select');
             fObj === null || fObj === void 0 ? void 0 : fObj.focus();
@@ -1201,7 +1208,10 @@ var ModalDialogClass = (function (_super) {
         }
     };
     ModalDialogClass.prototype.openFocus = function (obj) {
+        ModalDialogClass_1._stack.push(this);
         if ((obj) && (obj.parentElement) && this._frameObj) {
+            this._keyHandler = this._handleEsc.bind(this);
+            document.addEventListener('keydown', this._keyHandler);
             this._focusObj = obj;
             var r = obj.getBoundingClientRect();
             this._placeObj = createHTMLElement(obj.parentElement, 'div', {
@@ -1231,6 +1241,7 @@ var ModalDialogClass = (function (_super) {
     };
     ModalDialogClass.prototype.close = function () {
         var _a;
+        document.removeEventListener('keydown', this._keyHandler);
         if (this._focusObj) {
             var o = this._focusObj;
             o.classList.remove('modal-object');
@@ -1249,7 +1260,7 @@ var ModalDialogClass = (function (_super) {
         MicroControl('modal')
     ], ModalDialogClass);
     return ModalDialogClass;
-}(GenericWidgetClass));
+}(MicroControlClass));
 var PWMOutWidgetClass = (function (_super) {
     __extends(PWMOutWidgetClass, _super);
     function PWMOutWidgetClass() {

@@ -97,8 +97,7 @@ class GenericWidgetClass extends MicroControlClass {
             debounce(this.dispatchNext.bind(this))();
           } else {
             // @ts-ignore
-            try { updateAsap() } catch { };
-            // if (updateAsap) { updateAsap(); }
+            try { updateAsap(); } catch { };
           } // if
         });
       }

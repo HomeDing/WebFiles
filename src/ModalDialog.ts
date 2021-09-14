@@ -1,4 +1,12 @@
-// PWMOutWidget.ts: Widget Behavior implementation for PWMOut Elements
+// ModalDialog.ts: Behavior implementation for modal dialogs.
+
+// Dialogs can be opened using ModalDialogClass.open()
+// Open Dialogs can be replaced by using the ModalDialogClass.next()
+// Open Dialogs can be replaced by using the ModalDialogClass.next()
+// ModalDialogClass.openFocus() creates a dialog with an existing element.
+
+// The static function will take care of creating a modal frame
+// so the dialog implementatoin can focus on the functional elements.
 
 // This file is part of the Widget implementation for the HomeDing Library
 // implementing the Web UI corresponding to an internal configured element.
@@ -8,7 +16,7 @@
 /// <reference path="GenericWidget.ts" />
 
 @MicroControl('modal')
-class ModalDialogClass extends GenericWidgetClass {
+class ModalDialogClass extends MicroControlClass {
   static _stack: ModalDialogClass[] = [];
 
   protected _isOpen = false;
@@ -17,12 +25,13 @@ class ModalDialogClass extends GenericWidgetClass {
   protected _focusObj: HTMLElement | undefined;
   protected _placeObj: HTMLElement | undefined;
   protected params: any = {};
+  protected _keyHandler: any;
 
-  constructor() {
-    super();
-    // const scope = this;
-  } // constructor()
-
+  _handleEsc(e: KeyboardEvent) {
+    if ((e.key === 'Escape') && (ModalDialogClass._stack[ModalDialogClass._stack.length - 1] === this)) {
+      this.close();
+    }
+  }
 
   /**
    * Static helper to open a new dialog on top of existing ones.
@@ -44,6 +53,7 @@ class ModalDialogClass extends GenericWidgetClass {
     const m = micro.insertTemplate(document.body, 'modal', {}) as ModalDialogClass;
     m.openFocus(obj);
   }
+
 
   /**
    * Static helper to close the top current dialog and open the next one.
@@ -91,6 +101,8 @@ class ModalDialogClass extends GenericWidgetClass {
     ModalDialogClass._stack.push(this);
 
     if ((this._backObj) && (this._frameObj)) {
+      this._keyHandler = this._handleEsc.bind(this)
+      document.addEventListener('keydown', this._keyHandler);
       const dlg = micro.insertTemplate(this._frameObj, tmplName, data);
       const fObj = dlg?.querySelector('input,button,select') as HTMLElement;
       fObj?.focus();
@@ -113,8 +125,12 @@ class ModalDialogClass extends GenericWidgetClass {
 
   // open modal viewer with existing object
   openFocus(obj: HTMLElement) {
+    ModalDialogClass._stack.push(this);
 
     if ((obj) && (obj.parentElement) && this._frameObj) {
+      this._keyHandler = this._handleEsc.bind(this)
+      document.addEventListener('keydown', this._keyHandler);
+
       this._focusObj = obj;
       // this._focusStyle = obj.getAttribute('style');
 
@@ -154,7 +170,9 @@ class ModalDialogClass extends GenericWidgetClass {
   }
 
 
+  // close this dialog and remove all elements.
   close() {
+    document.removeEventListener('keydown', this._keyHandler);
     if (this._focusObj) {
       const o = this._focusObj;
       o.classList.remove('modal-object');

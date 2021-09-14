@@ -2,7 +2,8 @@
   "device": {
     "sys": "true",
     "properties": ["room", "name", "led", "button", "i2c-sda", "i2c-scl", "savemode", "sd", "reboottime", "logfile", "onstart", "onsysstart", "cache"],
-    "events": ["log"]
+    "events": ["log"],
+    "actions": ["onSysStart", "onStart"]
   },
 
   "element": {

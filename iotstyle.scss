@@ -631,6 +631,11 @@ select {
   border: $u-input-border;
 }
 
+input[type='text'],
+input:not([type]) {
+  padding-left: 0.3em;
+}
+
 input,
 select {
   width: 12rem;
