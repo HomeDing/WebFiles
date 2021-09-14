@@ -141,7 +141,7 @@ pre code {
   background-color: rgb(255, 255, 185);
   color: $u-text;
   font-size: 16px;
-  font-family: "Courier New", Courier, monospace;
+  font-family: 'Courier New', Courier, monospace;
 
   @media print {
     border: 1px solid $u-text;
@@ -156,7 +156,7 @@ pre code {
 
 // ===== Modal dialogs and focus Object
 
-div[u-control="modal"] {
+div[u-control='modal'] {
   position: fixed;
   visibility: visible;
   opacity: 1;
@@ -191,7 +191,7 @@ div[u-control="modal"] {
 
     &::before,
     &::after {
-      content: "";
+      content: '';
       position: absolute;
       background-color: red;
       z-index: -1;
@@ -641,6 +641,7 @@ select {
 label {
   cursor: pointer;
   border-color: transparent;
+
   > img,
   > .icon {
     vertical-align: middle;
@@ -650,7 +651,7 @@ label {
   }
 }
 
-input[type="checkbox"] {
+input[type='checkbox'] {
   width: 1.4rem;
   margin: 0 $gutter 0 0;
 }
@@ -665,7 +666,7 @@ option[disabled] {
 
 // slider implemented using input[type=range] element
 
-input[type="range"] {
+input[type='range'] {
   appearance: none;
   width: 18rem;
   transition: 0.4s all ease-out;
@@ -685,7 +686,7 @@ input[type="range"] {
 
 // switch = slider with range 0..1
 
-input.switch[type="range"] {
+input.switch[type='range'] {
   pointer-events: none;
   width: 2.2rem;
 }
@@ -741,12 +742,13 @@ input.switch[type="range"] {
 
   > :not(:first-child) {
     margin: 0;
+
     .icon {
       margin: 0 !important;
     }
   }
 
-  input[type="range"] {
+  input[type='range'] {
     width: 9.2rem;
   }
 }
@@ -815,11 +817,11 @@ input.switch[type="range"] {
   background-color: silver;
 }
 
-.u-bool[value="1"] {
+.u-bool[value='1'] {
   background-image: linear-gradient(145deg, lighten($u-on, 30%), $u-on);
 }
 
-.u-bool[value="0"] {
+.u-bool[value='0'] {
   background-image: linear-gradient(145deg, lighten($u-off, 30%), $u-off);
 }
 
