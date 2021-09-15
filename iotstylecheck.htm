@@ -45,6 +45,13 @@
       right: 2.2rem;
       background-image: url(/i/config.svg);
     }
+
+    .tag {
+      display: inline-block;
+      padding: 1px;
+      border: 2px solid #333;
+      background-color: silver;
+    }
   </style>
 
   </style>
@@ -114,7 +121,7 @@
       </div>
 
 
-      <div class="col card" u-control="timer" microID="${id}" u-is="timer">
+      <div class="col card active" u-control="timer" microID="${id}" u-is="timer">
         <div class="block header">
           <svg class="icon">
             <use href="./icons.svg#timer" />
@@ -137,9 +144,13 @@
           <div class="form-group"><label></label><label style="border: 0;"><input type="checkbox">done.</label></div>
           <div class="form-group"><label>volume:</label>
             <div u-is="input">
-              <label class="down"><svg class="icon"><use href="./icons.svg#minus" /></svg></label>
+              <label class="down"><svg class="icon">
+                  <use href="./icons.svg#minus" />
+                </svg></label>
               <input type="range" min="0" max="8">
-              <label class="up"><svg class="icon"><use href="./icons.svg#plus" /></svg></label>
+              <label class="up"><svg class="icon">
+                  <use href="./icons.svg#plus" />
+                </svg></label>
             </div>
           </div>
           <div class="form-group"><label>volume:</label>
@@ -149,7 +160,7 @@
               <label class="up">on</label>
             </div>
           </div>
-          
+
         </div>
         <div class="block footer">
           <button u-action="start" value="1">Start</button>
@@ -250,6 +261,19 @@
         </div>
       </div>
     </div>
+
+    <hr />
+
+    <div class="row">
+      <div class="col">
+        <label>Checks:</label>
+        <span class="tag" id="checkDefault">Default Parameters</span>
+        <span class="tag" id="checkArrow">Arrow functions</span>
+        <span class="tag" id="checkEvery">Every iterator</span>
+      </div>
+    </div>
+
+    <hr />
 
     <div class="row">
       <h2 class="col">Icons:</h2>
@@ -680,6 +704,34 @@
   </div>
 
   <script>
+
+    function checkDefaultParameter(a, b = 8) {
+      var result = (b === 8) ? 'valid' : 'invalid';
+      document.querySelector('#checkDefault').classList.add(result);
+    }
+
+    function checkArrowFunction() {
+      var result = 'invalid';
+      [1, 2, 3].forEach(i => {
+        if (i === 2) result = 'valid';
+      });
+      document.querySelector('#checkArrow').classList.add(result);
+    }
+
+    function checkEveryIterator() {
+      var result = 'invalid';
+      [1, 2, 3, 4].every(i => {
+        if (i === 2) result = 'valid';
+        if (i === 4) result = 'invalid';
+        return(i !== 3);
+      });
+      document.querySelector('#checkEvery').classList.add(result);
+    }
+
+    checkDefaultParameter(1);
+    checkArrowFunction();
+    checkEveryIterator();
+
   </script>
 </body>
 

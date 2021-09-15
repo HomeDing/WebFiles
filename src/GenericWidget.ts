@@ -134,27 +134,32 @@ class GenericWidgetClass extends MicroControlClass {
 
   // send an action to the board
   // + change config mode
-  on_click(e: MouseEvent) {
-    const src = e.target as HTMLElement;
-
-    // action may be on target or any parent element.
-    let p: HTMLElement | null = src;
-    while (p && !(p.getAttribute('u-action')) && p !== this) {
-      p = p.parentElement;
-    }
-    if (p) {
-      this.dispatchAction(p.getAttribute('u-action'), p.getAttribute('value') || '1');
+  on_click(event: MouseEvent) {
+    let chain = [];
+    let n: HTMLElement | null = event.target as HTMLElement;
+    while (n) {
+      chain.push(n);
+      if (n === this) break;
+      n = n.parentElement;
     }
 
-    if (src.classList.contains('setconfig')) {
-      ModalDialogClass.open('configelementdlg', this.data);
+    console.log('chain', chain);
 
-    } else if (src.classList.contains('setactive')) {
-      this.dispatchAction(toBool(this.data.active) ? 'stop' : 'start', '1');
-
-    } else if (src.tagName === 'H3') {
-      ModalDialogClass.openFocus(this);
-    }
+    chain.every(p => {
+      let ret = false;
+      if (p.getAttribute('u-action')) {
+        this.dispatchAction(p.getAttribute('u-action'), p.getAttribute('value') || '1');
+      } else if (p.classList.contains('setconfig')) {
+        ModalDialogClass.open('configelementdlg', this.data);
+      } else if (p.classList.contains('setactive')) {
+        this.dispatchAction(toBool(this.data.active) ? 'stop' : 'start', '1');
+      } else if (p.classList.contains('setfocus')) {
+        ModalDialogClass.openFocus(this);
+      } else {
+        ret = true;
+      }
+      return(ret);
+    });
   }
 } // GenericWidgetClass
 

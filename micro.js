@@ -385,24 +385,36 @@ var GenericWidgetClass = (function (_super) {
         var src = e.target;
         this.dispatchAction(src.getAttribute('u-value'), src.value);
     };
-    GenericWidgetClass.prototype.on_click = function (e) {
-        var src = e.target;
-        var p = src;
-        while (p && !(p.getAttribute('u-action')) && p !== this) {
-            p = p.parentElement;
+    GenericWidgetClass.prototype.on_click = function (event) {
+        var _this = this;
+        var chain = [];
+        var n = event.target;
+        while (n) {
+            chain.push(n);
+            if (n === this)
+                break;
+            n = n.parentElement;
         }
-        if (p) {
-            this.dispatchAction(p.getAttribute('u-action'), p.getAttribute('value') || '1');
-        }
-        if (src.classList.contains('setconfig')) {
-            ModalDialogClass.open('configelementdlg', this.data);
-        }
-        else if (src.classList.contains('setactive')) {
-            this.dispatchAction(toBool(this.data.active) ? 'stop' : 'start', '1');
-        }
-        else if (src.tagName === 'H3') {
-            ModalDialogClass.openFocus(this);
-        }
+        console.log('chain', chain);
+        chain.every(function (p) {
+            var ret = false;
+            if (p.getAttribute('u-action')) {
+                _this.dispatchAction(p.getAttribute('u-action'), p.getAttribute('value') || '1');
+            }
+            else if (p.classList.contains('setconfig')) {
+                ModalDialogClass.open('configelementdlg', _this.data);
+            }
+            else if (p.classList.contains('setactive')) {
+                _this.dispatchAction(toBool(_this.data.active) ? 'stop' : 'start', '1');
+            }
+            else if (p.classList.contains('setfocus')) {
+                ModalDialogClass.openFocus(_this);
+            }
+            else {
+                ret = true;
+            }
+            return (ret);
+        });
     };
     GenericWidgetClass = __decorate([
         MicroControl('generic')

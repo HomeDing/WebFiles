@@ -68,7 +68,7 @@
         <svg class="icon">
           <use href="./icons.svg#${type}" />
         </svg>
-        <h3 u-text="title"></h3>
+        <h3 u-text="title" class="setfocus"></h3>
         <h4 u-text="description"></h4>
         <svg class="setconfig">
           <use href="./icons.svg#config" />
@@ -358,12 +358,14 @@
       var p3 = fetchJSON('/env.json')
         .then(function (json) {
           envData = json;
+          uElements.env = envData;
         });
 
       var configData;
       var p4 = fetchJSON('/config.json')
         .then(function (json) {
           configData = json;
+          uElements.config = configData;
         });
 
       Promise.allSettled([p0, p1, p2, p3, p4]).then(function () {
