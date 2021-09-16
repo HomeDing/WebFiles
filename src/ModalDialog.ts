@@ -128,7 +128,7 @@ class ModalDialogClass extends MicroControlClass {
     ModalDialogClass._stack.push(this);
 
     if ((obj) && (obj.parentElement) && this._frameObj) {
-      this._keyHandler = this._handleEsc.bind(this)
+      this._keyHandler = this._handleEsc.bind(this);
       document.addEventListener('keydown', this._keyHandler);
 
       this._focusObj = obj;

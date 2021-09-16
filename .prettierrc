@@ -1,6 +1,6 @@
 {
-  "tabWidth": 2,
   "useTabs": false,
+  "tabWidth": 2,
   "singleQuote": true,
   "overrides": [
     {
@@ -8,7 +8,7 @@
         "*.scss"
       ],
       "options": {
-        "singleQuote": false
+        "singleQuote": true
       }
     }
   ]
