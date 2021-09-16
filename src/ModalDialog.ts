@@ -27,12 +27,6 @@ class ModalDialogClass extends MicroControlClass {
   protected params: any = {};
   protected _keyHandler: any;
 
-  _handleEsc(e: KeyboardEvent) {
-    if ((e.key === 'Escape') && (ModalDialogClass._stack[ModalDialogClass._stack.length - 1] === this)) {
-      this.close();
-    }
-  }
-
   /**
    * Static helper to open a new dialog on top of existing ones.
    * @param tmplName Name of template
@@ -92,6 +86,12 @@ class ModalDialogClass extends MicroControlClass {
     this._frameObj = this.querySelector('.modalFrame') as HTMLElement;
   }
 
+  _handleEsc(e: KeyboardEvent) {
+    if ((e.key === 'Escape') && (ModalDialogClass._stack[ModalDialogClass._stack.length - 1] === this)) {
+      this.close();
+    }
+  }
+
   /**
    * Open a new dialog on top of existing ones.
    * @param tmplName Name of template
@@ -101,7 +101,7 @@ class ModalDialogClass extends MicroControlClass {
     ModalDialogClass._stack.push(this);
 
     if ((this._backObj) && (this._frameObj)) {
-      this._keyHandler = this._handleEsc.bind(this)
+      this._keyHandler = this._handleEsc.bind(this);
       document.addEventListener('keydown', this._keyHandler);
       const dlg = micro.insertTemplate(this._frameObj, tmplName, data);
       const fObj = dlg?.querySelector('input,button,select') as HTMLElement;

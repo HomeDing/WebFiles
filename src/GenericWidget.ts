@@ -97,7 +97,7 @@ class GenericWidgetClass extends MicroControlClass {
             debounce(this.dispatchNext.bind(this))();
           } else {
             // @ts-ignore
-            try { updateAsap(); } catch { };
+            try { updateAsap(); } catch { }
           } // if
         });
       }
@@ -135,11 +135,11 @@ class GenericWidgetClass extends MicroControlClass {
   // send an action to the board
   // + change config mode
   on_click(event: MouseEvent) {
-    let chain = [];
+    const chain = [];
     let n: HTMLElement | null = event.target as HTMLElement;
     while (n) {
       chain.push(n);
-      if (n === this) break;
+      if (n === this) { break; }
       n = n.parentElement;
     }
 
@@ -158,7 +158,7 @@ class GenericWidgetClass extends MicroControlClass {
       } else {
         ret = true;
       }
-      return(ret);
+      return (ret);
     });
   }
 } // GenericWidgetClass
