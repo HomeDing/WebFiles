@@ -30,7 +30,7 @@ import yargs from 'yargs';
 
 const options = yargs
   .usage('Usage: $0 -c <case name>')
-  .usage('  HomeDing Portal server')
+  .usage('HomeDing Portal server')
   .option('c', { alias: 'case', describe: 'Simulate case', type: 'string', demandOption: false, default: null })
   .option('m', { alias: 'monitor', describe: 'monitor the requests', type: 'boolean', demandOption: false, default: false })
   .option('v', { alias: 'verbose', describe: 'Verbose logging', type: 'boolean', demandOption: false, default: false })

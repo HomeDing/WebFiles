@@ -358,7 +358,6 @@ var GenericWidgetClass = (function (_super) {
                             updateAsap();
                         }
                         catch (_a) { }
-                        ;
                     }
                 });
             }
@@ -391,8 +390,9 @@ var GenericWidgetClass = (function (_super) {
         var n = event.target;
         while (n) {
             chain.push(n);
-            if (n === this)
+            if (n === this) {
                 break;
+            }
             n = n.parentElement;
         }
         console.log('chain', chain);
@@ -1166,11 +1166,6 @@ var ModalDialogClass = (function (_super) {
         return _this;
     }
     ModalDialogClass_1 = ModalDialogClass;
-    ModalDialogClass.prototype._handleEsc = function (e) {
-        if ((e.key === 'Escape') && (ModalDialogClass_1._stack[ModalDialogClass_1._stack.length - 1] === this)) {
-            this.close();
-        }
-    };
     ModalDialogClass.open = function (tmplName, data) {
         var m = micro.insertTemplate(document.body, 'modal', data);
         m.open(tmplName, data);
@@ -1199,6 +1194,11 @@ var ModalDialogClass = (function (_super) {
         _super.prototype.connectedCallback.call(this);
         this._backObj = this.querySelector('.modalBack');
         this._frameObj = this.querySelector('.modalFrame');
+    };
+    ModalDialogClass.prototype._handleEsc = function (e) {
+        if ((e.key === 'Escape') && (ModalDialogClass_1._stack[ModalDialogClass_1._stack.length - 1] === this)) {
+            this.close();
+        }
     };
     ModalDialogClass.prototype.open = function (tmplName, data) {
         ModalDialogClass_1._stack.push(this);
