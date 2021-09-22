@@ -9,27 +9,27 @@
 
 @MicroControl('displaytext')
 class DisplayTextWidgetClass extends GenericWidgetClass {
-  lastValue: string | null = null;
-  _dispElem: HTMLElement | null = null;
-  _grid = 1;
-  _elem: HTMLElement | null = null;
-  _prefix = '';
-  _postfix = '';
+  lastValue!: string;
+  _dispElem!: HTMLElement | null;
+  _grid!: number;
+  _elem!: HTMLElement | null;
+  _prefix!:string;
+  _postfix!:string;
 
   connectedCallback() {
     super.connectedCallback();
-
+    this.lastValue = '';
     this._dispElem = document.querySelector('#panel .display');
     if (this._dispElem) {
-      if (this._dispElem.getAttribute('grid')) {
-        this._grid = Number(this._dispElem.getAttribute('grid'));
-      }
+      this._grid = Number(this._dispElem.getAttribute('grid') || 1);
       this._elem = createHTMLElement(this._dispElem, 'span', { class: 'text', style: 'top:0;left:0;display:none' });
     }
 
     if (!this.showSys()) {
       this.style.display = 'none';
     }
+    this._prefix = '';
+    this._postfix = '';
   }
 
   newData(path: string, key: string | null, value: string | null) {

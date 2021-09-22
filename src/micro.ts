@@ -83,7 +83,7 @@ class MicroRegistry {
         for (let i = 0; i < attr.length; i++) {
           const v: string = attr[i].value;
           if (v.indexOf('${') >= 0) {
-            if (! (<any>obj)[attr[i].name]) {
+            if (!(<any>obj)[attr[i].name]) {
               // custom attribute
               (obj as HTMLElement).setAttribute(attr[i].name, fill(v));
             } else if ((<any>obj)[attr[i].name].baseVal !== undefined) {
@@ -147,6 +147,18 @@ class MicroRegistry {
     return e;
   } // insertTemplate()
 
+
+  getMethods(obj: any): Set<string> {
+    const fSet = new Set<string>();
+    do {
+      Object.getOwnPropertyNames(obj)
+        .filter(item => typeof obj[item] === 'function')
+        .forEach(item => fSet.add(item))
+    } while ((obj = Object.getPrototypeOf(obj)))
+    return (fSet);
+  } // getMethods
+
+
   // attach events, methods and default-values to a html object (using the english spelling)
   loadBehavior(obj: HTMLElement, behavior: MicroControlClass) {
     const b = behavior as any;
@@ -160,16 +172,13 @@ class MicroRegistry {
       // already done.
     } else {
 
-      if (obj.attributes) {
-        // IE9 compatible
-        // copy all new attributes to properties
-        for (let n = 0; n < obj.attributes.length; n++) {
-          const a: Attr = obj.attributes[n];
-          if (!(obj as any)[a.name]) { (obj as any)[a.name] = a.value; }
-        }
+      // copy all html attributes to obj properties
+      for (const a of obj.attributes) {
+        if (!(obj as any)[a.name]) { (obj as any)[a.name] = a.value; }
       } // if
 
-      for (const p in b) {
+      // for (const p in ms) {
+      for (const p of this.getMethods(b)) {
         if (p === 'on_touchstart') {
           obj.addEventListener(p.substr(3), b[p].bind(obj), { passive: true });
         } else if (p.substr(0, 3) === 'on_') {

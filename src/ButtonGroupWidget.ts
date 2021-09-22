@@ -9,12 +9,13 @@
 
 @MicroControl('buttongroup')
 class ButtonGroupWidgetClass extends GenericWidgetClass {
-  _count = 0;
-  _blockElem: HTMLElement | null = null;
+  _count!: number;
+  _blockElem!: HTMLElement | null;
 
   connectedCallback() {
     super.connectedCallback();
     this._blockElem = this.querySelector('.block');
+    this._count = 0;
   }
 
   newData(path: string, key: string, value: string) {

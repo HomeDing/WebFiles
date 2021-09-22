@@ -9,12 +9,12 @@
 
 @MicroControl('displayline')
 class DisplayLineWidgetClass extends GenericWidgetClass {
-  _dispElem: HTMLElement | null = null;
-  _elem: HTMLElement | null = null;
-  _x0 = 0;
-  _x1 = 0;
-  _y0 = 0;
-  _y1 = 0;
+  _dispElem!: HTMLElement | null;
+  _elem!: HTMLElement | null;
+  _x0!: number;
+  _x1!: number;
+  _y0!: number;
+  _y1!: number;
 
   connectedCallback() {
     super.connectedCallback();
@@ -26,6 +26,10 @@ class DisplayLineWidgetClass extends GenericWidgetClass {
     if (!this.showSys()) {
       this.style.display = 'none';
     }
+    this._x0 = 0;
+    this._x1 = 0;
+    this._y0 = 0;
+    this._y1 = 0;
   } // connectedCallback
 
   newData(path: string, key: string | null, value: string | null) {

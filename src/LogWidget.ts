@@ -16,14 +16,16 @@ declare interface PromiseConstructor {
 class LogWidgetClass extends GenericWidgetClass {
   filename: string | null = null;
   lineSVGObj: HTMLObjectElement | null = null;
-  xFormat = 'datetime';
-  yFormat = 'num';
+  xFormat!: string;
+  yFormat!: string;
   api: any;
   lChart: any;
 
   connectedCallback() {
     super.connectedCallback();
     this.lineSVGObj = this.querySelector('object');
+    this.xFormat = 'datetime';
+    this.yFormat = 'num';
   }
 
   loadData() {

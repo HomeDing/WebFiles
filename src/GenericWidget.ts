@@ -9,12 +9,13 @@
 class GenericWidgetClass extends MicroControlClass {
   microid = '';
   data: any = {};
-  subId = 0;
   actions: string[] = [];
+  subId = 0;
 
   connectedCallback() {
     super.connectedCallback();
     this.data = { id: this.microid };
+    this.actions = [];
     this.subId = hub.subscribe(this.microid + '?*', this.newData.bind(this));
     hub.replay(this.subId);
   } // connectedCallback
@@ -106,8 +107,8 @@ class GenericWidgetClass extends MicroControlClass {
 
 
   // send an action to the board and dispatch to the element
-  dispatchAction(prop: string | null, val: string | null) {
-    if (prop !== null && val !== null) {
+  dispatchAction(prop: string | null | undefined, val: string | null) {
+    if (prop && val) {
       if (prop.includes('/')) {
         // list of actions with optional value placeholder
         prop.replace('${v}', encodeURI(val));

@@ -23,18 +23,19 @@ interface RGBWType {
 
 @MicroControl('color')
 class ColorWidgetClass extends GenericWidgetClass {
-  private colObj: HTMLElement | any = {};
-  private hObj: HTMLInputElement | any = {};
-  private sObj: HTMLInputElement | any = {};
-  private lObj: HTMLInputElement | any = {};
-  private wObj: HTMLInputElement | any = {};
+  private colObj: HTMLElement | any;
+  private hObj: HTMLInputElement | any;
+  private sObj: HTMLInputElement | any;
+  private lObj: HTMLInputElement | any;
+  private wObj: HTMLInputElement | any;
 
-  // actual value
-  private _value = '00000000';
-  private _hasWhite = false;
+  private _value!: string;   // actual value
+  private _hasWhite!: boolean;
 
   connectedCallback() {
     super.connectedCallback();
+    this._value = '00000000';
+    this._hasWhite = false;
     this.colObj = this.querySelector('.color') as HTMLElement || { style: {} };
     this.hObj = this.querySelector('.hue') as HTMLInputElement || {};
     this.sObj = this.querySelector('.band.saturation') as HTMLInputElement || { style: {} };

@@ -9,11 +9,12 @@
 
 @MicroControl('display')
 class DisplayWidgetClass extends GenericWidgetClass {
-  displayPage = '';
-  _dialogElem: HTMLElement | null = null;
+  displayPage!: string;
+  _dialogElem!: HTMLElement | null;
 
   connectedCallback() {
     super.connectedCallback();
+    this.displayPage = '';
     this._dialogElem = this.querySelector('.display');
   }
 

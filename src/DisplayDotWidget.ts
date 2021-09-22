@@ -9,17 +9,17 @@
 
 @MicroControl('displaydot')
 class DisplayDotWidgetClass extends GenericWidgetClass {
-  lastValue: string | null = null;
-  _dispElem: HTMLElement | null = null;
-  _elem: HTMLElement | null = null;
-  _x = 0;
-  _y = 0;
-  _value = false;
-
+  lastValue!: string;
+  _dispElem!: HTMLElement | null;
+  _elem!: HTMLElement | null;
+  _x!:number;
+  _y!:number;
+  _value!:boolean;
 
   // When the card is created also create a html tag inside the display.
   connectedCallback() {
     super.connectedCallback();
+    this.lastValue = '';
     this._dispElem = document.querySelector('#panel .display');
     if (this._dispElem) {
       this._elem = createHTMLElement(this._dispElem, 'span', { class: 'dot' });
@@ -28,6 +28,9 @@ class DisplayDotWidgetClass extends GenericWidgetClass {
     if (!this.showSys()) {
       this.style.display = 'none';
     }
+    this._x = 0;
+    this._y = 0;
+    this._value = false;
   } // connectedCallback
 
 

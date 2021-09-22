@@ -9,12 +9,12 @@
 
 @MicroControl('button')
 class ButtonWidgetClass extends GenericWidgetClass {
-  _onclick = '';
-  _ondoubleclick = '';
-  _onpress = '';
-  _timer = 0;
-  _start = 0;
-  _duration = 0;
+  _onclick: string | undefined;
+  _ondoubleclick: string | undefined;
+  _onpress: string | undefined;
+  _timer: number | undefined;
+  _start!:number;
+  _duration!:number;
 
   newData(path: string, key: string, value: string) {
     super.newData(path, key, value);

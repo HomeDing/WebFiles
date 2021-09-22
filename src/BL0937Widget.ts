@@ -9,10 +9,11 @@
 
 @MicroControl('bl0937')
 class BL0937WidgetClass extends GenericWidgetClass {
-  mode: String = '';
+  mode!: string;
 
   connectedCallback() {
     super.connectedCallback();
+    this.mode = '';
     this.data = { id: this.microid };
     this.subId = hub.subscribe(this.microid + '?mode', this.switchMode.bind(this));
     hub.replay(this.subId);
