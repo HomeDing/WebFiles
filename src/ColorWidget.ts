@@ -14,179 +14,172 @@ interface HslType {
   l: number;   // 0...255 as %
 }
 
-interface RGBType {
+interface RGBWType {
   r: number;  // 0...255
   g: number;  // 0...255
   b: number;   // 0...255
+  w: number;  // 0...255
 }
 
 @MicroControl('color')
 class ColorWidgetClass extends GenericWidgetClass {
-  private colObj: HTMLElement | null = null;
-  private hueObj: HTMLInputElement | null = null;
-  private lightObj: HTMLInputElement | null = null;
-  private satObj: HTMLInputElement | null = null;
-  private whiteObj: HTMLInputElement | null = null;
-  private _hvalue = '00ff0000';
+  private colObj: HTMLElement | any = {};
+  private hObj: HTMLInputElement | any = {};
+  private sObj: HTMLInputElement | any = {};
+  private lObj: HTMLInputElement | any = {};
+  private wObj: HTMLInputElement | any = {};
+
+  // actual value
   private _value = '00000000';
-  private _hue = 127;
-  private _lightness = 127;
-  private _saturation = 255;
-  private _white = 127;
   private _hasWhite = false;
 
   connectedCallback() {
     super.connectedCallback();
-    this.colObj = this.querySelector('.color') as HTMLElement;
-    this.hueObj = this.querySelector('.hue') as HTMLInputElement;
-    this.satObj = this.querySelector('.band.saturation') as HTMLInputElement;
-    this.lightObj = this.querySelector('.band.lightness') as HTMLInputElement;
-    this.whiteObj = this.querySelector('.white') as HTMLInputElement;
+    this.colObj = this.querySelector('.color') as HTMLElement || { style: {} };
+    this.hObj = this.querySelector('.hue') as HTMLInputElement || {};
+    this.sObj = this.querySelector('.band.saturation') as HTMLInputElement || { style: {} };
+    this.lObj = this.querySelector('.band.lightness') as HTMLInputElement || { style: {} };
+    this.wObj = this.querySelector('.white') as HTMLInputElement || {};
   } // connectedCallback
 
-  updateBands() {
-
-  }
 
   // visualize any new data for the widget.
   newData(_path: string, key: string | null, value: string | null) {
+    let newValue: string = this._value;
+
     if (!value) {
     } else if (key === 'value') {
-      // normalize value
-      value = value.replace('x', '');
-      if (value.length === 6) {
-        this._value = `00${value}`;
-      } else if (value.length === 8) {
-        this._value = value;
-      }
-      const col = this._value.substr(2);
-      const hsl = this.rgbToHsl(this.rgb(col));
-      this._hvalue = this.hslToRGB(hsl.h, 100, 50);
+      newValue = this.normColor(value);
 
-      if (this.hueObj) { this.hueObj.value = String(hsl.h); }
-      if (this.satObj) {
-        this.satObj.value = String(hsl.s);
-        this.satObj.style.background = `linear-gradient(to right, #808080 0%, #${this._hvalue} 100%)`;
-      }
-      if (this.lightObj) {
-        this.lightObj.value = String(hsl.l);
-        this.lightObj.style.background = `linear-gradient(to right, #000 0%, #${this._hvalue} 50%, #fff 100%)`;
-      }
+      if (newValue !== this._value) {
+        this._value = newValue;
 
-      if (this.whiteObj) { this.whiteObj.value = String(parseInt(this._value.substr(0, 2), 16)); }
+        // calculate hsl from rgbw
+        const rgbw = this.wrgb(newValue);
+        const hsl = this.toHSL(rgbw);
 
+        this.hObj.value = hsl.h;
+        this.sObj.value = hsl.s;
+        this.lObj.value = hsl.l;
 
-      if (this.colObj) {
-        this.colObj.style.backgroundColor = `#${col}`;
+        this._update();
       }
 
     } else if (key === 'config') {
-      this._hasWhite = (value === 'WRGB');
-      if (this.whiteObj) {
-        this.whiteObj.style.display = this._hasWhite ? '' : 'none';
+      this._hasWhite = true; // (value === 'WRGB');
+      if (this.wObj) {
+        this.wObj.style.display = this._hasWhite ? '' : 'none';
       }
     }
     super.newData(_path, key, value);
   }
 
-  on_input(e: InputEvent) {
-    const tar = e.target as HTMLInputElement;
-    let col = '';
 
-    if (tar === this.hueObj) {
-      this._hue = parseInt(tar.value, 10);
-      this._hvalue = this.hslToRGB(this._hue, 100, 50);
-
-    } else if (tar === this.lightObj) {
-      this._lightness = parseInt(tar.value, 10);
-      this.dispatchAction('lightness', tar.value);
-
-    } else if (tar === this.satObj) {
-      this._saturation = parseInt(tar.value, 10);
-      this.dispatchAction('saturation', tar.value);
-
-    } else if (tar === this.whiteObj) {
-      this._white = parseInt(tar.value, 10);
-    }
-
-    // calculate the new color value
-    col = 'x' + this.hslToRGB(this._hue, Math.round(this._saturation * 100 / 255), Math.round(this._lightness * 100 / 255));
-
-    if (this._hasWhite) {
-      col = 'x' + this.x16(this._white) + col.substr(1);
-    } // if
-    this.dispatchAction('value', col);
+  // calculate the new color value from input sliders
+  on_input() {
+    this._value = this.to16(parseInt(this.wObj.value))
+      + this.HSLToColor(this.hObj.value, this.sObj.value, this.lObj.value);
+    this._update();
+    this.dispatchAction('value', 'x' + this._value);
   } // on_input
 
 
-  // convert from #??rrggbb to RGBType
-  private rgb(color: string): RGBType {
-    const rgb = { r: 0, g: 0, b: 0 };
+  // Update the UI values and colors
+  private _update() {
+    const rgbw = this.wrgb(this._value);
+    const hsl = this.toHSL(rgbw);
+    const fullColor = this.HSLToColor(hsl.h, 100, 50);
 
-    // only last 6 chars of interest...
-    if (color && color.length >= 6) {
-      const col = color.substr(color.length - 6);
-      rgb.r = parseInt(col.substr(0, 2), 16);
-      rgb.g = parseInt(col.substr(2, 2), 16);
-      rgb.b = parseInt(col.substr(4, 2), 16);
+    this.sObj.style.background = `linear-gradient(to right, #808080 0%, #${fullColor} 100%)`;
+    this.lObj.style.background = `linear-gradient(to right, #000 0%, #${fullColor} 50%, #fff 100%)`;
+
+    this.colObj.style.backgroundColor = `#${this._value.substr(2)}`;
+    this.wObj.value = String(rgbw.w);
+  } // _updateUI()
+
+
+  // convert from various value formats to 'wwrrggbb'
+  private normColor(color: string): string {
+
+    if ((!color) || (color.length === 0)) {
+      color = '00000000';
+    } else {
+      if ((color.substr(0, 1) === 'x') || (color.substr(0, 1) === '#')) {
+        color = color.substr(1);
+      }
+      if (color.length === 6) {
+        color = '00' + color
+      }
     }
-    return (rgb);
-  } // rgb()
+    return (color);
+  } // normColor()
 
 
+  // convert from 'wwrrggbb' to RGBWType
+  private wrgb(color: string): RGBWType {
+    var rgbw = {
+      w: parseInt(color.substr(0, 2), 16),
+      r: parseInt(color.substr(2, 2), 16),
+      g: parseInt(color.substr(4, 2), 16),
+      b: parseInt(color.substr(6, 2), 16)
+    }
+    return (rgbw);
+  } // wrgb()
 
-  // rgb in format xRRGGBB, #RRGGBB, nnRRGGBB, #nnRRGGBB
-  // hue in range 0...359
 
   // returns an object with {h,s,l}
-  private rgbToHsl(rgb: RGBType): HslType {
+  private toHSL(rgb: RGBWType): HslType {
     const hsl: HslType = { h: 0, s: 0, l: 0 };
+    const r = rgb.r / 255;
+    const g = rgb.g / 255;
+    const b = rgb.b / 255;
 
-    const max = Math.max(rgb.r, rgb.g, rgb.b);
-    const min = Math.min(rgb.r, rgb.g, rgb.b);
-    const d = max - min;
-    const s = max + min;
-
-    hsl.l = Math.round(s / 2);
-
-    if (d > 0) {
-      let hue = 0;
-      hsl.s = Math.round(255 * (hsl.l > 127 ? d / (510 - s) : d / s));
-      if (max === rgb.r) {
-        hue = (rgb.g - rgb.b) / d + (rgb.g < rgb.b ? 6 : 0);
-      } else if (max === rgb.g) {
-        hue = (rgb.b - rgb.r) / d + 2;
-      } else if (max === rgb.b) {
-        hue = (rgb.r - rgb.g) / d + 4;
-      }
-      hsl.h = Math.round(hue * 60) % 360;
-    }
+    const l = Math.max(r, g, b);
+    const s = l - Math.min(r, g, b);
+    const h = s
+      ? l === r
+        ? (g - b) / s
+        : l === g
+          ? 2 + (b - r) / s
+          : 4 + (r - g) / s
+      : 0;
+    hsl.h = Math.round(60 * h < 0 ? 60 * h + 360 : 60 * h);
+    hsl.s = Math.round(100 * (s ? (l <= 0.5 ? s / (2 * l - s) : s / (2 - (2 * l - s))) : 0));
+    hsl.l = Math.round((100 * (2 * l - s)) / 2);
     return (hsl);
-  } // rgbToHsl
+  } // toHSL
 
 
-  // calculate rgb from hsl using builtin style function
-  private hslToRGB(h: number, s: number, l: number): string {
-    const obj = this.hueObj || this;
+  // calculate color from hsl
+  private HSLToColor(h: number, s: number, l: number): string {
+    s /= 100;
+    l /= 100;
+    const k = (n: number) => (n + h / 30) % 12;
+    const a = s * Math.min(l, 1 - l);
+    const f = (n: number) =>
+      l - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1)));
+    const rgb = {
+      r: Math.round(255 * f(0)),
+      g: Math.round(255 * f(8)),
+      b: Math.round(255 * f(4)),
+      w: 0
+    };
+    return this.toRGBColor(rgb);
+  } // HSLToColor()
 
-    // calculate the new color value
-    // use backgroundColor to convert to hsl to rgb format
-    obj.style.backgroundColor = `hsl(${h}, ${s}%, ${l}%)`;
-    const bc = getComputedStyle(obj, null).backgroundColor;
-    // format to 'rrggbb'
-    const v = String(bc).replace(/[^0-9,]/g, '').split(',');
-    const col = this.x16(v[0]) + this.x16(v[1]) + this.x16(v[2]);
-    return (col);
-  } // hslToRGB
-
-
-  private x16(d: any): string {
-    let x = Number(d).toString(16);
+  private to16(d: number): string {
+    let x = d.toString(16);
     if (x.length === 1) {
       x = '0' + x;
     }
     return (x);
   }
+
+  private toRGBColor(rgbw: RGBWType): string {
+    const col = this.to16(rgbw.r) + this.to16(rgbw.g) + this.to16(rgbw.b);
+    return (col);
+  }
+
 }
 
 // End.

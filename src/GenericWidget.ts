@@ -143,8 +143,6 @@ class GenericWidgetClass extends MicroControlClass {
       n = n.parentElement;
     }
 
-    console.log('chain', chain);
-
     chain.every(p => {
       let ret = false;
       if (p.getAttribute('u-action')) {

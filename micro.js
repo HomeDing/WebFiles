@@ -395,7 +395,6 @@ var GenericWidgetClass = (function (_super) {
             }
             n = n.parentElement;
         }
-        console.log('chain', chain);
         chain.every(function (p) {
             var ret = false;
             if (p.getAttribute('u-action')) {
@@ -555,141 +554,130 @@ var ColorWidgetClass = (function (_super) {
     __extends(ColorWidgetClass, _super);
     function ColorWidgetClass() {
         var _this = _super !== null && _super.apply(this, arguments) || this;
-        _this.colObj = null;
-        _this.hueObj = null;
-        _this.lightObj = null;
-        _this.satObj = null;
-        _this.whiteObj = null;
-        _this._hvalue = '00ff0000';
+        _this.colObj = {};
+        _this.hObj = {};
+        _this.sObj = {};
+        _this.lObj = {};
+        _this.wObj = {};
         _this._value = '00000000';
-        _this._hue = 127;
-        _this._lightness = 127;
-        _this._saturation = 255;
-        _this._white = 127;
         _this._hasWhite = false;
         return _this;
     }
     ColorWidgetClass.prototype.connectedCallback = function () {
         _super.prototype.connectedCallback.call(this);
-        this.colObj = this.querySelector('.color');
-        this.hueObj = this.querySelector('.hue');
-        this.satObj = this.querySelector('.band.saturation');
-        this.lightObj = this.querySelector('.band.lightness');
-        this.whiteObj = this.querySelector('.white');
-    };
-    ColorWidgetClass.prototype.updateBands = function () {
+        this.colObj = this.querySelector('.color') || { style: {} };
+        this.hObj = this.querySelector('.hue') || {};
+        this.sObj = this.querySelector('.band.saturation') || { style: {} };
+        this.lObj = this.querySelector('.band.lightness') || { style: {} };
+        this.wObj = this.querySelector('.white') || {};
     };
     ColorWidgetClass.prototype.newData = function (_path, key, value) {
+        var newValue = this._value;
         if (!value) {
         }
         else if (key === 'value') {
-            value = value.replace('x', '');
-            if (value.length === 6) {
-                this._value = "00" + value;
-            }
-            else if (value.length === 8) {
-                this._value = value;
-            }
-            var col = this._value.substr(2);
-            var hsl = this.rgbToHsl(this.rgb(col));
-            this._hvalue = this.hslToRGB(hsl.h, 100, 50);
-            if (this.hueObj) {
-                this.hueObj.value = String(hsl.h);
-            }
-            if (this.satObj) {
-                this.satObj.value = String(hsl.s);
-                this.satObj.style.background = "linear-gradient(to right, #808080 0%, #" + this._hvalue + " 100%)";
-            }
-            if (this.lightObj) {
-                this.lightObj.value = String(hsl.l);
-                this.lightObj.style.background = "linear-gradient(to right, #000 0%, #" + this._hvalue + " 50%, #fff 100%)";
-            }
-            if (this.whiteObj) {
-                this.whiteObj.value = String(parseInt(this._value.substr(0, 2), 16));
-            }
-            if (this.colObj) {
-                this.colObj.style.backgroundColor = "#" + col;
+            newValue = this.normColor(value);
+            if (newValue !== this._value) {
+                this._value = newValue;
+                var rgbw = this.wrgb(newValue);
+                var hsl = this.toHSL(rgbw);
+                this.hObj.value = hsl.h;
+                this.sObj.value = hsl.s;
+                this.lObj.value = hsl.l;
+                this._update();
             }
         }
         else if (key === 'config') {
-            this._hasWhite = (value === 'WRGB');
-            if (this.whiteObj) {
-                this.whiteObj.style.display = this._hasWhite ? '' : 'none';
+            this._hasWhite = true;
+            if (this.wObj) {
+                this.wObj.style.display = this._hasWhite ? '' : 'none';
             }
         }
         _super.prototype.newData.call(this, _path, key, value);
     };
-    ColorWidgetClass.prototype.on_input = function (e) {
-        var tar = e.target;
-        var col = '';
-        if (tar === this.hueObj) {
-            this._hue = parseInt(tar.value, 10);
-            this._hvalue = this.hslToRGB(this._hue, 100, 50);
-        }
-        else if (tar === this.lightObj) {
-            this._lightness = parseInt(tar.value, 10);
-            this.dispatchAction('lightness', tar.value);
-        }
-        else if (tar === this.satObj) {
-            this._saturation = parseInt(tar.value, 10);
-            this.dispatchAction('saturation', tar.value);
-        }
-        else if (tar === this.whiteObj) {
-            this._white = parseInt(tar.value, 10);
-        }
-        col = 'x' + this.hslToRGB(this._hue, Math.round(this._saturation * 100 / 255), Math.round(this._lightness * 100 / 255));
-        if (this._hasWhite) {
-            col = 'x' + this.x16(this._white) + col.substr(1);
-        }
-        this.dispatchAction('value', col);
+    ColorWidgetClass.prototype.on_input = function () {
+        this._value = this.to16(parseInt(this.wObj.value))
+            + this.HSLToColor(this.hObj.value, this.sObj.value, this.lObj.value);
+        this._update();
+        this.dispatchAction('value', 'x' + this._value);
     };
-    ColorWidgetClass.prototype.rgb = function (color) {
-        var rgb = { r: 0, g: 0, b: 0 };
-        if (color && color.length >= 6) {
-            var col = color.substr(color.length - 6);
-            rgb.r = parseInt(col.substr(0, 2), 16);
-            rgb.g = parseInt(col.substr(2, 2), 16);
-            rgb.b = parseInt(col.substr(4, 2), 16);
-        }
-        return (rgb);
+    ColorWidgetClass.prototype._update = function () {
+        var rgbw = this.wrgb(this._value);
+        var hsl = this.toHSL(rgbw);
+        var fullColor = this.HSLToColor(hsl.h, 100, 50);
+        this.sObj.style.background = "linear-gradient(to right, #808080 0%, #" + fullColor + " 100%)";
+        this.lObj.style.background = "linear-gradient(to right, #000 0%, #" + fullColor + " 50%, #fff 100%)";
+        this.colObj.style.backgroundColor = "#" + this._value.substr(2);
+        this.wObj.value = String(rgbw.w);
     };
-    ColorWidgetClass.prototype.rgbToHsl = function (rgb) {
+    ColorWidgetClass.prototype.normColor = function (color) {
+        if ((!color) || (color.length === 0)) {
+            color = '00000000';
+        }
+        else {
+            if ((color.substr(0, 1) === 'x') || (color.substr(0, 1) === '#')) {
+                color = color.substr(1);
+            }
+            if (color.length === 6) {
+                color = '00' + color;
+            }
+        }
+        return (color);
+    };
+    ColorWidgetClass.prototype.wrgb = function (color) {
+        var rgbw = {
+            w: parseInt(color.substr(0, 2), 16),
+            r: parseInt(color.substr(2, 2), 16),
+            g: parseInt(color.substr(4, 2), 16),
+            b: parseInt(color.substr(6, 2), 16)
+        };
+        return (rgbw);
+    };
+    ColorWidgetClass.prototype.toHSL = function (rgb) {
         var hsl = { h: 0, s: 0, l: 0 };
-        var max = Math.max(rgb.r, rgb.g, rgb.b);
-        var min = Math.min(rgb.r, rgb.g, rgb.b);
-        var d = max - min;
-        var s = max + min;
-        hsl.l = Math.round(s / 2);
-        if (d > 0) {
-            var hue = 0;
-            hsl.s = Math.round(255 * (hsl.l > 127 ? d / (510 - s) : d / s));
-            if (max === rgb.r) {
-                hue = (rgb.g - rgb.b) / d + (rgb.g < rgb.b ? 6 : 0);
-            }
-            else if (max === rgb.g) {
-                hue = (rgb.b - rgb.r) / d + 2;
-            }
-            else if (max === rgb.b) {
-                hue = (rgb.r - rgb.g) / d + 4;
-            }
-            hsl.h = Math.round(hue * 60) % 360;
-        }
+        var r = rgb.r / 255;
+        var g = rgb.g / 255;
+        var b = rgb.b / 255;
+        var l = Math.max(r, g, b);
+        var s = l - Math.min(r, g, b);
+        var h = s
+            ? l === r
+                ? (g - b) / s
+                : l === g
+                    ? 2 + (b - r) / s
+                    : 4 + (r - g) / s
+            : 0;
+        hsl.h = Math.round(60 * h < 0 ? 60 * h + 360 : 60 * h);
+        hsl.s = Math.round(100 * (s ? (l <= 0.5 ? s / (2 * l - s) : s / (2 - (2 * l - s))) : 0));
+        hsl.l = Math.round((100 * (2 * l - s)) / 2);
         return (hsl);
     };
-    ColorWidgetClass.prototype.hslToRGB = function (h, s, l) {
-        var obj = this.hueObj || this;
-        obj.style.backgroundColor = "hsl(" + h + ", " + s + "%, " + l + "%)";
-        var bc = getComputedStyle(obj, null).backgroundColor;
-        var v = String(bc).replace(/[^0-9,]/g, '').split(',');
-        var col = this.x16(v[0]) + this.x16(v[1]) + this.x16(v[2]);
-        return (col);
+    ColorWidgetClass.prototype.HSLToColor = function (h, s, l) {
+        s /= 100;
+        l /= 100;
+        var k = function (n) { return (n + h / 30) % 12; };
+        var a = s * Math.min(l, 1 - l);
+        var f = function (n) {
+            return l - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1)));
+        };
+        var rgb = {
+            r: Math.round(255 * f(0)),
+            g: Math.round(255 * f(8)),
+            b: Math.round(255 * f(4)),
+            w: 0
+        };
+        return this.toRGBColor(rgb);
     };
-    ColorWidgetClass.prototype.x16 = function (d) {
-        var x = Number(d).toString(16);
+    ColorWidgetClass.prototype.to16 = function (d) {
+        var x = d.toString(16);
         if (x.length === 1) {
             x = '0' + x;
         }
         return (x);
+    };
+    ColorWidgetClass.prototype.toRGBColor = function (rgbw) {
+        var col = this.to16(rgbw.r) + this.to16(rgbw.g) + this.to16(rgbw.b);
+        return (col);
     };
     ColorWidgetClass = __decorate([
         MicroControl('color')
