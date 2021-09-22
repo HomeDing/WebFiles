@@ -23,11 +23,11 @@ interface RGBWType {
 
 @MicroControl('color')
 class ColorWidgetClass extends GenericWidgetClass {
-  private colObj: HTMLElement | any;
-  private hObj: HTMLInputElement | any;
-  private sObj: HTMLInputElement | any;
-  private lObj: HTMLInputElement | any;
-  private wObj: HTMLInputElement | any;
+  private _colObj: HTMLElement | any;
+  private _hObj: HTMLInputElement | any;
+  private _sObj: HTMLInputElement | any;
+  private _lObj: HTMLInputElement | any;
+  private _wObj: HTMLInputElement | any;
 
   private _value!: string;   // actual value
   private _hasWhite!: boolean;
@@ -36,11 +36,11 @@ class ColorWidgetClass extends GenericWidgetClass {
     super.connectedCallback();
     this._value = '00000000';
     this._hasWhite = false;
-    this.colObj = this.querySelector('.color') as HTMLElement || { style: {} };
-    this.hObj = this.querySelector('.hue') as HTMLInputElement || {};
-    this.sObj = this.querySelector('.band.saturation') as HTMLInputElement || { style: {} };
-    this.lObj = this.querySelector('.band.lightness') as HTMLInputElement || { style: {} };
-    this.wObj = this.querySelector('.white') as HTMLInputElement || {};
+    this._colObj = this.querySelector('.color') as HTMLElement || { style: {} };
+    this._hObj = this.querySelector('.hue') as HTMLInputElement || {};
+    this._sObj = this.querySelector('.band.saturation') as HTMLInputElement || { style: {} };
+    this._lObj = this.querySelector('.band.lightness') as HTMLInputElement || { style: {} };
+    this._wObj = this.querySelector('.white') as HTMLInputElement || {};
   } // connectedCallback
 
 
@@ -59,17 +59,17 @@ class ColorWidgetClass extends GenericWidgetClass {
         const rgbw = this.wrgb(newValue);
         const hsl = this.toHSL(rgbw);
 
-        this.hObj.value = hsl.h;
-        this.sObj.value = hsl.s;
-        this.lObj.value = hsl.l;
+        this._hObj.value = hsl.h;
+        this._sObj.value = hsl.s;
+        this._lObj.value = hsl.l;
 
         this._update();
       }
 
     } else if (key === 'config') {
       this._hasWhite = true; // (value === 'WRGB');
-      if (this.wObj) {
-        this.wObj.style.display = this._hasWhite ? '' : 'none';
+      if (this._wObj) {
+        this._wObj.style.display = this._hasWhite ? '' : 'none';
       }
     }
     super.newData(_path, key, value);
@@ -78,8 +78,8 @@ class ColorWidgetClass extends GenericWidgetClass {
 
   // calculate the new color value from input sliders
   on_input() {
-    this._value = this.to16(parseInt(this.wObj.value))
-      + this.HSLToColor(this.hObj.value, this.sObj.value, this.lObj.value);
+    this._value = this.to16(parseInt(this._wObj.value))
+      + this.HSLToColor(this._hObj.value, this._sObj.value, this._lObj.value);
     this._update();
     this.dispatchAction('value', 'x' + this._value);
   } // on_input
@@ -91,11 +91,11 @@ class ColorWidgetClass extends GenericWidgetClass {
     const hsl = this.toHSL(rgbw);
     const fullColor = this.HSLToColor(hsl.h, 100, 50);
 
-    this.sObj.style.background = `linear-gradient(to right, #808080 0%, #${fullColor} 100%)`;
-    this.lObj.style.background = `linear-gradient(to right, #000 0%, #${fullColor} 50%, #fff 100%)`;
+    this._sObj.style.background = `linear-gradient(to right, #808080 0%, #${fullColor} 100%)`;
+    this._lObj.style.background = `linear-gradient(to right, #000 0%, #${fullColor} 50%, #fff 100%)`;
 
-    this.colObj.style.backgroundColor = `#${this._value.substr(2)}`;
-    this.wObj.value = String(rgbw.w);
+    this._colObj.style.backgroundColor = `#${this._value.substr(2)}`;
+    this._wObj.value = String(rgbw.w);
   } // _updateUI()
 
 

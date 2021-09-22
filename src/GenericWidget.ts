@@ -7,13 +7,14 @@
 
 @MicroControl('generic')
 class GenericWidgetClass extends MicroControlClass {
-  microid = '';
-  data: any = {};
-  actions: string[] = [];
-  subId = 0;
+  microid!:string;
+  data: any;
+  actions!: string[];
+  subId!:number;
 
   connectedCallback() {
     super.connectedCallback();
+    if (!this.microid) this.microid = '';
     this.data = { id: this.microid };
     this.actions = [];
     this.subId = hub.subscribe(this.microid + '?*', this.newData.bind(this));

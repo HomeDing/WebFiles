@@ -9,7 +9,6 @@
 
 @MicroControl('displaytext')
 class DisplayTextWidgetClass extends GenericWidgetClass {
-  lastValue!: string;
   _dispElem!: HTMLElement | null;
   _grid!: number;
   _elem!: HTMLElement | null;
@@ -18,7 +17,6 @@ class DisplayTextWidgetClass extends GenericWidgetClass {
 
   connectedCallback() {
     super.connectedCallback();
-    this.lastValue = '';
     this._dispElem = document.querySelector('#panel .display');
     if (this._dispElem) {
       this._grid = Number(this._dispElem.getAttribute('grid') || 1);

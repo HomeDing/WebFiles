@@ -14,22 +14,22 @@ declare interface PromiseConstructor {
 
 @MicroControl('log')
 class LogWidgetClass extends GenericWidgetClass {
-  filename: string | null = null;
-  lineSVGObj: HTMLObjectElement | null = null;
-  xFormat!: string;
-  yFormat!: string;
-  api: any;
-  lChart: any;
+  private _fName: string | null = null;
+  private _SVGObj: HTMLObjectElement | null = null;
+  private _xFormat!: string;
+  private _yFormat!: string;
+  private _api: any;
+  private _chart: any;
 
   connectedCallback() {
     super.connectedCallback();
-    this.lineSVGObj = this.querySelector('object');
-    this.xFormat = 'datetime';
-    this.yFormat = 'num';
+    this._SVGObj = this.querySelector('object');
+    this._xFormat = 'datetime';
+    this._yFormat = 'num';
   }
 
   loadData() {
-    const fName = (this.filename as string);
+    const fName = (this._fName as string);
     let allData = '';
 
     const p1 = fetch(fName, { cache: 'no-store' })
@@ -55,8 +55,8 @@ class LogWidgetClass extends GenericWidgetClass {
         return e.match(re);
       });
 
-      this.api.draw(
-        this.lChart,
+      this._api.draw(
+        this._chart,
         pmArray.map(function (v) {
           const p = v.split(',');
           return { x: p[0], y: p[1] };
@@ -70,19 +70,19 @@ class LogWidgetClass extends GenericWidgetClass {
   loadSVG() {
     let done = false;
 
-    if (this.lineSVGObj) {
+    if (this._SVGObj) {
       let svgObj = null;
       try {
-        svgObj = <any>(this.lineSVGObj.getSVGDocument());
+        svgObj = <any>(this._SVGObj.getSVGDocument());
       } catch (err) { }
 
       if ((svgObj) && (svgObj.api)) {
         // now setup
-        this.api = (this.lineSVGObj.getSVGDocument() as any).api;
-        this.lChart = this.api.add('line', { linetype: 'line' });
-        this.api.add(['VAxis',
+        this._api = (this._SVGObj.getSVGDocument() as any).api;
+        this._chart = this._api.add('line', { linetype: 'line' });
+        this._api.add(['VAxis',
           { type: 'hAxis', options: { format: 'datetime' } },
-          { type: 'indicator', options: { xFormat: this.xFormat, yFormat: this.yFormat } },
+          { type: 'indicator', options: { xFormat: this._xFormat, yFormat: this._yFormat } },
         ]);
         this.loadData();
         done = true;
@@ -99,12 +99,12 @@ class LogWidgetClass extends GenericWidgetClass {
   newData(path: string, key: string | null, value: string | null) {
     super.newData(path, key, value);
     if (key === 'filename') {
-      this.filename = value;
+      this._fName = value;
       this.loadSVG();
     } else if (key === 'xformat') {
-      this.xFormat = <string>value;
+      this._xFormat = <string>value;
     } else if (key === 'yformat') {
-      this.yFormat = <string>value;
+      this._yFormat = <string>value;
     }
   } // newValue()
 }

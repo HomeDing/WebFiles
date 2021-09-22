@@ -19,13 +19,11 @@
 class ModalDialogClass extends MicroControlClass {
   static _stack: ModalDialogClass[] = [];
 
-  protected _isOpen = false;
-  protected _backObj: HTMLElement | undefined;
-  protected _frameObj: HTMLElement | undefined;
-  protected _focusObj: HTMLElement | undefined;
-  protected _placeObj: HTMLElement | undefined;
-  protected params: any = {};
-  protected _keyHandler: any;
+  private _frameObj!: HTMLElement;
+
+  private _focusObj: HTMLElement | undefined;
+  private _placeObj: HTMLElement | undefined;
+  private _keyHandler: any;
 
   /**
    * Static helper to open a new dialog on top of existing ones.
@@ -82,7 +80,6 @@ class ModalDialogClass extends MicroControlClass {
 
   connectedCallback() {
     super.connectedCallback();
-    this._backObj = this.querySelector('.modalBack') as HTMLElement;
     this._frameObj = this.querySelector('.modalFrame') as HTMLElement;
   }
 
@@ -100,13 +97,11 @@ class ModalDialogClass extends MicroControlClass {
   open(tmplName: string, data: any) {
     ModalDialogClass._stack.push(this);
 
-    if ((this._backObj) && (this._frameObj)) {
-      this._keyHandler = this._handleEsc.bind(this);
-      document.addEventListener('keydown', this._keyHandler);
-      const dlg = micro.insertTemplate(this._frameObj, tmplName, data);
-      const fObj = dlg?.querySelector('input,button,select') as HTMLElement;
-      fObj?.focus();
-    }
+    this._keyHandler = this._handleEsc.bind(this);
+    document.addEventListener('keydown', this._keyHandler);
+    const dlg = micro.insertTemplate(this._frameObj, tmplName, data);
+    const fObj = dlg?.querySelector('input,button,select') as HTMLElement;
+    fObj?.focus();
   }
 
   /**
@@ -115,19 +110,17 @@ class ModalDialogClass extends MicroControlClass {
    * @param data optional data to pass
    */
   next(tmplName: string, data: any) {
-    if ((this._backObj) && (this._frameObj)) {
-      this._frameObj.firstElementChild?.remove();
-      const dlg = micro.insertTemplate(this._frameObj, tmplName, data);
-      const fObj = dlg?.querySelector('input,button,select') as HTMLElement;
-      fObj?.focus();
-    }
+    this._frameObj.firstElementChild?.remove();
+    const dlg = micro.insertTemplate(this._frameObj, tmplName, data);
+    const fObj = dlg?.querySelector('input,button,select') as HTMLElement;
+    fObj?.focus();
   } // next
 
   // open modal viewer with existing object
   openFocus(obj: HTMLElement) {
     ModalDialogClass._stack.push(this);
 
-    if ((obj) && (obj.parentElement) && this._frameObj) {
+    if ((obj) && (obj.parentElement)) {
       this._keyHandler = this._handleEsc.bind(this);
       document.addEventListener('keydown', this._keyHandler);
 

@@ -13,14 +13,10 @@
 
 @MicroControl('include')
 class IncludeWidgetClass extends MicroControlClass {
-  query: string | null = null;
-
-  // constructor() {}
+  ref!: string | null;
 
   connectedCallback() {
-    this.query = this.getAttribute('ref');
-
-    const obj = document.querySelector('#u-templates ' + this.query);
+    const obj = document.querySelector('#u-templates ' + this.ref);
 
     if (obj) {
       const e = obj.cloneNode(true) as HTMLElement;

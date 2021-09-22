@@ -1,35 +1,9 @@
 "use strict";
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        if (typeof b !== "function" && b !== null)
-            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __assign = (this && this.__assign) || function () {
-    __assign = Object.assign || function(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-                t[p] = s[p];
-        }
-        return t;
-    };
-    return __assign.apply(this, arguments);
 };
 var MicroState;
 (function (MicroState) {
@@ -37,8 +11,8 @@ var MicroState;
     MicroState[MicroState["INIT"] = 2] = "INIT";
     MicroState[MicroState["LOADED"] = 3] = "LOADED";
 })(MicroState || (MicroState = {}));
-var MicroRegistry = (function () {
-    function MicroRegistry() {
+class MicroRegistry {
+    constructor() {
         this._tco = null;
         this._registry = {};
         this._state = MicroState.PREP;
@@ -47,25 +21,25 @@ var MicroRegistry = (function () {
         window.addEventListener('load', this.init.bind(this));
         window.addEventListener('unload', this.onunload.bind(this));
     }
-    MicroRegistry.prototype.loadFile = function (fName) {
-        var scope = this;
-        var ret = fetch(fName)
+    loadFile(fName) {
+        const scope = this;
+        const ret = fetch(fName)
             .then(function (result) {
             return result.text();
         })
             .then(function (html) {
-            var f = document.createRange().createContextualFragment(html);
+            const f = document.createRange().createContextualFragment(html);
             if (scope._tco) {
                 scope._tco.appendChild(f);
             }
         });
         return ret;
-    };
-    MicroRegistry.prototype.attach = function (elem) {
+    }
+    attach(elem) {
         if (this._state === MicroState.LOADED) {
-            var cn = elem.getAttribute('u-is');
+            const cn = elem.getAttribute('u-is');
             if (cn) {
-                var bc = this._registry[cn];
+                const bc = this._registry[cn];
                 if (bc) {
                     this.loadBehavior(elem, bc);
                 }
@@ -74,11 +48,10 @@ var MicroRegistry = (function () {
         else {
             this._unloadedList.push(elem);
         }
-    };
-    MicroRegistry.prototype._setPlaceholders = function (obj, props) {
-        var _this = this;
+    }
+    _setPlaceholders(obj, props) {
         function fill(val) {
-            Object.getOwnPropertyNames(props).forEach(function (p) { return val = val.replace(new RegExp('\\$\\{' + p + '\\}', 'g'), props[p]); });
+            Object.getOwnPropertyNames(props).forEach(p => val = val.replace(new RegExp('\\$\\{' + p + '\\}', 'g'), props[p]));
             return val;
         }
         if (props) {
@@ -88,9 +61,9 @@ var MicroRegistry = (function () {
                 }
             }
             else if (obj.nodeType === Node.ELEMENT_NODE) {
-                var attr = obj.attributes;
-                for (var i = 0; i < attr.length; i++) {
-                    var v = attr[i].value;
+                const attr = obj.attributes;
+                for (let i = 0; i < attr.length; i++) {
+                    const v = attr[i].value;
                     if (v.indexOf('${') >= 0) {
                         if (!obj[attr[i].name]) {
                             obj.setAttribute(attr[i].name, fill(v));
@@ -103,30 +76,29 @@ var MicroRegistry = (function () {
                         }
                     }
                 }
-                obj.childNodes.forEach(function (c) {
-                    _this._setPlaceholders(c, props);
+                obj.childNodes.forEach(c => {
+                    this._setPlaceholders(c, props);
                 });
             }
         }
-    };
-    MicroRegistry.prototype.isVisible = function (el) {
-        var vis = false;
+    }
+    isVisible(el) {
+        let vis = false;
         if (el.offsetWidth > 0 && el.offsetHeight > 0) {
-            var rect = el.getBoundingClientRect();
+            const rect = el.getBoundingClientRect();
             vis = (rect.top <= window.innerHeight && rect.bottom >= 0);
         }
         return (vis);
-    };
-    MicroRegistry.prototype.loadDataImage = function (imgElem) {
+    }
+    loadDataImage(imgElem) {
         if ((imgElem.dataset.src) && (this.isVisible(imgElem))) {
             imgElem.src = imgElem.dataset.src;
         }
-    };
-    MicroRegistry.prototype.insertTemplate = function (root, controlName, props) {
-        var _this = this;
-        var e = null;
+    }
+    insertTemplate(root, controlName, props) {
+        let e = null;
         if (root && controlName && this._tco) {
-            var te = this._tco.querySelector('[u-control="' + controlName.toLowerCase() + '"]');
+            const te = this._tco.querySelector('[u-control="' + controlName.toLowerCase() + '"]');
             if (te) {
                 e = te.cloneNode(true);
             }
@@ -134,16 +106,25 @@ var MicroRegistry = (function () {
                 e.params = props;
                 this._setPlaceholders(e, props);
                 root.appendChild(e);
-                root.querySelectorAll('[u-is]').forEach(function (el) { return micro.attach(el); });
+                root.querySelectorAll('[u-is]').forEach(el => micro.attach(el));
                 this._setPlaceholders(e, props);
-                root.querySelectorAll('[data-src]:not([src])').forEach(function (el) { return _this.loadDataImage(el); });
+                root.querySelectorAll('[data-src]:not([src])').forEach(el => this.loadDataImage(el));
             }
         }
         return e;
-    };
-    MicroRegistry.prototype.loadBehavior = function (obj, behavior) {
-        var b = behavior;
-        var oc = obj;
+    }
+    getMethods(obj) {
+        const fSet = new Set();
+        do {
+            Object.getOwnPropertyNames(obj)
+                .filter(item => typeof obj[item] === 'function')
+                .forEach(item => fSet.add(item));
+        } while ((obj = Object.getPrototypeOf(obj)));
+        return (fSet);
+    }
+    loadBehavior(obj, behavior) {
+        const b = behavior;
+        const oc = obj;
         if (!obj) {
             console.error('loadBehavior: obj argument is missing.');
         }
@@ -153,15 +134,12 @@ var MicroRegistry = (function () {
         else if (oc._attachedBehavior === behavior) {
         }
         else {
-            if (obj.attributes) {
-                for (var n = 0; n < obj.attributes.length; n++) {
-                    var a = obj.attributes[n];
-                    if (!obj[a.name]) {
-                        obj[a.name] = a.value;
-                    }
+            for (const a of obj.attributes) {
+                if (!obj[a.name]) {
+                    obj[a.name] = a.value;
                 }
             }
-            for (var p in b) {
+            for (const p of this.getMethods(b)) {
                 if (p === 'on_touchstart') {
                     obj.addEventListener(p.substr(3), b[p].bind(obj), { passive: true });
                 }
@@ -186,25 +164,25 @@ var MicroRegistry = (function () {
                 this.List.push(obj);
             }
         }
-    };
-    MicroRegistry.prototype.define = function (name, mixin) {
+    }
+    define(name, mixin) {
         this._registry[name] = mixin;
-    };
-    MicroRegistry.prototype.onunload = function (_evt) {
-        this.List.forEach(function (obj) {
+    }
+    onunload(_evt) {
+        this.List.forEach(obj => {
             if (obj && obj.term) {
                 obj.term();
             }
-            for (var a = 0; a < obj.attributes.length; a++) {
+            for (let a = 0; a < obj.attributes.length; a++) {
                 obj[obj.attributes[a].name] = null;
             }
         });
-        for (var n = 0; n < this.List.length; n++) {
+        for (let n = 0; n < this.List.length; n++) {
             delete this.List[n];
         }
         this.List = [];
-    };
-    MicroRegistry.prototype.init = function () {
+    }
+    init() {
         this._state = MicroState.INIT;
         this._tco = document.getElementById('u-templates');
         if (!this._tco) {
@@ -216,32 +194,29 @@ var MicroRegistry = (function () {
         else {
             document.addEventListener('readystatechange', this.init2);
         }
-    };
-    MicroRegistry.prototype.init2 = function () {
-        var _this = this;
+    }
+    init2() {
         if (document.readyState === 'complete') {
             this._state = MicroState.LOADED;
-            this._unloadedList.forEach(function (el) {
-                var cn = el.getAttribute('u-is');
+            this._unloadedList.forEach(el => {
+                const cn = el.getAttribute('u-is');
                 if (cn) {
-                    var bc = _this._registry[cn];
+                    const bc = this._registry[cn];
                     if (bc) {
-                        _this.loadBehavior(el, bc);
+                        this.loadBehavior(el, bc);
                     }
-                    _this.List.push(el);
+                    this.List.push(el);
                 }
             });
             this._unloadedList = [];
         }
-    };
-    return MicroRegistry;
-}());
-var micro = new MicroRegistry();
-var obs = new MutationObserver(function (mutationsList, _observer) {
-    for (var _i = 0, mutationsList_1 = mutationsList; _i < mutationsList_1.length; _i++) {
-        var mutation = mutationsList_1[_i];
-        mutation.addedNodes.forEach(function (n) {
-            var e = n;
+    }
+}
+const micro = new MicroRegistry();
+let obs = new MutationObserver(function (mutationsList, _observer) {
+    for (const mutation of mutationsList) {
+        mutation.addedNodes.forEach(n => {
+            const e = n;
             if (e.getAttribute && e.getAttribute('u-is')) {
                 micro.attach(n);
             }
@@ -250,53 +225,44 @@ var obs = new MutationObserver(function (mutationsList, _observer) {
 });
 obs.observe(document, { childList: true, subtree: true });
 document.addEventListener('DOMContentLoaded', function () {
-    function f() { document.querySelectorAll('[data-src]:not([src])').forEach(function (e) { return micro.loadDataImage(e); }); }
+    function f() { document.querySelectorAll('[data-src]:not([src])').forEach(e => micro.loadDataImage(e)); }
     window.addEventListener('scroll', f);
     window.setTimeout(f, 40);
 });
-var MicroControlClass = (function () {
-    function MicroControlClass() {
-    }
-    MicroControlClass.prototype.connectedCallback = function () { };
-    MicroControlClass.prototype._clearWhitespace = function () {
+class MicroControlClass {
+    connectedCallback() { }
+    _clearWhitespace() {
         var _a;
-        var obj = this.firstChild;
+        let obj = this.firstChild;
         while (obj) {
-            var nextObj = obj.nextSibling;
+            const nextObj = obj.nextSibling;
             if (obj.nodeType === 3) {
                 (_a = obj.parentNode) === null || _a === void 0 ? void 0 : _a.removeChild(obj);
             }
             obj = nextObj;
         }
-    };
-    return MicroControlClass;
-}());
+    }
+}
 function MicroControl(isSelector) {
     return function (target) {
         micro.define(isSelector, new target());
         return target;
     };
 }
-var GenericWidgetClass = (function (_super) {
-    __extends(GenericWidgetClass, _super);
-    function GenericWidgetClass() {
-        var _this = _super !== null && _super.apply(this, arguments) || this;
-        _this.microid = '';
-        _this.data = {};
-        _this.subId = 0;
-        _this.actions = [];
-        return _this;
-    }
-    GenericWidgetClass.prototype.connectedCallback = function () {
-        _super.prototype.connectedCallback.call(this);
+let GenericWidgetClass = class GenericWidgetClass extends MicroControlClass {
+    connectedCallback() {
+        super.connectedCallback();
+        if (!this.microid)
+            this.microid = '';
         this.data = { id: this.microid };
+        this.actions = [];
         this.subId = hub.subscribe(this.microid + '?*', this.newData.bind(this));
         hub.replay(this.subId);
-    };
-    GenericWidgetClass.prototype.newData = function (_path, key, value) {
+    }
+    newData(_path, key, value) {
         if (key && value) {
             this.data[key] = value;
-            var ic = this.querySelector('img,h3');
+            const ic = this.querySelector('img,h3');
             if (ic) {
                 setAttr(ic, 'title', JSON.stringify(this.data, null, 1)
                     .replace('{\n', '')
@@ -307,8 +273,8 @@ var GenericWidgetClass = (function (_super) {
             this.classList.toggle('active', toBool(value));
         }
         ['span', 'div'].forEach(function (elType) {
-            this.querySelectorAll(elType + ("[u-active='" + key + "']")).forEach(function (elem) {
-                var b = toBool(value);
+            this.querySelectorAll(elType + `[u-active='${key}']`).forEach(function (elem) {
+                const b = toBool(value);
                 setAttr(elem, 'value', b ? '1' : '0');
                 setAttr(elem, 'title', b ? 'active' : 'not active');
                 elem.classList.toggle('active', b);
@@ -336,22 +302,21 @@ var GenericWidgetClass = (function (_super) {
                 setAttr(elem, 'u-action', value ? value : '');
             });
         }, this);
-        this.querySelectorAll("span[u-color='" + key + "']").forEach(function (elem) {
-            var col = value ? value.replace(/^x/, '#') : '#888';
+        this.querySelectorAll(`span[u-color='${key}']`).forEach(function (elem) {
+            let col = value ? value.replace(/^x/, '#') : '#888';
             col = col.replace(/^#\S{2}(\S{6})$/, '#$1');
             elem.style.backgroundColor = col;
         });
-    };
-    GenericWidgetClass.prototype.dispatchNext = function () {
-        var _this = this;
+    }
+    dispatchNext() {
         if (this.actions) {
-            var a = this.actions.shift();
+            const a = this.actions.shift();
             if (a) {
-                var aa = a.split('=');
-                var aUrl = aa[0] + '=' + encodeURIComponent(aa[1]);
-                fetch(aUrl).then(function () {
-                    if (_this.actions.length > 0) {
-                        debounce(_this.dispatchNext.bind(_this))();
+                const aa = a.split('=');
+                const aUrl = aa[0] + '=' + encodeURIComponent(aa[1]);
+                fetch(aUrl).then(() => {
+                    if (this.actions.length > 0) {
+                        debounce(this.dispatchNext.bind(this))();
                     }
                     else {
                         try {
@@ -362,32 +327,30 @@ var GenericWidgetClass = (function (_super) {
                 });
             }
         }
-    };
-    GenericWidgetClass.prototype.dispatchAction = function (prop, val) {
-        var _this = this;
-        if (prop !== null && val !== null) {
+    }
+    dispatchAction(prop, val) {
+        if (prop && val) {
             if (prop.includes('/')) {
                 prop.replace('${v}', encodeURI(val));
-                prop.split(',').forEach(function (a) { return _this.actions.push('/$board/' + a); });
+                prop.split(',').forEach((a) => this.actions.push('/$board/' + a));
             }
             else {
-                this.actions.push("/$board" + this.microid + "?" + prop + "=" + encodeURI(val));
+                this.actions.push(`/$board${this.microid}?${prop}=${encodeURI(val)}`);
             }
             debounce(this.dispatchNext.bind(this))();
         }
-    };
-    GenericWidgetClass.prototype.showSys = function () {
-        var p = getHashParams({ sys: false }).sys;
+    }
+    showSys() {
+        const p = getHashParams({ sys: false }).sys;
         return (toBool(p));
-    };
-    GenericWidgetClass.prototype.on_change = function (e) {
-        var src = e.target;
+    }
+    on_change(e) {
+        const src = e.target;
         this.dispatchAction(src.getAttribute('u-value'), src.value);
-    };
-    GenericWidgetClass.prototype.on_click = function (event) {
-        var _this = this;
-        var chain = [];
-        var n = event.target;
+    }
+    on_click(event) {
+        const chain = [];
+        let n = event.target;
         while (n) {
             chain.push(n);
             if (n === this) {
@@ -395,87 +358,75 @@ var GenericWidgetClass = (function (_super) {
             }
             n = n.parentElement;
         }
-        chain.every(function (p) {
-            var ret = false;
+        chain.every(p => {
+            let ret = false;
             if (p.getAttribute('u-action')) {
-                _this.dispatchAction(p.getAttribute('u-action'), p.getAttribute('value') || '1');
+                this.dispatchAction(p.getAttribute('u-action'), p.getAttribute('value') || '1');
             }
             else if (p.classList.contains('setconfig')) {
-                ModalDialogClass.open('configelementdlg', _this.data);
+                ModalDialogClass.open('configelementdlg', this.data);
             }
             else if (p.classList.contains('setactive')) {
-                _this.dispatchAction(toBool(_this.data.active) ? 'stop' : 'start', '1');
+                this.dispatchAction(toBool(this.data.active) ? 'stop' : 'start', '1');
             }
             else if (p.classList.contains('setfocus')) {
-                ModalDialogClass.openFocus(_this);
+                ModalDialogClass.openFocus(this);
             }
             else {
                 ret = true;
             }
             return (ret);
         });
-    };
-    GenericWidgetClass = __decorate([
-        MicroControl('generic')
-    ], GenericWidgetClass);
-    return GenericWidgetClass;
-}(MicroControlClass));
-var BL0937WidgetClass = (function (_super) {
-    __extends(BL0937WidgetClass, _super);
-    function BL0937WidgetClass() {
-        var _this = _super !== null && _super.apply(this, arguments) || this;
-        _this.mode = '';
-        return _this;
     }
-    BL0937WidgetClass.prototype.connectedCallback = function () {
-        _super.prototype.connectedCallback.call(this);
+};
+GenericWidgetClass = __decorate([
+    MicroControl('generic')
+], GenericWidgetClass);
+let BL0937WidgetClass = class BL0937WidgetClass extends GenericWidgetClass {
+    connectedCallback() {
+        super.connectedCallback();
+        if (!this.mode)
+            this.mode = 'current';
         this.data = { id: this.microid };
         this.subId = hub.subscribe(this.microid + '?mode', this.switchMode.bind(this));
         hub.replay(this.subId);
-    };
-    BL0937WidgetClass.prototype.setMode = function (newMode) {
+    }
+    setMode(newMode) {
         if (newMode && (newMode !== this.mode)) {
-            var td = void 0;
-            td = this.querySelector("[u-text=\"" + this.mode + "\"]");
+            let td;
+            td = this.querySelector(`[u-text="${this.mode}"]`);
             if (td === null || td === void 0 ? void 0 : td.parentElement) {
                 td.parentElement.style.display = 'none';
             }
-            td = this.querySelector("span[u-text=\"" + newMode + "\"]");
+            td = this.querySelector(`span[u-text="${newMode}"]`);
             if (td === null || td === void 0 ? void 0 : td.parentElement) {
                 td.parentElement.style.display = '';
             }
             this.mode = newMode;
         }
-    };
-    BL0937WidgetClass.prototype.switchMode = function (_path, _key, value) {
+    }
+    switchMode(_path, _key, value) {
         this.setMode(value);
-    };
-    BL0937WidgetClass.prototype.on_click = function (e) {
-        var src = e.target;
+    }
+    on_click(e) {
+        const src = e.target;
         if (src.getAttribute('u-action') === 'mode') {
             this.setMode(src['value']);
         }
-        _super.prototype.on_click.call(this, e);
-    };
-    BL0937WidgetClass = __decorate([
-        MicroControl('bl0937')
-    ], BL0937WidgetClass);
-    return BL0937WidgetClass;
-}(GenericWidgetClass));
-var ButtonGroupWidgetClass = (function (_super) {
-    __extends(ButtonGroupWidgetClass, _super);
-    function ButtonGroupWidgetClass() {
-        var _this = _super !== null && _super.apply(this, arguments) || this;
-        _this._count = 0;
-        _this._blockElem = null;
-        return _this;
+        super.on_click(e);
     }
-    ButtonGroupWidgetClass.prototype.connectedCallback = function () {
-        _super.prototype.connectedCallback.call(this);
+};
+BL0937WidgetClass = __decorate([
+    MicroControl('bl0937')
+], BL0937WidgetClass);
+let ButtonGroupWidgetClass = class ButtonGroupWidgetClass extends GenericWidgetClass {
+    connectedCallback() {
+        super.connectedCallback();
         this._blockElem = this.querySelector('.block');
-    };
-    ButtonGroupWidgetClass.prototype.newData = function (path, key, value) {
-        _super.prototype.newData.call(this, path, key, value);
+        this._count = 0;
+    }
+    newData(path, key, value) {
+        super.newData(path, key, value);
         if (key && value) {
             if (key !== 'title') {
                 if (this._count % 2 === 0) {
@@ -487,26 +438,14 @@ var ButtonGroupWidgetClass = (function (_super) {
                 this._count++;
             }
         }
-    };
-    ButtonGroupWidgetClass = __decorate([
-        MicroControl('buttongroup')
-    ], ButtonGroupWidgetClass);
-    return ButtonGroupWidgetClass;
-}(GenericWidgetClass));
-var ButtonWidgetClass = (function (_super) {
-    __extends(ButtonWidgetClass, _super);
-    function ButtonWidgetClass() {
-        var _this = _super !== null && _super.apply(this, arguments) || this;
-        _this._onclick = '';
-        _this._ondoubleclick = '';
-        _this._onpress = '';
-        _this._timer = 0;
-        _this._start = 0;
-        _this._duration = 0;
-        return _this;
     }
-    ButtonWidgetClass.prototype.newData = function (path, key, value) {
-        _super.prototype.newData.call(this, path, key, value);
+};
+ButtonGroupWidgetClass = __decorate([
+    MicroControl('buttongroup')
+], ButtonGroupWidgetClass);
+let ButtonWidgetClass = class ButtonWidgetClass extends GenericWidgetClass {
+    newData(path, key, value) {
+        super.newData(path, key, value);
         if (key === 'onclick') {
             this._onclick = value;
         }
@@ -516,101 +455,90 @@ var ButtonWidgetClass = (function (_super) {
         else if (key === 'onpress') {
             this._onpress = value;
         }
-    };
-    ButtonWidgetClass.prototype.on_click = function () {
+    }
+    on_click() {
         if (this._duration > 800) {
             if (this._onpress) {
                 this.dispatchAction(this._onpress, '1');
             }
         }
         else {
-            var scope_1 = this;
+            const scope = this;
             if (this._timer) {
                 window.clearTimeout(this._timer);
             }
             this._timer = window.setTimeout(function () {
-                scope_1.dispatchAction(scope_1._onclick, '1');
+                scope.dispatchAction(scope._onclick, '1');
             }, 250);
         }
-    };
-    ButtonWidgetClass.prototype.on_dblclick = function () {
+    }
+    on_dblclick() {
         if (this._timer) {
             window.clearTimeout(this._timer);
         }
         this.dispatchAction(this._ondoubleclick, '1');
-    };
-    ButtonWidgetClass.prototype.on_pointerdown = function () {
-        this._start = new Date().valueOf();
-    };
-    ButtonWidgetClass.prototype.on_pointerup = function () {
-        this._duration = new Date().valueOf() - this._start;
-    };
-    ButtonWidgetClass = __decorate([
-        MicroControl('button')
-    ], ButtonWidgetClass);
-    return ButtonWidgetClass;
-}(GenericWidgetClass));
-var ColorWidgetClass = (function (_super) {
-    __extends(ColorWidgetClass, _super);
-    function ColorWidgetClass() {
-        var _this = _super !== null && _super.apply(this, arguments) || this;
-        _this.colObj = {};
-        _this.hObj = {};
-        _this.sObj = {};
-        _this.lObj = {};
-        _this.wObj = {};
-        _this._value = '00000000';
-        _this._hasWhite = false;
-        return _this;
     }
-    ColorWidgetClass.prototype.connectedCallback = function () {
-        _super.prototype.connectedCallback.call(this);
-        this.colObj = this.querySelector('.color') || { style: {} };
-        this.hObj = this.querySelector('.hue') || {};
-        this.sObj = this.querySelector('.band.saturation') || { style: {} };
-        this.lObj = this.querySelector('.band.lightness') || { style: {} };
-        this.wObj = this.querySelector('.white') || {};
-    };
-    ColorWidgetClass.prototype.newData = function (_path, key, value) {
-        var newValue = this._value;
+    on_pointerdown() {
+        this._start = new Date().valueOf();
+    }
+    on_pointerup() {
+        this._duration = new Date().valueOf() - this._start;
+    }
+};
+ButtonWidgetClass = __decorate([
+    MicroControl('button')
+], ButtonWidgetClass);
+let ColorWidgetClass = class ColorWidgetClass extends GenericWidgetClass {
+    connectedCallback() {
+        super.connectedCallback();
+        this._value = '00000000';
+        this._hasWhite = false;
+        this._colObj = this.querySelector('.color') || { style: {} };
+        this._hObj = this.querySelector('.hue') || {};
+        this._sObj = this.querySelector('.band.saturation') || { style: {} };
+        this._lObj = this.querySelector('.band.lightness') || { style: {} };
+        this._wObj = this.querySelector('.white') || {};
+    }
+    newData(_path, key, value) {
+        let newValue = this._value;
         if (!value) {
         }
         else if (key === 'value') {
             newValue = this.normColor(value);
             if (newValue !== this._value) {
                 this._value = newValue;
-                var rgbw = this.wrgb(newValue);
-                var hsl = this.toHSL(rgbw);
-                this.hObj.value = hsl.h;
-                this.sObj.value = hsl.s;
-                this.lObj.value = hsl.l;
+                const rgbw = this.wrgb(newValue);
+                const hsl = this.toHSL(rgbw);
+                this._hObj.value = hsl.h;
+                this._sObj.value = hsl.s;
+                this._lObj.value = hsl.l;
                 this._update();
             }
         }
         else if (key === 'config') {
             this._hasWhite = true;
-            if (this.wObj) {
-                this.wObj.style.display = this._hasWhite ? '' : 'none';
+            if (this._wObj) {
+                this._wObj.style.display = this._hasWhite ? '' : 'none';
             }
         }
-        _super.prototype.newData.call(this, _path, key, value);
-    };
-    ColorWidgetClass.prototype.on_input = function () {
-        this._value = this.to16(parseInt(this.wObj.value))
-            + this.HSLToColor(this.hObj.value, this.sObj.value, this.lObj.value);
+        super.newData(_path, key, value);
+    }
+    on_input() {
+        this._value = this.to16(parseInt(this._wObj.value))
+            + this.HSLToColor(this._hObj.value, this._sObj.value, this._lObj.value);
         this._update();
         this.dispatchAction('value', 'x' + this._value);
-    };
-    ColorWidgetClass.prototype._update = function () {
-        var rgbw = this.wrgb(this._value);
-        var hsl = this.toHSL(rgbw);
-        var fullColor = this.HSLToColor(hsl.h, 100, 50);
-        this.sObj.style.background = "linear-gradient(to right, #808080 0%, #" + fullColor + " 100%)";
-        this.lObj.style.background = "linear-gradient(to right, #000 0%, #" + fullColor + " 50%, #fff 100%)";
-        this.colObj.style.backgroundColor = "#" + this._value.substr(2);
-        this.wObj.value = String(rgbw.w);
-    };
-    ColorWidgetClass.prototype.normColor = function (color) {
+    }
+    _update() {
+        const rgbw = this.wrgb(this._value);
+        const hsl = this.toHSL(rgbw);
+        const fullColor = this.HSLToColor(hsl.h, 100, 50);
+        this._sObj.style.background = `linear-gradient(to right, #808080 0%, #${fullColor} 100%)`;
+        this._lObj.style.background = `linear-gradient(to right, #000 0%, #${fullColor} 50%, #fff 100%)`;
+        this._colObj.style.backgroundColor = `#${this._value.substr(2)}`;
+        this._wObj.value = String(rgbw.w);
+    }
+    normColor(color) {
         if ((!color) || (color.length === 0)) {
             color = '00000000';
         }
@@ -623,8 +551,8 @@ var ColorWidgetClass = (function (_super) {
             }
         }
         return (color);
-    };
-    ColorWidgetClass.prototype.wrgb = function (color) {
+    }
+    wrgb(color) {
         var rgbw = {
             w: parseInt(color.substr(0, 2), 16),
             r: parseInt(color.substr(2, 2), 16),
@@ -632,15 +560,15 @@ var ColorWidgetClass = (function (_super) {
             b: parseInt(color.substr(6, 2), 16)
         };
         return (rgbw);
-    };
-    ColorWidgetClass.prototype.toHSL = function (rgb) {
-        var hsl = { h: 0, s: 0, l: 0 };
-        var r = rgb.r / 255;
-        var g = rgb.g / 255;
-        var b = rgb.b / 255;
-        var l = Math.max(r, g, b);
-        var s = l - Math.min(r, g, b);
-        var h = s
+    }
+    toHSL(rgb) {
+        const hsl = { h: 0, s: 0, l: 0 };
+        const r = rgb.r / 255;
+        const g = rgb.g / 255;
+        const b = rgb.b / 255;
+        const l = Math.max(r, g, b);
+        const s = l - Math.min(r, g, b);
+        const h = s
             ? l === r
                 ? (g - b) / s
                 : l === g
@@ -651,90 +579,69 @@ var ColorWidgetClass = (function (_super) {
         hsl.s = Math.round(100 * (s ? (l <= 0.5 ? s / (2 * l - s) : s / (2 - (2 * l - s))) : 0));
         hsl.l = Math.round((100 * (2 * l - s)) / 2);
         return (hsl);
-    };
-    ColorWidgetClass.prototype.HSLToColor = function (h, s, l) {
+    }
+    HSLToColor(h, s, l) {
         s /= 100;
         l /= 100;
-        var k = function (n) { return (n + h / 30) % 12; };
-        var a = s * Math.min(l, 1 - l);
-        var f = function (n) {
-            return l - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1)));
-        };
-        var rgb = {
+        const k = (n) => (n + h / 30) % 12;
+        const a = s * Math.min(l, 1 - l);
+        const f = (n) => l - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1)));
+        const rgb = {
             r: Math.round(255 * f(0)),
             g: Math.round(255 * f(8)),
             b: Math.round(255 * f(4)),
             w: 0
         };
         return this.toRGBColor(rgb);
-    };
-    ColorWidgetClass.prototype.to16 = function (d) {
-        var x = d.toString(16);
+    }
+    to16(d) {
+        let x = d.toString(16);
         if (x.length === 1) {
             x = '0' + x;
         }
         return (x);
-    };
-    ColorWidgetClass.prototype.toRGBColor = function (rgbw) {
-        var col = this.to16(rgbw.r) + this.to16(rgbw.g) + this.to16(rgbw.b);
-        return (col);
-    };
-    ColorWidgetClass = __decorate([
-        MicroControl('color')
-    ], ColorWidgetClass);
-    return ColorWidgetClass;
-}(GenericWidgetClass));
-var DSTimeWidgetClass = (function (_super) {
-    __extends(DSTimeWidgetClass, _super);
-    function DSTimeWidgetClass() {
-        return _super !== null && _super.apply(this, arguments) || this;
     }
-    DSTimeWidgetClass.prototype.isoDate = function () {
+    toRGBColor(rgbw) {
+        const col = this.to16(rgbw.r) + this.to16(rgbw.g) + this.to16(rgbw.b);
+        return (col);
+    }
+};
+ColorWidgetClass = __decorate([
+    MicroControl('color')
+], ColorWidgetClass);
+let DSTimeWidgetClass = class DSTimeWidgetClass extends GenericWidgetClass {
+    connectedCallback() {
+        super.connectedCallback();
+        this._nowObj = this.querySelector('.setnow');
+        window.setInterval(function () {
+            setTextContent(this._nowObj, this.isoDate());
+        }.bind(this), 200);
+    }
+    isoDate() {
         function pad02(num) {
             return (((num < 10) ? '0' : '') + num);
         }
-        var d = new Date();
-        var ds = d.getFullYear() + '-' + pad02(d.getMonth() + 1) + '-' + pad02(d.getDate()) +
+        const d = new Date();
+        const ds = d.getFullYear() + '-' + pad02(d.getMonth() + 1) + '-' + pad02(d.getDate()) +
             ' ' + pad02(d.getHours()) + ':' + pad02(d.getMinutes()) + ':' + pad02(d.getSeconds());
         return (ds);
-    };
-    DSTimeWidgetClass.prototype.connectedCallback = function () {
-        _super.prototype.connectedCallback.call(this);
-        this._nowObj = this.querySelector('.setnow');
-        window.setInterval(function () {
-            if (this._nowObj) {
-                setTextContent(this._nowObj, this.isoDate());
-            }
-        }.bind(this), 200);
-    };
-    DSTimeWidgetClass.prototype.on_click = function (e) {
-        var src = e.target;
+    }
+    on_click(e) {
+        const src = e.target;
         if ((src) && (src.classList.contains('setnow'))) {
             this.dispatchAction('time', this.isoDate());
         }
         else {
-            _super.prototype.on_click.call(this, e);
+            super.on_click(e);
         }
-    };
-    DSTimeWidgetClass = __decorate([
-        MicroControl('dstime')
-    ], DSTimeWidgetClass);
-    return DSTimeWidgetClass;
-}(GenericWidgetClass));
-var DisplayDotWidgetClass = (function (_super) {
-    __extends(DisplayDotWidgetClass, _super);
-    function DisplayDotWidgetClass() {
-        var _this = _super !== null && _super.apply(this, arguments) || this;
-        _this.lastValue = null;
-        _this._dispElem = null;
-        _this._elem = null;
-        _this._x = 0;
-        _this._y = 0;
-        _this._value = false;
-        return _this;
     }
-    DisplayDotWidgetClass.prototype.connectedCallback = function () {
-        _super.prototype.connectedCallback.call(this);
+};
+DSTimeWidgetClass = __decorate([
+    MicroControl('dstime')
+], DSTimeWidgetClass);
+let DisplayDotWidgetClass = class DisplayDotWidgetClass extends GenericWidgetClass {
+    connectedCallback() {
+        super.connectedCallback();
         this._dispElem = document.querySelector('#panel .display');
         if (this._dispElem) {
             this._elem = createHTMLElement(this._dispElem, 'span', { class: 'dot' });
@@ -743,9 +650,12 @@ var DisplayDotWidgetClass = (function (_super) {
         if (!this.showSys()) {
             this.style.display = 'none';
         }
-    };
-    DisplayDotWidgetClass.prototype.newData = function (path, key, value) {
-        _super.prototype.newData.call(this, path, key, value);
+        this._x = 0;
+        this._y = 0;
+        this._value = false;
+    }
+    newData(path, key, value) {
+        super.newData(path, key, value);
         if (key && value && this._elem) {
             if (key === 'value') {
                 this._value = toBool(value);
@@ -761,33 +671,21 @@ var DisplayDotWidgetClass = (function (_super) {
             }
             this.updateElem();
         }
-    };
-    DisplayDotWidgetClass.prototype.updateElem = function () {
+    }
+    updateElem() {
         if (this._elem) {
             this._elem.style.top = this._y + 'px';
             this._elem.style.left = this._x + 'px';
             this._elem.classList.toggle('active', this._value);
         }
-    };
-    DisplayDotWidgetClass = __decorate([
-        MicroControl('displaydot')
-    ], DisplayDotWidgetClass);
-    return DisplayDotWidgetClass;
-}(GenericWidgetClass));
-var DisplayLineWidgetClass = (function (_super) {
-    __extends(DisplayLineWidgetClass, _super);
-    function DisplayLineWidgetClass() {
-        var _this = _super !== null && _super.apply(this, arguments) || this;
-        _this._dispElem = null;
-        _this._elem = null;
-        _this._x0 = 0;
-        _this._x1 = 0;
-        _this._y0 = 0;
-        _this._y1 = 0;
-        return _this;
     }
-    DisplayLineWidgetClass.prototype.connectedCallback = function () {
-        _super.prototype.connectedCallback.call(this);
+};
+DisplayDotWidgetClass = __decorate([
+    MicroControl('displaydot')
+], DisplayDotWidgetClass);
+let DisplayLineWidgetClass = class DisplayLineWidgetClass extends GenericWidgetClass {
+    connectedCallback() {
+        super.connectedCallback();
         this._dispElem = document.querySelector('#panel .display');
         if (this._dispElem) {
             this._elem = createHTMLElement(this._dispElem, 'span', { class: 'line' });
@@ -796,9 +694,13 @@ var DisplayLineWidgetClass = (function (_super) {
         if (!this.showSys()) {
             this.style.display = 'none';
         }
-    };
-    DisplayLineWidgetClass.prototype.newData = function (path, key, value) {
-        _super.prototype.newData.call(this, path, key, value);
+        this._x0 = 0;
+        this._x1 = 0;
+        this._y0 = 0;
+        this._y1 = 0;
+    }
+    newData(path, key, value) {
+        super.newData(path, key, value);
         if (key && value && this._elem) {
             if (key === 'page') {
                 this._elem.setAttribute('displayPage', value);
@@ -808,50 +710,38 @@ var DisplayLineWidgetClass = (function (_super) {
             }
             this.updateElem();
         }
-    };
-    DisplayLineWidgetClass.prototype.updateElem = function () {
+    }
+    updateElem() {
         if (this._elem) {
             this._elem.style.top = this._y0 + 'px';
             this._elem.style.left = this._x0 + 'px';
             this._elem.style.width = (this._x1 - this._x0) + 'px';
             this._elem.style.height = (this._y1 - this._y0) + 'px';
         }
-    };
-    DisplayLineWidgetClass = __decorate([
-        MicroControl('displayline')
-    ], DisplayLineWidgetClass);
-    return DisplayLineWidgetClass;
-}(GenericWidgetClass));
-var DisplayTextWidgetClass = (function (_super) {
-    __extends(DisplayTextWidgetClass, _super);
-    function DisplayTextWidgetClass() {
-        var _this = _super !== null && _super.apply(this, arguments) || this;
-        _this.lastValue = null;
-        _this._dispElem = null;
-        _this._grid = 1;
-        _this._elem = null;
-        _this._prefix = '';
-        _this._postfix = '';
-        return _this;
     }
-    DisplayTextWidgetClass.prototype.connectedCallback = function () {
-        _super.prototype.connectedCallback.call(this);
+};
+DisplayLineWidgetClass = __decorate([
+    MicroControl('displayline')
+], DisplayLineWidgetClass);
+let DisplayTextWidgetClass = class DisplayTextWidgetClass extends GenericWidgetClass {
+    connectedCallback() {
+        super.connectedCallback();
         this._dispElem = document.querySelector('#panel .display');
         if (this._dispElem) {
-            if (this._dispElem.getAttribute('grid')) {
-                this._grid = Number(this._dispElem.getAttribute('grid'));
-            }
+            this._grid = Number(this._dispElem.getAttribute('grid') || 1);
             this._elem = createHTMLElement(this._dispElem, 'span', { class: 'text', style: 'top:0;left:0;display:none' });
         }
         if (!this.showSys()) {
             this.style.display = 'none';
         }
-    };
-    DisplayTextWidgetClass.prototype.newData = function (path, key, value) {
-        _super.prototype.newData.call(this, path, key, value);
+        this._prefix = '';
+        this._postfix = '';
+    }
+    newData(path, key, value) {
+        super.newData(path, key, value);
         if (key && value && this._elem) {
             if (key === 'value') {
-                var t = ("" + this._prefix + value + this._postfix).replace(/ /g, '&nbsp;');
+                const t = `${this._prefix}${value}${this._postfix}`.replace(/ /g, '&nbsp;');
                 if (this._elem.innerHTML !== t) {
                     this._elem.innerHTML = t;
                 }
@@ -860,7 +750,7 @@ var DisplayTextWidgetClass = (function (_super) {
                 this._elem.setAttribute('displayPage', value);
             }
             else if (key === 'x') {
-                var n = Number(value) * this._grid;
+                const n = Number(value) * this._grid;
                 this._elem.style.left = (this._grid > 1 ? (n * 7 / 10) : n) + 'px';
             }
             else if (key === 'y') {
@@ -878,166 +768,133 @@ var DisplayTextWidgetClass = (function (_super) {
                 this._postfix = value;
             }
         }
-    };
-    DisplayTextWidgetClass = __decorate([
-        MicroControl('displaytext')
-    ], DisplayTextWidgetClass);
-    return DisplayTextWidgetClass;
-}(GenericWidgetClass));
-var DisplayWidgetClass = (function (_super) {
-    __extends(DisplayWidgetClass, _super);
-    function DisplayWidgetClass() {
-        var _this = _super !== null && _super.apply(this, arguments) || this;
-        _this.displayPage = '';
-        _this._dialogElem = null;
-        return _this;
     }
-    DisplayWidgetClass.prototype.connectedCallback = function () {
-        _super.prototype.connectedCallback.call(this);
+};
+DisplayTextWidgetClass = __decorate([
+    MicroControl('displaytext')
+], DisplayTextWidgetClass);
+let DisplayWidgetClass = class DisplayWidgetClass extends GenericWidgetClass {
+    connectedCallback() {
+        super.connectedCallback();
+        this._page = '';
         this._dialogElem = this.querySelector('.display');
-    };
-    DisplayWidgetClass.prototype.newData = function (path, key, value) {
-        var _this = this;
+    }
+    newData(path, key, value) {
         var _a;
-        _super.prototype.newData.call(this, path, key, value);
+        super.newData(path, key, value);
         if (key && value) {
             if (key === 'page') {
-                if (value !== this.displayPage) {
-                    this.displayPage = value;
-                    (_a = this._dialogElem) === null || _a === void 0 ? void 0 : _a.querySelectorAll(':scope > span').forEach(function (e) {
-                        var p = e.getAttribute('displayPage') || '1';
-                        e.style.display = (p === _this.displayPage) ? '' : 'none';
+                if (value !== this._page) {
+                    this._page = value;
+                    (_a = this._dialogElem) === null || _a === void 0 ? void 0 : _a.querySelectorAll(':scope > span').forEach((e) => {
+                        const p = e.getAttribute('displayPage') || '1';
+                        e.style.display = (p === this._page) ? '' : 'none';
                     });
                 }
             }
         }
-    };
-    DisplayWidgetClass = __decorate([
-        MicroControl('display')
-    ], DisplayWidgetClass);
-    return DisplayWidgetClass;
-}(GenericWidgetClass));
-var IncludeWidgetClass = (function (_super) {
-    __extends(IncludeWidgetClass, _super);
-    function IncludeWidgetClass() {
-        var _this = _super !== null && _super.apply(this, arguments) || this;
-        _this.query = null;
-        return _this;
     }
-    IncludeWidgetClass.prototype.connectedCallback = function () {
-        this.query = this.getAttribute('ref');
-        var obj = document.querySelector('#u-templates ' + this.query);
+};
+DisplayWidgetClass = __decorate([
+    MicroControl('display')
+], DisplayWidgetClass);
+let IncludeWidgetClass = class IncludeWidgetClass extends MicroControlClass {
+    connectedCallback() {
+        const obj = document.querySelector('#u-templates ' + this.ref);
         if (obj) {
-            var e = obj.cloneNode(true);
-            var root = this.parentElement;
+            const e = obj.cloneNode(true);
+            const root = this.parentElement;
             root === null || root === void 0 ? void 0 : root.replaceChild(e, this);
         }
-    };
-    IncludeWidgetClass = __decorate([
-        MicroControl('include')
-    ], IncludeWidgetClass);
-    return IncludeWidgetClass;
-}(MicroControlClass));
-var InputWidgetClass = (function (_super) {
-    __extends(InputWidgetClass, _super);
-    function InputWidgetClass() {
-        var _this = _super !== null && _super.apply(this, arguments) || this;
-        _this._input = null;
-        _this._type = '';
-        _this._value = '';
-        return _this;
     }
-    InputWidgetClass.prototype.connectedCallback = function () {
-        if (this.tagName === 'INPUT') {
-            this._input = this;
+};
+IncludeWidgetClass = __decorate([
+    MicroControl('include')
+], IncludeWidgetClass);
+let InputWidgetClass = class InputWidgetClass extends MicroControlClass {
+    connectedCallback() {
+        const inObj = this.querySelector('input');
+        this._input = this;
+        if ((this.tagName !== 'INPUT') && inObj) {
+            this._input = inObj;
         }
-        else {
-            this._input = this.querySelector('input');
+        super.connectedCallback();
+        let type = this._input.getAttribute('type') || 'text';
+        if ((type === 'range') && (this._input.classList.contains('switch'))) {
+            type = 'switch';
+            this._input.min = '0';
+            this._input.max = '1';
         }
-        _super.prototype.connectedCallback.call(this);
-        if (this._input) {
-            var type = this._input.getAttribute('type') || 'text';
-            if ((type === 'range') && (this._input.classList.contains('switch'))) {
-                type = 'switch';
-                this._input.min = '0';
-                this._input.max = '1';
-            }
-            this._type = type;
-            this._value = this._input.value;
-        }
+        this._type = type;
+        this._value = this._input.value;
         this._clearWhitespace();
-    };
-    InputWidgetClass.prototype._check = function () {
-        if (this._input) {
-            var newVal = this._value;
-            var t = this._type;
-            if (t === 'checkbox') {
-                newVal = this._input.checked ? '1' : '0';
-            }
-            else if ((t === 'range') || (t === 'switch')) {
-                newVal = this._input.value;
-            }
-            if (newVal !== this._value) {
-                this._value = newVal;
-                this._input.dispatchEvent(new Event('change', { bubbles: true }));
-            }
+    }
+    _check() {
+        let newVal = this._value;
+        const t = this._type;
+        if (t === 'checkbox') {
+            newVal = this._input.checked ? '1' : '0';
         }
-    };
-    InputWidgetClass.prototype.on_change = function () {
+        else if ((t === 'range') || (t === 'switch')) {
+            newVal = this._input.value;
+        }
+        if (newVal !== this._value) {
+            this._value = newVal;
+            this._input.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+    }
+    on_change() {
         this._check();
-    };
-    InputWidgetClass.prototype.on_click = function (e) {
-        var src = e.target;
-        if (this._input) {
-            this._value = this._input.value;
-            while (src) {
-                if ((this._type === 'range') || (this._type === 'switch')) {
-                    var cl = src.classList;
-                    if (cl.contains('up')) {
-                        var nv = Number(this._input.value) + (Number((this._input.step) || 1));
-                        this._input.value = String(nv);
-                        break;
-                    }
-                    else if (cl.contains('down')) {
-                        var nv = Number(this._input.value) - (Number((this._input.step) || 1));
-                        this._input.value = String(nv);
-                        break;
-                    }
-                }
-                if (this._type === 'switch') {
-                    if (src === this._input || src === this) {
-                        this._input.value = String(1 - Number(this._input.value));
-                        break;
-                    }
-                }
-                if (src === this) {
+    }
+    on_click(e) {
+        let src = e.target;
+        this._value = this._input.value;
+        while (src) {
+            if ((this._type === 'range') || (this._type === 'switch')) {
+                const cl = src.classList;
+                if (cl.contains('up')) {
+                    const nv = Number(this._input.value) + (Number((this._input.step) || 1));
+                    this._input.value = String(nv);
                     break;
                 }
-                else {
-                    src = src.parentElement;
+                else if (cl.contains('down')) {
+                    const nv = Number(this._input.value) - (Number((this._input.step) || 1));
+                    this._input.value = String(nv);
+                    break;
                 }
             }
-            this._input.focus();
+            if (this._type === 'switch') {
+                if (src === this._input || src === this) {
+                    this._input.value = String(1 - Number(this._input.value));
+                    break;
+                }
+            }
+            if (src === this) {
+                break;
+            }
+            else {
+                src = src.parentElement;
+            }
         }
+        this._input.focus();
         this._check();
-    };
-    InputWidgetClass = __decorate([
-        MicroControl('input')
-    ], InputWidgetClass);
-    return InputWidgetClass;
-}(MicroControlClass));
+    }
+};
+InputWidgetClass = __decorate([
+    MicroControl('input')
+], InputWidgetClass);
 function jsonParse(obj, cbFunc) {
     function _jsonParse(path, key, value) {
-        var path2 = key ? path + '/' + key : path;
+        let path2 = key ? path + '/' + key : path;
         path2 = path2.replace('/[', '[');
         if (Array.isArray(value)) {
-            for (var n = 0; n < value.length; n++) {
+            for (let n = 0; n < value.length; n++) {
                 _jsonParse(path2, '[' + n + ']', value[n]);
             }
         }
         else if (typeof value === 'object') {
             cbFunc(path2, null, null);
-            Object.getOwnPropertyNames(value).forEach(function (k) { return _jsonParse(path2, k, value[k]); });
+            Object.getOwnPropertyNames(value).forEach(k => _jsonParse(path2, k, value[k]));
         }
         else {
             cbFunc(path, key, String(value));
@@ -1049,9 +906,9 @@ function jsonFind(obj, path) {
     if (path[0] === '/') {
         path = path.substr(1);
     }
-    var steps = path.split('/');
+    const steps = path.split('/');
     while (obj && steps.length > 0) {
-        var p = steps[0];
+        const p = steps[0];
         if (!obj[p]) {
             obj[p] = {};
         }
@@ -1060,31 +917,29 @@ function jsonFind(obj, path) {
     }
     return obj;
 }
-var LogWidgetClass = (function (_super) {
-    __extends(LogWidgetClass, _super);
-    function LogWidgetClass() {
-        var _this = _super !== null && _super.apply(this, arguments) || this;
-        _this.filename = null;
-        _this.lineSVGObj = null;
-        _this.xFormat = 'datetime';
-        _this.yFormat = 'num';
-        return _this;
+let LogWidgetClass = class LogWidgetClass extends GenericWidgetClass {
+    constructor() {
+        super(...arguments);
+        this._fName = null;
+        this._SVGObj = null;
     }
-    LogWidgetClass.prototype.connectedCallback = function () {
-        _super.prototype.connectedCallback.call(this);
-        this.lineSVGObj = this.querySelector('object');
-    };
-    LogWidgetClass.prototype.loadData = function () {
-        var fName = this.filename;
-        var allData = '';
-        var p1 = fetch(fName, { cache: 'no-store' })
+    connectedCallback() {
+        super.connectedCallback();
+        this._SVGObj = this.querySelector('object');
+        this._xFormat = 'datetime';
+        this._yFormat = 'num';
+    }
+    loadData() {
+        const fName = this._fName;
+        let allData = '';
+        const p1 = fetch(fName, { cache: 'no-store' })
             .then(function (result) {
             return result.text();
         })
             .then(function (txt) {
             allData = allData + '\n' + txt;
         });
-        var p2 = fetch(fName.replace('.txt', '_old.txt'), { cache: 'no-store' })
+        const p2 = fetch(fName.replace('.txt', '_old.txt'), { cache: 'no-store' })
             .then(function (result) {
             return result.text();
         })
@@ -1094,30 +949,30 @@ var LogWidgetClass = (function (_super) {
             .catch(function () {
         });
         Promise.allSettled([p1, p2]).then(function () {
-            var re = /^\d{4,},\d+/;
-            var pmArray = allData.split('\n').filter(function (e) {
+            const re = /^\d{4,},\d+/;
+            const pmArray = allData.split('\n').filter(function (e) {
                 return e.match(re);
             });
-            this.api.draw(this.lChart, pmArray.map(function (v) {
-                var p = v.split(',');
+            this._api.draw(this._chart, pmArray.map(function (v) {
+                const p = v.split(',');
                 return { x: p[0], y: p[1] };
             }));
         }.bind(this));
-    };
-    LogWidgetClass.prototype.loadSVG = function () {
-        var done = false;
-        if (this.lineSVGObj) {
-            var svgObj = null;
+    }
+    loadSVG() {
+        let done = false;
+        if (this._SVGObj) {
+            let svgObj = null;
             try {
-                svgObj = (this.lineSVGObj.getSVGDocument());
+                svgObj = (this._SVGObj.getSVGDocument());
             }
             catch (err) { }
             if ((svgObj) && (svgObj.api)) {
-                this.api = this.lineSVGObj.getSVGDocument().api;
-                this.lChart = this.api.add('line', { linetype: 'line' });
-                this.api.add(['VAxis',
+                this._api = this._SVGObj.getSVGDocument().api;
+                this._chart = this._api.add('line', { linetype: 'line' });
+                this._api.add(['VAxis',
                     { type: 'hAxis', options: { format: 'datetime' } },
-                    { type: 'indicator', options: { xFormat: this.xFormat, yFormat: this.yFormat } },
+                    { type: 'indicator', options: { xFormat: this._xFormat, yFormat: this._yFormat } },
                 ]);
                 this.loadData();
                 done = true;
@@ -1126,124 +981,111 @@ var LogWidgetClass = (function (_super) {
         if (!done) {
             window.setTimeout(this.loadSVG.bind(this), 1000);
         }
-    };
-    LogWidgetClass.prototype.newData = function (path, key, value) {
-        _super.prototype.newData.call(this, path, key, value);
+    }
+    newData(path, key, value) {
+        super.newData(path, key, value);
         if (key === 'filename') {
-            this.filename = value;
+            this._fName = value;
             this.loadSVG();
         }
         else if (key === 'xformat') {
-            this.xFormat = value;
+            this._xFormat = value;
         }
         else if (key === 'yformat') {
-            this.yFormat = value;
+            this._yFormat = value;
         }
-    };
-    LogWidgetClass = __decorate([
-        MicroControl('log')
-    ], LogWidgetClass);
-    return LogWidgetClass;
-}(GenericWidgetClass));
-var ModalDialogClass = (function (_super) {
-    __extends(ModalDialogClass, _super);
-    function ModalDialogClass() {
-        var _this = _super !== null && _super.apply(this, arguments) || this;
-        _this._isOpen = false;
-        _this.params = {};
-        return _this;
     }
-    ModalDialogClass_1 = ModalDialogClass;
-    ModalDialogClass.open = function (tmplName, data) {
-        var m = micro.insertTemplate(document.body, 'modal', data);
+};
+LogWidgetClass = __decorate([
+    MicroControl('log')
+], LogWidgetClass);
+var ModalDialogClass_1;
+let ModalDialogClass = ModalDialogClass_1 = class ModalDialogClass extends MicroControlClass {
+    static open(tmplName, data) {
+        const m = micro.insertTemplate(document.body, 'modal', data);
         m.open(tmplName, data);
-    };
-    ModalDialogClass.openFocus = function (obj) {
-        var m = micro.insertTemplate(document.body, 'modal', {});
+    }
+    static openFocus(obj) {
+        const m = micro.insertTemplate(document.body, 'modal', {});
         m.openFocus(obj);
-    };
-    ModalDialogClass.next = function (tmplName, data) {
-        var m = this._stack[this._stack.length - 1];
+    }
+    static next(tmplName, data) {
+        const m = this._stack[this._stack.length - 1];
         m.next(tmplName, data);
-    };
-    ModalDialogClass.save = function (data) {
+    }
+    static save(data) {
         var _a;
-        var m = this._stack[this._stack.length - 2];
-        var dlg = (_a = m._frameObj) === null || _a === void 0 ? void 0 : _a.firstElementChild;
+        const m = this._stack[this._stack.length - 2];
+        const dlg = (_a = m._frameObj) === null || _a === void 0 ? void 0 : _a.firstElementChild;
         if (dlg.save) {
             dlg.save(data);
         }
-    };
-    ModalDialogClass.close = function () {
-        var m = this._stack[this._stack.length - 1];
+    }
+    static close() {
+        const m = this._stack[this._stack.length - 1];
         m.close();
-    };
-    ModalDialogClass.prototype.connectedCallback = function () {
-        _super.prototype.connectedCallback.call(this);
-        this._backObj = this.querySelector('.modalBack');
+    }
+    connectedCallback() {
+        super.connectedCallback();
         this._frameObj = this.querySelector('.modalFrame');
-    };
-    ModalDialogClass.prototype._handleEsc = function (e) {
+    }
+    _handleEsc(e) {
         if ((e.key === 'Escape') && (ModalDialogClass_1._stack[ModalDialogClass_1._stack.length - 1] === this)) {
             this.close();
         }
-    };
-    ModalDialogClass.prototype.open = function (tmplName, data) {
+    }
+    open(tmplName, data) {
         ModalDialogClass_1._stack.push(this);
-        if ((this._backObj) && (this._frameObj)) {
-            this._keyHandler = this._handleEsc.bind(this);
-            document.addEventListener('keydown', this._keyHandler);
-            var dlg = micro.insertTemplate(this._frameObj, tmplName, data);
-            var fObj = dlg === null || dlg === void 0 ? void 0 : dlg.querySelector('input,button,select');
-            fObj === null || fObj === void 0 ? void 0 : fObj.focus();
-        }
-    };
-    ModalDialogClass.prototype.next = function (tmplName, data) {
+        this._keyHandler = this._handleEsc.bind(this);
+        document.addEventListener('keydown', this._keyHandler);
+        const dlg = micro.insertTemplate(this._frameObj, tmplName, data);
+        const fObj = dlg === null || dlg === void 0 ? void 0 : dlg.querySelector('input,button,select');
+        fObj === null || fObj === void 0 ? void 0 : fObj.focus();
+    }
+    next(tmplName, data) {
         var _a;
-        if ((this._backObj) && (this._frameObj)) {
-            (_a = this._frameObj.firstElementChild) === null || _a === void 0 ? void 0 : _a.remove();
-            var dlg = micro.insertTemplate(this._frameObj, tmplName, data);
-            var fObj = dlg === null || dlg === void 0 ? void 0 : dlg.querySelector('input,button,select');
-            fObj === null || fObj === void 0 ? void 0 : fObj.focus();
-        }
-    };
-    ModalDialogClass.prototype.openFocus = function (obj) {
+        (_a = this._frameObj.firstElementChild) === null || _a === void 0 ? void 0 : _a.remove();
+        const dlg = micro.insertTemplate(this._frameObj, tmplName, data);
+        const fObj = dlg === null || dlg === void 0 ? void 0 : dlg.querySelector('input,button,select');
+        fObj === null || fObj === void 0 ? void 0 : fObj.focus();
+    }
+    openFocus(obj) {
         ModalDialogClass_1._stack.push(this);
-        if ((obj) && (obj.parentElement) && this._frameObj) {
+        if ((obj) && (obj.parentElement)) {
             this._keyHandler = this._handleEsc.bind(this);
             document.addEventListener('keydown', this._keyHandler);
             this._focusObj = obj;
-            var r = obj.getBoundingClientRect();
+            const r = obj.getBoundingClientRect();
             this._placeObj = createHTMLElement(obj.parentElement, 'div', {
                 style: 'width:' + r.width + 'px;height:' + r.height + 'px',
                 class: obj.className
             }, obj);
-            var f = 4;
+            let f = 4;
             f = Math.min(f, (window.innerWidth - 64) / r.width);
             f = Math.min(f, (window.innerHeight - 64) / r.height);
-            var ph = createHTMLElement(this._frameObj, 'div', {
+            const ph = createHTMLElement(this._frameObj, 'div', {
                 style: 'width:' + f * r.width + 'px;height:' + f * r.height + 'px'
             });
-            var pr = ph.getBoundingClientRect();
+            const pr = ph.getBoundingClientRect();
             obj.classList.add('modal-object');
             obj.style.top = pr.top + 'px';
             obj.style.left = pr.left + 'px';
             obj.style.width = pr.width + 'px';
             obj.style.height = pr.height + 'px';
         }
-    };
-    ModalDialogClass.prototype.on_click = function (evt) {
-        var tar = evt.target;
-        var ua = tar.getAttribute('u-action');
+    }
+    on_click(evt) {
+        const tar = evt.target;
+        const ua = tar.getAttribute('u-action');
         if (ua === 'close') {
             this.close();
         }
-    };
-    ModalDialogClass.prototype.close = function () {
+    }
+    close() {
         var _a;
         document.removeEventListener('keydown', this._keyHandler);
         if (this._focusObj) {
-            var o = this._focusObj;
+            const o = this._focusObj;
             o.classList.remove('modal-object');
             o.style.top = '';
             o.style.left = '';
@@ -1253,35 +1095,31 @@ var ModalDialogClass = (function (_super) {
         }
         ModalDialogClass_1._stack.pop();
         this.remove();
-    };
-    var ModalDialogClass_1;
-    ModalDialogClass._stack = [];
-    ModalDialogClass = ModalDialogClass_1 = __decorate([
-        MicroControl('modal')
-    ], ModalDialogClass);
-    return ModalDialogClass;
-}(MicroControlClass));
-var PWMOutWidgetClass = (function (_super) {
-    __extends(PWMOutWidgetClass, _super);
-    function PWMOutWidgetClass() {
-        var _this = _super !== null && _super.apply(this, arguments) || this;
-        _this._range = 255;
-        _this.lastValue = null;
-        return _this;
     }
-    PWMOutWidgetClass.prototype.connectedCallback = function () {
-        _super.prototype.connectedCallback.call(this);
+};
+ModalDialogClass._stack = [];
+ModalDialogClass = ModalDialogClass_1 = __decorate([
+    MicroControl('modal')
+], ModalDialogClass);
+let PWMOutWidgetClass = class PWMOutWidgetClass extends GenericWidgetClass {
+    constructor() {
+        super(...arguments);
+        this._range = 255;
+        this.lastValue = null;
+    }
+    connectedCallback() {
+        super.connectedCallback();
         hub.subscribe(this.microid + '?*', this.newValue.bind(this));
-    };
-    PWMOutWidgetClass.prototype.newValue = function (_path, key, value) {
+    }
+    newValue(_path, key, value) {
         if (key === 'range') {
             this._range = Number(value);
         }
         else if (key === 'value') {
             if (this.lastValue !== value) {
-                var o = this.querySelector('.ux-levelbar');
-                var h = o.offsetHeight;
-                var bh = (h * Number(value)) / this._range;
+                const o = this.querySelector('.ux-levelbar');
+                const h = o.offsetHeight;
+                let bh = (h * Number(value)) / this._range;
                 if (bh > h - 1) {
                     bh = h - 1;
                 }
@@ -1292,12 +1130,11 @@ var PWMOutWidgetClass = (function (_super) {
                 this.lastValue = value;
             }
         }
-    };
-    PWMOutWidgetClass = __decorate([
-        MicroControl('pwmout')
-    ], PWMOutWidgetClass);
-    return PWMOutWidgetClass;
-}(GenericWidgetClass));
+    }
+};
+PWMOutWidgetClass = __decorate([
+    MicroControl('pwmout')
+], PWMOutWidgetClass);
 function toBool(s) {
     if (!s) {
         return false;
@@ -1316,7 +1153,7 @@ function toBool(s) {
     }
 }
 function toSeconds(v) {
-    var ret = 0;
+    let ret = 0;
     v = v.toLowerCase();
     if (v.endsWith('h')) {
         ret = parseInt(v, 10) * 60 * 60;
@@ -1346,7 +1183,7 @@ function setAttr(el, name, value) {
     }
 }
 function changeConfig(id, newConfig) {
-    var c, node, fName;
+    let c, node, fName;
     fName = '/env.json';
     c = JSON.parse(hub.read('env'));
     node = jsonFind(c, id);
@@ -1355,7 +1192,7 @@ function changeConfig(id, newConfig) {
         c = JSON.parse(hub.read('config'));
         node = jsonFind(c, id);
     }
-    for (var n in newConfig) {
+    for (const n in newConfig) {
         if (newConfig[n]) {
             node[n] = newConfig[n];
         }
@@ -1363,18 +1200,17 @@ function changeConfig(id, newConfig) {
             delete node[n];
         }
     }
-    var formData = new FormData();
+    const formData = new FormData();
     formData.append(fName, new Blob([JSON.stringify(c)], { type: 'text/html' }), fName);
     fetch('/', { method: 'POST', body: formData }).then(function () {
         window.alert('saved.');
     });
 }
-function debounce(func, wait) {
-    if (wait === void 0) { wait = 20; }
-    var timer;
+function debounce(func, wait = 20) {
+    let timer;
     return function () {
-        var scope = this;
-        var args = arguments;
+        const scope = this;
+        const args = arguments;
         if (timer) {
             clearTimeout(timer);
         }
@@ -1385,21 +1221,20 @@ function debounce(func, wait) {
     };
 }
 function getHashParams(defaults) {
-    var params = __assign({}, defaults);
+    const params = Object.assign({}, defaults);
     window.location.hash
         .substr(1)
         .split('&')
         .forEach(function (p) {
-        var pa = p.split('=');
+        const pa = p.split('=');
         params[pa[0]] = pa[1];
     });
     return params;
 }
-function createHTMLElement(parentNode, tag, attr, beforeNode) {
-    if (beforeNode === void 0) { beforeNode = null; }
-    var o = document.createElement(tag);
+function createHTMLElement(parentNode, tag, attr, beforeNode = null) {
+    const o = document.createElement(tag);
     if (attr) {
-        for (var a in attr) {
+        for (const a in attr) {
             if (attr.hasOwnProperty(a)) {
                 o.setAttribute(a, attr[a]);
             }
@@ -1413,18 +1248,16 @@ function createHTMLElement(parentNode, tag, attr, beforeNode) {
     }
     return (o);
 }
-var TimerWidgetClass = (function (_super) {
-    __extends(TimerWidgetClass, _super);
-    function TimerWidgetClass() {
-        var _this = _super !== null && _super.apply(this, arguments) || this;
-        _this.wt = 0;
-        _this.pt = 0;
-        _this.ct = 0;
-        _this.time = 0;
-        return _this;
+let TimerWidgetClass = class TimerWidgetClass extends GenericWidgetClass {
+    constructor() {
+        super(...arguments);
+        this.wt = 0;
+        this.pt = 0;
+        this.ct = 0;
+        this.time = 0;
     }
-    TimerWidgetClass.prototype.newData = function (path, key, value) {
-        _super.prototype.newData.call(this, path, key, value);
+    newData(path, key, value) {
+        super.newData(path, key, value);
         if (key === 'waittime') {
             this.wt = toSeconds(value);
         }
@@ -1441,44 +1274,42 @@ var TimerWidgetClass = (function (_super) {
             this.ct = this.wt + this.pt;
         }
         if (this.ct > 0) {
-            var el = this.querySelector('.u-bar');
-            var f = el.clientWidth / this.ct;
-            var pto = el.querySelector('.pulse');
+            const el = this.querySelector('.u-bar');
+            const f = el.clientWidth / this.ct;
+            const pto = el.querySelector('.pulse');
             pto.style.left = Math.floor(this.wt * f) + 'px';
             pto.style.width = Math.floor(this.pt * f) + 'px';
-            var cto = el.querySelector('.current');
+            const cto = el.querySelector('.current');
             cto.style.width = Math.floor(this.time * f) + 'px';
         }
-    };
-    TimerWidgetClass = __decorate([
-        MicroControl('timer')
-    ], TimerWidgetClass);
-    return TimerWidgetClass;
-}(GenericWidgetClass));
-var MicroHub = (function () {
-    function MicroHub() {
+    }
+};
+TimerWidgetClass = __decorate([
+    MicroControl('timer')
+], TimerWidgetClass);
+class MicroHub {
+    constructor() {
         this._registrations = {};
         this._registrationsId = 0;
         this._store = {};
     }
-    MicroHub.prototype.read = function (path) {
-        var o = this._findStoreObject(this.pPath(path));
+    read(path) {
+        const o = this._findStoreObject(this.pPath(path));
         return o[this.pKey(path)];
-    };
-    MicroHub.prototype.write = function (path, value) {
-        var o = this._findStoreObject(this.pPath(path));
+    }
+    write(path, value) {
+        const o = this._findStoreObject(this.pPath(path));
         o[this.pKey(path)] = value;
-    };
-    MicroHub.prototype.subscribe = function (matchPath, fCallback, replay) {
-        if (replay === void 0) { replay = false; }
-        var h = this._registrationsId;
-        var rn = matchPath.toLocaleLowerCase();
-        var re = '^' + rn
+    }
+    subscribe(matchPath, fCallback, replay = false) {
+        const h = this._registrationsId;
+        const rn = matchPath.toLocaleLowerCase();
+        const re = '^' + rn
             .replace(/(\[|\]|\/|\?)/g, '\\$1')
             .replace(/\*\*/g, '\\S{0,}')
             .replace(/\*/g, '[^/?]*') +
             '$';
-        var newEntry = {
+        const newEntry = {
             id: h,
             match: RegExp(re),
             callback: fCallback
@@ -1487,7 +1318,7 @@ var MicroHub = (function () {
         this._registrationsId++;
         if (replay) {
             jsonParse(this._store, function (path, key, value) {
-                var fullPath = path + (key ? '?' + key : '');
+                let fullPath = path + (key ? '?' + key : '');
                 if (fullPath) {
                     fullPath = fullPath.toLocaleLowerCase();
                     if (fullPath.match(newEntry.match)) {
@@ -1497,15 +1328,15 @@ var MicroHub = (function () {
             }.bind(this));
         }
         return h;
-    };
-    MicroHub.prototype.unsubscribe = function (h) {
+    }
+    unsubscribe(h) {
         delete this._registrations[h];
-    };
-    MicroHub.prototype.replay = function (h) {
-        var e = this._registrations[h];
+    }
+    replay(h) {
+        const e = this._registrations[h];
         if (e) {
             jsonParse(this._store, function (path, key, value) {
-                var fullPath = path + (key ? '?' + key : '');
+                let fullPath = path + (key ? '?' + key : '');
                 if (fullPath) {
                     fullPath = fullPath.toLocaleLowerCase();
                     if (fullPath.match(e.match)) {
@@ -1514,37 +1345,36 @@ var MicroHub = (function () {
                 }
             }.bind(this));
         }
-    };
-    MicroHub.prototype.publishObj = function (obj) {
+    }
+    publishObj(obj) {
         jsonParse(obj, function (path, key, value) {
             this.publishValue(path, key ? key.toLowerCase() : '', value ? value : '');
         }.bind(this));
-    };
-    MicroHub.prototype.publishValue = function (path, key, value) {
-        var fullPath = path + (key ? '?' + key : '');
+    }
+    publishValue(path, key, value) {
+        let fullPath = path + (key ? '?' + key : '');
         if (fullPath) {
             if (key) {
-                var p = this._findStoreObject(path);
+                const p = this._findStoreObject(path);
                 p[key] = value;
             }
             fullPath = fullPath.toLocaleLowerCase();
-            Object.values(this._registrations).forEach(function (r) {
+            Object.values(this._registrations).forEach(r => {
                 if (fullPath.match(r.match)) {
                     r.callback(path, key, value);
                 }
             });
         }
-    };
-    MicroHub.prototype.onunload = function () {
-        var _this = this;
-        Object.getOwnPropertyNames(this._registrations).forEach(function (n) { return delete _this._registrations[n]; });
-    };
-    MicroHub.prototype._findStoreObject = function (path) {
-        var p = this._store;
+    }
+    onunload() {
+        Object.getOwnPropertyNames(this._registrations).forEach(n => delete this._registrations[n]);
+    }
+    _findStoreObject(path) {
+        let p = this._store;
         if (path[0] === '/') {
             path = path.substr(1);
         }
-        var steps = path.split('/');
+        const steps = path.split('/');
         while (steps.length > 0 && p[steps[0]]) {
             p = p[steps[0]];
             steps.shift();
@@ -1554,22 +1384,21 @@ var MicroHub = (function () {
             steps.shift();
         }
         return p;
-    };
-    MicroHub.prototype.pPath = function (path) {
+    }
+    pPath(path) {
         if (path[0] === '/') {
             path = path.substr(1);
         }
-        var steps = path.split('/');
-        var res = steps.slice(0, steps.length - 1).join('/');
+        const steps = path.split('/');
+        const res = steps.slice(0, steps.length - 1).join('/');
         return res;
-    };
-    MicroHub.prototype.pKey = function (path) {
-        var steps = path.split('/');
-        var res = steps[steps.length - 1];
+    }
+    pKey(path) {
+        const steps = path.split('/');
+        const res = steps[steps.length - 1];
         return res;
-    };
-    return MicroHub;
-}());
-var hub = new MicroHub();
+    }
+}
+const hub = new MicroHub();
 window.addEventListener('unload', hub.onunload.bind(hub), false);
 //# sourceMappingURL=micro.js.map

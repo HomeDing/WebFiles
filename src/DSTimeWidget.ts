@@ -9,9 +9,18 @@
 
 @MicroControl('dstime')
 class DSTimeWidgetClass extends GenericWidgetClass {
-  _nowObj: HTMLElement | undefined;
+  _nowObj!: HTMLElement;
 
-  isoDate() {
+  connectedCallback() {
+    super.connectedCallback();
+    this._nowObj = <HTMLElement>this.querySelector('.setnow');
+    window.setInterval(function (this: DSTimeWidgetClass) {
+      setTextContent(this._nowObj, this.isoDate());
+    }.bind(this), 200);
+  } // connectedCallback()
+
+
+  private isoDate() {
     function pad02(num: number) {
       return (((num < 10) ? '0' : '') + num);
     }
@@ -21,17 +30,6 @@ class DSTimeWidgetClass extends GenericWidgetClass {
       ' ' + pad02(d.getHours()) + ':' + pad02(d.getMinutes()) + ':' + pad02(d.getSeconds());
     return (ds);
   }
-
-
-  connectedCallback() {
-    super.connectedCallback();
-    this._nowObj = <HTMLElement>this.querySelector('.setnow');
-    window.setInterval(function (this: DSTimeWidgetClass) {
-      if (this._nowObj) {
-        setTextContent(this._nowObj, this.isoDate());
-      }
-    }.bind(this), 200);
-  } // connectedCallback()
 
 
   on_click(this: DSTimeWidgetClass, e: MouseEvent) {
