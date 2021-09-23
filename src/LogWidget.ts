@@ -14,8 +14,8 @@ declare interface PromiseConstructor {
 
 @MicroControl('log')
 class LogWidgetClass extends GenericWidgetClass {
-  private _fName: string | null = null;
-  private _SVGObj: HTMLObjectElement | null = null;
+  private _fName!: string | null;
+  private _SVGObj!: HTMLObjectElement | null;
   private _xFormat!: string;
   private _yFormat!: string;
   private _api: any;

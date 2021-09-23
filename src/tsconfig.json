@@ -3,24 +3,26 @@
   "display": "client-side",
   
   "compilerOptions": {
-    "target": "es5",
+    "target": "es6",
     "outFile": "../micro.js",
 
     "allowJs": false,
     "experimentalDecorators": true,
     "lib": [
       "es2015",
+      "es6",
       "dom",
       "dom.iterable"
     ],
-
+    "skipLibCheck": true,
     "strict": true,
     "sourceMap": true,
     "newLine": "LF",
     "removeComments": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "allowUnreachableCode": false
+    "allowUnreachableCode": false,
+    "downlevelIteration": true
 
   },
   "include": [
