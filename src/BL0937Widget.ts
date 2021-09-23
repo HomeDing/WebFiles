@@ -13,7 +13,7 @@ class BL0937WidgetClass extends GenericWidgetClass {
 
   connectedCallback() {
     super.connectedCallback();
-    if (!this.mode) this.mode = 'current';
+    if (!this.mode) { this.mode = 'current'; }
     this.data = { id: this.microid };
     this.subId = hub.subscribe(this.microid + '?mode', this.switchMode.bind(this));
     hub.replay(this.subId);

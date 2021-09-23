@@ -153,8 +153,8 @@ class MicroRegistry {
     do {
       Object.getOwnPropertyNames(obj)
         .filter(item => typeof obj[item] === 'function')
-        .forEach(item => fSet.add(item))
-    } while ((obj = Object.getPrototypeOf(obj)))
+        .forEach(item => fSet.add(item));
+    } while ((obj = Object.getPrototypeOf(obj)));
     return (fSet);
   } // getMethods
 

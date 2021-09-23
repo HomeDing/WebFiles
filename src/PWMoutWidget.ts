@@ -9,7 +9,7 @@
 
 @MicroControl('pwmout')
 class PWMOutWidgetClass extends GenericWidgetClass {
-  _range!:number;
+  _range!: number;
   _last!: string;
 
   connectedCallback() {
@@ -21,7 +21,7 @@ class PWMOutWidgetClass extends GenericWidgetClass {
 
   newValue(_path: string, key: string | null, value: string | null) {
 
-    if (! value) {
+    if (!value) {
     } else if (key === 'range') {
       this._range = Number(value);
 

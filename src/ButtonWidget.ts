@@ -13,8 +13,8 @@ class ButtonWidgetClass extends GenericWidgetClass {
   _ondoubleclick: string | undefined;
   _onpress: string | undefined;
   _timer: number | undefined;
-  _start!:number;
-  _duration!:number;
+  _start!: number;
+  _duration!: number;
 
   newData(path: string, key: string, value: string) {
     super.newData(path, key, value);

@@ -20,6 +20,16 @@ class DSTimeWidgetClass extends GenericWidgetClass {
   } // connectedCallback()
 
 
+  on_click(this: DSTimeWidgetClass, e: MouseEvent) {
+    const src = e.target as HTMLElement;
+    if ((src) && (src.classList.contains('setnow'))) {
+      this.dispatchAction('time', this.isoDate());
+    } else {
+      super.on_click(e);
+    }
+  }
+
+
   private isoDate() {
     function pad02(num: number) {
       return (((num < 10) ? '0' : '') + num);
@@ -29,16 +39,6 @@ class DSTimeWidgetClass extends GenericWidgetClass {
     const ds = d.getFullYear() + '-' + pad02(d.getMonth() + 1) + '-' + pad02(d.getDate()) +
       ' ' + pad02(d.getHours()) + ':' + pad02(d.getMinutes()) + ':' + pad02(d.getSeconds());
     return (ds);
-  }
-
-
-  on_click(this: DSTimeWidgetClass, e: MouseEvent) {
-    const src = e.target as HTMLElement;
-    if ((src) && (src.classList.contains('setnow'))) {
-      this.dispatchAction('time', this.isoDate());
-    } else {
-      super.on_click(e);
-    }
   }
 }
 

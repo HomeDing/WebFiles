@@ -11,9 +11,9 @@
 class DisplayDotWidgetClass extends GenericWidgetClass {
   _dispElem!: HTMLElement | null;
   _elem!: HTMLElement | null;
-  _x!:number;
-  _y!:number;
-  _value!:boolean;
+  _x!: number;
+  _y!: number;
+  _value!: boolean;
 
   // When the card is created also create a html tag inside the display.
   connectedCallback() {

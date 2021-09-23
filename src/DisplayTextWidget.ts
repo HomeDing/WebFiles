@@ -12,8 +12,8 @@ class DisplayTextWidgetClass extends GenericWidgetClass {
   _dispElem!: HTMLElement | null;
   _grid!: number;
   _elem!: HTMLElement | null;
-  _prefix!:string;
-  _postfix!:string;
+  _prefix!: string;
+  _postfix!: string;
 
   connectedCallback() {
     super.connectedCallback();

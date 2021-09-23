@@ -78,7 +78,7 @@ class ColorWidgetClass extends GenericWidgetClass {
 
   // calculate the new color value from input sliders
   on_input() {
-    this._value = this.to16(parseInt(this._wObj.value))
+    this._value = this.to16(parseInt(this._wObj.value, 10))
       + this.HSLToColor(this._hObj.value, this._sObj.value, this._lObj.value);
     this._update();
     this.dispatchAction('value', 'x' + this._value);
@@ -109,7 +109,7 @@ class ColorWidgetClass extends GenericWidgetClass {
         color = color.substr(1);
       }
       if (color.length === 6) {
-        color = '00' + color
+        color = '00' + color;
       }
     }
     return (color);
@@ -118,13 +118,12 @@ class ColorWidgetClass extends GenericWidgetClass {
 
   // convert from 'wwrrggbb' to RGBWType
   private wrgb(color: string): RGBWType {
-    var rgbw = {
+    return ({
       w: parseInt(color.substr(0, 2), 16),
       r: parseInt(color.substr(2, 2), 16),
       g: parseInt(color.substr(4, 2), 16),
       b: parseInt(color.substr(6, 2), 16)
-    }
-    return (rgbw);
+    });
   } // wrgb()
 
 
