@@ -20,13 +20,14 @@
 
   <link Content-Type="text/css" href="/iotstyle.css" rel="stylesheet" />
   <script src="/micro.js"></script>
+  <script src="/monitorTab.js"></script>
   <style>
     .dataTab {
       border-collapse: collapse;
       background-color: white;
       border: solid 1px #203050;
       padding: 0;
-      color:#111111;
+      color: #111111;
     }
 
     .dataTab tr:nth-child(even) {
@@ -48,6 +49,10 @@
       color: white;
     }
 
+    .dataTab thead th[sort] {
+      cursor: pointer;
+    }
+
     .remote img {
       width: 1em;
       height: 1em;
@@ -64,19 +69,20 @@
 
     <div class="row">
       <div class="col">
-        <table id="devices" class="dataTab">
+        <table is="table-sortable" id="devices" class="dataTab">
           <thead>
             <tr>
               <th>*</th>
-              <th>hostname</th>
-              <th>room</th>
-              <th>title</th>
+              <th sort>hostname</th>
+              <th sort>room</th>
+              <th sort>title</th>
               <th>memory</th>
-              <th>version</th>
+              <th sort=date>version</th>
               <th>uptime</th>
               <th>safemode</th>
             </tr>
           </thead>
+          <tbody></tbody>
         </table>
       </div>
     </div>
@@ -84,23 +90,23 @@
 
   <script>
     window.onerror = function (msg, url, lineNo, columnNo, error) {
-      var string = msg.toLowerCase();
-      var substring = 'script error';
-      if (string.indexOf(substring) > -1) {
-        alert('Script Error: See Browser Console for Detail');
-      } else {
-        var message = [
-          'Message: ' + msg,
-          'URL: ' + url,
-          'Line: ' + lineNo,
-          'Column: ' + columnNo,
-          'Error object: ' + JSON.stringify(error)
-        ].join(' - ');
+    var string = msg.toLowerCase();
+    var substring = 'script error';
+    if (string.indexOf(substring) > -1) {
+    alert('Script Error: See Browser Console for Detail');
+    } else {
+    var message = [
+    'Message: ' + msg,
+    'URL: ' + url,
+    'Line: ' + lineNo,
+    'Column: ' + columnNo,
+    'Error object: ' + JSON.stringify(error)
+    ].join(' - ');
 
-        alert(message);
-      }
+    alert(message);
+    }
 
-      return false;
+    return false;
     };
   </script>
 
@@ -112,7 +118,7 @@
     var state = 0;
 
     function addDevice(name, data) {
-      var tab = document.querySelector('#devices');
+      var tab = document.querySelector('#devices tbody');
       var r = tab.insertRow(-1);
       var c, o;
       r.className = "remote";
@@ -141,8 +147,6 @@
 
       c = r.insertCell(-1);
       c.className = 'safemode';
-
-      return (r);
     } // addDevice()
 
 
@@ -154,7 +158,7 @@
         .then(function (json) {
           devices = Object.keys(json);
           for (var n = 0; n < devices.length; n++) {
-            remotes[n] = addDevice(devices[n], json[devices[n]]);
+            addDevice(devices[n], json[devices[n]]);
           }
           window.setTimeout(updateNext, 10);
         });
@@ -162,7 +166,11 @@
 
 
     function updateNext() {
+      if (remoteIndex === 0) {
+        remotes = document.querySelectorAll('.remote');
+      }
       var obj = remotes[remoteIndex];
+
       if (remoteIndex >= remotes.length) {
         remoteIndex = 0;
         window.setTimeout(updateNext, 8000);
@@ -185,7 +193,7 @@
 
             statImg.src = 'i/start.svg';
             obj.querySelector('.memory').textContent = si.freeHeap;
-            obj.querySelector('.version').textContent = si.build;
+            obj.querySelector('.version').textContent = new Date(si.build).toISOString().split(/[T\.]/)[0];
             obj.querySelector('.uptime').textContent = d.toISOString().split(/[T\.]/)[1];
             obj.querySelector('.safemode').textContent = si.safemode;
           })

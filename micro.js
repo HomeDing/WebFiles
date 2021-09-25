@@ -252,8 +252,9 @@ function MicroControl(isSelector) {
 let GenericWidgetClass = class GenericWidgetClass extends MicroControlClass {
     connectedCallback() {
         super.connectedCallback();
-        if (!this.microid)
+        if (!this.microid) {
             this.microid = '';
+        }
         this.data = { id: this.microid };
         this.actions = [];
         this.subId = hub.subscribe(this.microid + '?*', this.newData.bind(this));
@@ -385,8 +386,9 @@ GenericWidgetClass = __decorate([
 let BL0937WidgetClass = class BL0937WidgetClass extends GenericWidgetClass {
     connectedCallback() {
         super.connectedCallback();
-        if (!this.mode)
+        if (!this.mode) {
             this.mode = 'current';
+        }
         this.data = { id: this.microid };
         this.subId = hub.subscribe(this.microid + '?mode', this.switchMode.bind(this));
         hub.replay(this.subId);
@@ -524,7 +526,7 @@ let ColorWidgetClass = class ColorWidgetClass extends GenericWidgetClass {
         super.newData(_path, key, value);
     }
     on_input() {
-        this._value = this.to16(parseInt(this._wObj.value))
+        this._value = this.to16(parseInt(this._wObj.value, 10))
             + this.HSLToColor(this._hObj.value, this._sObj.value, this._lObj.value);
         this._update();
         this.dispatchAction('value', 'x' + this._value);
@@ -553,13 +555,12 @@ let ColorWidgetClass = class ColorWidgetClass extends GenericWidgetClass {
         return (color);
     }
     wrgb(color) {
-        var rgbw = {
+        return ({
             w: parseInt(color.substr(0, 2), 16),
             r: parseInt(color.substr(2, 2), 16),
             g: parseInt(color.substr(4, 2), 16),
             b: parseInt(color.substr(6, 2), 16)
-        };
-        return (rgbw);
+        });
     }
     toHSL(rgb) {
         const hsl = { h: 0, s: 0, l: 0 };
@@ -617,15 +618,6 @@ let DSTimeWidgetClass = class DSTimeWidgetClass extends GenericWidgetClass {
             setTextContent(this._nowObj, this.isoDate());
         }.bind(this), 200);
     }
-    isoDate() {
-        function pad02(num) {
-            return (((num < 10) ? '0' : '') + num);
-        }
-        const d = new Date();
-        const ds = d.getFullYear() + '-' + pad02(d.getMonth() + 1) + '-' + pad02(d.getDate()) +
-            ' ' + pad02(d.getHours()) + ':' + pad02(d.getMinutes()) + ':' + pad02(d.getSeconds());
-        return (ds);
-    }
     on_click(e) {
         const src = e.target;
         if ((src) && (src.classList.contains('setnow'))) {
@@ -634,6 +626,15 @@ let DSTimeWidgetClass = class DSTimeWidgetClass extends GenericWidgetClass {
         else {
             super.on_click(e);
         }
+    }
+    isoDate() {
+        function pad02(num) {
+            return (((num < 10) ? '0' : '') + num);
+        }
+        const d = new Date();
+        const ds = d.getFullYear() + '-' + pad02(d.getMonth() + 1) + '-' + pad02(d.getDate()) +
+            ' ' + pad02(d.getHours()) + ':' + pad02(d.getMinutes()) + ':' + pad02(d.getSeconds());
+        return (ds);
     }
 };
 DSTimeWidgetClass = __decorate([
@@ -918,11 +919,6 @@ function jsonFind(obj, path) {
     return obj;
 }
 let LogWidgetClass = class LogWidgetClass extends GenericWidgetClass {
-    constructor() {
-        super(...arguments);
-        this._fName = null;
-        this._SVGObj = null;
-    }
     connectedCallback() {
         super.connectedCallback();
         this._SVGObj = this.querySelector('object');
@@ -1102,21 +1098,20 @@ ModalDialogClass = ModalDialogClass_1 = __decorate([
     MicroControl('modal')
 ], ModalDialogClass);
 let PWMOutWidgetClass = class PWMOutWidgetClass extends GenericWidgetClass {
-    constructor() {
-        super(...arguments);
-        this._range = 255;
-        this.lastValue = null;
-    }
     connectedCallback() {
         super.connectedCallback();
         hub.subscribe(this.microid + '?*', this.newValue.bind(this));
+        this._range = 255;
+        this._last = '';
     }
     newValue(_path, key, value) {
-        if (key === 'range') {
+        if (!value) {
+        }
+        else if (key === 'range') {
             this._range = Number(value);
         }
         else if (key === 'value') {
-            if (this.lastValue !== value) {
+            if (this._last !== value) {
                 const o = this.querySelector('.ux-levelbar');
                 const h = o.offsetHeight;
                 let bh = (h * Number(value)) / this._range;
@@ -1127,7 +1122,7 @@ let PWMOutWidgetClass = class PWMOutWidgetClass extends GenericWidgetClass {
                     bh = 1;
                 }
                 o.style.borderBottomWidth = bh + 'px';
-                this.lastValue = value;
+                this._last = value;
             }
         }
     }
