@@ -22,7 +22,7 @@ class MicroRegistry {
 
   constructor() {
     window.addEventListener('load', this.init.bind(this));
-    window.addEventListener('unload', this.onunload.bind(this));
+    // window.addEventListener('unload', this.onunload.bind(this));
   }
 
   /**
@@ -209,16 +209,16 @@ class MicroRegistry {
   }
 
 
-  onunload(_evt: Event) {
-    this.List.forEach(obj => {
-      if (obj && (<any>obj).term) { (<any>obj).term(); }
-      for (let a = 0; a < obj.attributes.length; a++) { (<any>obj)[obj.attributes[a].name] = null; }
-    });
-    for (let n = 0; n < this.List.length; n++) {
-      delete this.List[n]; // free up any memory
-    }
-    this.List = [];
-  } // onunload
+  // onunload(_evt: Event) {
+  //   this.List.forEach(obj => {
+  //     if (obj && (<any>obj).term) { (<any>obj).term(); }
+  //     for (let a = 0; a < obj.attributes.length; a++) { (<any>obj)[obj.attributes[a].name] = null; }
+  //   });
+  //   for (let n = 0; n < this.List.length; n++) {
+  //     delete this.List[n]; // free up any memory
+  //   }
+  //   this.List = [];
+  // } // onunload
 
   /// Initialize the template and behaviors.
   protected init() {
