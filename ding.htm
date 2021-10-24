@@ -83,11 +83,13 @@
       <div class="col card" u-control="timer" microID="${id}" u-is="timer">
         <div u-is="include" ref=".cardheader"></div>
         <span class="u-bool ux-value" u-active="value"></span>
-        <fieldset class="block btn-group">
+        <fieldset class="block">
           <legend>Mode</legend>
-          <label><input name="mode" u-value="mode" type="radio" value="off">Off</label>
-          <label><input name="mode" u-value="mode" type="radio" value="on">On</label>
-          <label><input name="mode" u-value="mode" type="radio" value="timer">Timer</label>
+          <div class="btn-group" style="float: left;">
+            <label><input name="mode" u-value="mode" type="radio" value="off">Off</label>
+            <label><input name="mode" u-value="mode" type="radio" value="on">On</label>
+            <label><input name="mode" u-value="mode" type="radio" value="timer">Timer</label>
+          </div>
         </fieldset>
         <div class="block">
           <div class="u-bar">
@@ -98,7 +100,6 @@
         <div class="block">
           <button u-action="start" value="1">Start</button>
           <button u-action="next" value="1">Next</button>
-          <button u-action="stop" value="1">Stop</button>
         </div>
       </div>
 

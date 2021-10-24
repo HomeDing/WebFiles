@@ -19,7 +19,6 @@ class MicroRegistry {
         this._unloadedList = [];
         this.List = [];
         window.addEventListener('load', this.init.bind(this));
-        window.addEventListener('unload', this.onunload.bind(this));
     }
     loadFile(fName) {
         const scope = this;
@@ -168,20 +167,6 @@ class MicroRegistry {
     define(name, mixin) {
         this._registry[name] = mixin;
     }
-    onunload(_evt) {
-        this.List.forEach(obj => {
-            if (obj && obj.term) {
-                obj.term();
-            }
-            for (let a = 0; a < obj.attributes.length; a++) {
-                obj[obj.attributes[a].name] = null;
-            }
-        });
-        for (let n = 0; n < this.List.length; n++) {
-            delete this.List[n];
-        }
-        this.List = [];
-    }
     init() {
         this._state = MicroState.INIT;
         this._tco = document.getElementById('u-templates');
@@ -296,11 +281,6 @@ let GenericWidgetClass = class GenericWidgetClass extends MicroControlClass {
                 else if (elem.value !== value) {
                     elem.value = value ? value : '';
                 }
-            });
-        }, this);
-        ['button', 'label'].forEach(function (elType) {
-            this.querySelectorAll(elType + '[u-action=\'${' + key + '}\']').forEach(function (elem) {
-                setAttr(elem, 'u-action', value ? value : '');
             });
         }, this);
         this.querySelectorAll(`span[u-color='${key}']`).forEach(function (elem) {

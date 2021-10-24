@@ -22,3 +22,4 @@ robocopy dist %tar%\%version% /S /PURGE /XO /FFT
 robocopy dist-mini %tar%\%version%m /S /PURGE /XO /FFT
 
 :end
+exit 0

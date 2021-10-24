@@ -142,6 +142,13 @@
             </select>
           </div>
           <div class="form-group"><label></label><label style="border: 0;"><input type="checkbox">done.</label></div>
+          <div class="form-group">
+            <div class="btn-group" style="float: left;">
+              <label><input name="mode" u-value="mode" type="radio" value="off">Off</label>
+              <label><input name="mode" u-value="mode" type="radio" value="on">On</label>
+              <label><input name="mode" u-value="mode" type="radio" value="timer">Timer</label>
+            </div>
+          </div>
           <div class="form-group"><label>volume:</label>
             <div u-is="input">
               <label class="down"><svg class="icon">
@@ -723,7 +730,7 @@
       [1, 2, 3, 4].every(i => {
         if (i === 2) result = 'valid';
         if (i === 4) result = 'invalid';
-        return(i !== 3);
+        return (i !== 3);
       });
       document.querySelector('#checkEvery').classList.add(result);
     }

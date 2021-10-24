@@ -558,7 +558,8 @@ label > .icon {
   margin: 0 !important;
 }
 
-input[type=checkbox] {
+input[type=checkbox],
+input[type=radio] {
   width: 1.4rem;
   margin: 0 0.5rem 0 0;
 }

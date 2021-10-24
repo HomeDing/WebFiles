@@ -70,11 +70,12 @@ class GenericWidgetClass extends MicroControlClass {
     }, this);
 
     // action of buttons
-    ['button', 'label'].forEach(function (this: GenericWidgetClass, elType) {
-      this.querySelectorAll(elType + '[u-action=\'${' + key + '}\']').forEach(function (elem) {
-        setAttr(elem as HTMLElement, 'u-action', value ? value : '');
-      });
-    }, this);
+    // removed 2021.10.14 as of no usage ???
+    // ['button', 'label'].forEach(function (this: GenericWidgetClass, elType) {
+    //   this.querySelectorAll(elType + '[u-action=\'${' + key + '}\']').forEach(function (elem) {
+    //     setAttr(elem as HTMLElement, 'u-action', value ? value : '');
+    //   });
+    // }, this);
 
     // Color
     this.querySelectorAll(`span[u-color='${key}']`).forEach(function (elem) {

@@ -656,7 +656,8 @@ label {
   }
 }
 
-input[type='checkbox'] {
+input[type='checkbox'],
+input[type='radio'] {
   width: 1.4rem;
   margin: 0 $gutter 0 0;
 }
