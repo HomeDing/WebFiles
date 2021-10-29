@@ -108,7 +108,7 @@
     } // on_click()
   }); // CreateElementDlgBehavior
 
-  
+
   micro.define("configElementDlg", {
     config: {},
     params: {},
@@ -124,9 +124,9 @@
       // create properties, events and actions inputs
       var d = uElements.defs[this._type];
       uElements.defs["element"].properties.forEach(p => this._add(p, false, false));
-      d.properties.forEach(p => this._add(p, false, false));
-      d.events.forEach(p => this._add(p, true, false));
-      d.actions.forEach(p => this._add(p, false, true));
+      if (d.properties) { d.properties.forEach(p => this._add(p, false, false)) };
+      if (d.events) { d.events.forEach(p => this._add(p, true, false)) };
+      if (d.actions) { d.actions.forEach(p => this._add(p, false, true)) };
     }, // connectedCallback()
 
 

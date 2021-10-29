@@ -165,13 +165,7 @@ const storage = multer.diskStorage({
   },
   filename: function (req, file, cb) {
     const p = file.originalname.split('/');
-
-    if (p.length > 2) {
-      if (!fs.existsSync('./uploads/' + p[1])) {
-        fs.mkdirSync('./uploads/' + p[1]);
-      }
-    }
-    cb(null, file.originalname + '-' + Date.now());
+    cb(null, '/' + Date.now() + '-' + p[p.length - 1]);
   }
 });
 

@@ -56,16 +56,17 @@ function changeConfig(id: string, newConfig: any) {
   c = JSON.parse(hub.read('env'));
   node = jsonFind(c, id);
 
-  if (Object.keys(node).length === 0) {
+  if (! node) {
     // not a env configuration
     fName = '/config.json';
     c = JSON.parse(hub.read('config'));
-    node = jsonFind(c, id);
+    node = jsonLocate(c, id);
   }
 
   for (const n in newConfig) {
+    const rn = Object.keys(node).find(e => (e.toLowerCase() === n.toLowerCase()));
     if (newConfig[n]) {
-      node[n] = newConfig[n];
+      node[rn || n] = newConfig[n];
     } else {
       delete node[n];
     }

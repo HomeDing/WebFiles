@@ -41,15 +41,33 @@ function jsonFind(obj: any, path: string): any {
 
   // use existing objects.
   while (obj && steps.length > 0) {
-    const p = steps[0];
-    if (!obj[p]) {
-      // create new object
-      obj[p] = {};
-    }
-    obj = obj[p];
+    const n = steps[0].toLowerCase();
+
+    // find node using lowercase comparization
+    const p = Object.keys(obj).find(e => (e.toLowerCase() === n));
+    obj = (p ? obj[p] : undefined);
     steps.shift();
   } // while
   return obj;
 } // jsonFind
+
+
+// find node with the path in the object and create when not yet present.
+
+function jsonLocate(obj: any, path: string): any {
+  if (path[0] === '/') {
+    path = path.substr(1);
+  }
+  const steps = path.split('/');
+
+  // use existing objects.
+  while (obj && steps.length > 0) {
+    const n = steps[0];
+    const p = Object.keys(obj).find(e => (e.toLowerCase() === n.toLowerCase()));
+    obj = (p ? obj[p] : (obj[n] = {}));
+    steps.shift();
+  } // while
+  return obj;
+} // jsonLocate
 
 // End.

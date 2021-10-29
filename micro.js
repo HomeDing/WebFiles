@@ -889,11 +889,22 @@ function jsonFind(obj, path) {
     }
     const steps = path.split('/');
     while (obj && steps.length > 0) {
-        const p = steps[0];
-        if (!obj[p]) {
-            obj[p] = {};
-        }
-        obj = obj[p];
+        const n = steps[0].toLowerCase();
+        const p = Object.keys(obj).find(e => (e.toLowerCase() === n));
+        obj = (p ? obj[p] : undefined);
+        steps.shift();
+    }
+    return obj;
+}
+function jsonLocate(obj, path) {
+    if (path[0] === '/') {
+        path = path.substr(1);
+    }
+    const steps = path.split('/');
+    while (obj && steps.length > 0) {
+        const n = steps[0];
+        const p = Object.keys(obj).find(e => (e.toLowerCase() === n.toLowerCase()));
+        obj = (p ? obj[p] : (obj[n] = {}));
         steps.shift();
     }
     return obj;
@@ -1162,14 +1173,15 @@ function changeConfig(id, newConfig) {
     fName = '/env.json';
     c = JSON.parse(hub.read('env'));
     node = jsonFind(c, id);
-    if (Object.keys(node).length === 0) {
+    if (!node) {
         fName = '/config.json';
         c = JSON.parse(hub.read('config'));
-        node = jsonFind(c, id);
+        node = jsonLocate(c, id);
     }
     for (const n in newConfig) {
+        const rn = Object.keys(node).find(e => (e.toLowerCase() === n.toLowerCase()));
         if (newConfig[n]) {
-            node[n] = newConfig[n];
+            node[rn || n] = newConfig[n];
         }
         else {
             delete node[n];
