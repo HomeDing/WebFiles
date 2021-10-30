@@ -4,7 +4,8 @@
       "pin": "D3",
       "inverse": 1,
       "pullup": 1,
-      "onLow": "switch/relay?toggle=1"
+      "onLow": "switch/relay?toggle=1",
+      "title": "digitalin/button"
     }
   },
   "switch": {
@@ -25,12 +26,14 @@
       "onvalue": "digitalout/relay?value=$v"
     }
   },
-  "digitalout": {
+  "digitalOut": {
     "led": {
+      "title": "digitalOut/led",
       "pin": "D7",
       "inverse": "true"
     },
     "relay": {
+      "title": "digitalOut/relay",
       "pin": "D6",
       "inverse": "false"
     }

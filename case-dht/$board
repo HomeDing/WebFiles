@@ -1,4 +1,4 @@
-{"device/0": {"active":"true","name":"newnode","title":"","description":"plain nodemcu","savemode":"false","sd":"true","nextboot":"20731"},
+{"device/0": {"active":"true","name":"newnode","title":"","description":"plain nodemcu","safemode":"false","sd":"true","nextboot":"20731"},
 "ota/0": {"active":"true"},
 "ssdp/0": {"active":"true"},
 "ntptime/0": {"active":"true","now":"2020-07-21 13:14:18"},

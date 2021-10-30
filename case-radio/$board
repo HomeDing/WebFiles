@@ -1,4 +1,4 @@
-{"device/0": {"active":"true","name":"radioding","title":"","description":"IoT Device with Radio and LCD","savemode":"false","nextboot":"28709"},
+{"device/0": {"active":"true","name":"radioding","title":"","description":"IoT Device with Radio and LCD","safemode":"false","nextboot":"28709"},
 "ota/0": {"active":"true"},
 "ssdp/0": {"active":"true"},
 "displaylcd/0": {"active":"true"},

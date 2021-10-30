@@ -1,4 +1,4 @@
-{"device/0": {"active":"true","name":"nodeding","title":"","description":"Test Box","savemode":"false","nextboot":"10359"},
+{"device/0": {"active":"true","name":"nodeding","title":"","description":"Test Box","safemode":"false","nextboot":"10359"},
 "ota/0": {"active":"true"},
 "ssdp/0": {"active":"true"},
 "ntptime/0": {"active":"true","now":"2020-05-18 11:39:08"},

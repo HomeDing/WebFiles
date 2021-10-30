@@ -1,0 +1,27 @@
+{
+  "tm1637": {
+    "0": {
+      "title": "Time Display",
+      "clockpin": "D6",
+      "datapin": "D7",
+      "brightness": "4",
+      "value": "--:--"
+    }
+  },
+  "time": {
+    "clock": {
+      "onminute": "tm1637/0?value=$v"
+    }
+  },
+  "value": {
+    "bright": {
+      "title": "Brightness",
+      "loglevel": 2,
+      "useState": "true",
+      "min": 0,
+      "max": 8,
+      "value": 4,
+      "onvalue": "tm1637/0?brightness=$v"
+    }
+  }
+}

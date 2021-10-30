@@ -1,0 +1,35 @@
+{
+  "device/0": {
+    "active": "true",
+    "name": "clock",
+    "title": "clock",
+    "description": "Clock display",
+    "safemode": "false",
+    "sd": "1",
+    "nextboot": "4294918061"
+  },
+  "rtcstate/0": {
+    "active": "true"
+  },
+  "ota/0": {
+    "active": "true"
+  },
+  "ssdp/0": {
+    "active": "true"
+  },
+  "ntptime/on": {
+    "active": "true",
+    "now": "2021-08-01 11:56:15"
+  },
+  "tm1637/0": {
+    "active": "true",
+    "value": "11:56"
+  },
+  "time/clock": {
+    "active": "true"
+  },
+  "value/bright": {
+    "active": "true",
+    "value": "2"
+  }
+}
