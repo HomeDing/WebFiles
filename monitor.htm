@@ -160,21 +160,21 @@
         })
         .then(function (json) {
 
+          // all discovered devices are active
+          for (a in json) { json[a].active = true; }
+
           // add old devices from localstorage.
           var od = JSON.parse(localStorage.getItem('devices'));
-
-          Object.keys(od).forEach(e => {
-            if (json[e]) {
-              json[e].active = true;
-            } else {
+          for (e in od) {
+            if (! json[e]) {
+              // add known, inactive device
               var o = od[e];
               delete (o.ts);
               delete (o.path);
               o.active = false;
               json[e] = o;
-              console.log('old', o);
             }
-          });
+          }
           localStorage.setItem('devices', JSON.stringify(json));
 
           deviceInfo = json;
