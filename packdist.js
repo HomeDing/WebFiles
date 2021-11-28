@@ -42,7 +42,6 @@ logInfo(`Starting...`);
 const assets = [
   { m: 'xml', src: 'browserconfig.xml' },
   { m: 'json', src: 'site.webmanifest' },
-  { m: 'c', src: 'spinner.gif', tar: 'spinner.gif' },
   { m: 'xml', src: 'favicon.svg' },
   // { m: 'c', src: 'favicon48.png' },
   // { m: 'c', src: 'favicon192.png' },
