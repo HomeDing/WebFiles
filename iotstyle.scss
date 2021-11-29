@@ -54,6 +54,7 @@ $font-sans-serif: Arial, ui-sans-serif, sans-serif;
 
 html,
 body {
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
   color: $u-text;
@@ -67,8 +68,11 @@ body {
   }
 }
 
-* {
-  box-sizing: border-box;
+/* apply a natural box layout model to all elements, but allowing components to change */
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
 }
 
 // ===== Text containers =====
@@ -216,12 +220,21 @@ div[u-control='modal'] {
     right: 0.4rem;
     height: 1.8rem;
     width: 1.8rem;
-    font-size: 1.6rem;
+    font-size: 1.2rem;
     background-color: red;
-    text-align: center;
     z-index: 3 !important;
     user-select: none;
     cursor: pointer;
+
+    &::after {
+      position: absolute;
+      content: '\274C';
+      left: 0;
+      width: 1.8rem;
+      text-align: center;
+      color: white;
+      font-weight: 800;
+    }
   }
 }
 
