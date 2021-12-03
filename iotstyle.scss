@@ -5,25 +5,20 @@
 // ===== Colors =====
 // hue of 220 is signature of this style
 
-$u-background: #f0f0f0;
-$u-background-dark: #333333;
+$u-hue:220;  
+$u-background: #e0e0e0;
+$u-background-darkmode: #111111;
+
 $u-primary: hsl(220, 80%, 30%); // active objects
 
 $u-border-color: #555555;
 $u-border-color-active: hsl(220, 100%, 30%);
 
-$u-focus: #4466ee; // active object with focus
 $u-disabled: gray; // disabled objects
 $u-text: #111111; // any text
-$u-text-dark: #eeeeee; // any text in dark mode
 $u-heading: $u-primary; // any headlines
 $u-connect: #00cc00; // connectivity / net
 
-$u-card-background: hsl(220, 0%, 85%);
-
-$u-card-background-active: hsl(220, 80%, 55%);
-$u-card-color: $u-text;
-$u-card-color-active: white;
 $u-card-border: none;
 $u-card-radius: 0.4rem;
 
@@ -47,25 +42,38 @@ $u-btn-radius: 0.2em;
 $u-input-border: $u-border;
 $u-output-border: $u-border-none;
 
-// ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif;
 $font-sans-serif: Arial, ui-sans-serif, sans-serif;
 
 // ===== main =====
+
+:root {
+  color-scheme: dark light;
+  --color: CanvasText;
+  --back: #{$u-background};
+
+  --card-back: #{lighten($u-background, 20%)};
+  --card-head: #{hsl($u-hue, 0%, 70%)};
+  --card-head-active: #{hsl($u-hue, 80%, 70%)};
+  --focus:  #{hsl($u-hue, 50%, 50%)};
+  
+  @media (prefers-color-scheme: dark) {
+    --color: CanvasText;
+    --back: #{$u-background-darkmode};
+    --card-back: #{lighten($u-background-darkmode, 20%)};
+    --card-head: #{hsl($u-hue, 0%, 30%)};
+    --card-head-active: #{hsl($u-hue, 80%, 30%)};
+  }
+}
 
 html,
 body {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  color: $u-text;
   font-family: $font-sans-serif;
   font-size: 1em;
-  background-color: $u-background;
-
-  @media (prefers-color-scheme: dark) {
-    background: $u-background-dark;
-    color: $u-text-dark;
-  }
+  color: var(--color);
+  background-color: var(--back);
 }
 
 /* apply a natural box layout model to all elements, but allowing components to change */
@@ -113,11 +121,6 @@ h3,
 h4 {
   font-family: $font-sans-serif;
   font-weight: bold;
-  color: $u-heading;
-
-  @media (prefers-color-scheme: dark) {
-    color: $u-text-dark;
-  }
 }
 
 // Chapter
@@ -179,7 +182,7 @@ div[u-control='modal'] {
     position: absolute;
     width: 100%;
     height: 100%;
-    background-color: $u-background;
+    background-color: var(--back);
     opacity: 0.75;
   }
 
@@ -191,7 +194,7 @@ div[u-control='modal'] {
     min-height: 100px;
     transform: translateX(-50%) translateY(-50%);
     padding: 0.5em;
-    background-color: white;
+    background-color: var(--card-back);
 
     &::before,
     &::after {
@@ -355,6 +358,7 @@ svg {
 
   &.icon {
     user-select: none;
+    color: currentColor;
   }
 }
 
@@ -366,16 +370,13 @@ svg {
   margin-bottom: 0;
 
   img {
-    margin-right: $gutter;
   }
-
+  
   .icon {
-    width: 3rem;
-    height: 3rem;
-
-    @media (prefers-color-scheme: dark) {
-      // filter: brightness(600%);
-    }
+    margin-right: $gutter;
+    width: 2.6rem;
+    height: 2.6rem;
+    vertical-align: top;
   }
 
   h1 {
@@ -383,7 +384,6 @@ svg {
     font-size: 2.4rem;
     font-family: $font-sans-serif;
     font-weight: bold;
-    // color: invert($color: $u-background);
   }
 }
 
@@ -406,8 +406,8 @@ svg {
     color: $u-navbar-text !important;
 
     &:hover {
-      border-color: $u-focus;
-      background-color: $u-focus;
+      border-color: var(--focus);
+      background-color: var(--focus);
     }
   }
 
@@ -438,11 +438,6 @@ nav {
   transition: all 0.2s;
   padding: 1rem 0.2rem 0.2rem;
   background-color: white;
-
-  @media (prefers-color-scheme: dark) {
-    background: lighten($u-background-dark, 10%);
-    color: $u-text-dark;
-  }
 
   &.inpage {
     position: absolute;
@@ -475,8 +470,7 @@ main {
   position: relative;
   display: flex;
   flex-direction: column;
-  background-color: $u-card-background;
-  color: $u-card-color;
+  background-color: var(--card-back);
   border: $u-card-border;
   border-radius: $u-card-radius;
   width: 23rem;
@@ -484,12 +478,6 @@ main {
 
   @media print {
     border: 1px solid $u-text;
-    // page-break-inside:  ???;
-  }
-
-  h3,
-  h4 {
-    color: $u-heading;
   }
 
   &.small {
@@ -500,18 +488,6 @@ main {
   }
 
   &.active {
-    // change colors only
-    background-color: $u-card-background-active;
-    color: $u-card-color-active;
-
-    h3,
-    h4 {
-      color: $u-card-color-active;
-    }
-
-    svg.icon {
-      color: currentColor;
-    }
 
     .border {
       border-color: $u-border-color-active;
@@ -522,11 +498,7 @@ main {
     }
 
     > .block.header {
-      background-image: linear-gradient(
-        to bottom,
-        $u-card-background-active,
-        darken($u-card-background-active, 10%)
-      );
+      background-color: var(--card-head-active);
     }
   }
 
@@ -536,7 +508,6 @@ main {
     float: left;
     margin-right: $gutter;
     overflow: hidden;
-    color: $u-heading;
   }
 
   img,
@@ -553,11 +524,7 @@ main {
     min-height: 2em;
 
     &.header {
-      background-image: linear-gradient(
-        to bottom,
-        $u-card-background,
-        darken($u-card-background, 10%)
-      );
+      background-color: var(--card-head);
       border-top-right-radius: $u-card-radius;
       border-top-left-radius: $u-card-radius;
       min-height: 2.75em; // with or without icon
@@ -712,8 +679,7 @@ input.switch[type='range'] {
 
 *:focus {
   outline: 0;
-  border-color: $u-focus;
-  box-shadow: 0 0 0.1rem 0.2rem $u-focus;
+  box-shadow: 0 0 0.2rem 0.4rem var(--focus);
 }
 
 .btn-group {
@@ -775,11 +741,13 @@ input.switch[type='range'] {
 .invalid {
   border: 2px solid #ff1111 !important;
   background-color: #ffcccc !important;
+  color:$u-text;
 }
 
 .valid {
   border: 2px solid #00cc00 !important;
   background-color: #ccffcc !important;
+  color:$u-text;
 }
 
 // ===== element Icons =====

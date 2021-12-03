@@ -33,6 +33,7 @@
     #files {
       border: solid 1px black;
       background-color: white;
+      color: black;
       font-size: 1rem;
       overflow-y: scroll;
     }
@@ -62,7 +63,8 @@
     }
 
     #dropzone {
-      background-color: #dddddd;
+      color: black;
+      background-color: #dddd88;
       padding: 0.6rem;
       border: 1px dashed black;
     }
@@ -128,7 +130,7 @@
     <progress id="progress" class="fadeout" max="1" value="0"></progress>
 
     <div class="row u-header">
-      <a href="/" title="Startpage"><img class="icon" src="/i/ide.svg" /></a>
+      <svg class="icon"><use href="./icons.svg#ide" /></svg>
       <h1>HomeDing IDE</h1>
 
       <span style="flex-grow: 1"></span>

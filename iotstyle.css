@@ -1,20 +1,32 @@
 @charset "UTF-8";
+:root {
+  color-scheme: dark light;
+  --color: CanvasText;
+  --back: #e0e0e0;
+  --card-back: white;
+  --card-head: #b3b3b3;
+  --card-head-active: #759ef0;
+  --focus: #406abf;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color: CanvasText;
+    --back: #111111;
+    --card-back: #444444;
+    --card-head: #4d4d4d;
+    --card-head-active: #0f388a;
+  }
+}
+
 html,
 body {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  color: #111111;
   font-family: Arial, ui-sans-serif, sans-serif;
   font-size: 1em;
-  background-color: #f0f0f0;
-}
-@media (prefers-color-scheme: dark) {
-  html,
-body {
-    background: #333333;
-    color: #eeeeee;
-  }
+  color: var(--color);
+  background-color: var(--back);
 }
 
 /* apply a natural box layout model to all elements, but allowing components to change */
@@ -78,14 +90,6 @@ h3,
 h4 {
   font-family: Arial, ui-sans-serif, sans-serif;
   font-weight: bold;
-  color: #0f388a;
-}
-@media (prefers-color-scheme: dark) {
-  h2,
-h3,
-h4 {
-    color: #eeeeee;
-  }
 }
 
 h2 {
@@ -145,7 +149,7 @@ div[u-control=modal] .modalBack {
   position: absolute;
   width: 100%;
   height: 100%;
-  background-color: #f0f0f0;
+  background-color: var(--back);
   opacity: 0.75;
 }
 div[u-control=modal] .modalFrame {
@@ -156,7 +160,7 @@ div[u-control=modal] .modalFrame {
   min-height: 100px;
   transform: translateX(-50%) translateY(-50%);
   padding: 0.5em;
-  background-color: white;
+  background-color: var(--card-back);
 }
 div[u-control=modal] .modalFrame::before, div[u-control=modal] .modalFrame::after {
   content: "";
@@ -314,17 +318,17 @@ svg.button .connect {
 }
 svg.icon {
   user-select: none;
+  color: currentColor;
 }
 
 .u-header {
   margin-bottom: 0;
 }
-.u-header img {
-  margin-right: 0.5rem;
-}
 .u-header .icon {
-  width: 3rem;
-  height: 3rem;
+  margin-right: 0.5rem;
+  width: 2.6rem;
+  height: 2.6rem;
+  vertical-align: top;
 }
 .u-header h1 {
   margin: 0;
@@ -350,8 +354,8 @@ svg.icon {
 }
 .u-navbar > button:hover,
 .u-navbar > .button:hover {
-  border-color: #4466ee;
-  background-color: #4466ee;
+  border-color: var(--focus);
+  background-color: var(--focus);
 }
 .u-navbar > img.button,
 .u-navbar > svg.button {
@@ -375,12 +379,6 @@ nav {
   transition: all 0.2s;
   padding: 1rem 0.2rem 0.2rem;
   background-color: white;
-}
-@media (prefers-color-scheme: dark) {
-  nav {
-    background: #4d4d4d;
-    color: #eeeeee;
-  }
 }
 nav.inpage {
   position: absolute;
@@ -410,8 +408,7 @@ main {
   position: relative;
   display: flex;
   flex-direction: column;
-  background-color: #d9d9d9;
-  color: #111111;
+  background-color: var(--card-back);
   border: none;
   border-radius: 0.4rem;
   width: 23rem;
@@ -422,25 +419,10 @@ main {
     border: 1px solid #111111;
   }
 }
-.card h3,
-.card h4 {
-  color: #0f388a;
-}
 .card.small {
   font-size: 0.8em;
   width: 11.25rem;
   min-width: 11.25rem;
-}
-.card.active {
-  background-color: #306ee8;
-  color: white;
-}
-.card.active h3,
-.card.active h4 {
-  color: white;
-}
-.card.active svg.icon {
-  color: currentColor;
 }
 .card.active .border {
   border-color: #003399;
@@ -449,7 +431,7 @@ main {
   border-color: #003399 transparent;
 }
 .card.active > .block.header {
-  background-image: linear-gradient(to bottom, #306ee8, #1754cf);
+  background-color: var(--card-head-active);
 }
 .card .icon {
   width: 2.75em;
@@ -457,7 +439,6 @@ main {
   float: left;
   margin-right: 0.5rem;
   overflow: hidden;
-  color: #0f388a;
 }
 .card img.active,
 .card svg.active {
@@ -470,7 +451,7 @@ main {
   min-height: 2em;
 }
 .card > .block.header {
-  background-image: linear-gradient(to bottom, #d9d9d9, #bfbfbf);
+  background-color: var(--card-head);
   border-top-right-radius: 0.4rem;
   border-top-left-radius: 0.4rem;
   min-height: 2.75em;
@@ -608,8 +589,7 @@ input.switch[type=range] {
 
 *:focus {
   outline: 0;
-  border-color: #4466ee;
-  box-shadow: 0 0 0.1rem 0.2rem #4466ee;
+  box-shadow: 0 0 0.2rem 0.4rem var(--focus);
 }
 
 .btn-group {
@@ -662,11 +642,13 @@ input.switch[type=range] {
 .invalid {
   border: 2px solid #ff1111 !important;
   background-color: #ffcccc !important;
+  color: #111111;
 }
 
 .valid {
   border: 2px solid #00cc00 !important;
   background-color: #ccffcc !important;
+  color: #111111;
 }
 
 .element {
@@ -775,7 +757,7 @@ input.switch[type=range] {
 .display {
   position: relative;
   box-sizing: content-box;
-  background-color: #f0f0f0;
+  background-color: #e0e0e0;
   margin: auto;
   width: 128px;
   height: 64px;
