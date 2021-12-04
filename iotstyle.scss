@@ -5,7 +5,7 @@
 // ===== Colors =====
 // hue of 220 is signature of this style
 
-$u-hue:220;  
+$u-hue: 220;
 $u-background: #e0e0e0;
 $u-background-darkmode: #111111;
 
@@ -47,15 +47,15 @@ $font-sans-serif: Arial, ui-sans-serif, sans-serif;
 // ===== main =====
 
 :root {
-  color-scheme: dark light;
   --color: CanvasText;
   --back: #{$u-background};
 
   --card-back: #{lighten($u-background, 20%)};
   --card-head: #{hsl($u-hue, 0%, 70%)};
   --card-head-active: #{hsl($u-hue, 80%, 70%)};
-  --focus:  #{hsl($u-hue, 50%, 50%)};
-  
+  --focus: #{hsl($u-hue, 50%, 50%)};
+
+  color-scheme: dark light;
   @media (prefers-color-scheme: dark) {
     --color: CanvasText;
     --back: #{$u-background-darkmode};
@@ -369,9 +369,6 @@ svg {
 .u-header {
   margin-bottom: 0;
 
-  img {
-  }
-  
   .icon {
     margin-right: $gutter;
     width: 2.6rem;
@@ -488,7 +485,6 @@ main {
   }
 
   &.active {
-
     .border {
       border-color: $u-border-color-active;
     }
@@ -741,13 +737,13 @@ input.switch[type='range'] {
 .invalid {
   border: 2px solid #ff1111 !important;
   background-color: #ffcccc !important;
-  color:$u-text;
+  color: $u-text;
 }
 
 .valid {
   border: 2px solid #00cc00 !important;
   background-color: #ccffcc !important;
-  color:$u-text;
+  color: $u-text;
 }
 
 // ===== element Icons =====

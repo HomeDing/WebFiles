@@ -1,12 +1,12 @@
 @charset "UTF-8";
 :root {
-  color-scheme: dark light;
   --color: CanvasText;
   --back: #e0e0e0;
   --card-back: white;
   --card-head: #b3b3b3;
   --card-head-active: #759ef0;
   --focus: #406abf;
+  color-scheme: dark light;
 }
 @media (prefers-color-scheme: dark) {
   :root {
