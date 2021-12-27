@@ -8,6 +8,8 @@
 $u-hue: 220;
 $u-background: #e0e0e0;
 $u-background-darkmode: #111111;
+$u-text: #111111; // any text
+$u-text-darkmode: #eeeeee; // any text
 
 $u-primary: hsl(220, 80%, 30%); // active objects
 
@@ -15,7 +17,6 @@ $u-border-color: #555555;
 $u-border-color-active: hsl(220, 100%, 30%);
 
 $u-disabled: gray; // disabled objects
-$u-text: #111111; // any text
 $u-heading: $u-primary; // any headlines
 $u-connect: #00cc00; // connectivity / net
 
@@ -25,9 +26,9 @@ $u-card-radius: 0.4rem;
 $u-on: lighten(green, 10%);
 $u-off: red;
 
-$u-border: 1px solid $u-border-color;
-$u-border-none: 1px solid transparent;
-$u-border-active: 1px solid $u-border-color-active;
+$u-border: 0.1em solid $u-border-color;
+$u-border-none: 0.1em solid transparent;
+$u-border-active: 0.1em solid $u-border-color-active;
 
 $u-navbar: $u-primary;
 $u-navbar-text: white;
@@ -39,7 +40,6 @@ $gutter: math.div($white-space, 2);
 $gutter2: math.div($white-space, 4);
 
 $u-btn-radius: 0.2em;
-$u-input-border: $u-border;
 $u-output-border: $u-border-none;
 
 $font-sans-serif: Arial, ui-sans-serif, sans-serif;
@@ -47,7 +47,7 @@ $font-sans-serif: Arial, ui-sans-serif, sans-serif;
 // ===== main =====
 
 :root {
-  --color: CanvasText;
+  --color: #{$u-text};
   --back: #{$u-background};
 
   --card-back: #{lighten($u-background, 20%)};
@@ -57,9 +57,9 @@ $font-sans-serif: Arial, ui-sans-serif, sans-serif;
 
   color-scheme: dark light;
   @media (prefers-color-scheme: dark) {
-    --color: CanvasText;
+    --color: #{$u-text-darkmode};
     --back: #{$u-background-darkmode};
-    --card-back: #{lighten($u-background-darkmode, 20%)};
+    --card-back: #{lighten($u-background-darkmode, 15%)};
     --card-head: #{hsl($u-hue, 0%, 30%)};
     --card-head-active: #{hsl($u-hue, 80%, 30%)};
   }
@@ -104,15 +104,12 @@ h4 {
   }
 }
 
-a {
+a,
+a:visited,
+a:hover {
   color: inherit;
-  text-decoration: none;
-  cursor: pointer;
-}
-
-p > a,
-p > a:visited {
   text-decoration: underline;
+  cursor: pointer;
 }
 
 // h1 Page title is always inside u-header
@@ -144,10 +141,10 @@ h4 {
 code,
 .code,
 code.hljs,
-pre code {
+pre > code {
   background-color: rgb(255, 255, 185);
   color: $u-text;
-  font-size: 16px;
+  font-size: 1rem;
   font-family: 'Courier New', Courier, monospace;
 
   @media print {
@@ -155,10 +152,70 @@ pre code {
   }
 }
 
-pre code {
+p > code {
+  padding-left: 0.1em;
+  padding-right: 0.1em;
+}
+
+pre > code {
   display: block;
   border-radius: $u-card-radius;
-  padding: 2px;
+  padding: 0.1em;
+}
+
+// form elements
+
+label,
+input,
+input::placeholder,
+select,
+button {
+  display: inline-block;
+  font-size: inherit;
+  margin: 0;
+  border: $u-border-none;
+  padding: 0.1em 0.2em;
+  color: currentColor;
+}
+
+input::placeholder {
+  padding-top: 0.4em;
+  font-size: 0.6em;
+}
+
+label {
+  cursor: pointer;
+  height: 1.6em;
+
+  > img,
+  > .icon {
+    // vertical-align: middle;
+    width: 1em !important;
+    height: 1em !important;
+    margin: 0 !important;
+  }
+}
+
+input,
+select,
+button {
+  border-color: var(--color);
+}
+
+input[type='checkbox'],
+input[type='radio'] {
+  width: 2ch;
+  vertical-align: baseline;
+}
+
+input,
+select {
+  width: 22ch;
+  border-radius: 0.2em;
+}
+
+select {
+  padding-left: 0;
 }
 
 // ===== Modal dialogs and focus Object
@@ -223,21 +280,13 @@ div[u-control='modal'] {
     right: 0.4rem;
     height: 1.8rem;
     width: 1.8rem;
-    font-size: 1.2rem;
     background-color: red;
+    background-size: 1.8rem 1.8rem;
+    background-repeat: no-repeat;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'><path d='M12 12L36 36M36 12L12 36' stroke='white' stroke-width='8' stroke-linecap='round' /></svg>");
     z-index: 3 !important;
     user-select: none;
     cursor: pointer;
-
-    &::after {
-      position: absolute;
-      content: '\274C';
-      left: 0;
-      width: 1.8rem;
-      text-align: center;
-      color: white;
-      font-weight: 800;
-    }
   }
 }
 
@@ -399,8 +448,9 @@ svg {
   > button,
   > .button {
     text-decoration: none;
+    font-size: 1.25em;
     min-width: 2em;
-    color: $u-navbar-text !important;
+    color: $u-navbar-text ;
 
     &:hover {
       border-color: var(--focus);
@@ -434,7 +484,7 @@ nav {
   left: -280px;
   transition: all 0.2s;
   padding: 1rem 0.2rem 0.2rem;
-  background-color: white;
+  background-color: var(--card-back);
 
   &.inpage {
     position: absolute;
@@ -482,6 +532,14 @@ main {
     font-size: 0.8em;
     width: 11.25rem;
     min-width: 11.25rem;
+
+    .form-grid {
+      grid-template-columns: auto;
+
+      > label {
+        text-align: left;
+      }
+    }
   }
 
   &.active {
@@ -555,12 +613,11 @@ main {
 button,
 .button {
   display: inline-block;
-  font-size: 1.25em;
-  min-width: 3.6em;
-  height: 1.4em;
+  min-width: 6.5ch;
+  // height: 1.4em;
   padding: 0.1em 0.2em;
   border-radius: $u-btn-radius;
-  border: 0.1em solid $u-primary;
+  border-color: $u-primary;
   background-color: $u-primary;
   color: white;
   cursor: pointer;
@@ -572,7 +629,7 @@ button,
 
   &:disabled,
   &:disabled:focus {
-    border: 0.1rem solid $u-disabled;
+    border-color: $u-disabled;
     background-color: $u-disabled;
   }
 
@@ -593,54 +650,6 @@ button,
 }
 
 // standard input elements
-// label
-
-label,
-input,
-select {
-  display: inline-block;
-  vertical-align: top;
-  height: 1.4rem;
-  margin: 0;
-  padding: 0;
-  font-size: 1rem;
-  border: $u-input-border;
-}
-
-input[type='text'],
-input:not([type]) {
-  padding-left: 0.3em;
-}
-
-input,
-select {
-  width: 12rem;
-  padding: 0 0.1em;
-  background-color: white;
-}
-
-label {
-  cursor: pointer;
-  border-color: transparent;
-
-  > img,
-  > .icon {
-    vertical-align: middle;
-    width: 1.2rem !important;
-    height: 1.2rem !important;
-    margin: 0 !important;
-  }
-}
-
-input[type='checkbox'],
-input[type='radio'] {
-  width: 1.4rem;
-  margin: 0 $gutter 0 0;
-}
-
-option {
-  padding: 0;
-}
 
 option[disabled] {
   color: $u-disabled;
@@ -650,16 +659,22 @@ option[disabled] {
 
 input[type='range'] {
   appearance: none;
-  width: 18rem;
+  -webkit-appearance: none; // stylelint-disable-line property-no-vendor-prefix
+  vertical-align: top;
+  margin: 0.2em;
+  height: 1.2em;
+  padding: 0;
+  width: 9.8em;
   transition: 0.4s all ease-out;
   // border: 1px solid #555555;
-  border-radius: 0.7rem;
+  border-radius: 0.6em;
 
   &::-webkit-slider-thumb {
     appearance: none;
-    height: 16px;
-    width: 16px;
-    border-radius: 8px;
+    -webkit-appearance: none; // stylelint-disable-line property-no-vendor-prefix
+    height: 1em;
+    width: 1em;
+    border-radius: 0.5em;
     background: #203050;
     border: 1px solid #f0f0f0;
     cursor: pointer;
@@ -670,12 +685,12 @@ input[type='range'] {
 
 input.switch[type='range'] {
   pointer-events: none;
-  width: 2.2rem !important;
+  width: 2.5em !important;
 }
 
 *:focus {
   outline: 0;
-  box-shadow: 0 0 0.2rem 0.4rem var(--focus);
+  box-shadow: 0 0 0.1rem 0.2rem var(--focus);
 }
 
 .btn-group {
@@ -699,38 +714,32 @@ input.switch[type='range'] {
     border-top-right-radius: $u-btn-radius;
     border-bottom-right-radius: $u-btn-radius;
   }
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 12.6ch auto;
+  grid-gap: 5px;
+
+  > * {
+    grid-column-end: -1;
+  }
 
   > label {
-    display: inline-block;
-    font-size: 1.25em;
-    height: 1.4em;
-    padding: 0 0.4em;
+    grid-column: 1;
+    text-align: right;
+  }
+
+  > .wide {
+    grid-column: 1/-1;
   }
 }
 
-.form-group {
-  display: flex;
+.form-inline {
+  height: 1.6em;
 
-  &:not(:last-child) {
-    margin-bottom: $gutter;
-  }
-
-  > label:first-child {
-    margin-right: $gutter;
-    text-align: right;
-    width: 7em;
-  }
-
-  > :not(:first-child) {
-    margin: 0;
-
-    .icon {
-      margin: 0 !important;
-    }
-  }
-
-  input[type='range'] {
-    width: 9.2rem;
+  > * {
+    vertical-align: top;
   }
 }
 
@@ -920,22 +929,10 @@ input.switch[type='range'] {
 
 /* === Light input sliders === */
 
-.band {
-  appearance: none;
-  outline: none;
-  height: 1.4rem;
+input.band {
   width: 100%;
-  margin-bottom: 0.8rem;
-
-  &::-webkit-slider-thumb {
-    appearance: none;
-    width: 0;
-    height: 0;
-    border-color: $u-border-color transparent;
-    border-width: 1.2em 0.5em;
-    border-style: solid;
-    margin-top: -0.1rem;
-  }
+  border-radius: 0;
+  border-width: 1px;
 
   &.hue {
     background: linear-gradient(

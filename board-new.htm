@@ -6,13 +6,12 @@
     <div class="closedlg" u-action="close"></div>
   </div>
   <div class="block" style="font-size: 1.4">
-    <div class="form-group">
+    <div class="form-grid">
       <label>Type:</label>
       <select class="typeSelect">
         <option disabled selected="selected" value="0">Select Element...</option>
       </select>
-    </div>
-    <div class="form-group">
+
       <label>ID:</label>
       <input placeholder="choose a name..." aria-label="theID" class="newID">
     </div>
@@ -29,7 +28,7 @@
     <h3>Config ${id}</h3>
     <div class="closedlg" u-action="close"></div>
   </div>
-  <div class="block" style="font-size: 1.4">
+  <div class="block form-grid" xstyle="font-size: 1.4">
   </div>
 
   <div class="block footer">
@@ -47,21 +46,13 @@
     <p>${ev} --- ${val}</p>
   </div>
   <div class="block">
-    <div class="form-group">
-      <label>Target:</label>
-      <select id="adTarget">
+    <div class="form-grid">
+      <label>Target:</label><select id="adTarget">
         <option disabled selected>Select target...</option>
       </select>
+      <label>Event:</label><select id="adEvent" disabled></select>
+      <label>Value:</label><input id="adValue" value="$v" />
     </div>
-    <div class="form-group">
-      <label>Event:</label>
-      <select id="adEvent" disabled></select>
-    </div>
-    <div class="form-group">
-      <label>Value:</label>
-      <input id="adValue" value="$v" />
-    </div>
-
   </div>
 
   <div class="block footer">
@@ -117,7 +108,7 @@
     _id: '',
 
     connectedCallback: function () {
-      this._blk = this.querySelector('.block:not(.header)');
+      this._blk = this.querySelector('.form-grid');
       this._type = this.params.id.split('/')[1];
       this._id = this.params.id.split('/')[2];
 
@@ -132,14 +123,13 @@
 
     _add: function (k, isEvent, isAction) {
       var g, l, o;
-
-      g = createHTMLElement(this._blk, 'div', { class: 'form-group' });
-      createHTMLElement(g, 'label').textContent = k + ':';
+      createHTMLElement(this._blk, 'label').textContent = k + ':';
+      g = createHTMLElement(this._blk, 'div', { class: 'form-inline' });
 
       l = createHTMLElement(g, 'label');
       createHTMLElement(l, 'img', { src: (isEvent ? '/i/start.svg' : '/i/no.svg') });
 
-      o = createHTMLElement(g, 'input', { name: k });
+      o = createHTMLElement(g, 'input', { name: k, style: 'width:18ch' });
       if (this.params[k.toLowerCase()] !== undefined)
         o.value = this.params[k.toLowerCase()];
 
@@ -217,7 +207,6 @@
       console.log(this, ev, this._adTar.value);
       var selObj = this._adEvent;
 
-      // debugger;
       var el = this._adTar.value.split('/');
       var def = uElements.defs[el[0]].events;
       console.log(def);
@@ -237,9 +226,6 @@
     on_click: function (evt) {
       var ua = evt.srcElement.getAttribute('u-action');
       if (ua === 'save') {
-        debugger;
-
-        // simulate ???
         this.params.val = // 'switch/s?value=$v';
           this._adTar.value + '?' +
           this._adEvent.value + '=' +

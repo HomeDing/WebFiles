@@ -1,6 +1,5 @@
-@charset "UTF-8";
 :root {
-  --color: CanvasText;
+  --color: #111111;
   --back: #e0e0e0;
   --card-back: white;
   --card-head: #b3b3b3;
@@ -10,9 +9,9 @@
 }
 @media (prefers-color-scheme: dark) {
   :root {
-    --color: CanvasText;
+    --color: #eeeeee;
     --back: #111111;
-    --card-back: #444444;
+    --card-back: #373737;
     --card-head: #4d4d4d;
     --card-head-active: #0f388a;
   }
@@ -74,15 +73,12 @@ h4 > svg:first-child {
   margin-right: 0.2em;
 }
 
-a {
+a,
+a:visited,
+a:hover {
   color: inherit;
-  text-decoration: none;
-  cursor: pointer;
-}
-
-p > a,
-p > a:visited {
   text-decoration: underline;
+  cursor: pointer;
 }
 
 h2,
@@ -110,25 +106,81 @@ h4 {
 code,
 .code,
 code.hljs,
-pre code {
+pre > code {
   background-color: #ffffb9;
   color: #111111;
-  font-size: 16px;
+  font-size: 1rem;
   font-family: "Courier New", Courier, monospace;
 }
 @media print {
   code,
 .code,
 code.hljs,
-pre code {
+pre > code {
     border: 1px solid #111111;
   }
 }
 
-pre code {
+p > code {
+  padding-left: 0.1em;
+  padding-right: 0.1em;
+}
+
+pre > code {
   display: block;
   border-radius: 0.4rem;
-  padding: 2px;
+  padding: 0.1em;
+}
+
+label,
+input,
+input::placeholder,
+select,
+button {
+  display: inline-block;
+  font-size: inherit;
+  margin: 0;
+  border: 0.1em solid transparent;
+  padding: 0.1em 0.2em;
+  color: currentColor;
+}
+
+input::placeholder {
+  padding-top: 0.4em;
+  font-size: 0.6em;
+}
+
+label {
+  cursor: pointer;
+  height: 1.6em;
+}
+label > img,
+label > .icon {
+  width: 1em !important;
+  height: 1em !important;
+  margin: 0 !important;
+}
+
+input,
+select,
+button {
+  border-color: var(--color);
+}
+
+input[type=checkbox],
+input[type=radio] {
+  width: 2ch;
+  vertical-align: baseline;
+}
+
+input,
+select {
+  width: 22ch;
+  border-radius: 0.2em;
+}
+
+select {
+  padding-left: 0;
 }
 
 div[u-control=modal] {
@@ -184,20 +236,13 @@ div[u-control=modal] .closedlg {
   right: 0.4rem;
   height: 1.8rem;
   width: 1.8rem;
-  font-size: 1.2rem;
   background-color: red;
+  background-size: 1.8rem 1.8rem;
+  background-repeat: no-repeat;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'><path d='M12 12L36 36M36 12L12 36' stroke='white' stroke-width='8' stroke-linecap='round' /></svg>");
   z-index: 3 !important;
   user-select: none;
   cursor: pointer;
-}
-div[u-control=modal] .closedlg::after {
-  position: absolute;
-  content: "❌";
-  left: 0;
-  width: 1.8rem;
-  text-align: center;
-  color: white;
-  font-weight: 800;
 }
 
 .modal-object {
@@ -349,8 +394,9 @@ svg.icon {
 .u-navbar > button,
 .u-navbar > .button {
   text-decoration: none;
+  font-size: 1.25em;
   min-width: 2em;
-  color: white !important;
+  color: white;
 }
 .u-navbar > button:hover,
 .u-navbar > .button:hover {
@@ -378,7 +424,7 @@ nav {
   left: -280px;
   transition: all 0.2s;
   padding: 1rem 0.2rem 0.2rem;
-  background-color: white;
+  background-color: var(--card-back);
 }
 nav.inpage {
   position: absolute;
@@ -423,6 +469,12 @@ main {
   font-size: 0.8em;
   width: 11.25rem;
   min-width: 11.25rem;
+}
+.card.small .form-grid {
+  grid-template-columns: auto;
+}
+.card.small .form-grid > label {
+  text-align: left;
 }
 .card.active .border {
   border-color: #003399;
@@ -478,12 +530,10 @@ main {
 button,
 .button {
   display: inline-block;
-  font-size: 1.25em;
-  min-width: 3.6em;
-  height: 1.4em;
+  min-width: 6.5ch;
   padding: 0.1em 0.2em;
   border-radius: 0.2em;
-  border: 0.1em solid #0f388a;
+  border-color: #0f388a;
   background-color: #0f388a;
   color: white;
   cursor: pointer;
@@ -496,7 +546,7 @@ button:visited,
 button:disabled, button:disabled:focus,
 .button:disabled,
 .button:disabled:focus {
-  border: 0.1rem solid gray;
+  border-color: gray;
   background-color: gray;
 }
 button.active,
@@ -516,67 +566,27 @@ button + .button,
   margin-left: 0.5rem;
 }
 
-label,
-input,
-select {
-  display: inline-block;
-  vertical-align: top;
-  height: 1.4rem;
-  margin: 0;
-  padding: 0;
-  font-size: 1rem;
-  border: 1px solid #555555;
-}
-
-input[type=text],
-input:not([type]) {
-  padding-left: 0.3em;
-}
-
-input,
-select {
-  width: 12rem;
-  padding: 0 0.1em;
-  background-color: white;
-}
-
-label {
-  cursor: pointer;
-  border-color: transparent;
-}
-label > img,
-label > .icon {
-  vertical-align: middle;
-  width: 1.2rem !important;
-  height: 1.2rem !important;
-  margin: 0 !important;
-}
-
-input[type=checkbox],
-input[type=radio] {
-  width: 1.4rem;
-  margin: 0 0.5rem 0 0;
-}
-
-option {
-  padding: 0;
-}
-
 option[disabled] {
   color: gray;
 }
 
 input[type=range] {
   appearance: none;
-  width: 18rem;
+  -webkit-appearance: none;
+  vertical-align: top;
+  margin: 0.2em;
+  height: 1.2em;
+  padding: 0;
+  width: 9.8em;
   transition: 0.4s all ease-out;
-  border-radius: 0.7rem;
+  border-radius: 0.6em;
 }
 input[type=range]::-webkit-slider-thumb {
   appearance: none;
-  height: 16px;
-  width: 16px;
-  border-radius: 8px;
+  -webkit-appearance: none;
+  height: 1em;
+  width: 1em;
+  border-radius: 0.5em;
   background: #203050;
   border: 1px solid #f0f0f0;
   cursor: pointer;
@@ -584,12 +594,12 @@ input[type=range]::-webkit-slider-thumb {
 
 input.switch[type=range] {
   pointer-events: none;
-  width: 2.2rem !important;
+  width: 2.5em !important;
 }
 
 *:focus {
   outline: 0;
-  box-shadow: 0 0 0.2rem 0.4rem var(--focus);
+  box-shadow: 0 0 0.1rem 0.2rem var(--focus);
 }
 
 .btn-group {
@@ -611,32 +621,28 @@ input.switch[type=range] {
   border-top-right-radius: 0.2em;
   border-bottom-right-radius: 0.2em;
 }
-.btn-group > label {
-  display: inline-block;
-  font-size: 1.25em;
-  height: 1.4em;
-  padding: 0 0.4em;
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 12.6ch auto;
+  grid-gap: 5px;
+}
+.form-grid > * {
+  grid-column-end: -1;
+}
+.form-grid > label {
+  grid-column: 1;
+  text-align: right;
+}
+.form-grid > .wide {
+  grid-column: 1/-1;
 }
 
-.form-group {
-  display: flex;
+.form-inline {
+  height: 1.6em;
 }
-.form-group:not(:last-child) {
-  margin-bottom: 0.5rem;
-}
-.form-group > label:first-child {
-  margin-right: 0.5rem;
-  text-align: right;
-  width: 7em;
-}
-.form-group > :not(:first-child) {
-  margin: 0;
-}
-.form-group > :not(:first-child) .icon {
-  margin: 0 !important;
-}
-.form-group input[type=range] {
-  width: 9.2rem;
+.form-inline > * {
+  vertical-align: top;
 }
 
 .invalid {
@@ -750,7 +756,7 @@ input.switch[type=range] {
 }
 
 .border {
-  border: 1px solid #555555;
+  border: 0.1em solid #555555;
 }
 
 /* === Display Element === */
@@ -803,26 +809,15 @@ input.switch[type=range] {
 }
 
 /* === Light input sliders === */
-.band {
-  appearance: none;
-  outline: none;
-  height: 1.4rem;
+input.band {
   width: 100%;
-  margin-bottom: 0.8rem;
+  border-radius: 0;
+  border-width: 1px;
 }
-.band::-webkit-slider-thumb {
-  appearance: none;
-  width: 0;
-  height: 0;
-  border-color: #555555 transparent;
-  border-width: 1.2em 0.5em;
-  border-style: solid;
-  margin-top: -0.1rem;
-}
-.band.hue {
+input.band.hue {
   background: linear-gradient(to right, red 0%, yellow 17%, lime 33%, aqua 50%, blue 67%, fuchsia 83%, red 100%);
 }
-.band.white, .band.lightness, .band.saturation {
+input.band.white, input.band.lightness, input.band.saturation {
   background: linear-gradient(to right, black 0%, white 100%);
 }
 

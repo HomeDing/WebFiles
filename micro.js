@@ -1179,12 +1179,14 @@ function changeConfig(id, newConfig) {
         node = jsonLocate(c, id);
     }
     for (const n in newConfig) {
-        const rn = Object.keys(node).find(e => (e.toLowerCase() === n.toLowerCase()));
-        if (newConfig[n]) {
-            node[rn || n] = newConfig[n];
-        }
-        else {
-            delete node[n];
+        if (newConfig.hasOwnProperty(n)) {
+            const rn = Object.keys(node).find(e => (e.toLowerCase() === n.toLowerCase()));
+            if (newConfig[n]) {
+                node[rn || n] = newConfig[n];
+            }
+            else {
+                delete node[n];
+            }
         }
     }
     const formData = new FormData();

@@ -4,9 +4,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-
   <title>Board</title>
-
   <link rel="icon" type="image/png" href="/favicon48.png" sizes="48x48">
   <meta name="application-name" content="Ding" />
   <meta name="msapplication-config" content="/browserconfig.xml" />
@@ -78,7 +76,7 @@
       <div class="col card" u-control="generic" u-is="generic" microID="${id}">
         <div u-is="include" ref=".cardheader"></div>
         <div class="block">
-          <div class="form-group"><label>Value:</label><span u-text="value"></span></div>
+          <div class="form-grid"><label>Value:</label><span u-text="value"></span></div>
         </div>
       </div>
 
@@ -92,18 +90,24 @@
           <label><input name="mode" u-value="mode" type="radio" value="timer">Timer</label>
         </fieldset>
         <div class="block">
-          <div class="form-group"><label>Start:</label><span u-text="ontime"></span></div>
-          <div class="form-group"><label>End:</label><span u-text="offtime"></span></div>
+          <div class="form-grid">
+            <label>Start:</label><span u-text="ontime"></span>
+            <label>End:</label><span u-text="offtime"></span>
+          </div>
         </div>
       </div>
 
       <div class="col card" u-control="dstime" id="${id}" u-is="dstime" microID="${id}">
         <div u-is="include" ref=".cardheader"></div>
         <div class="block">
-          <div class="form-group"><label>ReadTime:</label><input u-value="readtime" type="time" step="1" /></div>
-          <div class="form-group"><label>Now:</label><span u-text="now"></span></div>
-          <div class="form-group"><label>set Time:</label><span class="now"></span></div>
-          <button style="float:right">set</button>
+          <div class="form-grid">
+            <label>ReadTime:</label><input u-value="readtime" type="time" step="1" />
+            <label>Now:</label><span u-text="now"></span>
+            <label>set Time:</label><span class="now"></span>
+          </div>
+          <div class="block footer">
+            <button style="float:right">set</button>
+          </div>
         </div>
       </div>
 
@@ -125,7 +129,7 @@
       <div class="col card" u-control="value" id="${id}" u-is="generic" microID="${id}">
         <div u-is="include" ref=".cardheader"></div>
         <div class="block">
-          <div class="form-group"><label>value:</label><span u-text="value"></span></div>
+          <div class="form-grid"><label>value:</label><span u-text="value"></span></div>
           <div u-is="input">
             <label class="down"><svg class="icon">
                 <use href="./icons.svg#minus" />
@@ -142,7 +146,7 @@
         <div u-is="include" ref=".cardheader"></div>
         <div class="block">
           <span class="u-bool ux-value" u-active="value"></span>
-          <div class="form-group"><label>value:</label><span u-text="value"></span></div>
+          <div class="form-grid"><label>value:</label><span u-text="value"></span></div>
         </div>
       </div>
 
@@ -156,17 +160,16 @@
 
       <div class="col card" u-control="color" id="${id}" u-is="color" microID="${id}">
         <div u-is="include" ref=".cardheader"></div>
-        <div class="block">
-          <div class="form-group"><label>value:</label><span u-text="value"></span><span class="color border"
-              style="width:6rem;"></span></div>
-          <input type="range" max="359" style="width: 100%;" class="band hue">
-          <input type="range" max="100" style="width: 100%;" class="band saturation" u-value="saturation">
-          <input type="range" max="100" style="width: 100%;" class="band lightness" u-value="lightness">
-          <input type="range" max="255" style="width: 100%;" class="band white">
+        <div class="block form-grid">
+          <label>value:</label>
+          <div><span u-text="value"></span><span class="color border" style="display:inline-block; height:100%;width:6rem;"></span></div>
+          <input type="range" max="359" class="wide band hue">
+          <input type="range" max="100" class="wide band saturation" u-value="saturation">
+          <input type="range" max="100" class="wide band lightness" u-value="lightness">
+          <input type="range" max="255" class="wide band white">
         </div>
         <div class="block footer">
-          <button u-action="mode" value="fade">fade</button><button u-action="mode" value="fix">fix</button><button
-            u-action="mode" value="pulse">pulse</button><button u-action="mode" value="wheel">wheel</button>
+          <button u-action="mode" value="fade">fade</button><button u-action="mode" value="fix">fix</button><button u-action="mode" value="pulse">pulse</button><button u-action="mode" value="wheel">wheel</button>
         </div>
       </div>
 
@@ -174,8 +177,8 @@
         <div u-is="include" ref=".cardheader"></div>
         <div class="block">
           <span u-color="value" class="border" style="width:4rem;height:4rem;float:right;border-radius:50%;"></span>
-          <div class="form-group"><label>value:</label><span u-text="value"></span></div>
-          <div class="form-group"><label>brightness:</label><span u-text="brightness"></span></div>
+          <div class="form-grid"><label>value:</label><span u-text="value"></span></div>
+          <div class="form-grid"><label>brightness:</label><span u-text="brightness"></span></div>
         </div>
       </div>
 
@@ -183,16 +186,16 @@
         <div u-is="include" ref=".cardheader"></div>
         <div class="block">
           <div style="text-align: center;"><span u-text="value" style="font-size:4rem;font-style: italic;"></span></div>
-          <div class="form-group"><label>brightness:</label><span u-text="brightness"></span></div>
+          <div class="form-grid"><label>brightness:</label><span u-text="brightness"></span></div>
         </div>
       </div>
 
       <div class="col card" u-control="ina2xx" id="${id}" u-is="generic" microID="${id}">
         <div u-is="include" ref=".cardheader"></div>
         <div class="block">
-          <div class="form-group"><label>Voltage:</label><span u-text="voltage"></span></div>
-          <div class="form-group"><label>Current:</label><span u-text="current"></span></div>
-          <div class="form-group"><label>Power:</label><span u-text="power"></span></div>
+          <div class="form-grid"><label>Voltage:</label><span u-text="voltage"></span></div>
+          <div class="form-grid"><label>Current:</label><span u-text="current"></span></div>
+          <div class="form-grid"><label>Power:</label><span u-text="power"></span></div>
         </div>
       </div>
 

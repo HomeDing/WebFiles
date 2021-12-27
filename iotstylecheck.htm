@@ -52,6 +52,15 @@
       border: 2px solid #333;
       background-color: silver;
     }
+
+    .probe {
+      display: inline-block;
+      width:12ch;
+      height:2em;
+      border: .1px solid #888;
+      padding-top: .3em;
+      text-align: center;
+    }
   </style>
 
   </style>
@@ -133,23 +142,39 @@
         </div>
         <div class="block">
           <span class="u-bool ux-value" u-active="value" style="position: absolute;top:0.5rem;right:0.5rem"></span>
-          <span>form-groups:</span>
-          <div class="form-group"><label>label:</label><span>{span} out-text.</span></div>
-          <div class="form-group"><label>label:</label><input placeholder="{input} enter here"></div>
-          <div class="form-group"><label>label:</label>
+          <span>form-grid:</span>
+          <div class="form-grid">
+            <label>label:</label><span class="form-inline">{span} out-text.</span>
+            <label>label:</label><input placeholder="{input} enter here">
+            <label>label:</label>
             <select>
-              <option>{select} Select here...</option>
+              <option>{select}Please choose...</option>
+              <option>Option Text 1</option>
+              <option>Option Text 2</option>
             </select>
-          </div>
-          <div class="form-group"><label></label><label style="border: 0;"><input type="checkbox">done.</label></div>
-          <div class="form-group">
-            <div class="btn-group" style="float: left;">
+            <div class="form-inline">
               <label><input name="mode" u-value="mode" type="radio" value="off">Off</label>
               <label><input name="mode" u-value="mode" type="radio" value="on">On</label>
               <label><input name="mode" u-value="mode" type="radio" value="timer">Timer</label>
             </div>
-          </div>
-          <div class="form-group"><label>volume:</label>
+            <!-- <div class="form-inline">
+              <label class="down"><svg class="icon">
+                  <use href="./icons.svg#minus" />
+                </svg></label>
+              <label class="down">off</label>
+              <input class="switch" type="range">
+              <label class="up">on</label>
+              <input style="width: 6ch;">
+            </div> -->
+            <label>label:</label>
+            <span><label><input type="checkbox">done.</label></span>
+            <div class="btn-group">
+              <label><input name="mode" u-value="mode" type="radio" value="off">Off</label>
+              <label><input name="mode" u-value="mode" type="radio" value="on">On</label>
+              <label><input name="mode" u-value="mode" type="radio" value="timer">Timer</label>
+            </div>
+
+            <label>volume:</label>
             <div u-is="input">
               <label class="down"><svg class="icon">
                   <use href="./icons.svg#minus" />
@@ -159,15 +184,18 @@
                   <use href="./icons.svg#plus" />
                 </svg></label>
             </div>
-          </div>
-          <div class="form-group"><label>volume:</label>
+
+            <label>hue:</label>
+              <input type="range" class="band hue" style="width: 100%;" >
+
+            <label>mute:</label>
             <div u-is="input" u-active="value">
               <label class="down">off</label>
               <input class="switch" type="range">
               <label class="up">on</label>
             </div>
-          </div>
 
+          </div>
         </div>
         <div class="block footer">
           <button u-action="start" value="1">Start</button>
@@ -248,7 +276,7 @@
           <h3>Small</h3>
           <span class="activeState" u-active="active"></span>
           <span class="setconfig"></span>
-          <div class="form-group"><label>label:</label><span>out-text.</span></div>
+          <div class="form-grid"><label>label:</label><span>out-text.</span></div>
         </div>
       </div>
 
@@ -266,6 +294,16 @@
           <h4>not active</h4>
           <span class="u-bool ux-value" value="1" style="position: absolute;top:0.5rem;right:0.5rem"></span>
         </div>
+      </div>
+    </div>
+
+    <hr />
+
+    <div class="row">
+      <div class="col">
+        <label>System Color Checks:</label>
+        <span class="probe" style="background-color: Canvas;Color:CanvasText">Canvas</span>
+        <span class="probe" style="background-color: Highlight;Color:HighlightText">Highlight</span>
       </div>
     </div>
 

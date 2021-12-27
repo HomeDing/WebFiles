@@ -73,6 +73,7 @@
 -i/washing.svg
 -i/weatherfeed.svg
 -i/sht20.svg
+-elements.json
 -clock.svg
 -lineChart.js
 -lineChart.svg

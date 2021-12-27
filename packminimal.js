@@ -40,6 +40,7 @@ logInfo(`Starting...`);
 
 // array with files that get copied as they are
 const assets = [
+  { m: 'js', src: 'micro.js' },
   { m: 'xml', src: 'browserconfig.xml' },
   { m: 'json', src: 'site.webmanifest' },
   { m: 'xml', src: 'favicon.svg' },
@@ -58,7 +59,6 @@ const assets = [
   { m: 'm', src: 'ding.htm' },
   { m: 'm', src: 'microide.htm' },
   { m: 'js', src: 'microide.js' },
-  { m: 'js', src: 'micro.js' }
 ];
 
 // create fresh dist folders
