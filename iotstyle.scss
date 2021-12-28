@@ -167,6 +167,7 @@ pre > code {
 
 label,
 input,
+input+span,
 input::placeholder,
 select,
 button {
@@ -450,7 +451,7 @@ svg {
     text-decoration: none;
     font-size: 1.25em;
     min-width: 2em;
-    color: $u-navbar-text ;
+    color: $u-navbar-text;
 
     &:hover {
       border-color: var(--focus);

@@ -11,17 +11,12 @@
 
 <body style="width:300px">
   <h1>Web Update</h1>
-  <table style="width:300px">
-    <tr>
-      <td><progress value=0 max=1></progress></td>
-    </tr>
-    <tr>
-      <td id='info'>.</td>
-    </tr>
-    <tr>
-      <td align="right"><button>Start</button></td>
-    </tr>
-  </table>
+  <div style="display:grid">
+    <progress value=0 max=1></progress>
+    <span id='l'></span>
+  </div>
+  <div style="text-align: right;"><button>Start</button></div>
+
   <hr>
   <p style="text-align: right;"><a href="/updateicons.htm" title="next step"
       style="text-decoration: none;">&gt;&gt;&gt;</a></p>
@@ -29,13 +24,13 @@
     var repo = 'https://homeding.github.io/';
     var eStart = document.querySelector('button');
     var eBar = document.querySelector('progress');
-    var eInfo = document.querySelector('#info');
+    var eLog = document.querySelector('#l');
     var work = { status: '0', list: null, files: 0, done: 0 };
     var timer = 0;
     var seed = "?" + new Date().valueOf();
 
     function log(t) {
-      eInfo.innerText = t;
+      eLog.innerText = t;
     } // log
 
     function next() {
@@ -75,7 +70,7 @@
       work.done++;
       eBar.max = work.files;
       eBar.value = work.done;
-      eInfo.innerText = theItem; // log
+      eLog.innerText = theItem; // log
 
       if (theItem[0] == '-') {
         // delete the file

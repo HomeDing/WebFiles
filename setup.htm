@@ -9,34 +9,21 @@
 
 <body style="width:300px">
   <h1>Setup WiFi</h1>
-  <table style="width: 300px;">
-    <tr>
-      <td>Devicename:</td>
-      <td id="dname">xyz</td>
-    </tr>
-    <tr>
-      <td>Network:</td>
-      <td> <select id="conNet" style="width:12em">
-          <option selected disabled>scanning...</option>
-        </select></td>
-    </tr>
-    <tr>
-      <td>Passphrase:</td>
-      <td><input id="pass" type="password" style="width:12em"></input></td>
-    </tr>
-    <tr>
-      <td colspan="2" align="right">
-        <button id="bCon">Connect</button>
-      </td>
-    </tr>
-  </table>
+  <div style="display:grid;grid-template-columns: 10ch auto;grid-gap:1ch;">
+    <label>Devicename:</label><span id="d">xyz</span>
+    <label>Network:</label><span><select id="n" style="width:12em">
+        <option selected disabled>scanning...</option>
+      </select></span>
+    <label>Passphrase:</label><input id="pass" type="password" style="width:12em"></input>
+  </div>
+  <div style="text-align: right;"><button id="b">Connect</button></div>
   <hr>
   <p style="text-align: right;"><a id="nextLink" title="next step" href="/$update.htm" style="text-decoration: none;">&gt;&gt;&gt;</a></p>
 
   <script>
     var state = 0;  // 0: start, 1: get sysinfo, 2: sysinfo-done,  3: scan, 4, scan-done
     var timer;
-    var oSel = document.getElementById('conNet');
+    var oSel = document.getElementById('n');
 
     function check() {
       if (state == 0) {
@@ -48,7 +35,7 @@
           }).then(function (t) {
             if (t.length > 0) {
               var d = JSON.parse(t).devicename;
-              document.getElementById('dname').textContent = d;
+              document.getElementById('d').textContent = d;
               var a = document.getElementById('nextLink');
               a.href = a.href.replace(/\/\/[^\/]+\//, '//' + d + '/');
               state = 2;
@@ -92,7 +79,7 @@
     } // scanned()
 
     // connect using network name and password
-    document.getElementById('bCon').addEventListener('click', function () {
+    document.getElementById('b').addEventListener('click', function () {
       fetch('/$connect?n=' + oSel.value + '&p=' + document.getElementById('pass').value);
     });
     timer = window.setInterval(check, 800);

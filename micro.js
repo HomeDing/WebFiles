@@ -20,14 +20,12 @@ class MicroRegistry {
         this.List = [];
         window.addEventListener('load', this.init.bind(this));
     }
-    loadFile(fName) {
+    loadFile(url) {
         const scope = this;
-        const ret = fetch(fName)
-            .then(function (result) {
-            return result.text();
-        })
-            .then(function (html) {
-            const f = document.createRange().createContextualFragment(html);
+        const ret = fetch(url)
+            .then(raw => raw.text())
+            .then(htm => {
+            const f = document.createRange().createContextualFragment(htm);
             if (scope._tco) {
                 scope._tco.appendChild(f);
             }

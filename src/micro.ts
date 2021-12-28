@@ -26,16 +26,15 @@ class MicroRegistry {
   }
 
   /**
-   * @param {string} fName
+   * Load html templates into container.
+   * @param {string} url file with templates
    */
-  loadFile(fName: string): Promise<void> {
+  loadFile(url: string): Promise<void> {
     const scope = this;
-    const ret = fetch(fName)
-      .then(function (result) {
-        return result.text();
-      })
-      .then(function (html) {
-        const f = document.createRange().createContextualFragment(html);
+    const ret = fetch(url)
+      .then(raw => raw.text())
+      .then(htm => {
+        const f = document.createRange().createContextualFragment(htm);
         if (scope._tco) {
           scope._tco.appendChild(f);
         }

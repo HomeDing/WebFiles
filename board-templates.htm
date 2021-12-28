@@ -57,8 +57,8 @@
   </div>
 </div>
 
-<div class="col card" u-control="timer" microID="${id}" u-is="timer">
-  <div u-is="include" ref=".cardheader"></div>
+<form method="dialog" class="col card" u-control="timer" microID="${id}" u-is="timer">
+  <div u-is="include" ref=".cHead"></div>
   <span class="u-bool ux-value" u-active="value" style="top:2rem;"></span>
   <fieldset class="block">
     <legend>Mode</legend>
@@ -79,10 +79,10 @@
     <button u-action="start" value="1">Start</button>
     <button u-action="next" value="1">Next</button>
   </div>
-</div>
+</form>
 
 <div class="col card" u-control="button" microID="${id}" u-is="button">
-  <div u-is="include" ref=".cardheader"></div>
+  <div u-is="include" ref=".cHead"></div>
   <div class="block"><button u-text="description">.</button></div>
 </div>
 
@@ -94,7 +94,7 @@
 </div>
 
 <div class="col card" u-control="digitalout" microID="${id}" u-is="generic">
-  <div u-is="include" ref=".cardheader"></div>
+  <div u-is="include" ref=".cHead"></div>
   <div class="block Element">
     <span class="u-bool ux-value" u-active="value" style="position: absolute;top:0.5rem;right:0.5rem"></span>
     <div class="form-grid"><label>Value:</label><span u-text="value"></span></div>
@@ -102,7 +102,7 @@
 </div>
 
 <div class="col card" u-control="reference" microID="${id}" u-is="generic">
-  <div u-is="include" ref=".cardheader"></div>
+  <div u-is="include" ref=".cHead"></div>
   <div class="block Element">
     <span class="u-bool ux-value" u-active="value" style="position: absolute;top:0.5rem;right:0.5rem"></span>
     <div class="form-grid">
@@ -113,7 +113,7 @@
 </div>
 
 <div class="col card" u-control="pwmout" u-is="pwmout" microID="${id}">
-  <div u-is="include" ref=".cardheader"></div>
+  <div u-is="include" ref=".cHead"></div>
   <div class="block" style="position: relative;min-height: 5rem">
     <span class="ux-levelbar ux-value"></span>
     <div style="font-size: 2rem"><span u-text="value"></span> / <span u-text="range"></span></div>
@@ -121,7 +121,7 @@
 </div>
 
 <div class="col card" u-control="log" u-is="log" microID="${id}">
-  <div u-is="include" ref=".cardheader"></div>
+  <div u-is="include" ref=".cHead"></div>
   <div class="block"><object data="chartline.svg" type="image/svg+xml" style="width:100%"></object></div>
 </div>
 
@@ -146,21 +146,21 @@
 </div>
 
 <div class="col card hidden" u-control="displaytext" u-is="displaytext" microID="${id}">
-  <div u-is="include" ref=".cardheader"></div>
+  <div u-is="include" ref=".cHead"></div>
   <div class="block">
     <div class="form-grid"><label>Value:</label><span u-text="value"></span></div>
   </div>
 </div>
 
 <div class="col card hidden" u-control="displaydot" u-is="displaydot" microID="${id}">
-  <div u-is="include" ref=".cardheader"></div>
+  <div u-is="include" ref=".cHead"></div>
   <div class="block">
     <div class="form-grid"><label>Value:</label><span u-text="value"></span></div>
   </div>
 </div>
 
 <div class="col card hidden" u-control="displayline" u-is="displayline" microID="${id}">
-  <div u-is="include" ref=".cardheader"></div>
+  <div u-is="include" ref=".cHead"></div>
   <div class="block">(<span u-text="x0"></span>,<span u-text="y0"></span>) /
     (<span u-text="x1"></span>,<span u-text="y1"></span>)</div>
 </div>

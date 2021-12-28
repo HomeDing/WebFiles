@@ -4,8 +4,10 @@ import express from 'express';
 
 import Logger from './Logger';
 import { ConfigCache } from './ConfigCache';
+import { TxtAnswer, SrvAnswer} from 'dns-packet';
 import mDNS from 'multicast-dns';
 import makeMdns = require('multicast-dns');
+
 
 // there is one DeviceDiscovery only.
 export class DeviceDiscovery {
@@ -104,18 +106,19 @@ export class DeviceDiscovery {
       // console.log('response:', response);
 
       response.additionals
-        .filter((a) => (a.type === 'SRV'))
-        .forEach((a) => {
+        .filter(a => (a.type === 'SRV'))
+        .forEach(a => {
+          const ta = a as SrvAnswer;
           // console.log("SRV", a.data);
-          hdd.target = (<any>(a.data)).target;
+          hdd.target = ta.data.target;
           hdd.host = hdd.target.replace(/\.local/, '');
         });
 
       response.additionals
-        .filter((a) => (a.type === 'TXT'))
-        .forEach((a) => {
-          const d = '';
-          String(a.data)
+        .filter(a => (a.type === 'TXT'))
+        .forEach(a => {
+          const ta = a as TxtAnswer;
+          String(ta.data)
             .split(',')
             .forEach(e => {
               const p = e.split('=');

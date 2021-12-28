@@ -40,7 +40,6 @@
 <body>
   <div class="container-fluid">
     <div class="row u-header">
-      <img class="icon" src="/favicon.svg" />
       <h1>Board</h1>
     </div>
     <div class="row u-navbar">
@@ -62,7 +61,7 @@
         <div class="modalFrame" class="modal-object"></div>
       </div>
 
-      <div class="cardheader block header">
+      <div class="cHead block header">
         <svg class="icon">
           <use href="./icons.svg#${type}" />
         </svg>
@@ -74,14 +73,14 @@
       </div>
 
       <div class="col card" u-control="generic" u-is="generic" microID="${id}">
-        <div u-is="include" ref=".cardheader"></div>
+        <div u-is="include" ref=".cHead"></div>
         <div class="block">
           <div class="form-grid"><label>Value:</label><span u-text="value"></span></div>
         </div>
       </div>
 
-      <div class="col card" u-control="schedule" id="${id}" u-is="generic" microID="${id}">
-        <div u-is="include" ref=".cardheader"></div>
+      <form method="dialog" class="col card" u-control="schedule" id="${id}" u-is="generic" microID="${id}">
+        <div u-is="include" ref=".cHead"></div>
         <span class="u-bool ux-value" u-active="value" style="top:2rem;"></span>
         <fieldset class="block btn-group">
           <legend>Mode</legend>
@@ -95,10 +94,10 @@
             <label>End:</label><span u-text="offtime"></span>
           </div>
         </div>
-      </div>
+      </form>
 
       <div class="col card" u-control="dstime" id="${id}" u-is="dstime" microID="${id}">
-        <div u-is="include" ref=".cardheader"></div>
+        <div u-is="include" ref=".cHead"></div>
         <div class="block">
           <div class="form-grid">
             <label>ReadTime:</label><input u-value="readtime" type="time" step="1" />
@@ -112,7 +111,7 @@
       </div>
 
       <div class="col card" u-control="switch" id="${id}" u-is="generic" microID="${id}">
-        <div u-is="include" ref=".cardheader"></div>
+        <div u-is="include" ref=".cHead"></div>
         <div class="block">
           <span class="u-bool ux-value border" u-active="value"></span>
           <div u-is="input">
@@ -120,30 +119,20 @@
             <input class="switch" u-value="value" type="range">
             <label class="up">on</label>
           </div>
-
-          <!-- <input u-value="value"> -->
-
         </div>
       </div>
 
       <div class="col card" u-control="value" id="${id}" u-is="generic" microID="${id}">
-        <div u-is="include" ref=".cardheader"></div>
-        <div class="block">
-          <div class="form-grid"><label>value:</label><span u-text="value"></span></div>
-          <div u-is="input">
-            <label class="down"><svg class="icon">
-                <use href="./icons.svg#minus" />
-              </svg></label>
-            <input u-value="value" type="range">
-            <label class="down"><svg class="icon">
-                <use href="./icons.svg#plus" />
-              </svg></label>
-          </div>
+        <div u-is="include" ref=".cHead"></div>
+        <div class="block form-grid">
+          <label>value:</label>
+          <span u-is="input">
+            <input type="range" u-value="value"><span u-text="value"></span></span>
         </div>
       </div>
 
       <div class="col card" u-control="logic" id="${id}" u-is="generic" microID="${id}">
-        <div u-is="include" ref=".cardheader"></div>
+        <div u-is="include" ref=".cHead"></div>
         <div class="block">
           <span class="u-bool ux-value" u-active="value"></span>
           <div class="form-grid"><label>value:</label><span u-text="value"></span></div>
@@ -151,7 +140,7 @@
       </div>
 
       <div class="col card" u-control="rfcodes" microID="${id}" u-is="generic">
-        <div u-is="include" ref=".cardheader"></div>
+        <div u-is="include" ref=".cHead"></div>
         <div class="block Element">
           <div><label>Last Code:</label></div>
           <pre>[<span u-text="value" style="user-select: text;"></span>]</pre>
@@ -159,10 +148,10 @@
       </div>
 
       <div class="col card" u-control="color" id="${id}" u-is="color" microID="${id}">
-        <div u-is="include" ref=".cardheader"></div>
+        <div u-is="include" ref=".cHead"></div>
         <div class="block form-grid">
           <label>value:</label>
-          <div><span u-text="value"></span><span class="color border" style="display:inline-block; height:100%;width:6rem;"></span></div>
+          <div><span class="color border" style="display:inline-block; height:100%;width:6rem;"></span><span u-text="value"></span></div>
           <input type="range" max="359" class="wide band hue">
           <input type="range" max="100" class="wide band saturation" u-value="saturation">
           <input type="range" max="100" class="wide band lightness" u-value="lightness">
@@ -174,7 +163,7 @@
       </div>
 
       <div class="col card" u-control="light" id="${id}" u-is="generic" microID="${id}">
-        <div u-is="include" ref=".cardheader"></div>
+        <div u-is="include" ref=".cHead"></div>
         <div class="block">
           <span u-color="value" class="border" style="width:4rem;height:4rem;float:right;border-radius:50%;"></span>
           <div class="form-grid"><label>value:</label><span u-text="value"></span></div>
@@ -183,7 +172,7 @@
       </div>
 
       <div class="col card" u-control="tm1637" id="${id}" u-is="generic" microID="${id}">
-        <div u-is="include" ref=".cardheader"></div>
+        <div u-is="include" ref=".cHead"></div>
         <div class="block">
           <div style="text-align: center;"><span u-text="value" style="font-size:4rem;font-style: italic;"></span></div>
           <div class="form-grid"><label>brightness:</label><span u-text="brightness"></span></div>
@@ -191,7 +180,7 @@
       </div>
 
       <div class="col card" u-control="ina2xx" id="${id}" u-is="generic" microID="${id}">
-        <div u-is="include" ref=".cardheader"></div>
+        <div u-is="include" ref=".cHead"></div>
         <div class="block">
           <div class="form-grid"><label>Voltage:</label><span u-text="voltage"></span></div>
           <div class="form-grid"><label>Current:</label><span u-text="current"></span></div>
@@ -200,7 +189,7 @@
       </div>
 
       <div class="col card" u-control="bl0937" id="${id}" u-is="bl0937" microID="${id}">
-        <div u-is="include" ref=".cardheader"></div>
+        <div u-is="include" ref=".cHead"></div>
         <div class="block">
           <table style="width:100%;font-size:2rem">
             <tr>
@@ -237,6 +226,8 @@
     var uElements = {
       defs: {},
       impl: [],
+      env: {},
+      config: {}
     }
 
     var params = getHashParams({
@@ -317,13 +308,9 @@
           function () {
             refreshState = 'f';
             fetch('/$board')
-              .then(function (result) {
-                return result.json();
-              })
-              .then(function (json) {
-                hub.publishObj(json);
-              })
-              .finally(function (json) {
+              .then(raw => raw.json())
+              .then(json => hub.publishObj(json))
+              .finally(() => {
                 refreshState = '';
                 updateAsap(REFRESH_IDLEINTERVALL);
               });
@@ -335,56 +322,43 @@
     // initiate a fetch with JSON response expected.
     async function fetchJSON(url, options) {
       var p = fetch(url, options)
-        .then(function (result) {
-          return (result.json());
-        });
+        .then(raw => raw.json());
       return (p)
     }
 
     function init() {
       // load templates from other file.
-      var p0 = Promise.allSettled([micro.loadFile('/board-templates.htm'), micro.loadFile('/board-new.htm')]);
-
-      // implemented elements -> element definitions -> env.json -> config.json
-      var p1 = fetchJSON('/$elements')
-        .then(function (json) {
-          uElements.impl = json;
-        });
+      var p0 = micro.loadFile('/board-templates.htm');
 
       var p2 = fetchJSON('/elements.json')
-        .then(function (json) {
-          uElements.defs = json;
-        });
+        .then(json => uElements.defs = json);
 
-
-      var envData;
       var p3 = fetchJSON('/env.json')
-        .then(function (json) {
-          envData = json;
-          uElements.env = envData;
-        });
+        .then(json => uElements.env = json);
 
-      var configData;
       var p4 = fetchJSON('/config.json')
-        .then(function (json) {
-          configData = json;
-          uElements.config = configData;
-        });
+        .then(json => uElements.config = json);
 
-      Promise.allSettled([p0, p1, p2, p3, p4]).then(function () {
+      Promise.allSettled([p0, p2, p3, p4]).then(function () {
         // env data should be published before config data
-        if (envData) {
-          hub.write('env', JSON.stringify(envData));
-          hub.publishObj(envData);
+        if (uElements.env) {
+          hub.write('env', JSON.stringify(uElements.env));
+          hub.publishObj(uElements.env);
         }
-        if (configData) {
+        if (uElements.config) {
+          const c = uElements.config;
           // adjust title locally
-          for (var t in configData) for (var i in configData[t]) {
-            if (!configData[t][i].title) configData[t][i].title = t + '/' + i;
+          for (var t in c) for (var i in c[t]) {
+            if (!c[t][i].title) c[t][i].title = t + '/' + i;
           }
-          hub.write('config', JSON.stringify(configData));
-          hub.publishObj(configData);
+          hub.write('config', JSON.stringify(c));
+          hub.publishObj(c);
         }
+
+        // defer metadata and dialogs
+        fetchJSON('/$elements')
+          .then(json => uElements.impl = json);
+        micro.loadFile('/board-new.htm');
         updateAsap();
       });
     } // init()

@@ -134,6 +134,7 @@ pre > code {
 
 label,
 input,
+input + span,
 input::placeholder,
 select,
 button {
