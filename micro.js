@@ -21,13 +21,12 @@ class MicroRegistry {
         window.addEventListener('load', this.init.bind(this));
     }
     loadFile(url) {
-        const scope = this;
         const ret = fetch(url)
             .then(raw => raw.text())
             .then(htm => {
             const f = document.createRange().createContextualFragment(htm);
-            if (scope._tco) {
-                scope._tco.appendChild(f);
+            if (this._tco) {
+                this._tco.appendChild(f);
             }
         });
         return ret;
@@ -196,7 +195,7 @@ class MicroRegistry {
     }
 }
 const micro = new MicroRegistry();
-let obs = new MutationObserver(function (mutationsList, _observer) {
+const obs = new MutationObserver(function (mutationsList, _observer) {
     for (const mutation of mutationsList) {
         mutation.addedNodes.forEach(n => {
             const e = n;
@@ -213,7 +212,8 @@ document.addEventListener('DOMContentLoaded', function () {
     window.setTimeout(f, 40);
 });
 class MicroControlClass {
-    connectedCallback() { }
+    connectedCallback() {
+    }
     _clearWhitespace() {
         var _a;
         let obj = this.firstChild;
@@ -443,12 +443,11 @@ let ButtonWidgetClass = class ButtonWidgetClass extends GenericWidgetClass {
             }
         }
         else {
-            const scope = this;
             if (this._timer) {
                 window.clearTimeout(this._timer);
             }
-            this._timer = window.setTimeout(function () {
-                scope.dispatchAction(scope._onclick, '1');
+            this._timer = window.setTimeout(() => {
+                this.dispatchAction(this._onclick, '1');
             }, 250);
         }
     }
@@ -1177,14 +1176,12 @@ function changeConfig(id, newConfig) {
         node = jsonLocate(c, id);
     }
     for (const n in newConfig) {
-        if (newConfig.hasOwnProperty(n)) {
-            const rn = Object.keys(node).find(e => (e.toLowerCase() === n.toLowerCase()));
-            if (newConfig[n]) {
-                node[rn || n] = newConfig[n];
-            }
-            else {
-                delete node[n];
-            }
+        const rn = Object.keys(node).find(e => (e.toLowerCase() === n.toLowerCase()));
+        if (newConfig[n]) {
+            node[rn || n] = newConfig[n];
+        }
+        else {
+            delete node[n];
         }
     }
     const formData = new FormData();
@@ -1196,14 +1193,12 @@ function changeConfig(id, newConfig) {
 function debounce(func, wait = 20) {
     let timer;
     return function () {
-        const scope = this;
-        const args = arguments;
         if (timer) {
             clearTimeout(timer);
         }
-        timer = window.setTimeout(function () {
+        timer = window.setTimeout(() => {
             timer = 0;
-            func.apply(scope, args);
+            func();
         }, wait);
     };
 }
@@ -1222,9 +1217,7 @@ function createHTMLElement(parentNode, tag, attr, beforeNode = null) {
     const o = document.createElement(tag);
     if (attr) {
         for (const a in attr) {
-            if (attr.hasOwnProperty(a)) {
-                o.setAttribute(a, attr[a]);
-            }
+            o.setAttribute(a, attr[a]);
         }
     }
     if (beforeNode) {

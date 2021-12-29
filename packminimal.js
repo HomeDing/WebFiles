@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 // packminimal.js
 // copy all files for the minimal web server into the mindist folder
 // ready to be published on http://homeding.github.io/vmxx 
@@ -9,13 +11,13 @@ const debug = require('debug');
 const shell = require('shelljs');
 
 const sass = require('sass');
-const minify = require('html-minifier').minify;
-const uglify = require("uglify-js");
+const HTMLMinifier = require('html-minifier-terser');
+const JSMinifier = require('terser');
 
 const distFolder = "dist-mini";
 
 // ===== Command line support =====
-console.log('HomeDing: Packing Dist-mini Folder');
+console.log('HomeDing: Packing dist-mini Folder');
 const options = yargs
   .usage('Usage: $0')
   .option('v', { alias: 'verbose', describe: 'Verbose logging', type: 'boolean', demandOption: false, default: false })
@@ -25,22 +27,95 @@ debug.enable(options.verbose ? '*' : '*:info');
 
 // ===== initializing modules =====
 
-const logInfo = debug('iot:info');
-const logTrace = debug('iot:trace');
+const logInfo = debug('iot:info')
 debug.log = console.log.bind(console);
 
-Array.prototype.unique = function () {
-  return this.filter(function (value, index, self) {
-    return self.indexOf(value) === index;
-  });
-}
+
+// pack all assets
+async function packAssets(assets) {
+  const asyncJobs = [];
+
+  for (const op of assets) {
+    let txt;
+
+    if (!op.tar) { op.tar = op.src; }
+
+    switch (op.m) {
+      case 'c': // sync copy
+        shell.cp(op.src, distFolder + '/' + op.tar);
+        break;
+
+      case 'm': // async minify html
+        const p1 = new Promise(res => {
+          txt = shell.cat(op.src).stdout;
+
+          HTMLMinifier.minify(txt, {
+            collapseWhitespace: true,
+            removeComments: true,
+            removeTagWhitespace: true,
+            minifyCSS: true,
+            minifyJS: true,
+            verbose: true,
+            quoteCharacter: "\'"
+          }).then(txt => {
+            shell.ShellString(txt).to(distFolder + '/' + op.tar);
+            res();
+          });
+        });
+        asyncJobs.push(p1);
+        break;
+
+      case 'js': // async minify javascript
+        const p2 = new Promise(res => {
+          txt = shell.cat(op.src).stdout;
+
+          JSMinifier.minify(txt, {
+            compress: { drop_console: true, drop_debugger: true },
+            mangle: true,
+            output: { indent_level: 0, beautify: false }
+          }).then(out => {
+            shell.ShellString(out.code).to(distFolder + '/' + op.tar);
+            res();
+          });
+        });
+        asyncJobs.push(p2);
+        // res();
+        break;
+
+      case 'json': // minify json
+        txt = shell.cat(op.src).stdout;
+        txt = JSON.stringify(JSON.parse(txt), null, 0);
+        shell.ShellString(txt).to(distFolder + '/' + op.tar);
+        break;
+
+      case 'css': // sync minify css
+        txt = sass.compile(op.src, {
+          style: 'compressed',
+          sourceMap: false
+        }).css;
+        shell.ShellString(txt).to(distFolder + '/' + op.tar);
+        break;
+
+      case 'xml': // sync minify xml
+        txt = shell.cat(op.src).stdout;
+        txt = txt.replace(/([\>])\s+/g, '$1');
+        shell.ShellString(txt).to(distFolder + '/' + op.tar);
+        break;
+
+      default:
+        break;
+    }
+  };
+
+  return (Promise.all(asyncJobs));
+};
+
 
 logInfo(`Starting...`);
 
 
 // array with files that get copied as they are
 const assets = [
-  { m: 'js', src: 'micro.js' },
   { m: 'xml', src: 'browserconfig.xml' },
   { m: 'json', src: 'site.webmanifest' },
   { m: 'xml', src: 'favicon.svg' },
@@ -59,86 +134,22 @@ const assets = [
   { m: 'm', src: 'ding.htm' },
   { m: 'm', src: 'microide.htm' },
   { m: 'js', src: 'microide.js' },
+  { m: 'js', src: 'micro.js' }
 ];
+
 
 // create fresh dist folders
 shell.rm('-rf', distFolder);
 shell.mkdir(distFolder);
 shell.mkdir(distFolder + '/i');
 
+packAssets(assets).then(() => {
+  logInfo(`Files created.`);
 
-// process all assets
-assets
-  // .filter(name => (name.indexOf('/') < 0))
+  let listText =
+    shell.cat('oldlist.txt').stdout +
+    shell.ls('-R', distFolder).grep(/^.*\..*$/).stdout;
+  shell.ShellString(listText).to(distFolder + '/list.txt');
 
-  .forEach(op => {
-    let txt;
-
-    if (!op.tar) { op.tar = op.src; }
-
-    switch (op.m) {
-      case 'c': // copy
-        shell.cp(op.src, distFolder + '/' + op.tar);
-        break;
-
-      case 'm': // minify html
-        txt = shell.cat(op.src).stdout;
-        txt = minify(txt, {
-          collapseWhitespace: true,
-          removeComments: true,
-          removeTagWhitespace: true,
-          minifyCSS: true,
-          minifyJS: true,
-          quoteCharacter: "\'"
-        });
-        shell.ShellString(txt).to(distFolder + '/' + op.tar);
-        break;
-
-      case 'js': // minify javascript
-        txt = shell.cat(op.src).stdout;
-        txt = uglify.minify(txt, {
-          compress: { drop_console: true, drop_debugger: true },
-          mangle: true,
-          output: { indent_level: 0, beautify: false }
-        }).code;
-        shell.ShellString(txt).to(distFolder + '/' + op.tar);
-        break;
-
-      case 'json': // minify json
-        txt = shell.cat(op.src).stdout;
-        txt = JSON.stringify(JSON.parse(txt), null, 0);
-        shell.ShellString(txt).to(distFolder + '/' + op.tar);
-        break;
-
-      case 'css': // minify css
-        txt = sass.renderSync({
-          file: 'iotstyle.scss',
-          outputStyle: 'compressed',
-          sourceMap: false
-        }).css;
-        shell.ShellString(txt).to(distFolder + '/' + op.tar);
-        break;
-
-      case 'xml': // minify xml
-        txt = shell.cat(op.src).stdout;
-        txt = txt.replace(/([\>])\s+/g, '$1');
-        shell.ShellString(txt).to(distFolder + '/' + op.tar);
-        break;
-
-      default:
-        break;
-    }
-  });
-
-logInfo(`Files copied.`);
-
-// ===== create list file =====
-
-let listText =
-  shell.cat('oldlist.txt').stdout +
-  shell.ls('-R', distFolder).grep(/^.*\..*$/).stdout;
-shell.ShellString(listText).to(distFolder + '/list.txt');
-
-logInfo(`list.txt file written.`);
-
-logInfo(`done.`);
+  logInfo(`list.txt file written.`);
+});

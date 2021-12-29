@@ -4,20 +4,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-
   <title>IoT HomeDing Monitor</title>
-
   <link rel="icon" type="image/png" href="/favicon48.png" sizes="48x48">
-  <meta name="application-name" content="Ding" />
-  <meta name="msapplication-config" content="/browserconfig.xml" />
-  <meta name="msapplication-TileColor" content="#2b5797" />
-  <meta name="msapplication-TileImage" content="/favicon144.png" />
-  <link rel="apple-touch-icon" sizes="180x180" href="/favicon180.png" />
-  <meta name="mobile-web-app-capable" content="yes" />
-  <link rel="manifest" href="/site.webmanifest" />
-  <meta name="theme-color" content="#ffffff" />
-  <link rel="icon" type="image/png" href="/favicon48.png" sizes="48x48">
-
   <link Content-Type="text/css" href="/iotstyle.css" rel="stylesheet" />
   <script src="/micro.js"></script>
   <script src="/monitorTab.js"></script>
@@ -63,7 +51,7 @@
 <body>
   <div class="container-fluid">
     <div class="row u-header">
-      <a href="/" title="Startpage"><img class="icon" src="/i/device.svg" /></a>
+      <a href="/" title="Startpage"><svg class="icon"><use href="./icons.svg#device"/></svg></a>
       <h1>IoT HomeDing Monitor</h1>
     </div>
 
@@ -77,8 +65,10 @@
               <th sort>room</th>
               <th sort>title</th>
               <th>memory</th>
-              <th sort=date>version</th>
+              <th sort>core</th>
+              <th sort=date>date</th>
               <th>uptime</th>
+              <th sort>flash</th>
               <th>safemode</th>
             </tr>
           </thead>
@@ -130,7 +120,7 @@
       var r = tab.querySelector('tr[host="' + name + '"]');
       if (!r) {
         var r = tab.insertRow(-1);
-        r.className = "remote";
+        r.className = 'remote';
         r.setAttribute('host', name);
 
         var c;
@@ -145,8 +135,10 @@
         c.title = JSON.stringify(data, null, 2);
 
         r.insertCell(-1).className = 'memory';
-        r.insertCell(-1).className = 'version';
+        r.insertCell(-1).className = 'core';
+        r.insertCell(-1).className = 'date';
         r.insertCell(-1).className = 'uptime';
+        r.insertCell(-1).className = 'flash';
         r.insertCell(-1).className = 'safemode';
       } // if
 
@@ -236,8 +228,10 @@
 
               statImg.src = 'i/start.svg';
               obj.querySelector('.memory').textContent = si.freeHeap;
-              obj.querySelector('.version').textContent = new Date(si.build).toISOString().split(/[T\.]/)[0];
+              obj.querySelector('.core').textContent = (si.coreBuild || '').replace('.ino', '') + ' ' + (si.coreVersion || '');
+              obj.querySelector('.date').textContent = new Date(si.build).toISOString().split(/[T\.]/)[0];
               obj.querySelector('.uptime').textContent = d.toISOString().split(/[T\.]/)[1];
+              obj.querySelector('.flash').textContent = si.flashSize;
               obj.querySelector('.safemode').textContent = si.safemode;
             })
             .catch(function (err) {
