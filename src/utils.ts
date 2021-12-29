@@ -119,7 +119,7 @@ function getHashParams(defaults: object) {
   const params: any = { ...defaults };
 
   window.location.hash
-    .substr(1)
+    .substring(1)
     .split('&')
     .forEach(function (p) {
       const pa = p.split('=');

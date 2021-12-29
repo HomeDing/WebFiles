@@ -52,7 +52,7 @@ export class MockTime extends VirtualBaseElement {
   async getState(): Promise<any> {
     const now = new Date().toISOString();
     this.state.now =
-      this.state.value = now.substr(0, 19).replace(/T/, ' ');
+      this.state.value = now.substring(0, 19).replace(/T/, ' ');
     return (this.state);
   }
 } // MockTime

@@ -145,7 +145,7 @@
     function createNodes(conf) {
       jsonParse(conf, function (path, key, val) {
         if ((path.length > 1) && (path[0] === '/'))
-          path = path.substr(1);
+          path = path.substring(1);
         var p = path.split('/');
         if (p.length >= 2) {
           var s = JSON.stringify(conf[p[0]][p[1]], null, 2)
@@ -163,7 +163,7 @@
             } // if
             if (key) {
               // n[key] = val;
-              if (key.substr(0, 2) == 'on') {
+              if (key.substring(0, 2) == 'on') {
                 createEdges(id, val);
               }
             } // if

@@ -137,13 +137,13 @@ class MicroRegistry {
             }
             for (const p of this.getMethods(b)) {
                 if (p === 'on_touchstart') {
-                    obj.addEventListener(p.substr(3), b[p].bind(obj), { passive: true });
+                    obj.addEventListener(p.substring(3), b[p].bind(obj), { passive: true });
                 }
-                else if (p.substr(0, 3) === 'on_') {
-                    obj.addEventListener(p.substr(3), b[p].bind(obj), false);
+                else if (p.substring(0, 3) === 'on_') {
+                    obj.addEventListener(p.substring(3), b[p].bind(obj), false);
                 }
-                else if (p.substr(0, 2) === 'on') {
-                    obj.addEventListener(p.substr(2), b[p].bind(obj), false);
+                else if (p.substring(0, 2) === 'on') {
+                    obj.addEventListener(p.substring(2), b[p].bind(obj), false);
                 }
                 else if (b[p] == null || b[p].constructor !== Function) {
                     if (!obj[p]) {
@@ -514,7 +514,7 @@ let ColorWidgetClass = class ColorWidgetClass extends GenericWidgetClass {
         const fullColor = this.HSLToColor(hsl.h, 100, 50);
         this._sObj.style.background = `linear-gradient(to right, #808080 0%, #${fullColor} 100%)`;
         this._lObj.style.background = `linear-gradient(to right, #000 0%, #${fullColor} 50%, #fff 100%)`;
-        this._colObj.style.backgroundColor = `#${this._value.substr(2)}`;
+        this._colObj.style.backgroundColor = `#${this._value.substring(2)}`;
         this._wObj.value = String(rgbw.w);
     }
     normColor(color) {
@@ -522,8 +522,8 @@ let ColorWidgetClass = class ColorWidgetClass extends GenericWidgetClass {
             color = '00000000';
         }
         else {
-            if ((color.substr(0, 1) === 'x') || (color.substr(0, 1) === '#')) {
-                color = color.substr(1);
+            if ((color.substring(0, 1) === 'x') || (color.substring(0, 1) === '#')) {
+                color = color.substring(1);
             }
             if (color.length === 6) {
                 color = '00' + color;
@@ -531,12 +531,12 @@ let ColorWidgetClass = class ColorWidgetClass extends GenericWidgetClass {
         }
         return (color);
     }
-    wrgb(color) {
+    wrgb(col) {
         return ({
-            w: parseInt(color.substr(0, 2), 16),
-            r: parseInt(color.substr(2, 2), 16),
-            g: parseInt(color.substr(4, 2), 16),
-            b: parseInt(color.substr(6, 2), 16)
+            w: parseInt(col.substring(0, 2), 16),
+            r: parseInt(col.substring(2, 4), 16),
+            g: parseInt(col.substring(4, 6), 16),
+            b: parseInt(col.substring(6, 8), 16)
         });
     }
     toHSL(rgb) {
@@ -882,7 +882,7 @@ function jsonParse(obj, cbFunc) {
 }
 function jsonFind(obj, path) {
     if (path[0] === '/') {
-        path = path.substr(1);
+        path = path.substring(1);
     }
     const steps = path.split('/');
     while (obj && steps.length > 0) {
@@ -895,7 +895,7 @@ function jsonFind(obj, path) {
 }
 function jsonLocate(obj, path) {
     if (path[0] === '/') {
-        path = path.substr(1);
+        path = path.substring(1);
     }
     const steps = path.split('/');
     while (obj && steps.length > 0) {
@@ -1205,7 +1205,7 @@ function debounce(func, wait = 20) {
 function getHashParams(defaults) {
     const params = Object.assign({}, defaults);
     window.location.hash
-        .substr(1)
+        .substring(1)
         .split('&')
         .forEach(function (p) {
         const pa = p.split('=');
@@ -1352,7 +1352,7 @@ class MicroHub {
     _findStoreObject(path) {
         let p = this._store;
         if (path[0] === '/') {
-            path = path.substr(1);
+            path = path.substring(1);
         }
         const steps = path.split('/');
         while (steps.length > 0 && p[steps[0]]) {
@@ -1367,7 +1367,7 @@ class MicroHub {
     }
     pPath(path) {
         if (path[0] === '/') {
-            path = path.substr(1);
+            path = path.substring(1);
         }
         const steps = path.split('/');
         const res = steps.slice(0, steps.length - 1).join('/');

@@ -185,7 +185,7 @@ function drop(e) {
   const dtFiles = e.dataTransfer.files;
 
   const formData = new FormData();
-  const root = '/' + (location.hash ? location.hash.substr(1) + '/' : '')
+  const root = '/' + (location.hash ? location.hash.substring(1) + '/' : '')
   for (let i = 0; i < dtFiles.length; i++) {
     formData.append('file', dtFiles[i], root + dtFiles[i].name);
   }

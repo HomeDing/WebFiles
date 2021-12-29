@@ -94,7 +94,7 @@ class ColorWidgetClass extends GenericWidgetClass {
     this._sObj.style.background = `linear-gradient(to right, #808080 0%, #${fullColor} 100%)`;
     this._lObj.style.background = `linear-gradient(to right, #000 0%, #${fullColor} 50%, #fff 100%)`;
 
-    this._colObj.style.backgroundColor = `#${this._value.substr(2)}`;
+    this._colObj.style.backgroundColor = `#${this._value.substring(2)}`;
     this._wObj.value = String(rgbw.w);
   } // _updateUI()
 
@@ -105,8 +105,8 @@ class ColorWidgetClass extends GenericWidgetClass {
     if ((!color) || (color.length === 0)) {
       color = '00000000';
     } else {
-      if ((color.substr(0, 1) === 'x') || (color.substr(0, 1) === '#')) {
-        color = color.substr(1);
+      if ((color.substring(0, 1) === 'x') || (color.substring(0, 1) === '#')) {
+        color = color.substring(1);
       }
       if (color.length === 6) {
         color = '00' + color;
@@ -117,12 +117,12 @@ class ColorWidgetClass extends GenericWidgetClass {
 
 
   // convert from 'wwrrggbb' to RGBWType
-  private wrgb(color: string): RGBWType {
+  private wrgb(col: string): RGBWType {
     return ({
-      w: parseInt(color.substr(0, 2), 16),
-      r: parseInt(color.substr(2, 2), 16),
-      g: parseInt(color.substr(4, 2), 16),
-      b: parseInt(color.substr(6, 2), 16)
+      w: parseInt(col.substring(0, 2), 16),
+      r: parseInt(col.substring(2, 4), 16),
+      g: parseInt(col.substring(4, 6), 16),
+      b: parseInt(col.substring(6, 8), 16)
     });
   } // wrgb()
 

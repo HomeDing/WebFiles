@@ -73,7 +73,7 @@
       if (logtext == lastText) {
         return;
       } else if ((lastText.length > 0) && (logtext.lastIndexOf(lastText, 0) === 0)) {
-        newText = logtext.substr(lastText.length);
+        newText = logtext.substring(lastText.length);
       }
       lastText = logtext;
 

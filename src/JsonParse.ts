@@ -35,7 +35,7 @@ function jsonParse(obj: any, cbFunc: JsonParseCallback) {
 
 function jsonFind(obj: any, path: string): any {
   if (path[0] === '/') {
-    path = path.substr(1);
+    path = path.substring(1);
   }
   const steps = path.split('/');
 
@@ -56,7 +56,7 @@ function jsonFind(obj: any, path: string): any {
 
 function jsonLocate(obj: any, path: string): any {
   if (path[0] === '/') {
-    path = path.substr(1);
+    path = path.substring(1);
   }
   const steps = path.split('/');
 

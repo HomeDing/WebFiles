@@ -179,11 +179,11 @@ class MicroRegistry {
       // for (const p in ms) {
       for (const p of this.getMethods(b)) {
         if (p === 'on_touchstart') {
-          obj.addEventListener(p.substr(3), b[p].bind(obj), { passive: true });
-        } else if (p.substr(0, 3) === 'on_') {
-          obj.addEventListener(p.substr(3), b[p].bind(obj), false);
-        } else if (p.substr(0, 2) === 'on') {
-          obj.addEventListener(p.substr(2), b[p].bind(obj), false);
+          obj.addEventListener(p.substring(3), b[p].bind(obj), { passive: true });
+        } else if (p.substring(0, 3) === 'on_') {
+          obj.addEventListener(p.substring(3), b[p].bind(obj), false);
+        } else if (p.substring(0, 2) === 'on') {
+          obj.addEventListener(p.substring(2), b[p].bind(obj), false);
         } else if (b[p] == null || b[p].constructor !== Function) {
           // set default-value
           if (!(obj as any)[p]) { (obj as any)[p] = b[p]; }

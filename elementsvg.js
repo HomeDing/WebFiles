@@ -51,7 +51,7 @@ document.api = {
 window.addEventListener("load", function () {
   var s = document.location.search;
   if (s.length > 1) {
-    var qElem = s.substr(1);
+    var qElem = s.substring(1);
     fetch('elements.json')
       .then(function (result) { return result.json(); })
       .then(function (e) {

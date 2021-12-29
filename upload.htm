@@ -26,7 +26,7 @@
       dragHelper(e);
       var fls = e.dataTransfer.files;
       var formData = new FormData();
-      var r = '/' + (location.hash ? location.hash.substr(1) + '/' : '')
+      var r = '/' + (location.hash ? location.hash.substring(1) + '/' : '')
       for (var i = 0; i < fls.length; i++) {
         formData.append('file', fls[i], r + fls[i].name);
       }

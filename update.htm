@@ -38,7 +38,7 @@
     } // next
 
     if (location.hash) {
-      repo += location.hash.substr(1) + '/';
+      repo += location.hash.substring(1) + '/';
     } else {
       repo += 'v03/';
     }
@@ -74,7 +74,7 @@
 
       if (theItem[0] == '-') {
         // delete the file
-        fetch('/' + theItem.substr(1), { method: 'DELETE' })
+        fetch('/' + theItem.substring(1), { method: 'DELETE' })
           .then(next).catch(next);
 
       } else {

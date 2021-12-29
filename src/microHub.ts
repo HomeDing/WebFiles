@@ -149,7 +149,7 @@ class MicroHub {
   protected _findStoreObject(path: string): any {
     let p: any = this._store;
     if (path[0] === '/') {
-      path = path.substr(1);
+      path = path.substring(1);
     }
     const steps = path.split('/');
 
@@ -170,7 +170,7 @@ class MicroHub {
   // return path to parent object
   private pPath(path: string): string {
     if (path[0] === '/') {
-      path = path.substr(1);
+      path = path.substring(1);
     }
     const steps = path.split('/');
     const res = steps.slice(0, steps.length - 1).join('/');

@@ -89,7 +89,7 @@
 
       if (theItem[0] == '-') {
         // delete the file
-        fetch('/' + theItem.substr(1), { method: 'DELETE' })
+        fetch('/' + theItem.substring(1), { method: 'DELETE' })
           .then(next).catch(next);
 
       } else {

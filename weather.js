@@ -52,7 +52,7 @@ _hideParts();
 // test:
 var code = 210;
 if (location.hash.length > 0)
-  code = Number(location.hash.substr(1));
+  code = Number(location.hash.substring(1));
 _updateParts(code);
 
 
