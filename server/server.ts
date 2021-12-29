@@ -2,6 +2,9 @@
 // https://github.com/microsoft/TypeScript-Node-Starter/blob/master/src/app.ts
 
 import express from 'express';
+import http from 'http';
+import https from 'https';
+
 import fs from 'fs';
 import path from 'path';
 
@@ -11,6 +14,19 @@ import { DeviceDiscovery } from './Discover';
 import { ConfigCache } from './ConfigCache';
 
 import * as settings from './settings.json';
+
+import yargs from 'yargs';
+
+import * as virtual from './VirtualBaseElement';
+
+import * as mock from './MockElements';
+import * as proxy from './ProxyElement';
+
+
+// #region ===== Upload files service ====
+
+import multer from 'multer';
+
 
 // import { start } from 'repl';
 
@@ -25,14 +41,12 @@ app.use('/api', api);
 
 // ===== Startup =====
 
-import yargs from 'yargs';
-
-
 const options = yargs
   .usage('Usage: $0 -c <case name>')
   .usage('HomeDing Portal server')
   .option('c', { alias: 'case', describe: 'Simulate case', type: 'string', demandOption: false, default: null })
   .option('m', { alias: 'monitor', describe: 'monitor the requests', type: 'boolean', demandOption: false, default: false })
+  .option('s', { alias: 'secure', describe: 'Use https', type: 'string', demandOption: false, default: false })
   .option('v', { alias: 'verbose', describe: 'Verbose logging', type: 'boolean', demandOption: false, default: false })
   .argv;
 
@@ -47,15 +61,10 @@ if (options.verbose) {
 }
 
 
-//#region ===== Enable Virtual Elements =====
+// #region ===== Enable Virtual Elements =====
 
 /** The current state for all elements. */
 let boardState: any = null;
-
-import * as virtual from './VirtualBaseElement';
-
-import * as mock from './MockElements';
-import * as proxy from './ProxyElement';
 
 // to simulate a specific case the files `config.json`, `env.json` and `$board`
 // are used from a directory named `case-${casename}`.
@@ -73,7 +82,6 @@ if (options.case) {
     Logger.info(`The configuration folder ${boardFileName} could not be found.`);
     caseFolder = null;
     boardFileName = '';
-
   } else {
     Logger.info(`Starting case ${options.case} ...`);
 
@@ -90,7 +98,7 @@ if (options.case) {
   }
 } else {
   // no mock-case
-  Logger.info(`Starting...`);
+  Logger.info('Starting...');
 
   // ===== env and config information
   allConfig = Object.assign({},
@@ -100,10 +108,10 @@ if (options.case) {
   boardState = {};
 }
 
-//#endregion
+// #endregion
 
 
-//#region ===== Setup web server middleware features =====
+// #region ===== Setup web server middleware features =====
 
 /**
  * Express middleware that adds header to avoid caching
@@ -126,7 +134,7 @@ if (options.monitor) {
   });
 }
 
-//#endregion
+// #endregion
 
 
 // ===== Bind api services
@@ -153,11 +161,6 @@ app.get('/\\$setup*', function (req, res) { res.sendFile(path.join(process.cwd()
 app.get('/\\$update*', function (req, res) { res.sendFile(path.join(process.cwd(), 'update.htm')); });
 app.get('/\\$upload*', function (req, res) { res.sendFile(path.join(process.cwd(), 'upload.htm')); });
 
-
-//#region ===== Upload files service ====
-
-import multer from 'multer';
-
 // configure upload storage to save in /uploads and use the filename+date
 const storage = multer.diskStorage({
   destination: function (_req, _file, cb) {
@@ -179,29 +182,27 @@ app.post('/', upload.any(), function (req, res) {
   res.send('');
 });
 
-//#endregion
+// #endregion
 
 
-//#region ===== Setup mocking and proxy elements =====
+// #region ===== Setup mocking and proxy elements =====
 
 if (options.case) { mock.register(); }
 proxy.register();
 virtual.activate(allConfig);
 
-//#endregion
+// #endregion
 
 app.get(/^\/\$list$/, noCache, async function (req, res) {
   const fl = [];
   const files = await fs.promises.readdir('.');
   for (const i in files) {
-    if (files.hasOwnProperty(i)) {
-      const aFile = await fs.promises.stat(files[i]);
-      if (aFile.isFile()) {
-        fl.push({
-          name: '/' + files[i],
-          size: aFile.size
-        });
-      }
+    const aFile = await fs.promises.stat(files[i]);
+    if (aFile.isFile()) {
+      fl.push({
+        name: '/' + files[i],
+        size: aFile.size
+      });
     }
   }
   res.json(fl);
@@ -210,14 +211,14 @@ app.get(/^\/\$list$/, noCache, async function (req, res) {
 
 app.get(/^\/\$sysinfo$/, noCache, function (req, res) {
   const fl = {
-    'devicename': 'nodejsding',
-    'build': 'Dec  1 2018',
-    'freeHeap': 31168,
-    'flashSize': 4194304,
+    devicename: 'nodejsding',
+    build: 'Dec  1 2018',
+    freeHeap: 31168,
+    flashSize: 4194304,
     // 'flash-real-size':4194304,
-    'fsTotalBytes': 957314,
-    'fsUsedBytes': 218872,
-    'ssid': 'devnet'
+    fsTotalBytes: 957314,
+    fsUsedBytes: 218872,
+    ssid: 'devnet'
     // 'bssid':'74:DA:11:22:33:44'
   };
   res.json(fl);
@@ -240,7 +241,6 @@ app.get('/\\$board/:type/:id', noCache, async function (req, res) {
     // incoming action
     res.send();
     /* no await */ virtual.action(id, req.query);
-
   } else {
     // Update and return status of a single element
     boardState[id] = Object.assign(boardState[id], virtual.state(id));
@@ -305,7 +305,6 @@ app.use(function (req, res) {
 });
 
 
-
 module.exports = {
   app: app,
 
@@ -313,9 +312,23 @@ module.exports = {
 
   start: function () {
     const port: number = app.get('port');
-    app.listen(port, () => {
-      Logger.info('Web Server started.');
-      Logger.info(`open http://localhost:${port}/`);
-    });
+
+    if (!options.secure) {
+      const httpServer = http.createServer(app);
+      httpServer.listen(port, () => {
+        Logger.info('Web Server started.');
+        Logger.info(`open http://localhost:${port}/`);
+      });
+    } else {
+      const httpsOptions = {
+        key: fs.readFileSync('./certs/localhost.key'),
+        cert: fs.readFileSync('./certs/localhost.crt')
+      };
+      const httpsServer = https.createServer(httpsOptions, app);
+      httpsServer.listen(4000, () => {
+        Logger.info('Web Server started.');
+        Logger.info('open https://localhost:4000/');
+      });
+    }
   }
 };

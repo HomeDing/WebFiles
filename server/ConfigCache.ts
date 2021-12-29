@@ -37,9 +37,7 @@ export class ConfigCache {
         cnf = await this.get(req.params.hostname);
       }
       res.json(cnf);
-
     });
-
   }
 
   // create a instance of the DeviceDiscovery service.
@@ -61,7 +59,6 @@ export class ConfigCache {
     const host: string = hostname.replace(/\.local/, '');
     if (!this.dService.isOnline(host)) {
       Logger.error(`not online: ${host}`); // , err
-
     } else if (!this.netConfigs[host]) {
       try {
         const url = `http://${hostname}/config.json`;
@@ -70,7 +67,6 @@ export class ConfigCache {
         // const j = await req.json();
         this.netConfigs[host] = JSON.parse(txt);
         Logger.info(`config from ${host}:`, this.netConfigs[host]);
-
       } catch (err) {
         Logger.error(`no config from ${host}`); // , err
       }

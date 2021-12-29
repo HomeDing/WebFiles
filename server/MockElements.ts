@@ -4,10 +4,6 @@ import Logger from './Logger';
 import { register as registerVirtual, VirtualBaseElement } from './VirtualBaseElement';
 
 export class MockSwitch extends VirtualBaseElement {
-  constructor(typeId: string, config: any) {
-    super(typeId, config);
-  }
-
   async doAction(action: any) {
     if (action.value != null) { this.state.value = action.value; }
     if (action.toggle != null) { this.state.value = (this.state.value ? 0 : 1); }

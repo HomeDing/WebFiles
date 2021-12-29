@@ -4,7 +4,7 @@ import express from 'express';
 
 import Logger from './Logger';
 import { ConfigCache } from './ConfigCache';
-import { TxtAnswer, SrvAnswer} from 'dns-packet';
+import { TxtAnswer, SrvAnswer } from 'dns-packet';
 import mDNS from 'multicast-dns';
 import makeMdns = require('multicast-dns');
 
@@ -78,7 +78,7 @@ export class DeviceDiscovery {
   * start a new query.
   */
   private startDiscovery() {
-    Logger.trace(`>>START`);
+    Logger.trace('>>START');
     this.mdns.query([{ name: '_homeding._tcp.local', type: 'PTR' }]);
   } // startDiscovery()
 
@@ -126,7 +126,6 @@ export class DeviceDiscovery {
             });
         });
 
-
       isNew = (!this.netDevices[hdd.host]);
       const item = this.netDevices[hdd.host] = {
         host: hdd.host,
@@ -139,7 +138,6 @@ export class DeviceDiscovery {
       if (isNew) {
         Logger.info('+', 'http://' + item.host, JSON.stringify(item));
       }
-
     } // if
   } // addDevice
 
@@ -149,7 +147,6 @@ export class DeviceDiscovery {
     const now = new Date();
 
     for (const host in this.netDevices) {
-
       // Logger.trace(`old ${host} : ${this.netDevices[host]}`);
       // Logger.trace(now.valueOf() - this.netDevices[host].valueOf());
 

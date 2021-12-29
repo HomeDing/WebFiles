@@ -27,7 +27,6 @@ export class ProxyElement extends VirtualBaseElement {
   constructor(typeId: string, config: any) {
     super(typeId, config); // will be proxy/xxx in type/ID
 
-    const scope = this;
     const url: string[] = config.url.split('/');
     const baseurl = url.slice(0, 3).join('/'); // 'http://server'
 
@@ -45,9 +44,7 @@ export class ProxyElement extends VirtualBaseElement {
 
 
   async getState(): Promise<any> {
-
     if (!this.requested && (Date.now() > this.nextTry)) {
-
       // fetch configuration
       this.requested = true;
       this.nextTry = Date.now() + (10 * 1000);
@@ -84,10 +81,8 @@ export class ProxyElement extends VirtualBaseElement {
   // pass action to real element
   async doAction(action: any) {
     for (const a in action) {
-      if (action.hasOwnProperty(a)) {
-        await fetch(this.url + '?' + a + '=' + action[a], { timeout: 4000 });
-        this.nextTry = 0; // asap.
-      }
+      await fetch(this.url + '?' + a + '=' + action[a], { timeout: 4000 });
+      this.nextTry = 0; // asap.
     }
   }
 } // ProxyElement
