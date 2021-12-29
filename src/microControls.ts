@@ -16,7 +16,9 @@ interface MicroControlClass extends HTMLElement {
 } // ControlInterface
 
 class MicroControlClass {
-  connectedCallback(): void {}
+  connectedCallback(): void {
+    // empty
+  }
 
   /// <summary>remove all textnodes from the control to avoid unwanted spaces.</summary>
   _clearWhitespace() {

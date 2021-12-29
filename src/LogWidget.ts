@@ -48,6 +48,7 @@ class LogWidgetClass extends GenericWidgetClass {
         allData = txt + '\n' + allData;
       })
       .catch(function () {
+        // empty
       });
     Promise.allSettled([p1, p2]).then(function (this: LogWidgetClass) {
       const re = /^\d{4,},\d+/;

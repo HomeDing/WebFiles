@@ -30,13 +30,13 @@ class MicroRegistry {
    * @param {string} url file with templates
    */
   loadFile(url: string): Promise<void> {
-    const scope = this;
+    // const scope = this;
     const ret = fetch(url)
       .then(raw => raw.text())
       .then(htm => {
         const f = document.createRange().createContextualFragment(htm);
-        if (scope._tco) {
-          scope._tco.appendChild(f);
+        if (this._tco) {
+          this._tco.appendChild(f);
         }
       });
     return ret;
@@ -129,7 +129,7 @@ class MicroRegistry {
    * @param {string} controlName
    * @param {Object} props
    */
-  insertTemplate(root: HTMLElement, controlName: string, props: Object): HTMLElement | null {
+  insertTemplate(root: HTMLElement, controlName: string, props: unknown): HTMLElement | null {
     let e = null;
     if (root && controlName && this._tco) {
       const te = this._tco.querySelector('[u-control="' + controlName.toLowerCase() + '"]');
@@ -260,7 +260,7 @@ const micro = new MicroRegistry();
 
 
 // detect that a new micro control was created using Mutation Observe Callback
-let obs = new MutationObserver(function (mutationsList: MutationRecord[], _observer) {
+const obs = new MutationObserver(function (mutationsList: MutationRecord[], _observer) {
   for (const mutation of mutationsList) {
     mutation.addedNodes.forEach(n => {
       const e = <Element>n;

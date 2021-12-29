@@ -38,7 +38,6 @@ function toSeconds(v: string): number {
 } // toSeconds()
 
 
-
 function setTextContent(el: HTMLElement, txt: string) {
   if (el.textContent !== txt) { el.textContent = txt; }
 } // setTextContent
@@ -56,7 +55,7 @@ function changeConfig(id: string, newConfig: any) {
   c = JSON.parse(hub.read('env'));
   node = jsonFind(c, id);
 
-  if (! node) {
+  if (!node) {
     // not a env configuration
     fName = '/config.json';
     c = JSON.parse(hub.read('config'));
@@ -64,13 +63,11 @@ function changeConfig(id: string, newConfig: any) {
   }
 
   for (const n in newConfig) {
-    if (newConfig.hasOwnProperty(n)) {
-      const rn = Object.keys(node).find(e => (e.toLowerCase() === n.toLowerCase()));
-      if (newConfig[n]) {
-        node[rn || n] = newConfig[n];
-      } else {
-        delete node[n];
-      }
+    const rn = Object.keys(node).find(e => (e.toLowerCase() === n.toLowerCase()));
+    if (newConfig[n]) {
+      node[rn || n] = newConfig[n];
+    } else {
+      delete node[n];
     }
   }
 
@@ -85,16 +82,13 @@ function changeConfig(id: string, newConfig: any) {
 /** Simple function for debouncing.
  * reduce the # of function calls when initiating events trigger too often
  * by deferring the function execution. */
-function debounce(func: Function, wait: number = 20) {
+function debounce(func: () => void, wait = 20) {
   let timer: number;
-  return function (this: any) {
-    const scope: any = this;
-    const args = arguments;
-
+  return function () {
     if (timer) { clearTimeout(timer); }
-    timer = window.setTimeout(function () {
+    timer = window.setTimeout(() => {
       timer = 0;
-      func.apply(scope, args);
+      func();
     }, wait);
   };
 } // debounce()
@@ -143,9 +137,7 @@ function createHTMLElement(
   const o = document.createElement(tag);
   if (attr) {
     for (const a in attr) {
-      if (attr.hasOwnProperty(a)) {
-        o.setAttribute(a, attr[a]);
-      }
+      o.setAttribute(a, attr[a]);
     }
   }
   if (beforeNode) {

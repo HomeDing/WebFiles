@@ -38,7 +38,7 @@ class MicroHub {
    * @param {boolean} replay
    * @returns {number} number of registration
    */
-  subscribe(matchPath: string, fCallback: JsonParseCallback, replay: boolean = false): number {
+  subscribe(matchPath: string, fCallback: JsonParseCallback, replay = false): number {
     const h = this._registrationsId;
 
     // treating upper/lowercase equal is not clearly defined, but true with domain names.

@@ -36,11 +36,9 @@ class ButtonWidgetClass extends GenericWidgetClass {
 
     } else {
       // single short click
-      const scope = this;
       if (this._timer) { window.clearTimeout(this._timer); }
-      this._timer = window.setTimeout(function () {
-        // wait until time for double-click is over
-        scope.dispatchAction(scope._onclick, '1');
+      this._timer = window.setTimeout(() => {
+        this.dispatchAction(this._onclick, '1');
       }, 250);
     }
   } // on_click
