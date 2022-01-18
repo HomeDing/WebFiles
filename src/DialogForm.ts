@@ -39,16 +39,6 @@ class DialogFormClass extends MicroControlClass {
     }
   }
 
-  // get current data in from as JSON
-  private _formData() {
-    let ret = {};
-    if (this._form) {
-      const fd = new FormData(this._form);
-      ret = Object.fromEntries(fd.entries());
-    }
-    return (ret);
-  } // _formData()
-
 
   // setup the form and dialog with open-event and data propagation
   // into u-text placeholders and form elements 
@@ -104,6 +94,7 @@ class DialogFormClass extends MicroControlClass {
     }
   }
 
+
   on_submit(evt: SubmitEvent) {
     const uSub = evt.submitter;
 
@@ -136,4 +127,17 @@ class DialogFormClass extends MicroControlClass {
   on_cancel(_evt: any) {
     (<any>this).returnValue = 'cancel';
   }
+
+
+  // get current data in from as JSON
+  private _formData() {
+    let ret = {};
+    if (this._form) {
+      const fd = new FormData(this._form);
+      ret = Object.fromEntries(fd.entries());
+    }
+    return (ret);
+  } // _formData()
+
+
 } // DialogFormClass
