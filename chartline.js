@@ -145,7 +145,7 @@ function boxEqual(box1, box2) {
 
 // ====== Line Charts
 
-ChartLineClass = function (options) {
+var ChartLineClass = function (options) {
   var _defaultOptions = { linetype: 'line', color: 'black' };
   return {
     type: 'line',
@@ -230,9 +230,9 @@ ChartLineClass = function (options) {
 
           // opposite Line at start point [is 0/0
           ol.push({ dx: 0, dy: 0 });
-          for (n = 1; n < values.length - 1; n++) {
+          for (let n = 1; n < values.length - 1; n++) {
             // calculate the opposite line, dx, dy
-            var dx = (p[n + 1].x - p[n - 1].x);
+            var dx = (p[n + 1].x - p[n - 10].x);
             var dy = (p[n + 1].y - p[n - 1].y);
             var l = Math.sqrt(dx * dx + dy * dy);
             ol.push({ dx: cpLen * dx / l, dy: cpLen * dy / l });
@@ -241,7 +241,7 @@ ChartLineClass = function (options) {
           ol.push({ dx: 0, dy: 0 });
 
           points.push('M' + p[0].x + ',' + p[0].y);
-          for (n = 0; n < values.length - 1; n++) {
+          for (let n = 0; n < values.length - 1; n++) {
             // calculate the opposite line, dx, dy
             // var dx = (p[n+1].x - p[n-1].x) * cpLen;
             // var dy = (p[n+1].y - p[n-1].y) * cpLen;

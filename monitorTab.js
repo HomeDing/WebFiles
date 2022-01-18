@@ -1,5 +1,3 @@
-
-
 class TableSortable extends HTMLTableElement {
 
   sortAsc = ' [A]';

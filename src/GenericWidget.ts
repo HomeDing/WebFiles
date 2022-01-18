@@ -142,7 +142,7 @@ class GenericWidgetClass extends MicroControlClass {
     let n: HTMLElement | null = event.target as HTMLElement;
     while (n) {
       chain.push(n);
-      if (n === this) { break; }
+      if (n === this) { break; }  
       n = n.parentElement;
     }
 
@@ -150,12 +150,17 @@ class GenericWidgetClass extends MicroControlClass {
       let ret = false;
       if (p.getAttribute('u-action')) {
         this.dispatchAction(p.getAttribute('u-action'), p.getAttribute('value') || '1');
+
       } else if (p.classList.contains('setconfig')) {
-        ModalDialogClass.open('configelementdlg', this.data);
+        const ti = this.microid.split('/');
+        DialogFormClass.openModalForm('configElement', { ...this.data, type:ti[1], id:ti[2] });
+
       } else if (p.classList.contains('setactive')) {
         this.dispatchAction(toBool(this.data.active) ? 'stop' : 'start', '1');
-      } else if (p.classList.contains('setfocus')) {
-        ModalDialogClass.openFocus(this);
+
+      } else if (p.classList.contains('fullscreen')) {
+        this.requestFullscreen();
+
       } else {
         ret = true;
       }

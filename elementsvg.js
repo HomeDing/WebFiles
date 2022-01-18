@@ -16,7 +16,7 @@ function createBox(tName, txt) {
   // document.documentElement.setAttribute('viewBox', '0 0 120 ' + (y + 20));
   document.documentElement.setAttribute('height', (2*(y + 18)));
   y += 12;
-};
+}
 
 function create(def) {
   // remove old blocks
@@ -42,7 +42,7 @@ function create(def) {
     def.actions.forEach(function (e) {
       createBox("action", e);
     });
-};
+}
 
 document.api = {
   create: create
@@ -62,5 +62,4 @@ window.addEventListener("load", function () {
         }
       });
   }
-
 });

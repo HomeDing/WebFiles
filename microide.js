@@ -160,7 +160,7 @@ function handleFmt() {
     // missing comma in '}{'
     t = t.replace(/\}\s*\{/g, '},{');
     // comma before close brackets
-    t = t.replace(/,\s*([\}\]])/g, '$1');
+    t = t.replace(/,\s*([}\]])/g, '$1');
 
     try {
       o = JSON.parse(t);

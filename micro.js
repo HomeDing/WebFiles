@@ -343,13 +343,14 @@ let GenericWidgetClass = class GenericWidgetClass extends MicroControlClass {
                 this.dispatchAction(p.getAttribute('u-action'), p.getAttribute('value') || '1');
             }
             else if (p.classList.contains('setconfig')) {
-                ModalDialogClass.open('configelementdlg', this.data);
+                const ti = this.microid.split('/');
+                DialogFormClass.openModalForm('configElement', Object.assign(Object.assign({}, this.data), { type: ti[1], id: ti[2] }));
             }
             else if (p.classList.contains('setactive')) {
                 this.dispatchAction(toBool(this.data.active) ? 'stop' : 'start', '1');
             }
-            else if (p.classList.contains('setfocus')) {
-                ModalDialogClass.openFocus(this);
+            else if (p.classList.contains('fullscreen')) {
+                this.requestFullscreen();
             }
             else {
                 ret = true;
@@ -617,6 +618,107 @@ let DSTimeWidgetClass = class DSTimeWidgetClass extends GenericWidgetClass {
 DSTimeWidgetClass = __decorate([
     MicroControl('dstime')
 ], DSTimeWidgetClass);
+var DialogFormClass_1;
+let DialogFormClass = DialogFormClass_1 = class DialogFormClass extends MicroControlClass {
+    constructor() {
+        super(...arguments);
+        this._defaultData = {};
+        this._data = {};
+        this._form = undefined;
+        this._callback = undefined;
+    }
+    static openModalForm(id, data = {}, cb) {
+        const dlg = document.querySelector('dialog#' + id);
+        if (dlg)
+            dlg.openModalForm(data, cb);
+    }
+    connectedCallback() {
+        super.connectedCallback();
+        const f = this.querySelector('form');
+        if (f) {
+            this._form = f;
+            this._defaultData = this._formData();
+        }
+    }
+    _formData() {
+        let ret = {};
+        if (this._form) {
+            const fd = new FormData(this._form);
+            ret = Object.fromEntries(fd.entries());
+        }
+        return (ret);
+    }
+    openModalForm(data = {}, cb) {
+        this._data = Object.assign({}, this._defaultData, data);
+        this.returnValue = '';
+        this._callback = cb;
+        this.dispatchEvent(new CustomEvent("open", {
+            detail: {
+                dialog: this,
+                data: this._data,
+                form: this._form
+            },
+            bubbles: true,
+            cancelable: true,
+            composed: false,
+        }));
+        this.querySelectorAll('*[u-text]').forEach((e) => {
+            const key = e.getAttribute('u-text');
+            if (key) {
+                e.textContent = data[key];
+            }
+        });
+        if (this._form) {
+            const fields = this._form.querySelectorAll('*[name]');
+            fields.forEach((f) => {
+                if ((f.tagName == 'INPUT') || (f.tagName == 'SELECT')) {
+                    const val = data[f.name];
+                    if (val) {
+                        f.value = val;
+                    }
+                }
+            });
+        }
+        this.showModal();
+    }
+    on_click(evt) {
+        const tar = evt.target;
+        const ua = tar.getAttribute('u-action');
+        if (ua === 'close') {
+            this.returnValue = 'cancel';
+            this.close();
+        }
+    }
+    on_submit(evt) {
+        const uSub = evt.submitter;
+        if (uSub && this._form) {
+            const ret = this._formData();
+            const ua = uSub.getAttribute('u-action');
+            if (ua === null || ua === void 0 ? void 0 : ua.startsWith('next:')) {
+                this.returnValue = 'ok';
+                const nextID = ua.substring(5);
+                DialogFormClass_1.openModalForm(nextID, ret);
+            }
+            else if (ua === 'return') {
+                if (this._callback) {
+                    this._callback(ret);
+                }
+            }
+            else if (ua === 'done') {
+                this.returnValue = 'ok';
+            }
+            else {
+                evt.preventDefault();
+            }
+        }
+    }
+    on_cancel(_evt) {
+        this.returnValue = 'cancel';
+    }
+};
+DialogFormClass = DialogFormClass_1 = __decorate([
+    MicroControl('dialogform')
+], DialogFormClass);
 let DisplayDotWidgetClass = class DisplayDotWidgetClass extends GenericWidgetClass {
     connectedCallback() {
         super.connectedCallback();
@@ -983,108 +1085,6 @@ let LogWidgetClass = class LogWidgetClass extends GenericWidgetClass {
 LogWidgetClass = __decorate([
     MicroControl('log')
 ], LogWidgetClass);
-var ModalDialogClass_1;
-let ModalDialogClass = ModalDialogClass_1 = class ModalDialogClass extends MicroControlClass {
-    static open(tmplName, data) {
-        const m = micro.insertTemplate(document.body, 'modal', data);
-        m.open(tmplName, data);
-    }
-    static openFocus(obj) {
-        const m = micro.insertTemplate(document.body, 'modal', {});
-        m.openFocus(obj);
-    }
-    static next(tmplName, data) {
-        const m = this._stack[this._stack.length - 1];
-        m.next(tmplName, data);
-    }
-    static save(data) {
-        var _a;
-        const m = this._stack[this._stack.length - 2];
-        const dlg = (_a = m._frameObj) === null || _a === void 0 ? void 0 : _a.firstElementChild;
-        if (dlg.save) {
-            dlg.save(data);
-        }
-    }
-    static close() {
-        const m = this._stack[this._stack.length - 1];
-        m.close();
-    }
-    connectedCallback() {
-        super.connectedCallback();
-        this._frameObj = this.querySelector('.modalFrame');
-    }
-    _handleEsc(e) {
-        if ((e.key === 'Escape') && (ModalDialogClass_1._stack[ModalDialogClass_1._stack.length - 1] === this)) {
-            this.close();
-        }
-    }
-    open(tmplName, data) {
-        ModalDialogClass_1._stack.push(this);
-        this._keyHandler = this._handleEsc.bind(this);
-        document.addEventListener('keydown', this._keyHandler);
-        const dlg = micro.insertTemplate(this._frameObj, tmplName, data);
-        const fObj = dlg === null || dlg === void 0 ? void 0 : dlg.querySelector('input,button,select');
-        fObj === null || fObj === void 0 ? void 0 : fObj.focus();
-    }
-    next(tmplName, data) {
-        var _a;
-        (_a = this._frameObj.firstElementChild) === null || _a === void 0 ? void 0 : _a.remove();
-        const dlg = micro.insertTemplate(this._frameObj, tmplName, data);
-        const fObj = dlg === null || dlg === void 0 ? void 0 : dlg.querySelector('input,button,select');
-        fObj === null || fObj === void 0 ? void 0 : fObj.focus();
-    }
-    openFocus(obj) {
-        ModalDialogClass_1._stack.push(this);
-        if ((obj) && (obj.parentElement)) {
-            this._keyHandler = this._handleEsc.bind(this);
-            document.addEventListener('keydown', this._keyHandler);
-            this._focusObj = obj;
-            const r = obj.getBoundingClientRect();
-            this._placeObj = createHTMLElement(obj.parentElement, 'div', {
-                style: 'width:' + r.width + 'px;height:' + r.height + 'px',
-                class: obj.className
-            }, obj);
-            let f = 4;
-            f = Math.min(f, (window.innerWidth - 64) / r.width);
-            f = Math.min(f, (window.innerHeight - 64) / r.height);
-            const ph = createHTMLElement(this._frameObj, 'div', {
-                style: 'width:' + f * r.width + 'px;height:' + f * r.height + 'px'
-            });
-            const pr = ph.getBoundingClientRect();
-            obj.classList.add('modal-object');
-            obj.style.top = pr.top + 'px';
-            obj.style.left = pr.left + 'px';
-            obj.style.width = pr.width + 'px';
-            obj.style.height = pr.height + 'px';
-        }
-    }
-    on_click(evt) {
-        const tar = evt.target;
-        const ua = tar.getAttribute('u-action');
-        if (ua === 'close') {
-            this.close();
-        }
-    }
-    close() {
-        var _a;
-        document.removeEventListener('keydown', this._keyHandler);
-        if (this._focusObj) {
-            const o = this._focusObj;
-            o.classList.remove('modal-object');
-            o.style.top = '';
-            o.style.left = '';
-            o.style.width = '';
-            o.style.height = '';
-            (_a = this._placeObj) === null || _a === void 0 ? void 0 : _a.remove();
-        }
-        ModalDialogClass_1._stack.pop();
-        this.remove();
-    }
-};
-ModalDialogClass._stack = [];
-ModalDialogClass = ModalDialogClass_1 = __decorate([
-    MicroControl('modal')
-], ModalDialogClass);
 let PWMOutWidgetClass = class PWMOutWidgetClass extends GenericWidgetClass {
     connectedCallback() {
         super.connectedCallback();

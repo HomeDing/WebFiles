@@ -46,7 +46,7 @@ async function packAssets(assets) {
         break;
 
       case 'm': // async minify html
-        const p1 = new Promise(res => {
+        asyncJobs.push(new Promise(res => {
           txt = shell.cat(op.src).stdout;
 
           HTMLMinifier.minify(txt, {
@@ -56,17 +56,16 @@ async function packAssets(assets) {
             minifyCSS: true,
             minifyJS: true,
             verbose: true,
-            quoteCharacter: "\'"
+            quoteCharacter: "'"
           }).then(txt => {
             shell.ShellString(txt).to(distFolder + '/' + op.tar);
             res();
           });
-        });
-        asyncJobs.push(p1);
+        }));
         break;
 
       case 'js': // async minify javascript
-        const p2 = new Promise(res => {
+        asyncJobs.push(new Promise(res => {
           txt = shell.cat(op.src).stdout;
 
           JSMinifier.minify(txt, {
@@ -77,8 +76,7 @@ async function packAssets(assets) {
             shell.ShellString(out.code).to(distFolder + '/' + op.tar);
             res();
           });
-        });
-        asyncJobs.push(p2);
+        }));
         // res();
         break;
 
@@ -98,17 +96,16 @@ async function packAssets(assets) {
 
       case 'xml': // sync minify xml
         txt = shell.cat(op.src).stdout;
-        txt = txt.replace(/([\>])\s+/g, '$1');
+        txt = txt.replace(/([>])\s+/g, '$1');
         shell.ShellString(txt).to(distFolder + '/' + op.tar);
         break;
 
       default:
         break;
     }
-  };
-
+  }
   return (Promise.all(asyncJobs));
-};
+}
 
 
 logInfo(`Starting...`);

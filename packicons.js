@@ -26,8 +26,8 @@ files.forEach(file => {
 
 var svgText = icons.toString();
 svgText = svgText.replace(/\s+/g, ' '); 
-svgText = svgText.replace(/\<symbol/g, '\n<symbol');
-svgText = svgText.replace(/\> \</g, '><');
+svgText = svgText.replace(/<symbol/g, '\n<symbol');
+svgText = svgText.replace(/> </g, '><');
 // console.log(svgText);
 
 fs.writeFileSync('./icons.svg', svgText);
