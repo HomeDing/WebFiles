@@ -13,6 +13,11 @@ type DialogCallback = ((data: any) => void);
 @MicroControl('dialogform')
 class DialogFormClass extends MicroControlClass {
 
+  private _defaultData = {};
+  private _data = {};
+  private _form?: HTMLFormElement = undefined;
+  private _callback?: DialogCallback = undefined;
+
   /**
    * Static helper to open a new dialog on top of existing ones.
    * @param tmplName Name of template
@@ -23,11 +28,6 @@ class DialogFormClass extends MicroControlClass {
     if (dlg)
       (<DialogFormClass>dlg).openModalForm(data, cb);
   } // open
-
-  private _defaultData = {};
-  private _data = {};
-  private _form?: HTMLFormElement = undefined;
-  private _callback?: DialogCallback = undefined;
 
   connectedCallback() {
     super.connectedCallback();
