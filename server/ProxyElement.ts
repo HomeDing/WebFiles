@@ -1,6 +1,7 @@
 // Proxy remote elements to local virtual elements
 
 import { register as registerVirtual, VirtualBaseElement } from './VirtualBaseElement';
+import timeoutSignal from 'timeout-signal';
 import fetch from 'node-fetch';
 import { ConfigCache } from './ConfigCache';
 
@@ -64,8 +65,8 @@ export class ProxyElement extends VirtualBaseElement {
       // fetch state
       if (this.configJson) {
         try {
-          const r = await fetch(this.url, { timeout: 4000 });
-          const j = await r.json();
+          const r = await fetch(this.url, { signal: timeoutSignal(4000) });
+          const j:any = await r.json();
           const rs = j[`${this.type}/${this.id}`];
           this.state = Object.assign(this.state, rs);
         } catch (e) {
@@ -81,7 +82,7 @@ export class ProxyElement extends VirtualBaseElement {
   // pass action to real element
   async doAction(action: any) {
     for (const a in action) {
-      await fetch(this.url + '?' + a + '=' + action[a], { timeout: 4000 });
+      await fetch(this.url + '?' + a + '=' + action[a], { signal: timeoutSignal(4000) });
       this.nextTry = 0; // asap.
     }
   }

@@ -1,6 +1,7 @@
 // Discovery of local Home devices advertising themselves
 
 import express from 'express';
+import timeoutSignal from 'timeout-signal';
 import fetch from 'node-fetch';
 
 import { DeviceDiscovery } from './Discover';
@@ -62,7 +63,7 @@ export class ConfigCache {
     } else if (!this.netConfigs[host]) {
       try {
         const url = `http://${hostname}/config.json`;
-        const req = await fetch(url, { timeout: this.options.timeout });
+        const req = await fetch(url, { signal: timeoutSignal(this.options.timeout) });
         const txt = await req.text();
         // const j = await req.json();
         this.netConfigs[host] = JSON.parse(txt);
