@@ -14,7 +14,7 @@
     "html-minifier-terser": "^7.0.0-alpha.1",
     "multer": "^1.4.3",
     "multicast-dns": "^7.2.3",
-    "node-fetch": "^2.6.5",
+    "node-fetch": "^3.1.1",
     "terser": "^5.10.0",
     "yargs": "^15.4.1"
   },
