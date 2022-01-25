@@ -4,8 +4,8 @@ import express from 'express';
 import timeoutSignal from 'timeout-signal';
 import fetch from 'node-fetch';
 
-import { DeviceDiscovery } from './Discover';
-import Logger from './Logger';
+import { DeviceDiscovery } from './Discover.js';
+import Logger from './Logger.js';
 
 export class ConfigCache {
   private static _instance: ConfigCache;

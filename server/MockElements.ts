@@ -1,7 +1,7 @@
 // Collection of mocking virtual elements
 
-import Logger from './Logger';
-import { register as registerVirtual, VirtualBaseElement } from './VirtualBaseElement';
+import Logger from './Logger.js';
+import { register as registerVirtual, VirtualBaseElement } from './VirtualBaseElement.js';
 
 export class MockSwitch extends VirtualBaseElement {
   async doAction(action: any) {

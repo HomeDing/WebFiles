@@ -4,13 +4,17 @@
   
   "compilerOptions": {
     // see https://github.com/microsoft/TypeScript/wiki/Node-Target-Mapping
-    "lib": ["ES2020"],
-    "module": "CommonJS",
-    "target": "ES2020",                          /* Specify ECMAScript target version: 'ES3' (default), 'ES5', 'ES2015', 'ES2016', 'ES2017', 'ES2018', 'ES2019', 'ES2020', or 'ESNEXT'. */
-    "sourceMap": true,                     /* Generates corresponding '.map' file. */
-    "rootDir": ".",                       /* Specify the root directory of input files. Use to control the output directory structure with --outDir. */
-
+    "rootDir": ".",                      /* Specify the root directory of input files. Use to control the output directory structure with --outDir. */
+    "outDir": "..\\dist-server",                 /* Specify the root directory of input files. Use to control the output directory structure with --outDir. */
+    "target": "ES2021",                       /* Specify ECMAScript target version: 'ES3' (default), 'ES5', 'ES2015', 'ES2016', 'ES2017', 'ES2018', 'ES2019', 'ES2020', or 'ESNEXT'. */
+    "lib": ["ES2021"],
+    "module": "ES2020",
+    "moduleResolution": "Node",
     "strict": true,                           /* Enable all strict type-checking options. */
+    "sourceMap": true,                        /* Generates corresponding '.map' file. */
+
+    "allowSyntheticDefaultImports": true,
+    
     "esModuleInterop": true,                  /* Enables emit interoperability between CommonJS and ES Modules via creation of namespace objects for all imports. Implies 'allowSyntheticDefaultImports'. */
     "skipLibCheck": true,                     /* Skip type checking of declaration files. */
     "forceConsistentCasingInFileNames": true  /* Disallow inconsistently-cased references to the same file. */

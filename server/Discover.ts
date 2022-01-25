@@ -2,11 +2,10 @@
 
 import express from 'express';
 
-import Logger from './Logger';
-import { ConfigCache } from './ConfigCache';
+import Logger from './Logger.js';
+import { ConfigCache } from './ConfigCache.js';
 import { TxtAnswer, SrvAnswer } from 'dns-packet';
 import mDNS from 'multicast-dns';
-import makeMdns = require('multicast-dns');
 
 
 // there is one DeviceDiscovery only.
@@ -35,7 +34,7 @@ export class DeviceDiscovery {
   constructor(options: any = {}) {
     this.options = Object.assign({}, this.defaultOptions, options);
 
-    this.mdns = makeMdns();
+    this.mdns = mDNS();
 
     // express function: list all found devices.
     this.router.get('', (_req, res) => { res.json(this.netDevices); });

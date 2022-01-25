@@ -4,23 +4,25 @@
 
 // ===== Packages used =====
 
-const yargs = require('yargs');
-const debug = require('debug');
-const shell = require('shelljs');
+import yargs from 'yargs';
+import debug from 'debug';
 
-const minify = require('html-minifier').minify;
+import * as HTMLMinifier from 'html-minifier-terser';
+
+// const minify = require('html-minifier').minify;
+
+import { default as shell } from './shell.cjs'
 
 const outFile = "upload.h";
 
 // ===== Command line support =====
-console.log('HomeDing: Build upload.h file');
-const options = yargs
+console.log('HomeDing: Build ${outFile} file');
+const options = yargs(process.argv.slice(2))
   .usage('Usage: $0')
   .option('v', { alias: 'verbose', describe: 'Verbose logging', type: 'boolean', demandOption: false, default: false })
   .argv;
 
 debug.enable(options.verbose ? '*' : '*:info');
-
 
 // ===== initializing modules =====
 
@@ -34,31 +36,36 @@ Array.prototype.unique = function () {
   });
 }
 
-
 logInfo(`Starting...`);
 
 let txt = shell.cat('makeembedtemplate.txt').stdout;
-// console.log(txt);
 const placeholders = txt.match(/\$\{\w*\.htm\}/g);
 logTrace("Placeholders: ", placeholders);
 
-placeholders
+const tasks = placeholders
   .map(p => p.substring(2, p.length - 1))
   .unique()
-  .forEach(name => {
+  .map(name => {
     const c = shell.cat(name).stdout;
-    const mc = minify(c, {
+    const mc = HTMLMinifier.minify(c, {
       collapseWhitespace: true,
       removeComments: true,
       removeTagWhitespace: true,
       minifyCSS: true,
-      minifyJS: true
+      minifyJS: true,
+      verbose: true,
+      quoteCharacter: "\""
+    }).then(x => {
+      txt = txt.replace('${' + name + '}', x);
     });
-    txt = txt.replace('${' + name + '}', mc);
+    return (mc);
   });
 
-// write to upload.h to be copied into the Arduino project.
-shell.ShellString(txt).to(outFile);
-logTrace('generated code:\n', txt);
 
-logInfo(`${outFile} written.`);
+Promise.allSettled(tasks).then(() => {
+  // write to upload.h to be copied into the Arduino project.
+  shell.ShellString(txt).to(outFile);
+  logTrace('generated code:\n', txt);
+  logInfo(`${outFile} written.`);
+})
+

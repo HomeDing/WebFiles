@@ -6,19 +6,22 @@
 
 // ===== Packages used =====
 
-const yargs = require('yargs');
-const debug = require('debug');
-const shell = require('shelljs');
+import yargs from 'yargs';
+import debug from 'debug';
 
-const sass = require('sass');
-const HTMLMinifier = require('html-minifier-terser');
-const JSMinifier = require('terser');
+import sass from 'sass';
+import * as HTMLMinifier from 'html-minifier-terser';
+import * as JSMinifier from 'terser';
+
+import { default as shell } from './shell.cjs'
 
 const distFolder = "dist";
 
+console.log(`HomeDing: Packing ${distFolder} Folder`);
+
 // ===== Command line support =====
-console.log('HomeDing: Packing dist Folder');
-const options = yargs
+
+const options = yargs(process.argv.slice(2))
   .usage('Usage: $0')
   .option('v', { alias: 'verbose', describe: 'Verbose logging', type: 'boolean', demandOption: false, default: false })
   .argv;
@@ -77,7 +80,6 @@ async function packAssets(assets) {
             res();
           });
         }));
-        // res();
         break;
 
       case 'json': // minify json
@@ -154,7 +156,6 @@ const assets = [
   { m: 'js', src: 'microide.js' },
   { m: 'js', src: 'micro.js' }
 ];
-
 
 // create fresh dist folders
 shell.rm('-rf', distFolder);

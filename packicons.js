@@ -5,8 +5,8 @@
 
 // using https://github.com/svgstore/svgstore
 
-var svgstore = require('svgstore');
-var fs = require('fs');
+import fs from 'fs'
+import svgstore from 'svgstore'
 
 console.log('Packing all icons into a file...');
 

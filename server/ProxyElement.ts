@@ -1,9 +1,11 @@
 // Proxy remote elements to local virtual elements
 
-import { register as registerVirtual, VirtualBaseElement } from './VirtualBaseElement';
+import { register as registerVirtual, VirtualBaseElement } from './VirtualBaseElement.js';
 import timeoutSignal from 'timeout-signal';
 import fetch from 'node-fetch';
-import { ConfigCache } from './ConfigCache';
+import { ConfigCache } from './ConfigCache.js';
+
+// const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
 
 // logging setup
 import debug from 'debug';
@@ -28,8 +30,9 @@ export class ProxyElement extends VirtualBaseElement {
   constructor(typeId: string, config: any) {
     super(typeId, config); // will be proxy/xxx in type/ID
 
+    // 'http:(0)//host(2)/$board/type(4)/id(5)'
     const url: string[] = config.url.split('/');
-    const baseurl = url.slice(0, 3).join('/'); // 'http://server'
+    const baseurl = url.slice(0, 3).join('/');
 
     this.host = url[2];
     this.type = url[4];
@@ -66,7 +69,7 @@ export class ProxyElement extends VirtualBaseElement {
       if (this.configJson) {
         try {
           const r = await fetch(this.url, { signal: timeoutSignal(4000) });
-          const j:any = await r.json();
+          const j = await r.json() as any;
           const rs = j[`${this.type}/${this.id}`];
           this.state = Object.assign(this.state, rs);
         } catch (e) {
@@ -89,7 +92,7 @@ export class ProxyElement extends VirtualBaseElement {
 } // ProxyElement
 
 
-export function register() {
+export function register() : void {
   registerVirtual('webproxy', ProxyElement);
 }
 
