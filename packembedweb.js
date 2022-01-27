@@ -8,10 +8,7 @@ import yargs from 'yargs';
 import debug from 'debug';
 
 import * as HTMLMinifier from 'html-minifier-terser';
-
-// const minify = require('html-minifier').minify;
-
-import { default as shell } from './shell.cjs'
+import shell from 'shelljs'
 
 const outFile = "upload.h";
 

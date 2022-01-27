@@ -13,7 +13,7 @@ import sass from 'sass';
 import * as HTMLMinifier from 'html-minifier-terser';
 import * as JSMinifier from 'terser';
 
-import { default as shell } from './shell.cjs'
+import shell from 'shelljs'
 
 const distFolder = "dist-mini";
 

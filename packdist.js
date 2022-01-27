@@ -13,7 +13,7 @@ import sass from 'sass';
 import * as HTMLMinifier from 'html-minifier-terser';
 import * as JSMinifier from 'terser';
 
-import { default as shell } from './shell.cjs'
+import shell from 'shelljs'
 
 const distFolder = "dist";
 
@@ -150,7 +150,7 @@ const assets = [
   { m: 'c', src: 'elements.json' },
   { m: 'm', src: 'log.htm' },
   { m: 'm', src: 'panel.htm' },
-  { m: 'm', src: 'panel.js' },
+  { m: 'js', src: 'panel.js' },
 
   { m: 'm', src: 'microide.htm' },
   { m: 'js', src: 'microide.js' },
