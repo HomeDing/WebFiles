@@ -640,14 +640,6 @@ let DialogFormClass = DialogFormClass_1 = class DialogFormClass extends MicroCon
             this._defaultData = this._formData();
         }
     }
-    _formData() {
-        let ret = {};
-        if (this._form) {
-            const fd = new FormData(this._form);
-            ret = Object.fromEntries(fd.entries());
-        }
-        return (ret);
-    }
     openModalForm(data = {}, cb) {
         this._data = Object.assign({}, this._defaultData, data);
         this.returnValue = '';
@@ -714,6 +706,14 @@ let DialogFormClass = DialogFormClass_1 = class DialogFormClass extends MicroCon
     }
     on_cancel(_evt) {
         this.returnValue = 'cancel';
+    }
+    _formData() {
+        let ret = {};
+        if (this._form) {
+            const fd = new FormData(this._form);
+            ret = Object.fromEntries(fd.entries());
+        }
+        return (ret);
     }
 };
 DialogFormClass = DialogFormClass_1 = __decorate([

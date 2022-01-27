@@ -18,14 +18,13 @@ const log = {
 
 
 export class ProxyElement extends VirtualBaseElement {
-  // eslint-disable-next-line no-unused-vars
   private url: string;
   private host: string;
   private configJson: any = null;
-  // private canRequest = false;
   private requested = false; // set true when a state request is on the way.
   private nextTry = 0;
   private configs = ConfigCache.getInstance();
+  private TIMEOUT = 4000;
 
   constructor(typeId: string, config: any) {
     super(typeId, config); // will be proxy/xxx in type/ID
@@ -68,7 +67,7 @@ export class ProxyElement extends VirtualBaseElement {
       // fetch state
       if (this.configJson) {
         try {
-          const r = await fetch(this.url, { signal: timeoutSignal(4000) });
+          const r = await fetch(this.url, { signal: timeoutSignal(this.TIMEOUT) });
           const j = await r.json() as any;
           const rs = j[`${this.type}/${this.id}`];
           this.state = Object.assign(this.state, rs);
@@ -85,14 +84,14 @@ export class ProxyElement extends VirtualBaseElement {
   // pass action to real element
   async doAction(action: any) {
     for (const a in action) {
-      await fetch(this.url + '?' + a + '=' + action[a], { signal: timeoutSignal(4000) });
+      await fetch(this.url + '?' + a + '=' + action[a], { signal: timeoutSignal(this.TIMEOUT) });
       this.nextTry = 0; // asap.
     }
   }
 } // ProxyElement
 
 
-export function register() : void {
+export function register(): void {
   registerVirtual('webproxy', ProxyElement);
 }
 

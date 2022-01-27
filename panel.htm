@@ -71,6 +71,8 @@
       <a class="button" href="/board.htm">Board</a>
       <a class="button" href="/microide.htm">IDE</a>
       <a class="button" href="/log.htm">Log</a>
+      <span class="gap"></span>
+      <button id="sysButton">sys</button>
     </div>
 
     <div class="row" style="margin-top:0.5em">
@@ -93,9 +95,13 @@
         </g>
       </svg>
     </div>
+    <div id="errors" style="margin-top:0.5em;color:red">
+    </div>
   </div>
 
   <script>
+    var sysObj = document.getElementById('sysButton');
+
     var PANEL_GRIDSIZE = 72; // px
     var PANEL_WIDTH = 16;
     var PANEL_HEIGHT = 12;
@@ -106,6 +112,10 @@
     window.addEventListener("hashchange", function () {
       window.location.reload();
     });
+    sysObj.addEventListener('click', function (evt) {
+      params.sys = !toBool(params.sys);
+      window.location.hash = 'sys=' + params.sys;
+    });
 
     var elementDef, envDef, configDef;
 
@@ -114,7 +124,6 @@
 
     panelObj.style.width = PANEL_GRIDSIZE * PANEL_WIDTH + "px";
     panelObj.style.height = PANEL_GRIDSIZE * PANEL_HEIGHT + "px";
-
 
     var DragObj = null;
     var DragOffset = null;
@@ -141,7 +150,7 @@
       create edges = {src, srcPin, tar, tarPin, obj}
     */
 
-    // create all nodes from the HomeDing config file
+    // create all nodes and edges from the HomeDing config files
     function createNodes(conf) {
       jsonParse(conf, function (path, key, val) {
         if ((path.length > 1) && (path[0] === '/'))
@@ -179,7 +188,12 @@
       var py = 1;
       // remove edge going into the nirvana
       edges = edges.filter(function (l) {
-        return (nodes[l.src] && nodes[l.tar]);
+        const fits = (nodes[l.src] && nodes[l.tar]);
+        if (!fits) {
+          createHTMLElement(document.querySelector('#errors'), 'p')
+            .textContent = `undeliverable action: ${l.src}->${l.tar}`;
+        }
+        return (fits);
       });
 
       // find nodes without edges:

@@ -109,9 +109,8 @@
   },
 
   "scene": {
-    "properties": [],
-    "events": ["value"],
-    "actions": ["onvalue/*"]
+    "properties": ["steps", "delay"],
+    "events": ["start"]
   },
 
   "ota": {
