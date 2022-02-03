@@ -14,7 +14,7 @@ declare interface PromiseConstructor {
 
 @MicroControl('log')
 class LogWidgetClass extends GenericWidgetClass {
-  private _fName!: string | null;
+  private _fName?: string;
   private _SVGObj!: HTMLObjectElement | null;
   private _xFormat!: string;
   private _yFormat!: string;
@@ -97,7 +97,7 @@ class LogWidgetClass extends GenericWidgetClass {
   } // loadSVG()
 
 
-  newData(path: string, key: string | null, value: string | null) {
+  newData(path: string, key?: string, value?: string) {
     super.newData(path, key, value);
     if (key === 'filename') {
       this._fName = value;

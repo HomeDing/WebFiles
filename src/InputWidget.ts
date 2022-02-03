@@ -33,6 +33,11 @@ class InputWidgetClass extends MicroControlClass {
     this._type = type;
     this._value = this._input.value;
     this._clearWhitespace();
+
+    // bind to event for 
+    // while ()
+    // this.subId = hub.subscribe(this.microid + '?*', this.newData.bind(this));
+
   } // connectedCallback
 
   _check() {
@@ -50,6 +55,10 @@ class InputWidgetClass extends MicroControlClass {
     }
   }
 
+  newData(path: string, key: string | null, value: string | null) {
+    console.log(path, key, value);
+    // super.newData(path, key, value);
+  }
 
   on_change() {
     this._check();

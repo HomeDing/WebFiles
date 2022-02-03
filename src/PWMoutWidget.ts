@@ -19,8 +19,7 @@ class PWMOutWidgetClass extends GenericWidgetClass {
     this._last = '';
   }
 
-  newValue(_path: string, key: string | null, value: string | null) {
-
+  newValue(_path: string, key?: string, value?: string) {
     if (!value) {
     } else if (key === 'range') {
       this._range = Number(value);

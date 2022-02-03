@@ -15,11 +15,10 @@ class BL0937WidgetClass extends GenericWidgetClass {
     super.connectedCallback();
     if (!this.mode) { this.mode = 'current'; }
     this.data = { id: this.microid };
-    this.subId = hub.subscribe(this.microid + '?mode', this.switchMode.bind(this));
     hub.replay(this.subId);
   } // connectedCallback
 
-  setMode(newMode: string | null) {
+  setMode(newMode?: string) {
     if (newMode && (newMode !== this.mode)) {
       let td;
       // hide old mode output
@@ -33,8 +32,10 @@ class BL0937WidgetClass extends GenericWidgetClass {
   }
 
   // visualize any new data for the widget.
-  switchMode(_path: string, _key: string | null, value: string | null) {
-    this.setMode(value);
+  newData(_path: string, key?: string, value?: string): void {
+    if (key === 'mode') {
+      this.setMode(value);
+    }
   }
 
   on_click(e: MouseEvent) {

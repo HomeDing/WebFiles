@@ -63,11 +63,11 @@ class MicroHub {
     if (replay) {
       jsonParse(
         this._store,
-        function (path: string, key: string | null, value: string | null) {
+        function (path: string, key?: string, value?: string) {
           let fullPath: string = path + (key ? '?' + key : '');
           if (fullPath) {
             fullPath = fullPath.toLocaleLowerCase();
-            if (fullPath.match(newEntry.match)) { newEntry.callback(path, key ? key.toLowerCase() : null, value); }
+            if (fullPath.match(newEntry.match)) { newEntry.callback(path, key ? key.toLowerCase() : undefined, value); }
           } // if
         }.bind(this)
       );
@@ -94,11 +94,11 @@ class MicroHub {
     if (e) {
       jsonParse(
         this._store,
-        function (path: string, key: string | null, value: string | null) {
+        function (path: string, key?: string, value?: string) {
           let fullPath: string = path + (key ? '?' + key : '');
           if (fullPath) {
             fullPath = fullPath.toLocaleLowerCase();
-            if (fullPath.match(e.match)) { e.callback(path, key ? key.toLowerCase() : null, value); }
+            if (fullPath.match(e.match)) { e.callback(path, key ? key.toLowerCase() : undefined, value); }
           } // if
         }.bind(this)
       );
@@ -112,7 +112,7 @@ class MicroHub {
   publishObj(obj: any) {
     jsonParse(
       obj,
-      function (this: MicroHub, path: string, key: string | null, value: string | null) {
+      function (this: MicroHub, path: string, key?: string, value?: string) {
         this.publishValue(path, key ? key.toLowerCase() : '', value ? value : '');
       }.bind(this)
     );

@@ -45,7 +45,7 @@ class ColorWidgetClass extends GenericWidgetClass {
 
 
   // visualize any new data for the widget.
-  newData(_path: string, key: string | null, value: string | null) {
+  newData(_path: string, key?: string, value?: string) {
     let newValue: string = this._value;
 
     if (!value) {

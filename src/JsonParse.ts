@@ -4,7 +4,7 @@
 // See also:
 // http://goessner.net/articles/JsonPath/
 
-type JsonParseCallback = (path: string, key: string | null, value: string | null) => void;
+type JsonParseCallback = (path: string, key?: string, value?: string) => void;
 
 function jsonParse(obj: any, cbFunc: JsonParseCallback) {
   /** internal function used in recursion */
@@ -19,7 +19,7 @@ function jsonParse(obj: any, cbFunc: JsonParseCallback) {
       } // for
     } else if (typeof value === 'object') {
       // this is an attribute for the receiver function
-      cbFunc(path2, null, null);
+      cbFunc(path2, undefined, undefined);
 
       // traverse all entries in the object
       Object.getOwnPropertyNames(value).forEach(k => _jsonParse(path2, k, value[k]));

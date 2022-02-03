@@ -33,7 +33,7 @@ class DisplayDotWidgetClass extends GenericWidgetClass {
 
 
   // new value is set in the element.
-  newData(path: string, key: string | null, value: string | null) {
+  newData(path: string, key?: string, value?: string) {
     super.newData(path, key, value);
     if (key && value && this._elem) {
       if (key === 'value') {

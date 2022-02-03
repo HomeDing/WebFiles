@@ -22,7 +22,7 @@ class GenericWidgetClass extends MicroControlClass {
   } // connectedCallback
 
   // visualize any new data for the widget.
-  newData(_path: string, key: string | null, value: string | null) {
+  newData(_path: string, key?: string, value?: string) {
     // save data to title
     if (key && value) {
       this.data[key] = value;
@@ -34,56 +34,47 @@ class GenericWidgetClass extends MicroControlClass {
             .replace('\n}', '')
         );
       }
+
+      // active card
+      if (key === 'active') {
+        this.classList.toggle('active', toBool(value));
+      }
+
+      // u-active flags
+      ['span', 'div'].forEach(function (this: GenericWidgetClass, elType) {
+        this.querySelectorAll(elType + `[u-active='${key}']`).forEach(function (elem) {
+          const b = toBool(value);
+          setAttr(elem as HTMLElement, 'value', b ? '1' : '0');
+          setAttr(elem as HTMLElement, 'title', b ? 'active' : 'not active');
+          elem.classList.toggle('active', b);
+        });
+      }, this);
+
+      // textContent
+      ['h2', 'h3', 'h4', 'span', 'button'].forEach(function (this: GenericWidgetClass, elType) {
+        this.querySelectorAll(elType + '[u-text=\'' + key + '\']').forEach(function (elem) {
+          if (elem.textContent !== value) { elem.textContent = value; }
+        });
+      }, this);
+
+      // value of input and select fields
+      ['input', 'select'].forEach(function (this: GenericWidgetClass, elType) {
+        this.querySelectorAll(elType + '[u-value=\'' + key + '\']').forEach(function (elem) {
+          if ((elem as HTMLInputElement).type === 'radio') {
+            (<HTMLInputElement>elem).checked = (<HTMLInputElement>elem).value === value;
+          } else if ((elem as HTMLInputElement).value !== value) {
+            (elem as HTMLInputElement).value = value ? value : '';
+          }
+        });
+      }, this);
+
+      // Color
+      this.querySelectorAll(`span[u-color='${key}']`).forEach(function (elem) {
+        let col = value ? value.replace(/^x/, '#') : '#888';
+        col = col.replace(/^#\S{2}(\S{6})$/, '#$1');
+        (elem as HTMLElement).style.backgroundColor = col;
+      });
     }
-
-    // active card
-    if (key === 'active') {
-      this.classList.toggle('active', toBool(value));
-    }
-
-    // u-active flags
-    ['span', 'div'].forEach(function (this: GenericWidgetClass, elType) {
-      this.querySelectorAll(elType + `[u-active='${key}']`).forEach(function (elem) {
-        const b = toBool(value);
-        setAttr(elem as HTMLElement, 'value', b ? '1' : '0');
-        setAttr(elem as HTMLElement, 'title', b ? 'active' : 'not active');
-        elem.classList.toggle('active', b);
-      });
-    }, this);
-
-    // textContent
-    ['h2', 'h3', 'h4', 'span', 'button'].forEach(function (this: GenericWidgetClass, elType) {
-      this.querySelectorAll(elType + '[u-text=\'' + key + '\']').forEach(function (elem) {
-        if (elem.textContent !== value) { elem.textContent = value; }
-      });
-    }, this);
-
-    // value of input and select fields
-    ['input', 'select'].forEach(function (this: GenericWidgetClass, elType) {
-      this.querySelectorAll(elType + '[u-value=\'' + key + '\']').forEach(function (elem) {
-        if ((elem as HTMLInputElement).type === 'radio') {
-          (<HTMLInputElement>elem).checked = (<HTMLInputElement>elem).value === value;
-        } else if ((elem as HTMLInputElement).value !== value) {
-          (elem as HTMLInputElement).value = value ? value : '';
-        }
-      });
-    }, this);
-
-    // action of buttons
-    // removed 2021.10.14 as of no usage ???
-    // ['button', 'label'].forEach(function (this: GenericWidgetClass, elType) {
-    //   this.querySelectorAll(elType + '[u-action=\'${' + key + '}\']').forEach(function (elem) {
-    //     setAttr(elem as HTMLElement, 'u-action', value ? value : '');
-    //   });
-    // }, this);
-
-    // Color
-    this.querySelectorAll(`span[u-color='${key}']`).forEach(function (elem) {
-      let col = value ? value.replace(/^x/, '#') : '#888';
-      col = col.replace(/^#\S{2}(\S{6})$/, '#$1');
-      (elem as HTMLElement).style.backgroundColor = col;
-    });
-
   } // newData()
 
 
@@ -142,7 +133,7 @@ class GenericWidgetClass extends MicroControlClass {
     let n: HTMLElement | null = event.target as HTMLElement;
     while (n) {
       chain.push(n);
-      if (n === this) { break; }  
+      if (n === this) { break; }
       n = n.parentElement;
     }
 
@@ -153,7 +144,7 @@ class GenericWidgetClass extends MicroControlClass {
 
       } else if (p.classList.contains('setconfig')) {
         const ti = this.microid.split('/');
-        DialogFormClass.openModalForm('configElement', { ...this.data, type:ti[1], id:ti[2] });
+        DialogFormClass.openModalForm('configElement', { ...this.data, type: ti[1], id: ti[2] });
 
       } else if (p.classList.contains('setactive')) {
         this.dispatchAction(toBool(this.data.active) ? 'stop' : 'start', '1');

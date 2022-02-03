@@ -30,7 +30,7 @@ class DisplayTextWidgetClass extends GenericWidgetClass {
     this._postfix = '';
   }
 
-  newData(path: string, key: string | null, value: string | null) {
+  newData(path: string, key?: string, value?: string) {
     super.newData(path, key, value);
     if (key && value && this._elem) {
 
