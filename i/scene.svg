@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+  <g fill="currentColor">
+    <path d="M4 8h23.5v4H4z" />
+    <path d="M32 6a4 4 0 100 8 4 4 0 000-8zm0 2a2 2 0 110 4 2 2 0 010-4z" />
+    <path d="M36.5 8H44v4h-7.5z" />
+    <path d="M4 36h23.5v4H4z" />
+    <path d="M32 34a4 4 0 100 8 4 4 0 000-8zm0 2a2 2 0 110 4 2 2 0 010-4z" />
+    <path d="M36.5 36H44v4h-7.5z" />
+    <path d="M44 26H20.5v-4H44z" />
+    <path d="M16 28a4 4 0 100-8 4 4 0 000 8zm0-2a2 2 0 110-4 2 2 0 010 4z" />
+    <path d="M11.5 26H4v-4h7.5z" />
+  </g>
+</svg>

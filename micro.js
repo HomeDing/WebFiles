@@ -252,40 +252,40 @@ let GenericWidgetClass = class GenericWidgetClass extends MicroControlClass {
                     .replace('{\n', '')
                     .replace('\n}', ''));
             }
+            if (key === 'active') {
+                this.classList.toggle('active', toBool(value));
+            }
+            ['span', 'div'].forEach(function (elType) {
+                this.querySelectorAll(elType + `[u-active='${key}']`).forEach(function (elem) {
+                    const b = toBool(value);
+                    setAttr(elem, 'value', b ? '1' : '0');
+                    setAttr(elem, 'title', b ? 'active' : 'not active');
+                    elem.classList.toggle('active', b);
+                });
+            }, this);
+            ['h2', 'h3', 'h4', 'span', 'button'].forEach(function (elType) {
+                this.querySelectorAll(elType + '[u-text=\'' + key + '\']').forEach(function (elem) {
+                    if (elem.textContent !== value) {
+                        elem.textContent = value;
+                    }
+                });
+            }, this);
+            ['input', 'select'].forEach(function (elType) {
+                this.querySelectorAll(elType + '[u-value=\'' + key + '\']').forEach(function (elem) {
+                    if (elem.type === 'radio') {
+                        elem.checked = elem.value === value;
+                    }
+                    else if (elem.value !== value) {
+                        elem.value = value ? value : '';
+                    }
+                });
+            }, this);
+            this.querySelectorAll(`span[u-color='${key}']`).forEach(function (elem) {
+                let col = value ? value.replace(/^x/, '#') : '#888';
+                col = col.replace(/^#\S{2}(\S{6})$/, '#$1');
+                elem.style.backgroundColor = col;
+            });
         }
-        if (key === 'active') {
-            this.classList.toggle('active', toBool(value));
-        }
-        ['span', 'div'].forEach(function (elType) {
-            this.querySelectorAll(elType + `[u-active='${key}']`).forEach(function (elem) {
-                const b = toBool(value);
-                setAttr(elem, 'value', b ? '1' : '0');
-                setAttr(elem, 'title', b ? 'active' : 'not active');
-                elem.classList.toggle('active', b);
-            });
-        }, this);
-        ['h2', 'h3', 'h4', 'span', 'button'].forEach(function (elType) {
-            this.querySelectorAll(elType + '[u-text=\'' + key + '\']').forEach(function (elem) {
-                if (elem.textContent !== value) {
-                    elem.textContent = value;
-                }
-            });
-        }, this);
-        ['input', 'select'].forEach(function (elType) {
-            this.querySelectorAll(elType + '[u-value=\'' + key + '\']').forEach(function (elem) {
-                if (elem.type === 'radio') {
-                    elem.checked = elem.value === value;
-                }
-                else if (elem.value !== value) {
-                    elem.value = value ? value : '';
-                }
-            });
-        }, this);
-        this.querySelectorAll(`span[u-color='${key}']`).forEach(function (elem) {
-            let col = value ? value.replace(/^x/, '#') : '#888';
-            col = col.replace(/^#\S{2}(\S{6})$/, '#$1');
-            elem.style.backgroundColor = col;
-        });
     }
     dispatchNext() {
         if (this.actions) {
@@ -369,7 +369,6 @@ let BL0937WidgetClass = class BL0937WidgetClass extends GenericWidgetClass {
             this.mode = 'current';
         }
         this.data = { id: this.microid };
-        this.subId = hub.subscribe(this.microid + '?mode', this.switchMode.bind(this));
         hub.replay(this.subId);
     }
     setMode(newMode) {
@@ -386,8 +385,10 @@ let BL0937WidgetClass = class BL0937WidgetClass extends GenericWidgetClass {
             this.mode = newMode;
         }
     }
-    switchMode(_path, _key, value) {
-        this.setMode(value);
+    newData(_path, key, value) {
+        if (key === 'mode') {
+            this.setMode(value);
+        }
     }
     on_click(e) {
         const src = e.target;
@@ -923,6 +924,9 @@ let InputWidgetClass = class InputWidgetClass extends MicroControlClass {
             this._input.dispatchEvent(new Event('change', { bubbles: true }));
         }
     }
+    newData(path, key, value) {
+        console.log(path, key, value);
+    }
     on_change() {
         this._check();
     }
@@ -973,7 +977,7 @@ function jsonParse(obj, cbFunc) {
             }
         }
         else if (typeof value === 'object') {
-            cbFunc(path2, null, null);
+            cbFunc(path2, undefined, undefined);
             Object.getOwnPropertyNames(value).forEach(k => _jsonParse(path2, k, value[k]));
         }
         else {
@@ -1267,6 +1271,27 @@ let TimerWidgetClass = class TimerWidgetClass extends GenericWidgetClass {
 TimerWidgetClass = __decorate([
     MicroControl('timer')
 ], TimerWidgetClass);
+let ValueWidget = class ValueWidget extends GenericWidgetClass {
+    connectedCallback() {
+        super.connectedCallback();
+        this._input = this.querySelector('input');
+    }
+    newData(path, key, value) {
+        console.log(path, key, value);
+        if ((this._input) && (value)) {
+            if (key === 'min') {
+                this._input.min = value;
+            }
+            else if (key === 'max') {
+                this._input.max = value;
+            }
+        }
+        super.newData(path, key, value);
+    }
+};
+ValueWidget = __decorate([
+    MicroControl('value')
+], ValueWidget);
 class MicroHub {
     constructor() {
         this._registrations = {};
@@ -1302,7 +1327,7 @@ class MicroHub {
                 if (fullPath) {
                     fullPath = fullPath.toLocaleLowerCase();
                     if (fullPath.match(newEntry.match)) {
-                        newEntry.callback(path, key ? key.toLowerCase() : null, value);
+                        newEntry.callback(path, key ? key.toLowerCase() : undefined, value);
                     }
                 }
             }.bind(this));
@@ -1320,7 +1345,7 @@ class MicroHub {
                 if (fullPath) {
                     fullPath = fullPath.toLocaleLowerCase();
                     if (fullPath.match(e.match)) {
-                        e.callback(path, key ? key.toLowerCase() : null, value);
+                        e.callback(path, key ? key.toLowerCase() : undefined, value);
                     }
                 }
             }.bind(this));

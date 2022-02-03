@@ -1,6 +1,6 @@
 ["ssdp", "ota", "device", "time", "remote",
   "ntptime", "serialcmd", "my", "value", "button",
-  "analog", "timer", "schedule", "digitalout",
+  "analog", "timer", "schedule", "scene", "digitalout",
   "pwmout", "displaytext", "displaydot",
   "displayLCD", "displaySSD1306", "dht",
   "rfsend", "rotary", "alarm", "and"
