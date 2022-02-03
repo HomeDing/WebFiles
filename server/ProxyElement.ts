@@ -1,14 +1,16 @@
 // Proxy remote elements to local virtual elements
 
-import { register as registerVirtual, VirtualBaseElement } from './VirtualBaseElement.js';
-import timeoutSignal from 'timeout-signal';
 import fetch from 'node-fetch';
+import timeoutSignal from 'timeout-signal';
+
+import { EventBusClass } from './EventBus.js';
+import { VirtualBaseElement } from './VirtualBaseElement.js';
+import { RegistryClass } from './Registry.js';
 import { ConfigCache } from './ConfigCache.js';
 
-// const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
+import debug from 'debug';
 
 // logging setup
-import debug from 'debug';
 const logServer = debug('proxy');
 const log = {
   info: logServer.extend('info'),
@@ -18,16 +20,18 @@ const log = {
 
 
 export class ProxyElement extends VirtualBaseElement {
-  private url: string;
-  private host: string;
+  private url!: string;
+  private host!: string;
   private configJson: any = null;
   private requested = false; // set true when a state request is on the way.
   private nextTry = 0;
   private configs = ConfigCache.getInstance();
   private TIMEOUT = 4000;
 
-  constructor(typeId: string, config: any) {
-    super(typeId, config); // will be proxy/xxx in type/ID
+
+  setConfig(_bus: EventBusClass, config: any, _default = {}) {
+    this.eventBus = _bus;
+    this.config = Object.assign({}, _default, config);
 
     // 'http:(0)//host(2)/$board/type(4)/id(5)'
     const url: string[] = config.url.split('/');
@@ -42,9 +46,10 @@ export class ProxyElement extends VirtualBaseElement {
     this.typeId = `${this.type}/${this.host}-${this.id}`;
 
     // extract config for element state
-    this.state = { url: baseurl };
+    this.state = Object.assign(this.state, {
+      url: baseurl
+    });
   }
-
 
   async getState(): Promise<any> {
     if (!this.requested && (Date.now() > this.nextTry)) {
@@ -91,8 +96,8 @@ export class ProxyElement extends VirtualBaseElement {
 } // ProxyElement
 
 
-export function register(): void {
-  registerVirtual('webproxy', ProxyElement);
+export function register(registry: RegistryClass): void {
+  registry.registerType('webproxy', ProxyElement);
 }
 
 // End.

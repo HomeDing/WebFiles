@@ -16,9 +16,11 @@ import Logger from './Logger.js';
 import { DeviceDiscovery } from './Discover.js';
 import { ConfigCache } from './ConfigCache.js';
 
+import { RegistryClass } from "./Registry.js";
 import * as virtual from './VirtualBaseElement.js';
 import * as mock from './MockElements.js';
 import * as proxy from './ProxyElement.js';
+import { EventBusClass } from './EventBus.js';
 
 
 export interface HomeDingServerOptions {
@@ -43,6 +45,7 @@ export class HomeDingServer {
 
   // file based settings
   private _settings = {} as any;
+  private _boardFileName = '';
 
   /** The current config & state for mocked elements. */
   private _allConfig: { [e: string]: any; } = {};
@@ -50,13 +53,18 @@ export class HomeDingServer {
 
   private _caseFolder?: string;
 
+  private registry = new RegistryClass();
+  private eventBus = new EventBusClass(this.registry);
+
+  private timer?: NodeJS.Timer = undefined;
+
   /**
    * Express middleware that adds header to avoid caching
    */
   private expressNoCache(_req: express.Request, res: express.Response, next: express.NextFunction) {
     res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
     next();
-  } // noCache
+  } // expressNoCache
 
 
   /**
@@ -69,6 +77,10 @@ export class HomeDingServer {
     Logger.trace(`url=${req.originalUrl} time=${duration}`);
   }
 
+  private loop() {
+    this.eventBus.executeEvents();
+    this.eventBus.loop();
+  }
 
   constructor() {
     Logger.info('Homeding Server');
@@ -80,7 +92,6 @@ export class HomeDingServer {
 
   public async start(options: HomeDingServerOptions) {
     const opts = Object.assign({}, this._defaultOptions, options);
-
     this._settings = JSON.parse(fs.readFileSync(path.join(process.cwd(), 'settings.json'), 'utf8'));
 
     this._app.set('port', opts.port);
@@ -135,14 +146,12 @@ export class HomeDingServer {
       Logger.info(`Starting test case ${options.case}...`);
 
       this._caseFolder = `case-${options.case}/`;
-      const boardFileName = this._caseFolder + '$board';
+      this._boardFileName = this._caseFolder + '$board';
 
-      if (!fs.existsSync(boardFileName)) {
-        Logger.info(`The configuration folder ${boardFileName} could not be found.`);
+      if (!fs.existsSync(this._boardFileName)) {
+        Logger.info(`The configuration folder ${this._boardFileName} could not be found.`);
         process.exit(1);
       } //
-
-      Logger.info(`Starting case ${options.case} ...`);
 
       // ===== env and config information
       this._allConfig = Object.assign({},
@@ -152,10 +161,10 @@ export class HomeDingServer {
       this._boardState = null;
 
       // ===== watch for changes of $board
-      fs.watch(boardFileName, (_eventName, _filename) => {
+      fs.watch(this._boardFileName, (_eventName, _filename) => {
         this._boardState = null;
       });
-      mock.register();
+      mock.register(this.registry);
 
     } else {
       // no mock-case
@@ -167,89 +176,90 @@ export class HomeDingServer {
       );
       this._boardState = {};
     }
-    proxy.register();
-    virtual.activate(this._allConfig);
+    proxy.register(this.registry);
+    this.eventBus.startup(this._allConfig);
 
-    // this._app.get(/^\/\$list$/, noCache, async function (req, res) {
-    //   const fl = [];
-    //   const files = await fs.promises.readdir('.');
-    //   for (const i in files) {
-    //     const aFile = await fs.promises.stat(files[i]);
-    //     if (aFile.isFile()) {
-    //       fl.push({
-    //         name: '/' + files[i],
-    //         size: aFile.size
-    //       });
-    //     }
-    //   }
-    //   res.json(fl);
-    // });
-
-
-    // this._app.get(/^\/\$sysinfo$/, noCache, function (req, res) {
-    //   const fl = {
-    //     devicename: 'nodejsding',
-    //     build: 'Dec  1 2018',
-    //     freeHeap: 31168,
-    //     flashSize: 4194304,
-    //     // 'flash-real-size':4194304,
-    //     fsTotalBytes: 957314,
-    //     fsUsedBytes: 218872,
-    //     ssid: 'devnet'
-    //     // 'bssid':'74:DA:11:22:33:44'
-    //   };
-    //   res.json(fl);
-    // });
+    this._app.get(/^\/\$list$/, this.expressNoCache, async function (req, res) {
+      const fl = [];
+      const files = await fs.promises.readdir('.');
+      for (const i in files) {
+        const aFile = await fs.promises.stat(files[i]);
+        if (aFile.isFile()) {
+          fl.push({
+            name: '/' + files[i],
+            size: aFile.size
+          });
+        }
+      }
+      res.json(fl);
+    });
 
 
-    // // ===== serving /$board status for a single element
-
-    // this._app.get('/\\$board/:type/:id', noCache, async function (req, res) {
-    //   if (!boardState) {
-    //     boardState = {};
-    //     if (this._caseFolder) {
-    //       // get current state from case-folder
-    //       boardState = JSON.parse(await fs.promises.readFile(boardFileName, 'utf8'));
-    //     }
-    //   }
-
-    //   const id = req.params.type + '/' + req.params.id;
-    //   if (Object.keys(req.query).length > 0) {
-    //     // incoming action
-    //     res.send();
-    //     /* no await */ virtual.action(id, req.query);
-    //   } else {
-    //     // Update and return status of a single element
-    //     boardState[id] = Object.assign(boardState[id], virtual.state(id));
-    //     res.json(boardState[id]);
-    //   }
-    //   // next();
-    // });
+    this._app.get(/^\/\$sysinfo$/, this.expressNoCache, (_req, res) => {
+      const fl = {
+        devicename: 'nodejsding',
+        build: 'Dec  1 2018',
+        freeHeap: 31168,
+        flashSize: 4194304,
+        // 'flash-real-size':4194304,
+        fsTotalBytes: 957314,
+        fsUsedBytes: 218872,
+        ssid: 'devnet'
+        // 'bssid':'74:DA:11:22:33:44'
+      };
+      res.json(fl);
+    });
 
 
-    // this._app.get(/^\/\$board$/, noCache, async function (req, res) {
-    //   if (!boardState) {
-    //     boardState = {};
-    //     if (this._caseFolder) {
-    //       // get current state from case-folder
-    //       boardState = JSON.parse(await fs.promises.readFile(boardFileName, 'utf8'));
-    //     }
-    //   }
+    // ===== serving /$board status for a single element
 
-    //   // Update status of all elements
-    //   const vState = await virtual.allState();
-    //   boardState = Object.assign(boardState, vState);
+    this._app.get('/\\$board/:type/:id', this.expressNoCache, async (req, res) => {
+      if (!this._boardState) {
+        this._boardState = {};
+        if (this._caseFolder) {
+          // get current state from case-folder
+          this._boardState = JSON.parse(await fs.promises.readFile(this._boardFileName, 'utf8'));
+        }
+      }
 
-    //   // debugSend('send:' , boardStatus);
-    //   res.type('application/json');
-    //   res.send(JSON.stringify(boardState, null, 2));
-    // });
+      const id = req.params.type + '/' + req.params.id;
+      if (Object.keys(req.query).length > 0) {
+        // incoming action
+        res.send();
+        /* no await */ this.eventBus.dispatch(id, req.query);
+        this.eventBus.executeEvents();
+      } else {
+        // Update and return status of a single element
+        this._boardState[id] = Object.assign(this._boardState[id], this.eventBus.state(id));
+        res.json(this._boardState[id]);
+      }
+      // next();
+    });
 
 
-    // this._app.get(/^\/\$flush$/, noCache, async function (req, res) {
-    //   configService.flush();
-    //   res.send();
-    // });
+    this._app.get(/^\/\$board$/, this.expressNoCache, async (req, res) => {
+      if (!this._boardState) {
+        this._boardState = {};
+        if (this._caseFolder) {
+          // get current state from case-folder
+          this._boardState = JSON.parse(await fs.promises.readFile(this._boardFileName, 'utf8'));
+        }
+      }
+
+      // Update status of all elements
+      const vState = await this.eventBus.allState();
+      this._boardState = Object.assign(this._boardState, vState);
+
+      // debugSend('send:' , boardStatus);
+      res.type('application/json');
+      res.send(JSON.stringify(this._boardState, null, 2));
+    });
+
+
+    this._app.get(/^\/\$flush$/, this.expressNoCache, async (_req, res) => {
+      configService.flush();
+      res.send();
+    });
 
     // ===== serving file system
 
@@ -284,7 +294,10 @@ export class HomeDingServer {
         Logger.info('Web Server started.');
         Logger.info('open https://localhost:${opts.port}/');
       });
-    }
+    } // if
+
+    // start event loop
+    this.timer = setInterval(this.loop.bind(this), 200);
 
   }
 }

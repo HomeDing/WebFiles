@@ -1,7 +1,9 @@
 // Collection of mocking virtual elements
 
+import { EventBusClass } from './EventBus.js';
 import Logger from './Logger.js';
-import { register as registerVirtual, VirtualBaseElement } from './VirtualBaseElement.js';
+import { RegistryClass } from './Registry.js';
+import { VirtualBaseElement } from './VirtualBaseElement.js';
 
 export class MockSwitch extends VirtualBaseElement {
   async doAction(action: any) {
@@ -12,12 +14,79 @@ export class MockSwitch extends VirtualBaseElement {
 } // MockSwitch
 
 
+export class MockReference extends VirtualBaseElement {
+  private _lastState = { reference: undefined, invalue: undefined, value: 0 };
+
+  async doAction(action: any) {
+    if (action.value != null) { this.state.invalue = Number(action.value); }
+    if (action.reference != null) { this.state.reference = Number(action.reference); }
+    super.doAction(action);
+    this.state.value = (this.state.invalue > this.state.reference) ? 1 : 0;
+    if (this.config.inverse) {
+      this.state.value = 1 - this.state.value;
+    }
+  }
+
+  loop() {
+    if (this.state.value !== this._lastState.value) {
+      this.eventBus.queueEvents(this.config.onvalue, String(this.state.value));
+      this._lastState.value = this.state.value;
+    }
+  }
+} // MockReference
+
+
+export class MockDHT extends VirtualBaseElement {
+  private _nextRead = Date.now() + 1 * 1000;
+  private _defaultConfig = { readtime: 60 };
+  private _lastState = { temperature: undefined, humidity: undefined };
+
+  setConfig(bus: EventBusClass, config: any) {
+    super.setConfig(bus, config, this._defaultConfig);
+    // this.state = Object.assign(this.state, {
+    //   temperature: this.config.temperature,
+    //   humidity: this.config.humidity
+    // });
+  }
+
+  // async doAction(action: any) {
+  //   if (action.temperature) { this.state.temperature = action.temperature; }
+  //   if (action.humidity) { this.state.humidity = action.humidity; }
+  //   super.doAction(action);
+  // }
+
+  loop() {
+    const now = Date.now();
+    super.loop();
+
+    if (now > this._nextRead) {
+      this.state.temperature = String(16 + Math.floor(Math.random() * 12)) + '.00';
+      this.state.humidity = String(40 + Math.floor(Math.random() * 20)) + '.00';
+      this._nextRead = now + 10 * 1000;
+    }
+
+    if (this.state.temperature !== this._lastState.temperature) {
+      this.eventBus.queueEvents(this.config.ontemperature, this.state.temperature);
+      this._lastState.temperature = this.state.temperature;
+    }
+
+    if (this.state.humidity !== this._lastState.humidity) {
+      this.eventBus.queueEvents(this.config.onhumidity, this.state.humidity);
+      this._lastState.humidity = this.state.humidity;
+    }
+
+  }
+
+} // MockReference
+
+
 export class MockValue extends VirtualBaseElement {
-  constructor(typeId: string, config: any) {
-    super(typeId, config);
-    this.config = Object.assign({ step: 1 }, config);
+  private _defaultConfig = { step: 1, value: 0 };
+
+  setConfig(bus: EventBusClass, config: any) {
+    super.setConfig(bus, config, this._defaultConfig);
     this.state = Object.assign(this.state, {
-      value: 0
+      value: this.config.value
     });
   }
 
@@ -28,6 +97,10 @@ export class MockValue extends VirtualBaseElement {
     if (action.up != null) { this.state.value = Number(v) + Number(action.up) * step; }
     if (action.down != null) { this.state.value = Number(v) - Number(action.down) * step; }
     super.doAction(action);
+
+    if (v !== this.state.value) {
+      this.eventBus.queueEvents(this.config.onvalue, this.state.value);
+    }
   }
 } // MockValue
 
@@ -58,12 +131,10 @@ export class MockTime extends VirtualBaseElement {
 } // MockTime
 
 export class MockBL0937 extends VirtualBaseElement {
-  constructor(typeId: string, config: any) {
-    super(typeId, config);
-    this.config = Object.assign({ step: 1 }, config);
-    this.state = Object.assign(this.state, {
-      mode: this.config.mode
-    });
+  private _defaultConfig = { step: 1, value: 0 };
+
+  setConfig(bus: EventBusClass, config: any) {
+    super.setConfig(bus, config, this._defaultConfig);
   }
 
   async getState(): Promise<any> {
@@ -92,8 +163,13 @@ export class MockBL0937 extends VirtualBaseElement {
 
 // support changing the state by action - some properties
 export class MockStandard extends VirtualBaseElement {
-  constructor(typeId: string, config: any) {
-    super(typeId, config);
+
+  constructor(typeName: string, id: string) {
+    super(typeName, id);
+  }
+
+  setConfig(bus: EventBusClass, config: any) {
+    super.setConfig(bus, config);
     this.state.value = config.value || 0;
   }
 
@@ -111,8 +187,8 @@ export class MockTimer extends VirtualBaseElement {
   restart = false;
   startTime = Date.now();
 
-  constructor(typeId: string, config: any) {
-    super(typeId, config);
+  setConfig(bus: EventBusClass, config: any) {
+    super.setConfig(bus, config);
     this.restart = Boolean(config.restart);
     this.state.value = config.value || 0;
     this.state.mode = config.mode || 'timer';
@@ -151,21 +227,23 @@ export class MockTimer extends VirtualBaseElement {
 } // class MockTimer
 
 
-export function register() {
-  registerVirtual('device', MockDevice);
-  registerVirtual('dstime', MockTime);
-  registerVirtual('ntptime', MockTime);
+export function register(registry: RegistryClass) {
+  registry.registerType('device', MockDevice);
+  registry.registerType('dstime', MockTime);
+  registry.registerType('ntptime', MockTime);
+  registry.registerType('reference', MockReference);
+  registry.registerType('dht', MockDHT);
 
-  registerVirtual('switch', MockSwitch);
-  registerVirtual('value', MockValue);
-  registerVirtual('timer', MockTimer);
+  registry.registerType('switch', MockSwitch);
+  registry.registerType('value', MockValue);
+  registry.registerType('timer', MockTimer);
 
-  registerVirtual('digitalout', MockStandard);
-  registerVirtual('neo', MockStandard);
-  registerVirtual('color', MockStandard);
-  registerVirtual('my9291', MockStandard);
-  registerVirtual('p9813', MockStandard);
+  registry.registerType('digitalout', MockStandard);
+  registry.registerType('neo', MockStandard);
+  registry.registerType('color', MockStandard);
+  registry.registerType('my9291', MockStandard);
+  registry.registerType('p9813', MockStandard);
 
-  registerVirtual('bl0937', MockBL0937);
+  registry.registerType('bl0937', MockBL0937);
 }
 
