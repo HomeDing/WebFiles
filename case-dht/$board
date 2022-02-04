@@ -2,6 +2,7 @@
 "ota/0": {"active":"true"},
 "ssdp/0": {"active":"true"},
 "ntptime/0": {"active":"true","now":"2020-07-21 13:14:18"},
-"dht/on": {"active":"true","temperature":"40.40","humidity":"19.20"},
+"dht/on": {"active":"true","temperature":"21.40","humidity":"49.20"},
 "log/temp": {"active":"true","value":"40.40"},
-"log/hum": {"active":"true","value":"19.20"}}
+"log/hum": {"active":"true","value":"19.20"},
+"value/target":{"active":"true","value":"40"}}

@@ -5,11 +5,11 @@
       "description": "Temperature and Humidity sensor",
       "pin": "D5",
       "readtime": "60s",
-      "ontemperature": "log/temp?value=$v",
-      "onhumidity": "log/hum?value=$v"
+      "ontemperature": "log/temp?value=$v,reference/temp?value=$v",
+      "onhumidity": "log/hum?value=$v,log/xx?value=$v"
     }
   },
-  "log": { 
+  "log": {
     "temp": {
       "description": "Log values to file",
       "filename": "/log-temp.txt",
@@ -19,6 +19,34 @@
       "description": "logging humidity",
       "filename": "/log-hum.txt",
       "filesize": "10000"
+    }
+  },
+  "reference": {
+    "temp": {
+      "loglevel": "2",
+      "title": "target temp",
+      "onreference": "digitalout/heater?value=$v",
+      "inverse": "true",
+      "value": "1"
+    }
+  },
+  "digitalout": {
+    "heater": {
+      "loglevel": "2",
+      "title": "heater",
+      "description": "control heater and led",
+      "pin": "D0",
+      "inverse": "true"
+    }
+  },
+  "value": {
+    "target": {
+      "loglevel": "2",
+      "title": "target temp",
+      "min": "12",
+      "max": "40",
+      "value": "22",
+      "onvalue": "reference/temp?reference=$v"
     }
   }
 }
