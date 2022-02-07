@@ -66,17 +66,17 @@ table {
   border-right: solid 1px #203050;
   margin-top: 0.4em;
   margin-bottom: 0.4em;
-}
 
-table thead tr {
-  background-color: #203050;
-}
+  thead tr {
+    background-color: #203050;
 
-table thead tr th {
-  vertical-align: top;
-  padding: 0.2em 0.6em;
-  color: white;
-  font-weight: bold;
+    th {
+      vertical-align: top;
+      padding: 0.2em 0.6em;
+      color: white;
+      font-weight: bold;
+    }
+  }
 }
 
 table td {
@@ -103,10 +103,9 @@ table td {
   min-height: 6rem;
 }
 
-
 // cards with icon
 .iconcard {
-  padding: $gutter2 $gutter2 $gutter2 calc(4rem + 2* $gutter2);
+  padding: $gutter2 $gutter2 $gutter2 calc(4rem + 2 * $gutter2);
   min-height: 5.4rem;
 
   svg {
@@ -143,15 +142,15 @@ p > img {
   height: auto;
 }
 
-img[title="w200"] {
+img[title='w200'] {
   width: 200px;
 }
 
-img[title="w400"] {
+img[title='w400'] {
   width: 400px;
 }
 
-img[title="w600"] {
+img[title='w600'] {
   width: 600px;
 }
 

@@ -6,9 +6,13 @@
     "max-nesting-depth": 3,
     "order/properties-alphabetical-order": null,
     "selector-max-id": 2,
+    "selector-max-compound-selectors": 4,
     "selector-no-qualifying-type": [true, { "ignore": ["class", "attribute"]  } ],
     "selector-class-pattern": "[a-zA-Z]*",
-    "at-rule-allowed-list": ["use", "media"],
-    "function-parentheses-space-inside":"never-single-line"
+    "at-rule-allowed-list": ["use", "media", "import"],
+    "function-parentheses-space-inside":"never-single-line",
+
+    "at-rule-no-unknown": null,
+    "scss/at-rule-no-unknown": true
   }
 }

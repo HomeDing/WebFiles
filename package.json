@@ -44,7 +44,7 @@
   "scripts": {
     "test:ts": "eslint src\\*.ts",
     "test:server": "eslint server\\*.ts",
-    "test:css": "stylelint iotstyle.scss",
+    "test:css": "stylelint *.scss css/*.scss",
     "test": "npm run test:ts && npm run test:server && npm run test:css",
     "clean": "shx rm -rf dist && shx rm -rf dist-mini",
     "build:css": "sass iotstyle.scss iotstyle.css",
