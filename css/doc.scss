@@ -1,0 +1,175 @@
+// file: doc.scss
+// document layout rules
+// This is part of the micro css implementation.
+
+// <nav> is a vertical menu that can slide in and out by using some scripting.
+// <nav> is used together with <main> for content
+// `inpage` class: nav is beside main content, not overlap
+// open class: nav is visible, maybe main needs to shift
+
+nav {
+  position: fixed;
+  min-height: 100%;
+  width: 280px;
+  z-index: 1;
+  left: -280px;
+  transition: all 0.2s;
+  padding: 1rem 0.2rem 0.2rem;
+  background-color: var(--card-back);
+
+  &.inpage {
+    position: absolute;
+  }
+
+  &.open {
+    left: 0;
+  }
+
+  &.inpage.open + main {
+    margin-left: 280px;
+
+    @media print {
+      margin-left: 0;
+    }
+  }
+
+  a,
+  a:hover {
+    text-decoration: none;
+  }
+
+  @media print {
+    display: none;
+  }
+}
+
+main {
+  transition: margin-left 0.2s;
+}
+
+h2 {
+  clear: both;
+}
+
+.s-md {
+  min-height: 4em;
+  padding: 0.4em;
+  max-width: 800px;
+}
+
+// Tables
+
+table {
+  empty-cells: show;
+  border-collapse: collapse;
+  border-left: solid 1px #203050;
+  border-right: solid 1px #203050;
+  margin-top: 0.4em;
+  margin-bottom: 0.4em;
+}
+
+table thead tr {
+  background-color: #203050;
+}
+
+table thead tr th {
+  vertical-align: top;
+  padding: 0.2em 0.6em;
+  color: white;
+  font-weight: bold;
+}
+
+table td {
+  vertical-align: top;
+  padding: 0.2em 0.6em;
+  border-bottom: 1px solid #203050;
+}
+
+// simple content cards with image + text
+.plaincard,
+.imgcard,
+.iconcard {
+  position: relative;
+  margin: 0 $gutter $gutter 0;
+  width: 100%;
+  max-width: 100%;
+  background-color: var(--card-back);
+  page-break-inside: avoid;
+}
+
+// card with text only
+.plaincard {
+  padding: $gutter2;
+  min-height: 6rem;
+}
+
+
+// cards with icon
+.iconcard {
+  padding: $gutter2 $gutter2 $gutter2 calc(4rem + 2* $gutter2);
+  min-height: 5.4rem;
+
+  svg {
+    position: absolute;
+    top: $gutter2;
+    left: $gutter2;
+    height: 4rem;
+    width: 4rem;
+  }
+}
+
+// picture with 4:3 ratio + text
+.imgcard {
+  padding: $gutter2 $gutter2 0 calc(9.6rem + $gutter2);
+  min-height: 7.2rem;
+
+  img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: auto;
+    width: 9.6rem;
+    max-height: 7.2rem;
+  }
+}
+
+img {
+  max-width: 600px;
+  height: auto;
+}
+
+p > img {
+  width: auto;
+  height: auto;
+}
+
+img[title="w200"] {
+  width: 200px;
+}
+
+img[title="w400"] {
+  width: 400px;
+}
+
+img[title="w600"] {
+  width: 600px;
+}
+
+.warning {
+  padding: 0.2rem;
+  border-radius: 0.4rem;
+}
+
+// formatted code blocks
+
+@media print {
+  html,
+  body {
+    font-size: 0.66em;
+    background-color: white;
+  }
+
+  .short {
+    border: 1px solid silver;
+  }
+}

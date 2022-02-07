@@ -1,0 +1,437 @@
+// file: iot.scss
+// Element and card rules for iot dashboards
+// This is part of the micro css implementation.
+
+// ===== Cards =====
+
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--card-back);
+  border: $u-card-border;
+  border-radius: $u-card-radius;
+  width: 23rem;
+  min-width: 23rem;
+
+  @media print {
+    border: 1px solid $u-text;
+  }
+
+  &.small {
+    // reduced width and text size
+    font-size: 0.8rem;
+    width: 11.25rem;
+    min-width: 11.25rem;
+
+    .form-grid {
+      grid-template-columns: auto;
+
+      > label {
+        text-align: left;
+      }
+    }
+  }
+
+  &.active {
+    .border {
+      border-color: $u-border-color-active;
+    }
+
+    .band::-webkit-slider-thumb {
+      border-color: $u-border-color-active transparent;
+    }
+
+    > .block.header {
+      background-color: var(--card-head-active);
+    }
+  }
+
+  .icon {
+    width: 2.75rem;
+    height: 2.75rem;
+    float: left;
+    margin-right: $gutter;
+    overflow: hidden;
+  }
+
+  img,
+  svg {
+    &.active {
+      background-color: limegreen;
+    }
+  }
+
+  > .block {
+    position: relative;
+    flex: 1 1 auto;
+    padding: $gutter $white-space;
+    min-height: 2rem;
+    
+    &.header {
+      background-color: var(--card-head);
+      border-top-right-radius: $u-card-radius;
+      border-top-left-radius: $u-card-radius;
+      min-height: 2.75em; // with or without icon
+      max-height: 4rem;
+
+      h3,
+      h4 {
+        margin-bottom: 0;
+      }
+    }
+
+    &.footer {
+      padding: $gutter $white-space;
+      border-top: 1px solid rgba(0, 0, 0, 0.125);
+
+      > *:not(:first-child) {
+        margin-left: $gutter;
+      }
+    }
+  }
+
+  > hr {
+    background-color: rgba(0, 0, 0, 0.125);
+    border: 0;
+    height: 1px;
+    margin: 0;
+    padding: 0;
+  }
+}
+
+// ===== forms / input / groups =====
+
+button,
+.button {
+  display: inline-block;
+  min-width: 6.5ch;
+  // height: 1.4em;
+  padding: 0.1em 0.2em;
+  border-radius: $u-btn-radius;
+  border-color: $u-primary;
+  background-color: $u-primary;
+  color: $u-primary-text;
+  cursor: pointer;
+  user-select: none;
+
+  &:visited {
+    color: white;
+  }
+
+  &:disabled,
+  &:disabled:focus {
+    border-color: $u-disabled;
+    background-color: $u-disabled;
+  }
+
+  &.active {
+    background-color: #acc1e4 !important;
+    border-color: #203050 !important;
+  }
+
+  &.secondary {
+    background-color: #777777;
+    border-color: #777777;
+  }
+
+  + button,
+  + .button {
+    margin-left: $gutter;
+  }
+}
+
+// standard input elements
+
+option[disabled] {
+  color: $u-disabled;
+}
+
+// slider implemented using input[type=range] element
+
+input[type='range'] {
+  appearance: none;
+  -webkit-appearance: none; // stylelint-disable-line property-no-vendor-prefix
+  vertical-align: top;
+  margin: 0.2em;
+  height: 1.2em;
+  padding: 0;
+  width: 9.8em;
+  transition: 0.4s all ease-out;
+  // border: 1px solid #555555;
+  border-radius: 0.6em;
+
+  &::-webkit-slider-thumb {
+    appearance: none;
+    -webkit-appearance: none; // stylelint-disable-line property-no-vendor-prefix
+    height: 1em;
+    width: 1em;
+    border-radius: 0.5em;
+    background: #203050;
+    border: 1px solid #f0f0f0;
+    cursor: pointer;
+  }
+}
+
+// switch = slider with range 0..1
+
+input.switch[type='range'] {
+  pointer-events: none;
+  width: 2.5em !important;
+}
+
+*:focus {
+  outline: 0;
+  box-shadow: 0 0 0.1rem 0.2rem var(--focus);
+}
+
+.btn-group {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: flex-start;
+
+  > * {
+    flex: 1 1 auto;
+    margin: 0;
+    border-radius: 0;
+  }
+
+  > *:first-child {
+    border-top-left-radius: $u-btn-radius;
+    border-bottom-left-radius: $u-btn-radius;
+  }
+
+  > *:last-child {
+    border-top-right-radius: $u-btn-radius;
+    border-bottom-right-radius: $u-btn-radius;
+  }
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 12.6ch auto;
+  grid-gap: 5px;
+  margin-bottom: 0.5rem;
+
+  > * {
+    grid-column-end: -1;
+  }
+
+  > label {
+    grid-column: 1;
+    text-align: right;
+  }
+
+  > .wide {
+    grid-column: 1/-1;
+  }
+}
+
+.form-inline {
+  height: 1.6em;
+
+  > * {
+    vertical-align: top;
+  }
+}
+
+
+// ===== element Icons =====
+
+.element {
+  position: relative;
+  display: inline-block;
+  height: 6rem;
+  width: 6rem;
+  margin: 0.6rem;
+
+  &.wide {
+    width: 10rem;
+  }
+
+  > svg,
+  > img {
+    position: relative;
+    left: 1rem;
+    top: 0.4rem;
+    height: 4rem;
+    width: 4rem;
+  }
+
+  > .id {
+    position: absolute;
+    display: inline-block;
+    bottom: 0.4rem;
+    left: 0;
+    height: 1rem;
+    width: 6rem;
+    text-align: center;
+  }
+
+  > .info {
+    position: absolute;
+    display: inline-block;
+    top: 0.4rem;
+    right: 0;
+    height: 5.2rem;
+    width: 4rem;
+  }
+}
+
+// ===== Value indicators for the web UI =====
+// using ux- prefix.
+
+.u-bool {
+  display: inline-block;
+  height: 1.4rem;
+  width: 1.4rem;
+  border-radius: 0.7rem;
+  text-align: center;
+  background-color: silver;
+}
+
+.u-bool[value='1'] {
+  background-image: linear-gradient(145deg, lighten($u-on, 30%), $u-on);
+}
+
+.u-bool[value='0'] {
+  background-image: linear-gradient(145deg, lighten($u-off, 30%), $u-off);
+}
+
+// visualizing the output level 0...max
+.ux-levelbar {
+  display: inline-block;
+  border-color: $u-primary;
+  border-style: solid;
+  border-width: 1px;
+  width: 32px;
+  height: 64px;
+}
+
+// show something on the right side of the card visualizing the actual value of the element
+
+.ux-value {
+  position: absolute;
+  right: 0.5rem;
+  top: 0.5rem;
+}
+
+// Timer-bar
+
+.u-bar {
+  position: relative;
+  height: 1.4em;
+  width: 100%;
+  background-color: #aaaaaa;
+}
+
+.u-bar > .pulse,
+.u-bar > .current {
+  display: inline-block;
+  position: absolute;
+}
+
+.u-bar > .pulse {
+  top: 0;
+  left: 0;
+  height: 1.4em;
+  background-color: green;
+}
+
+.u-bar > .current {
+  top: 0.4em;
+  height: 0.6em;
+  background-color: red;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.border {
+  border: $u-border;
+}
+
+/* === Display Element === */
+
+.display {
+  position: relative;
+  box-sizing: content-box;
+  background-color: $u-background;
+  margin: auto;
+  width: 128px;
+  height: 64px;
+  border: 2px solid $u-border-color;
+  zoom: 2;
+
+  > span {
+    box-sizing: border-box;
+    display: inline-block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 10px;
+    overflow: hidden;
+    background-color: transparent;
+
+    &.text {
+      color: $u-text;
+      font-size: 10px;
+      line-height: 10px;
+    }
+
+    &.dot {
+      height: 10px;
+      width: 10px;
+      border-radius: 50%;
+
+      &.active {
+        background-color: green;
+      }
+    }
+
+    &.line {
+      border-top: 1px solid black;
+    }
+  }
+} // #display
+
+.displayinc {
+  position: relative;
+  margin: auto;
+  zoom: 2;
+
+  > .icon {
+    width: 1.2em;
+    height: 1.2em;
+    margin: 0;
+  }
+}
+
+/* === Light input sliders === */
+
+input.band {
+  width: 100%;
+  border-radius: 0;
+  border-width: 1px;
+
+  &.hue {
+    background: linear-gradient(
+      to right,
+      red 0%,
+      yellow 17%,
+      lime 33%,
+      aqua 50%,
+      blue 67%,
+      fuchsia 83%,
+      red 100%
+    );
+  }
+
+  &.white,
+  &.lightness,
+  &.saturation {
+    background: linear-gradient(to right, black 0%, white 100%);
+  }
+}

@@ -1,0 +1,19 @@
+// file: extras.scss
+// rules, not in use
+// This is part of the micro css implementation.
+
+/* === Responsive Utilities === */
+
+.display-xs {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .hidden-xs {
+    display: none;
+  }
+
+  .display-xs {
+    display: initial;
+  }
+}
