@@ -263,7 +263,17 @@
       window.location.hash = 'sys=' + params.sys;
     });
 
-    addObj.addEventListener('click', function (evt) {
+    addObj.addEventListener('click', async function (evt) {
+      // load dialogs on demand.
+
+      if (!document.querySelector('dialog#addElement')) {
+        // lazy load dialogs.
+        await fetch("./board-new.htm")
+          .then(res => res.text())
+          .then(txt => {
+            document.body.appendChild(document.createRange().createContextualFragment(txt));
+          });
+      }
       DialogFormClass.openModalForm('addElement', {});
     });
 
@@ -383,23 +393,13 @@
       });
     } // init()
 
-    window.addEventListener('load', init);
+    window.addEventListener('DOMContentLoaded', init);
 
     if (window !== window.top) {
       // disable header and navbar in portal mode.
       document.querySelector('.u-header').style.display = 'none';
       document.querySelector('.u-navbar').style.display = 'none';
     } // if
-  </script>
-
-
-  <script async>
-    // lazy load dialogs.
-    fetch("./board-new.htm")
-      .then(res => res.text())
-      .then(txt => {
-        document.body.appendChild(document.createRange().createContextualFragment(txt));
-      });
   </script>
 
 </body>

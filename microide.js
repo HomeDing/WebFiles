@@ -213,9 +213,7 @@ box.addEventListener('dragenter', dragHelper, false);
 box.addEventListener('dragover', dragHelper, false);
 box.addEventListener('drop', drop, false);
 
-window.addEventListener('load', function () {
-  window.setTimeout(handleReloadFS, 400)
-});
+window.addEventListener('DOMContentLoaded', handleReloadFS);
 
 function jsonCheck() {
   const fName = activeFileObj.innerText;
