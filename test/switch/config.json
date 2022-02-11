@@ -19,6 +19,10 @@
     "d6": {
       "pin": "12",
       "inverse": "false"
+    },
+    "led": {
+      "pin": "D3",
+      "inverse": "true"
     }
   },
   "schedule": {
@@ -26,12 +30,6 @@
       "onTime": "18:30:00",
       "offTime": "22:55:00",
       "onValue": "switch/relay?toggle=$v"
-    }
-  },
-  "webbutton": {
-    "d3": {
-      "description": "toggle",
-      "onClick": "switch/relay?toggle=1,switch/dummy?toggle=1"
     }
   },
   "bl0937": {

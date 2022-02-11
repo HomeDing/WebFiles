@@ -1,0 +1,39 @@
+{
+  "device/0": {
+    "active": "true",
+    "name": "plug04",
+    "title": "Stecker 04",
+    "description": "Gosund SP111 with minimal sketch",
+    "safemode": "false",
+    "sd": "1",
+    "nextboot": "4294962431"
+  },
+  "ota/0": {
+    "active": "true"
+  },
+  "digitalin/d3": {
+    "active": "true",
+    "value": "0"
+  },
+  "switch/relay": {
+    "active": "true",
+    "value": "0"
+  },
+  "digitalout/d6": {
+    "active": "true",
+    "value": "0"
+  },
+  "digitalout/led": {
+    "active": "true",
+    "value": "0"
+  },
+  "bl0937/0": {
+    "active": "true",
+    "cycletime": "2000",
+    "mode": "current",
+    "power": "0",
+    "powerfactor": "1334533.38",
+    "current": "28",
+    "currentfactor": "11039948.00"
+  }
+}
