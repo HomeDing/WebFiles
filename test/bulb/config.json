@@ -1,0 +1,30 @@
+{
+  "switch": {
+    "en": {
+      "title": "bulb01",
+      "description": "switch on/off",
+      "onvalue": "my9291/l?enable=$v",
+      "value": "0"
+    }
+  },
+  "color": {
+    "l": {
+      "title": "color-control",
+      "config": "WRGB",
+      "mode": "fix",
+      "duration": "2",
+      "brightness": "123",
+      "value": "x2000070F",
+      "onvalue": "my9291/l?value=$v"
+    }
+  },
+  "my9291": {
+    "l": {
+      "title": "bulb01",
+      "datapin": "4",
+      "clockpin": "5",
+      "brightness": "255",
+      "value": "x00020000"
+    }
+  }
+}

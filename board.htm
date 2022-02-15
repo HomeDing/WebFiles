@@ -164,12 +164,12 @@
       <div class="col card" u-control="color" id="${id}" u-is="color" microID="${id}">
         <div u-is="include" ref=".cHead"></div>
         <div class="block form-grid">
-          <label>value:</label>
-          <div><span class="color border" style="display:inline-block; height:100%;width:6rem;"></span><span u-text="value"></span></div>
-          <input type="range" max="359" class="wide band hue">
-          <input type="range" max="100" class="wide band saturation" u-value="saturation">
-          <input type="range" max="100" class="wide band lightness" u-value="lightness">
-          <input type="range" max="255" class="wide band white">
+          <label>value:</label><output name="value"></output>
+          <label>color:</label><input type="color" name="color">
+          <label style="display:none">white:</label>
+          <div style="display:none"><input type="range" max="255" name="white"><output name="white"></output></div>
+          <label>brightness:</label>
+          <div><input type="range" max="100" name="brightness"><output name="brightness"></output></div>
         </div>
         <div class="block footer">
           <button u-action="mode" value="fade">fade</button><button u-action="mode" value="fix">fix</button><button u-action="mode" value="pulse">pulse</button><button u-action="mode" value="wheel">wheel</button>
@@ -180,8 +180,9 @@
         <div u-is="include" ref=".cHead"></div>
         <div class="block">
           <span u-color="value" class="border" style="width:4rem;height:4rem;float:right;border-radius:50%;"></span>
-          <div class="form-grid"><label>value:</label><span u-text="value"></span></div>
-          <div class="form-grid"><label>brightness:</label><span u-text="brightness"></span></div>
+          <div class="form-grid"><label>value:</label><output u-text="value">xxx</output>
+            <label>brightness:</label><output u-text="brightness"></output>
+          </div>
         </div>
       </div>
 
@@ -190,13 +191,6 @@
         <div class="block">
           <div style="text-align: center;"><span u-text="value" style="font-size:4rem;font-style: italic;"></span></div>
           <div class="form-grid"><label>brightness:</label><span u-text="brightness"></span></div>
-        </div>
-      </div>
-
-      <div class="col card" u-control="scene" id="${id}" u-is="generic" microID="${id}">
-        <div u-is="include" ref=".cHead"></div>
-        <div class="block">
-          <button u-action="start" value="1">start</button>
         </div>
       </div>
 
@@ -228,6 +222,16 @@
           mode: <button u-action="mode" value="current">current</button>
           <button u-action="mode" value="voltage">voltage</button>
         </div>
+      </div>
+
+      <div class="col card" u-control="scene" microID="${id}" u-is="scene">
+        <div class="cHead block header">
+          <svg class="icon">
+            <use href="./icons.svg#scene" />
+          </svg>
+          <h3>Scenes</h3>
+        </div>
+        <div class="block"></div>
       </div>
 
     </div>
@@ -282,10 +286,9 @@
       "sht20": "dht",
       "displayssd1306": "displayoled",
       "displaysh1106": "displayoled",
-      "neo": "light", "and": "logic", "or": "logic",
+      "neo": "light", "my9291": "light",
+      "and": "logic", "or": "logic",
       "ina219": "ina2xx", "ina226": "ina2xx"
-      // ,
-      // "my9291": "light"
     };
 
     hub.subscribe('/*/*', function (path, key, value) {

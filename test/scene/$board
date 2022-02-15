@@ -1,0 +1,22 @@
+{
+  "device/0": {
+    "active": "true",
+    "name": "test-scene",
+    "title": "testingScene",
+    "description": "testing Scene",
+    "safemode": "false",
+    "sd": "1",
+    "nextboot": "20781"
+  },
+  "schedule/0": {
+    "active": "true",
+    "mode": "off",
+    "value": "0"
+  },
+  "scene/day": {
+    "active": "true"
+  },
+  "scene/night": {
+    "active": "true"
+  }
+}

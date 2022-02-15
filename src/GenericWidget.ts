@@ -41,32 +41,31 @@ class GenericWidgetClass extends MicroControlClass {
       }
 
       // u-active flags
-      ['span', 'div'].forEach(function (this: GenericWidgetClass, elType) {
-        this.querySelectorAll(elType + `[u-active='${key}']`).forEach(function (elem) {
+      ['span', 'div'].forEach(elType => {
+        this.querySelectorAll(`${elType}[u-active='${key}']`).forEach(function (elem) {
           const b = toBool(value);
           setAttr(elem as HTMLElement, 'value', b ? '1' : '0');
           setAttr(elem as HTMLElement, 'title', b ? 'active' : 'not active');
           elem.classList.toggle('active', b);
         });
-      }, this);
+      });
 
-      // textContent
-      ['h2', 'h3', 'h4', 'span', 'button'].forEach(function (this: GenericWidgetClass, elType) {
-        this.querySelectorAll(elType + '[u-text=\'' + key + '\']').forEach(function (elem) {
-          if (elem.textContent !== value) { elem.textContent = value; }
-        });
-      }, this);
+      // u-text: substitude textContent
+      this.querySelectorAll(`*[u-text='${key}']`).forEach(elem => {
+        if (elem.textContent !== value) { elem.textContent = value; }
+      });
 
-      // value of input and select fields
-      ['input', 'select'].forEach(function (this: GenericWidgetClass, elType) {
-        this.querySelectorAll(elType + '[u-value=\'' + key + '\']').forEach(function (elem) {
-          if ((elem as HTMLInputElement).type === 'radio') {
-            (<HTMLInputElement>elem).checked = (<HTMLInputElement>elem).value === value;
-          } else if ((elem as HTMLInputElement).value !== value) {
-            (elem as HTMLInputElement).value = value ? value : '';
-          }
-        });
-      }, this);
+      // u-value: value of input and select fields
+      ['input', 'select'].forEach(elType => {
+        this.querySelectorAll(`${elType}[u-value='${key}']`)
+          .forEach(elem => {
+            if ((elem as HTMLInputElement).type === 'radio') {
+              (<HTMLInputElement>elem).checked = (<HTMLInputElement>elem).value === value;
+            } else if ((elem as HTMLInputElement).value !== value) {
+              (elem as HTMLInputElement).value = value ? value : '';
+            }
+          });
+      });
 
       // Color
       this.querySelectorAll(`span[u-color='${key}']`).forEach(function (elem) {

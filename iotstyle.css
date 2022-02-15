@@ -137,6 +137,7 @@ input,
 input + span,
 input::placeholder,
 select,
+output,
 button {
   display: inline-block;
   font-size: inherit;
@@ -144,6 +145,11 @@ button {
   border: 0.1em solid transparent;
   padding: 0.1em 0.2em;
   color: currentColor;
+}
+
+input[type=color] {
+  padding: 0;
+  border: none;
 }
 
 input::placeholder {

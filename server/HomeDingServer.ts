@@ -17,10 +17,9 @@ import { DeviceDiscovery } from './Discover.js';
 import { ConfigCache } from './ConfigCache.js';
 
 import { RegistryClass } from "./Registry.js";
-import * as virtual from './VirtualBaseElement.js';
+import { EventBusClass } from './EventBus.js';
 import * as mock from './MockElements.js';
 import * as proxy from './ProxyElement.js';
-import { EventBusClass } from './EventBus.js';
 
 
 export interface HomeDingServerOptions {
@@ -143,9 +142,17 @@ export class HomeDingServer {
     // #region ===== Setup mocking and proxy elements =====
 
     if (options.case) {
-      Logger.info(`Starting test case ${options.case}...`);
+      Logger.info(`Starting test case:; ${options.case}...`);
 
-      this._caseFolder = `case-${options.case}/`;
+      if (fs.existsSync(`./test/${options.case}/`)) {
+        this._caseFolder = `./test/${options.case}/`;
+      } else if (fs.existsSync(`./case-${options.case}/`)) {
+        this._caseFolder = `case-${options.case}/`;
+      } else {
+        Logger.error(`Test case folder ${options.case} doesn't exist`);
+        process.abort();
+      }
+
       this._boardFileName = this._caseFolder + '$board';
 
       if (!fs.existsSync(this._boardFileName)) {

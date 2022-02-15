@@ -155,12 +155,10 @@
       <div class="col card" u-control="color" id="${id}" u-is="color" microID="${id}">
         <div u-is="include" ref=".cHead"></div>
         <div class="block form-grid">
-          <label>value:</label>
-          <div><span u-text="value"></span><span class="color border" style="display:inline-block; height:100%;width:6rem;"></span></div>
-          <input type="range" max="359" class="wide band hue">
-          <input type="range" max="100" class="wide band saturation" u-value="saturation">
-          <input type="range" max="100" class="wide band lightness" u-value="lightness">
-          <input type="range" max="255" class="wide band white">
+          <label>value:</label><output name="value"></output>
+          <label>color:</label><input type="color" name="color">
+          <label style="display:none">white:</label><div style="display:none"><input type="range" max="255" name="white"><output name="white"></output></div>
+          <label>brightness:</label><div><input type="range" max="100" name="brightness"><output u-text="brightness"></output></div>
         </div>
         <div class="block footer">
           <button u-action="mode" value="fade">fade</button><button u-action="mode" value="fix">fix</button><button u-action="mode" value="pulse">pulse</button><button u-action="mode" value="wheel">wheel</button>
@@ -171,7 +169,11 @@
         <div class="block"><button u-text="description">.</button></div>
       </div>
 
-      <div class="col card small" u-control="webbuttongroup" microID="${id}" u-is="buttongroup">
+      <div class="col card" u-control="scene" microID="${id}" u-is="scene">
+        <div class="block header">
+          <h3>Scenes</h3>
+        </div>
+        <div class="block"></div>
       </div>
     </div>
 

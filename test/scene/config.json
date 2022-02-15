@@ -1,0 +1,42 @@
+{
+  "schedule": {
+    "0": {
+      "mode": "off",
+      "ontime": "21:00:00",
+      "offtime": "22:00:00",
+      "onon": "device/0?log=Sched:on",
+      "onoff": "device/0?log=Sched:off",
+      "onValue": "displaydot/p?value=$v",
+      "loglevel": "2",
+      "description": "Sched for Test",
+      "title": "schedule/0"
+    }
+  },
+  "scene": {
+    "day": {
+      "loglevel": 2,
+      "title": "set daylight",
+      "steps": [
+        "device/0?log=day0:0",
+        "device/0?log=day1:0"
+      ],
+      "delay": 3
+    },
+    "night": {
+      "loglevel": 2,
+      "title": "set nightlight",
+      "steps": [
+        "device/0?log=day0:1",
+        "device/0?log=day1:1"
+      ]
+    },
+    "stop": {
+      "loglevel": 2,
+      "steps": [
+        "device/0?log=stop"
+      ],
+      "delay": 3
+    }
+
+  }
+}

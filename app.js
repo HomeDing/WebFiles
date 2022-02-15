@@ -21,7 +21,7 @@ const appOptions = yargs(process.argv.slice(2))
   .option('v', { alias: 'verbose', describe: 'Verbose logging', type: 'boolean', demandOption: false, default: false })
   .argv;
 
-Logger.enable('hd:error');
+Logger.enable('hd:error,hd:info');
 
 if (appOptions.verbose) {
   Logger.enable('*');

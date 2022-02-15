@@ -255,23 +255,22 @@ let GenericWidgetClass = class GenericWidgetClass extends MicroControlClass {
             if (key === 'active') {
                 this.classList.toggle('active', toBool(value));
             }
-            ['span', 'div'].forEach(function (elType) {
-                this.querySelectorAll(elType + `[u-active='${key}']`).forEach(function (elem) {
+            ['span', 'div'].forEach(elType => {
+                this.querySelectorAll(`${elType}[u-active='${key}']`).forEach(function (elem) {
                     const b = toBool(value);
                     setAttr(elem, 'value', b ? '1' : '0');
                     setAttr(elem, 'title', b ? 'active' : 'not active');
                     elem.classList.toggle('active', b);
                 });
-            }, this);
-            ['h2', 'h3', 'h4', 'span', 'button'].forEach(function (elType) {
-                this.querySelectorAll(elType + '[u-text=\'' + key + '\']').forEach(function (elem) {
-                    if (elem.textContent !== value) {
-                        elem.textContent = value;
-                    }
-                });
-            }, this);
-            ['input', 'select'].forEach(function (elType) {
-                this.querySelectorAll(elType + '[u-value=\'' + key + '\']').forEach(function (elem) {
+            });
+            this.querySelectorAll(`*[u-text='${key}']`).forEach(elem => {
+                if (elem.textContent !== value) {
+                    elem.textContent = value;
+                }
+            });
+            ['input', 'select'].forEach(elType => {
+                this.querySelectorAll(`${elType}[u-value='${key}']`)
+                    .forEach(elem => {
                     if (elem.type === 'radio') {
                         elem.checked = elem.value === value;
                     }
@@ -279,7 +278,7 @@ let GenericWidgetClass = class GenericWidgetClass extends MicroControlClass {
                         elem.value = value ? value : '';
                     }
                 });
-            }, this);
+            });
             this.querySelectorAll(`span[u-color='${key}']`).forEach(function (elem) {
                 let col = value ? value.replace(/^x/, '#') : '#888';
                 col = col.replace(/^#\S{2}(\S{6})$/, '#$1');
@@ -385,7 +384,8 @@ let BL0937WidgetClass = class BL0937WidgetClass extends GenericWidgetClass {
             this.mode = newMode;
         }
     }
-    newData(_path, key, value) {
+    newData(path, key, value) {
+        super.newData(path, key, value);
         if (key === 'mode') {
             this.setMode(value);
         }
@@ -401,30 +401,6 @@ let BL0937WidgetClass = class BL0937WidgetClass extends GenericWidgetClass {
 BL0937WidgetClass = __decorate([
     MicroControl('bl0937')
 ], BL0937WidgetClass);
-let ButtonGroupWidgetClass = class ButtonGroupWidgetClass extends GenericWidgetClass {
-    connectedCallback() {
-        super.connectedCallback();
-        this._blockElem = this.querySelector('.block');
-        this._count = 0;
-    }
-    newData(path, key, value) {
-        super.newData(path, key, value);
-        if (key && value) {
-            if (key !== 'title') {
-                if (this._count % 2 === 0) {
-                    this._blockElem = createHTMLElement(this, 'div', { 'class': 'block' });
-                }
-                if (this._blockElem) {
-                    createHTMLElement(this._blockElem, 'button', { 'u-action': value }).textContent = key;
-                }
-                this._count++;
-            }
-        }
-    }
-};
-ButtonGroupWidgetClass = __decorate([
-    MicroControl('buttongroup')
-], ButtonGroupWidgetClass);
 let ButtonWidgetClass = class ButtonWidgetClass extends GenericWidgetClass {
     newData(path, key, value) {
         super.newData(path, key, value);
@@ -473,12 +449,6 @@ let ColorWidgetClass = class ColorWidgetClass extends GenericWidgetClass {
     connectedCallback() {
         super.connectedCallback();
         this._value = '00000000';
-        this._hasWhite = false;
-        this._colObj = this.querySelector('.color') || { style: {} };
-        this._hObj = this.querySelector('.hue') || {};
-        this._sObj = this.querySelector('.band.saturation') || { style: {} };
-        this._lObj = this.querySelector('.band.lightness') || { style: {} };
-        this._wObj = this.querySelector('.white') || {};
     }
     newData(_path, key, value) {
         let newValue = this._value;
@@ -486,38 +456,51 @@ let ColorWidgetClass = class ColorWidgetClass extends GenericWidgetClass {
         }
         else if (key === 'value') {
             newValue = this.normColor(value);
+            this._color = '#' + newValue.substring(2);
+            this._white = parseInt(newValue.substring(0, 2), 16);
             if (newValue !== this._value) {
                 this._value = newValue;
-                const rgbw = this.wrgb(newValue);
-                const hsl = this.toHSL(rgbw);
-                this._hObj.value = hsl.h;
-                this._sObj.value = hsl.s;
-                this._lObj.value = hsl.l;
-                this._update();
+                this.querySelectorAll('*[name=value]').forEach(e => { e.value = value; });
+                this.querySelectorAll('*[name=color]').forEach(e => { e.value = this._color; });
+                this.querySelectorAll('*[name=white]').forEach(e => { e.value = String(this._white); });
             }
         }
+        else if (key === 'brightness') {
+            this._brightness = parseInt(value, 10);
+            this.querySelectorAll('*[name=brightness]').forEach(e => {
+                e.value = String(this._brightness);
+            });
+        }
         else if (key === 'config') {
-            this._hasWhite = true;
-            if (this._wObj) {
-                this._wObj.style.display = this._hasWhite ? '' : 'none';
+            if (value.toLowerCase() === 'wrgb') {
+                let o = this.querySelector('input[name=white]');
+                if (o)
+                    o = o.parentElement;
+                if (o && o.previousElementSibling) {
+                    o.style.display = '';
+                    o.previousElementSibling.style.display = '';
+                }
             }
         }
         super.newData(_path, key, value);
     }
-    on_input() {
-        this._value = this.to16(parseInt(this._wObj.value, 10))
-            + this.HSLToColor(this._hObj.value, this._sObj.value, this._lObj.value);
-        this._update();
-        this.dispatchAction('value', 'x' + this._value);
-    }
-    _update() {
-        const rgbw = this.wrgb(this._value);
-        const hsl = this.toHSL(rgbw);
-        const fullColor = this.HSLToColor(hsl.h, 100, 50);
-        this._sObj.style.background = `linear-gradient(to right, #808080 0%, #${fullColor} 100%)`;
-        this._lObj.style.background = `linear-gradient(to right, #000 0%, #${fullColor} 50%, #fff 100%)`;
-        this._colObj.style.backgroundColor = `#${this._value.substring(2)}`;
-        this._wObj.value = String(rgbw.w);
+    on_input(evt) {
+        const n = evt.target.name;
+        const val = evt.target.value;
+        if (n === 'brightness') {
+            this._brightness = parseInt(val, 10);
+            this.dispatchAction(n, val);
+        }
+        else if (n === 'white') {
+            this._white = parseInt(val, 10);
+            const v = 'x' + this.to16(this._white) + this._color.substring(1);
+            this.dispatchAction('value', v);
+        }
+        else if (n === 'color') {
+            this._color = val;
+            const v = 'x' + this.to16(this._white) + this._color.substring(1);
+            this.dispatchAction('value', v);
+        }
     }
     normColor(color) {
         if ((!color) || (color.length === 0)) {
@@ -533,57 +516,12 @@ let ColorWidgetClass = class ColorWidgetClass extends GenericWidgetClass {
         }
         return (color);
     }
-    wrgb(col) {
-        return ({
-            w: parseInt(col.substring(0, 2), 16),
-            r: parseInt(col.substring(2, 4), 16),
-            g: parseInt(col.substring(4, 6), 16),
-            b: parseInt(col.substring(6, 8), 16)
-        });
-    }
-    toHSL(rgb) {
-        const hsl = { h: 0, s: 0, l: 0 };
-        const r = rgb.r / 255;
-        const g = rgb.g / 255;
-        const b = rgb.b / 255;
-        const l = Math.max(r, g, b);
-        const s = l - Math.min(r, g, b);
-        const h = s
-            ? l === r
-                ? (g - b) / s
-                : l === g
-                    ? 2 + (b - r) / s
-                    : 4 + (r - g) / s
-            : 0;
-        hsl.h = Math.round(60 * h < 0 ? 60 * h + 360 : 60 * h);
-        hsl.s = Math.round(100 * (s ? (l <= 0.5 ? s / (2 * l - s) : s / (2 - (2 * l - s))) : 0));
-        hsl.l = Math.round((100 * (2 * l - s)) / 2);
-        return (hsl);
-    }
-    HSLToColor(h, s, l) {
-        s /= 100;
-        l /= 100;
-        const k = (n) => (n + h / 30) % 12;
-        const a = s * Math.min(l, 1 - l);
-        const f = (n) => l - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1)));
-        const rgb = {
-            r: Math.round(255 * f(0)),
-            g: Math.round(255 * f(8)),
-            b: Math.round(255 * f(4)),
-            w: 0
-        };
-        return this.toRGBColor(rgb);
-    }
     to16(d) {
         let x = d.toString(16);
         if (x.length === 1) {
             x = '0' + x;
         }
         return (x);
-    }
-    toRGBColor(rgbw) {
-        const col = this.to16(rgbw.r) + this.to16(rgbw.g) + this.to16(rgbw.b);
-        return (col);
     }
 };
 ColorWidgetClass = __decorate([
@@ -1122,6 +1060,45 @@ let PWMOutWidgetClass = class PWMOutWidgetClass extends GenericWidgetClass {
 PWMOutWidgetClass = __decorate([
     MicroControl('pwmout')
 ], PWMOutWidgetClass);
+var SceneWidgetClass_1;
+let SceneWidgetClass = SceneWidgetClass_1 = class SceneWidgetClass extends GenericWidgetClass {
+    connectedCallback() {
+        super.connectedCallback();
+        if (!SceneWidgetClass_1._sceneCard) {
+            SceneWidgetClass_1._sceneCard = this;
+        }
+        else {
+            this.style.display = 'none';
+        }
+        const c = SceneWidgetClass_1._sceneCard.querySelector('div.block:last-child');
+        this._buttonObj = createHTMLElement(c, 'button', {
+            'microid': this.microid
+        });
+        this._buttonObj.textContent = '-';
+    }
+    on_click(evt) {
+        console.log(evt.target);
+        const btnObj = evt.target;
+        let action = btnObj.getAttribute('microid');
+        if (action) {
+            if (action.startsWith('/'))
+                action = action.substring(1);
+            this.dispatchAction(action + '?start=1', '1');
+        }
+    }
+    startScene() { 0; }
+    newData(path, key, value) {
+        super.newData(path, key, value);
+        if (key && value) {
+            if (key === 'title') {
+                this._buttonObj.textContent = value;
+            }
+        }
+    }
+};
+SceneWidgetClass = SceneWidgetClass_1 = __decorate([
+    MicroControl('scene')
+], SceneWidgetClass);
 function toBool(s) {
     if (!s) {
         return false;

@@ -1,0 +1,49 @@
+{
+  "color": {
+    "0": {
+      "loglevel": 2,
+      "config": "RGB",
+      "mode": "fix",
+      "duration": "4",
+      "saturation": "255",
+      "lightness": "127",
+      "value": "x203050",
+      "onvalue": "light/0?value=$v"
+    }
+  },
+  "neo": {
+    "bar": {
+      "loglevel": 1,
+      "pin": "D5",
+      "value": "#00770077",
+      "brightness":"50",
+      "count": 10
+    }
+  },
+
+  "switch": {
+    "en": {
+      "loglevel": "2",
+      "description": "switch on/off",
+      "value": "1",
+      "onvalue": "light/0?enable=$v"
+    }
+  },
+  "scene": {
+    "day": {
+      "loglevel": 2,
+      "steps": [
+        "my9291/0?value=xFF888888",
+        "light/0?value=1"
+      ],
+      "delay": 3
+    },
+    "night": {
+      "loglevel": 2,
+      "steps": [
+        "my9291/0?value=x402010",
+        "light/0?value=0"
+      ]
+    }
+  }
+}

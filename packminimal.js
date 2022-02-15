@@ -116,16 +116,7 @@ const assets = [
   { m: 'xml', src: 'browserconfig.xml' },
   { m: 'json', src: 'site.webmanifest' },
   { m: 'xml', src: 'favicon.svg' },
-  // { m: 'c', src: 'favicon48.png' },
-  // { m: 'c', src: 'favicon192.png' },
-  // { m: 'c', src: 'favicon270.png' },
-  // { m: 'c', src: 'favicon512.png' },
-  { m: 'xml', src: 'i/start.svg' },
-  { m: 'xml', src: 'i/stop.svg' },
-  { m: 'xml', src: 'i/plus.svg' },
-  { m: 'xml', src: 'i/minus.svg' },
-  { m: 'xml', src: 'i/default.svg' },
-  { m: 'xml', src: 'i/ide.svg' },
+  { m: 'xml', src: 'icons-mini.svg', tar:'icons.svg'},
   { m: 'css', src: 'iotstyle.scss', tar: 'iotstyle.css' },
   { m: 'm', src: 'updateicons.htm' },
   { m: 'm', src: 'ding.htm' },
@@ -138,7 +129,6 @@ const assets = [
 // create fresh dist folders
 shell.rm('-rf', distFolder);
 shell.mkdir(distFolder);
-shell.mkdir(distFolder + '/i');
 
 packAssets(assets).then(() => {
   logInfo(`Files created.`);

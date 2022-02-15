@@ -1,0 +1,32 @@
+{
+  "device/0": {
+    "active": "true",
+    "name": "bulb01",
+    "title": "Smart Bulb",
+    "description": "Smart RGBW Bulb",
+    "safemode": "false",
+    "sd": "1",
+    "nextboot": "4294965585"
+  },
+  "ota/0": {
+    "active": "true"
+  },
+  "switch/en": {
+    "active": "true",
+    "value": "0"
+  },
+  "color/l": {
+    "active": "true",
+    "mode": "0",
+    "value": "x2000070f",
+    "duration": "2000",
+    "saturation": "255",
+    "lightness": "127"
+  },
+  "my9291/l": {
+    "active": "true",
+    "value": "x2000070f",
+    "enable": "0",
+    "brightness": "255"
+  }
+}

@@ -8,39 +8,17 @@
 /// <reference path="microControls.ts" />
 /// <reference path="GenericWidget.ts" />
 
-interface HslType {
-  h: number;  // 0...359
-  s: number;  // 0...255 as %
-  l: number;   // 0...255 as %
-}
-
-interface RGBWType {
-  r: number;  // 0...255
-  g: number;  // 0...255
-  b: number;   // 0...255
-  w: number;  // 0...255
-}
 
 @MicroControl('color')
 class ColorWidgetClass extends GenericWidgetClass {
-  private _colObj: HTMLElement | any;
-  private _hObj: HTMLInputElement | any;
-  private _sObj: HTMLInputElement | any;
-  private _lObj: HTMLInputElement | any;
-  private _wObj: HTMLInputElement | any;
-
   private _value!: string;   // actual value
-  private _hasWhite!: boolean;
+  private _color!: string;   // actual color value from the color input
+  private _white!: number;   // actual white value from the slider
+  private _brightness!: number;   // actual brightness value from the slider
 
   connectedCallback() {
     super.connectedCallback();
     this._value = '00000000';
-    this._hasWhite = false;
-    this._colObj = this.querySelector('.color') as HTMLElement || { style: {} };
-    this._hObj = this.querySelector('.hue') as HTMLInputElement || {};
-    this._sObj = this.querySelector('.band.saturation') as HTMLInputElement || { style: {} };
-    this._lObj = this.querySelector('.band.lightness') as HTMLInputElement || { style: {} };
-    this._wObj = this.querySelector('.white') as HTMLInputElement || {};
   } // connectedCallback
 
 
@@ -51,52 +29,61 @@ class ColorWidgetClass extends GenericWidgetClass {
     if (!value) {
     } else if (key === 'value') {
       newValue = this.normColor(value);
+      this._color = '#' + newValue.substring(2);
+      this._white = parseInt(newValue.substring(0, 2), 16)
 
       if (newValue !== this._value) {
         this._value = newValue;
 
-        // calculate hsl from rgbw
-        const rgbw = this.wrgb(newValue);
-        const hsl = this.toHSL(rgbw);
-
-        this._hObj.value = hsl.h;
-        this._sObj.value = hsl.s;
-        this._lObj.value = hsl.l;
-
-        this._update();
+        this.querySelectorAll('*[name=value]').forEach(e => { (e as HTMLInputElement).value = value; });
+        this.querySelectorAll('*[name=color]').forEach(e => { (e as HTMLInputElement).value = this._color; });
+        this.querySelectorAll('*[name=white]').forEach(e => { (e as HTMLInputElement).value = String(this._white); });
       }
+
+    } else if (key === 'brightness') {
+      this._brightness = parseInt(value, 10);
+
+      this.querySelectorAll('*[name=brightness]').forEach(e => {
+        (e as HTMLInputElement).value = String(this._brightness);
+      });
 
     } else if (key === 'config') {
-      this._hasWhite = true; // (value === 'WRGB');
-      if (this._wObj) {
-        this._wObj.style.display = this._hasWhite ? '' : 'none';
+      if (value.toLowerCase() === 'wrgb') {
+        let o = this.querySelector('input[name=white]') as HTMLElement | null;
+        if (o) o = o.parentElement; // div
+        if (o && o.previousElementSibling) {
+          o.style.display = '';
+          (o.previousElementSibling as HTMLElement).style.display = '';
+        }
       }
+      // if (this._wObj) {
+      //   this._wObj.style.display = this._hasWhite ? '' : 'none';
+      // }
     }
     super.newData(_path, key, value);
   }
 
 
   // calculate the new color value from input sliders
-  on_input() {
-    this._value = this.to16(parseInt(this._wObj.value, 10))
-      + this.HSLToColor(this._hObj.value, this._sObj.value, this._lObj.value);
-    this._update();
-    this.dispatchAction('value', 'x' + this._value);
+  on_input(evt: InputEvent) {
+    const n = (evt.target as HTMLInputElement).name;
+    const val = (evt.target as HTMLInputElement).value;
+
+    if (n === 'brightness') {
+      this._brightness = parseInt(val, 10);
+      this.dispatchAction(n, val);
+
+    } else if (n === 'white') {
+      this._white = parseInt(val, 10);
+      const v = 'x' + this.to16(this._white) + this._color.substring(1);
+      this.dispatchAction('value', v);
+
+    } else if (n === 'color') {
+      this._color = val;
+      const v = 'x' + this.to16(this._white) + this._color.substring(1);
+      this.dispatchAction('value', v);
+    }
   } // on_input
-
-
-  // Update the UI values and colors
-  private _update() {
-    const rgbw = this.wrgb(this._value);
-    const hsl = this.toHSL(rgbw);
-    const fullColor = this.HSLToColor(hsl.h, 100, 50);
-
-    this._sObj.style.background = `linear-gradient(to right, #808080 0%, #${fullColor} 100%)`;
-    this._lObj.style.background = `linear-gradient(to right, #000 0%, #${fullColor} 50%, #fff 100%)`;
-
-    this._colObj.style.backgroundColor = `#${this._value.substring(2)}`;
-    this._wObj.value = String(rgbw.w);
-  } // _updateUI()
 
 
   // convert from various value formats to 'wwrrggbb'
@@ -115,58 +102,6 @@ class ColorWidgetClass extends GenericWidgetClass {
     return (color);
   } // normColor()
 
-
-  // convert from 'wwrrggbb' to RGBWType
-  private wrgb(col: string): RGBWType {
-    return ({
-      w: parseInt(col.substring(0, 2), 16),
-      r: parseInt(col.substring(2, 4), 16),
-      g: parseInt(col.substring(4, 6), 16),
-      b: parseInt(col.substring(6, 8), 16)
-    });
-  } // wrgb()
-
-
-  // returns an object with {h,s,l}
-  private toHSL(rgb: RGBWType): HslType {
-    const hsl: HslType = { h: 0, s: 0, l: 0 };
-    const r = rgb.r / 255;
-    const g = rgb.g / 255;
-    const b = rgb.b / 255;
-
-    const l = Math.max(r, g, b);
-    const s = l - Math.min(r, g, b);
-    const h = s
-      ? l === r
-        ? (g - b) / s
-        : l === g
-          ? 2 + (b - r) / s
-          : 4 + (r - g) / s
-      : 0;
-    hsl.h = Math.round(60 * h < 0 ? 60 * h + 360 : 60 * h);
-    hsl.s = Math.round(100 * (s ? (l <= 0.5 ? s / (2 * l - s) : s / (2 - (2 * l - s))) : 0));
-    hsl.l = Math.round((100 * (2 * l - s)) / 2);
-    return (hsl);
-  } // toHSL
-
-
-  // calculate color from hsl
-  private HSLToColor(h: number, s: number, l: number): string {
-    s /= 100;
-    l /= 100;
-    const k = (n: number) => (n + h / 30) % 12;
-    const a = s * Math.min(l, 1 - l);
-    const f = (n: number) =>
-      l - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1)));
-    const rgb = {
-      r: Math.round(255 * f(0)),
-      g: Math.round(255 * f(8)),
-      b: Math.round(255 * f(4)),
-      w: 0
-    };
-    return this.toRGBColor(rgb);
-  } // HSLToColor()
-
   private to16(d: number): string {
     let x = d.toString(16);
     if (x.length === 1) {
@@ -174,12 +109,6 @@ class ColorWidgetClass extends GenericWidgetClass {
     }
     return (x);
   }
-
-  private toRGBColor(rgbw: RGBWType): string {
-    const col = this.to16(rgbw.r) + this.to16(rgbw.g) + this.to16(rgbw.b);
-    return (col);
-  }
-
 }
 
 // End.

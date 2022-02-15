@@ -74,16 +74,13 @@
   </div>
 </form>
 
-<div class="col card" u-control="button" microID="${id}" u-is="button">
+<div class="col card" u-control="button" microID="${id}" u-is="button"> 
   <div u-is="include" ref=".cHead"></div>
   <div class="block"><button u-text="description">.</button></div>
 </div>
 
 <div class="col card small" u-control="webbutton" microID="${id}" u-is="button">
   <div class="block"><button u-text="description">.</button></div>
-</div>
-
-<div class="col card small" u-control="webbuttongroup" microID="${id}" u-is="buttongroup">
 </div>
 
 <div class="col card" u-control="digitalout" microID="${id}" u-is="generic">
@@ -127,14 +124,14 @@
 <!-- Display -->
 
 <div class="col card" u-control="displayoled" u-is="display" microID="${id}">
-  <div class="block" style="display: flex;flex-direction: row;">
-    <label class="displayinc" u-action="addpage" value="-1"><svg class="icon">
-        <use href="./icons.svg#minus"></use>
-      </svg></label>
+  <div class="block" style="display: flex;flex-direction: row;align-items: center;">
+    <svg class="icon" u-action="addpage" value="-1" style="margin:0;width:2rem">
+      <use href="./icons.svg#minus"></use>
+    </svg>
     <div class="display"></div>
-    <label class="displayinc" u-action="addpage" value="1"><svg class="icon">
-        <use href="./icons.svg#plus"></use>
-      </svg></label>
+    <svg class="icon" u-action="addpage" value="1" style="margin:0;width:2rem">
+      <use href="./icons.svg#plus"></use>
+    </svg>
   </div>
 </div>
 
