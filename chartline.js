@@ -76,6 +76,32 @@ function _calcSteps(l, h) {
 } // _calcSteps()
 
 
+// calculate friendly steps and range
+function _calcDateSteps(l, h) {
+  const day = (24 * 60 * 60);
+  const tzOff = (new Date(0)).getTimezoneOffset() * 60;
+  var step;
+  var ret = {};
+  var v = h - l;
+
+  if ((v > day/2) && (v < day)) {
+    step = day / 4;
+  } else if ((v > day) && (v < 2 * day)) {
+    step = day / 2;
+  } else if ((v > 2 * day) && (v < 6 * day)) {
+    step = day;
+  } else if ((v > 6 * day) && (v < 14 * day)) {
+    step = 2 * day;
+  } else {
+    return(_calcSteps(l,h));
+  }
+  ret.high = Math.ceil(h / step) * step - tzOff;
+  ret.low = Math.floor(l / step) * step + tzOff;
+  ret.step = step;
+  return (ret);
+} // _calcDateSteps()
+
+
 // list of the graphical elements in the chart.
 // real data based charts must come before hLines and axis.
 var graphs = [];
@@ -94,15 +120,15 @@ function fmtData(form, data) {
 
   } else if (form == 'date') {
     // convert from ux timestamp (seconds since 1.1.1970) to date
-    txt = (new Date(n * 1000)).toLocaleDateString();
+    txt = (new Date(n * 1000)).toLocaleDateString('de');
 
   } else if (form == 'time') {
     // convert from ux timestamp (seconds since 1.1.1970) to time
-    txt = (new Date(n * 1000)).toLocaleTimeString();
+    txt = (new Date(n * 1000)).toLocaleTimeString('de');
 
   } else if (form == 'datetime') {
     // convert from ux timestamp (seconds since 1.1.1970) to datetime
-    txt = (new Date(n * 1000)).toLocaleString();
+    txt = (new Date(n * 1000)).toLocaleString('de');
 
   } // if
   return txt;
@@ -363,7 +389,7 @@ HAxisClass = function (options) {
 
     fBox: function (box) {
       if (box) {
-        var s = _calcSteps(box.left, box.right);
+        var s = _calcDateSteps(box.left, box.right);
         box.left = s.low;
         box.right = s.high;
         this.step = s.step;
