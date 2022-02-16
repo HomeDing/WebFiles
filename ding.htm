@@ -160,7 +160,7 @@
           <label style="display:none">white:</label><div style="display:none"><input type="range" max="255" name="white"><output name="white"></output></div>
           <label>brightness:</label><div><input type="range" max="100" name="brightness"><output u-text="brightness"></output></div>
         </div>
-        <div class="block footer">
+        <div class="block footer form-actions">
           <button u-action="mode" value="fade">fade</button><button u-action="mode" value="fix">fix</button><button u-action="mode" value="pulse">pulse</button><button u-action="mode" value="wheel">wheel</button>
         </div>
       </div>
@@ -173,7 +173,7 @@
         <div class="block header">
           <h3>Scenes</h3>
         </div>
-        <div class="block"></div>
+        <div class="block form-actions"></div>
       </div>
     </div>
 
@@ -189,7 +189,7 @@
     // Element type reuse
     var alias = {
       "sht20": "dht",
-      "p9813": "neo"
+      "neo": "color"
     };
 
     hub.subscribe('/*/*', function (path, key, value) {

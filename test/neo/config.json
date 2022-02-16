@@ -34,6 +34,7 @@
       "loglevel": 2,
       "steps": [
         "my9291/0?value=xFF888888",
+        "neo/bar?value=red",
         "light/0?value=1"
       ],
       "delay": 3
@@ -42,7 +43,8 @@
       "loglevel": 2,
       "steps": [
         "my9291/0?value=x402010",
-        "light/0?value=0"
+        "neo/bar?value=blue",
+                "light/0?value=0"
       ]
     }
   }

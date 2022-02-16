@@ -449,6 +449,8 @@ let ColorWidgetClass = class ColorWidgetClass extends GenericWidgetClass {
     connectedCallback() {
         super.connectedCallback();
         this._value = '00000000';
+        this._color = 'x000000';
+        this._white = undefined;
     }
     newData(_path, key, value) {
         let newValue = this._value;
@@ -456,12 +458,19 @@ let ColorWidgetClass = class ColorWidgetClass extends GenericWidgetClass {
         }
         else if (key === 'value') {
             newValue = this.normColor(value);
-            this._color = '#' + newValue.substring(2);
+            if (newValue.match(/[0-9a-z]{8}/)) {
+                this._color = '#' + newValue.substring(2);
+            }
+            else {
+                this._color = newValue;
+            }
             this._white = parseInt(newValue.substring(0, 2), 16);
             if (newValue !== this._value) {
                 this._value = newValue;
                 this.querySelectorAll('*[name=value]').forEach(e => { e.value = value; });
-                this.querySelectorAll('*[name=color]').forEach(e => { e.value = this._color; });
+                this.querySelectorAll('*[name=color]').forEach(e => {
+                    e.value = this._color;
+                });
                 this.querySelectorAll('*[name=white]').forEach(e => { e.value = String(this._white); });
             }
         }
@@ -498,8 +507,11 @@ let ColorWidgetClass = class ColorWidgetClass extends GenericWidgetClass {
         }
         else if (n === 'color') {
             this._color = val;
-            const v = 'x' + this.to16(this._white) + this._color.substring(1);
-            this.dispatchAction('value', v);
+            let v = this._color.substring(1);
+            if (this._white) {
+                v = this.to16(this._white) + v;
+            }
+            this.dispatchAction('value', 'x' + v);
         }
     }
     normColor(color) {
@@ -507,6 +519,22 @@ let ColorWidgetClass = class ColorWidgetClass extends GenericWidgetClass {
             color = '00000000';
         }
         else {
+            color = color.toLowerCase();
+            if (color === 'black') {
+                color = '000000';
+            }
+            if (color === 'red') {
+                color = 'ff0000';
+            }
+            if (color === 'green') {
+                color = '00ff00';
+            }
+            if (color === 'blue') {
+                color = '0000ff';
+            }
+            if (color === 'white') {
+                color = 'ffffff';
+            }
             if ((color.substring(0, 1) === 'x') || (color.substring(0, 1) === '#')) {
                 color = color.substring(1);
             }
@@ -514,7 +542,7 @@ let ColorWidgetClass = class ColorWidgetClass extends GenericWidgetClass {
                 color = '00' + color;
             }
         }
-        return (color);
+        return (color.toLowerCase());
     }
     to16(d) {
         let x = d.toString(16);

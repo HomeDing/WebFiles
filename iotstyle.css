@@ -481,9 +481,6 @@ svg.icon {
   padding: 0.5rem 1rem;
   border-top: 1px solid rgba(0, 0, 0, 0.125);
 }
-.card > .block.footer > *:not(:first-child) {
-  margin-left: 0.5rem;
-}
 .card > hr {
   background-color: rgba(0, 0, 0, 0.125);
   border: 0;
@@ -523,12 +520,6 @@ button.secondary,
 .button.secondary {
   background-color: #777777;
   border-color: #777777;
-}
-button + button,
-button + .button,
-.button + button,
-.button + .button {
-  margin-left: 0.5rem;
 }
 
 option[disabled] {
@@ -609,6 +600,14 @@ input.switch[type=range] {
 }
 .form-inline > * {
   vertical-align: top;
+}
+
+.form-actions {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  column-gap: 0.25rem;
+  row-gap: 0.25rem;
 }
 
 .element {

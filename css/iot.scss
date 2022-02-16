@@ -84,10 +84,6 @@
     &.footer {
       padding: $gutter $white-space;
       border-top: 1px solid rgba(0, 0, 0, 0.125);
-
-      > *:not(:first-child) {
-        margin-left: $gutter;
-      }
     }
   }
 
@@ -135,10 +131,10 @@ button,
     border-color: #777777;
   }
 
-  + button,
-  + .button {
-    margin-left: $gutter;
-  }
+  // + button,
+  // + .button {
+  //   margin-left: $gutter;
+  // }
 }
 
 // standard input elements
@@ -234,6 +230,14 @@ input.switch[type='range'] {
   > * {
     vertical-align: top;
   }
+}
+
+.form-actions {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  column-gap: $gutter2;
+  row-gap: $gutter2;
 }
 
 
