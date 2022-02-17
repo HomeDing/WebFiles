@@ -349,6 +349,44 @@ svg.icon {
   user-select: none;
 }
 
+nav {
+  position: fixed;
+  min-height: 100%;
+  width: 24ch;
+  z-index: 1;
+  left: -24ch;
+  transition: all 0.2s;
+  padding: 1rem 0.2rem 0.2rem;
+  background-color: var(--card-back);
+}
+nav.inpage {
+  position: absolute;
+}
+nav.open {
+  left: 0;
+}
+nav.inpage.open + main {
+  margin-left: 24ch;
+}
+@media print {
+  nav.inpage.open + main {
+    margin-left: 0;
+  }
+}
+nav a,
+nav a:hover {
+  text-decoration: none;
+}
+@media print {
+  nav {
+    display: none;
+  }
+}
+
+main {
+  transition: margin-left 0.2s;
+}
+
 .u-header {
   margin-bottom: 0;
 }

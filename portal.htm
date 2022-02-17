@@ -17,8 +17,8 @@
   <link rel="icon" type="image/png" href="/favicon48.png" sizes="48x48">
 
   <link Content-Type="text/css" href="/iotstyle.css" rel="stylesheet" />
-
   <script src="/micro.js"></script>
+
   <style>
     html,
     body {
@@ -51,17 +51,20 @@
     ul>li {
       margin-bottom: 0.3em;
     }
-
   </style>
 </head>
 
 <body>
   <div id="ppage">
     <div class="row u-navbar">
-      <svg class="button" id="menuButton" tabindex=0><use href="./icons.svg#menu"  /></svg>
+      <svg class="button" id="menuButton" tabindex=0>
+        <use href="./icons.svg#menu" />
+      </svg>
       <span class="button">HomePortal</span>
       <span class="gap"></span>
-      <svg class="button" id="reload" tabindex=0><use href="./icons.svg#reload"  /></svg>
+      <svg class="button" id="reload" tabindex=0>
+        <use href="./icons.svg#reload" />
+      </svg>
     </div>
 
     <div id="pbody">
@@ -75,21 +78,37 @@
         </ul>
       </nav>
       <main>
-        <iframe id="content" name="content" style="width: 100%;height:100%;border:0" xsrc="board.htm"></iframe>
+        <iframe id="content" name="content" style="width: 100%;height:100%;border:0" src="about:blank"></iframe>
       </main>
     </div>
   </div>
 
   <script>
+    const param = {
+      SCREENTIMEOUT: 10 * 1000
+    };
+
     var iframeObj = document.querySelector('iframe#content');
+    var timerRef = 0;
 
     // handle nav menu
     var navObj = document.querySelector('nav');
     var mbObj = document.querySelector('#menuButton');
     var devList = [];
 
+    function resetTimeout() {
+      document.title = (new Date()).toISOString();
+      console.log(iframeObj.src);
+      if (timerRef) window.clearTimeout(timerRef);
+      timerRef = window.setTimeout(() => {
+        iframeObj.src = 'portalidle.htm';
+        window.location.hash = '';
+      }, param.SCREENTIMEOUT);
+    }
+
     mbObj.addEventListener('click', function (e) {
       navObj.classList.toggle('open');
+      resetTimeout();
     });
     if (window.innerWidth > 880) {
       navObj.classList.add('open');
@@ -98,6 +117,7 @@
     navObj.addEventListener('click', function (e) {
       if (!navObj.classList.contains('inpage'))
         navObj.classList.remove('open');
+      resetTimeout();
     });
 
     function loadDevices() {
@@ -134,12 +154,19 @@
         iframeObj.src = "data:text/html;charset=utf-8,pleasewait";
         iframeObj.src = 'http://' + m[1];
       } // if
+      resetTimeout();
     } // startContent()
 
     window.addEventListener('hashchange', startContent);
-    window.addEventListener('load', loadDevices);
+
+    window.addEventListener('load', () => {
+      loadDevices();
+      window.location.hash = "/board.htm";
+    });
+
     document.querySelector('#reload').addEventListener('click', function () {
       window.location.reload(true);
+      resetTimeout();
     })
   </script>
 </body>

@@ -133,14 +133,14 @@
 
       var data = [];
       for (n = 0; n < 300; n++) {
-        data.push({ x: now + n, y: Math.sin(n / 12) })
+        data.push({ x: now + (n*1400), y: Math.sin(n / 12) })
       }
       chartAPI.draw(chart, data);
     }
 
     window.addEventListener('load', function () {
       chartAPI = chartObj.getSVGDocument().api;
-      lineDraw1();
+      lineDraw4();
 
       document.getElementById('doClear').addEventListener('click', lineClear);
       document.getElementById('doDraw1').addEventListener('click', lineDraw1);

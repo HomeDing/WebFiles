@@ -394,6 +394,46 @@ svg {
 
 // ===== Page Layout =====
 
+nav {
+  position: fixed;
+  min-height: 100%;
+  width: 24ch;
+  z-index: 1;
+  left: -24ch;
+  transition: all 0.2s;
+  padding: 1rem 0.2rem 0.2rem;
+  background-color: var(--card-back);
+
+  &.inpage {
+    position: absolute;
+  }
+
+  &.open {
+    left: 0;
+  }
+
+  &.inpage.open + main {
+    margin-left: 24ch;
+
+    @media print {
+      margin-left: 0;
+    }
+  }
+
+  a,
+  a:hover {
+    text-decoration: none;
+  }
+
+  @media print {
+    display: none;
+  }
+}
+
+main {
+  transition: margin-left 0.2s;
+}
+
 // The header in the micro css is used to display the primary icon of the device and title.
 
 .u-header {

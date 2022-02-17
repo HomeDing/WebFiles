@@ -51,7 +51,9 @@
 <body>
   <div class="container-fluid">
     <div class="row u-header">
-      <a href="/" title="Startpage"><svg class="icon"><use href="./icons.svg#device"/></svg></a>
+      <a href="/" title="Startpage"><svg class="icon">
+          <use href="./icons.svg#device" />
+        </svg></a>
       <h1>IoT HomeDing Monitor</h1>
     </div>
 
@@ -70,6 +72,7 @@
               <th>uptime</th>
               <th sort>flash</th>
               <th>safemode</th>
+              <th>...</th>
             </tr>
           </thead>
           <tbody></tbody>
@@ -112,20 +115,45 @@
     var remoteIndex = 0;
 
     var state = 0;
+    var tabObj = document.querySelector('#devices tbody');
+
+    tabObj.addEventListener('click', (evt) => {
+      /** @type HTMLElement */
+      let tar = evt.target;
+      if (tar.className == "delete") {
+        while (tar && (tar.tagName !== 'TR')) { tar = tar.parentElement; }
+        const host = tar.getAttribute('host');
+        if (deviceInfo[host])
+          delete deviceInfo[host];
+        tar.remove();
+        localStorage.setItem('devices', JSON.stringify(deviceInfo));
+      }
+    });
+
+
+    // duration in seconds to readable format
+
+    function fmtDuration(dur) {
+      var ret = '';
+      if (dur < 24*60*60) {
+        var d = new Date(dur * 1000);
+        ret = d.toISOString().split(/[T\.]/)[1];
+      } else {
+        var d = dur / (24*60*60);
+        ret = d.toFixed(1) + 'd';
+      }
+      return(ret);
+    }
 
     function addDevice(name, data) {
-      var tab = document.querySelector('#devices tbody');
-
       // find existing row for device
-      var r = tab.querySelector('tr[host="' + name + '"]');
+      var r = tabObj.querySelector('tr[host="' + name + '"]');
       if (!r) {
-        var r = tab.insertRow(-1);
+        var r = tabObj.insertRow(-1);
         r.className = 'remote';
         r.setAttribute('host', name);
 
         var c;
-
-        // c = r.insertCell(-1);
         createHTMLElement(r.insertCell(-1), 'img', { class: 'status', src: 'i/no.svg' });
         createHTMLElement(r.insertCell(-1), 'a', { href: 'http://' + name }).innerText = name;
         r.insertCell(-1).innerText = data.room || '';
@@ -137,11 +165,15 @@
         r.insertCell(-1).className = 'memory';
         r.insertCell(-1).className = 'core';
         r.insertCell(-1).className = 'date';
-        r.insertCell(-1).className = 'uptime';
+        c = r.insertCell(-1);
+        c.className = 'uptime';
+        c.style = "text-align:right";
         r.insertCell(-1).className = 'flash';
         r.insertCell(-1).className = 'safemode';
+        c = r.insertCell(-1);
+        c.className = 'delete';
+        createHTMLElement(c, 'img', { class: 'delete', src: 'i/remove.svg' });
       } // if
-
     } // addDevice()
 
 
@@ -158,7 +190,7 @@
           // add old devices from localstorage.
           var od = JSON.parse(localStorage.getItem('devices'));
           for (e in od) {
-            if (! json[e]) {
+            if (!json[e]) {
               // add known, inactive device
               var o = od[e];
               delete (o.ts);
@@ -167,9 +199,9 @@
               json[e] = o;
             }
           }
-          localStorage.setItem('devices', JSON.stringify(json));
-
           deviceInfo = json;
+          localStorage.setItem('devices', JSON.stringify(deviceInfo));
+
           devices = Object.keys(json);
           devices.sort();
           for (var n = 0; n < devices.length; n++) {
@@ -223,14 +255,11 @@
               }
             })
             .then(function (si) {
-              // alert(JSON.stringify(si, null, 2));
-              var d = new Date(si.upTime * 1000);
-
               statImg.src = 'i/start.svg';
               obj.querySelector('.memory').textContent = si.freeHeap;
               obj.querySelector('.core').textContent = (si.coreBuild || '').replace('.ino', '') + ' ' + (si.coreVersion || '');
               obj.querySelector('.date').textContent = new Date(si.build).toISOString().split(/[T\.]/)[0];
-              obj.querySelector('.uptime').textContent = d.toISOString().split(/[T\.]/)[1];
+              obj.querySelector('.uptime').textContent = fmtDuration(si.upTime);
               obj.querySelector('.flash').textContent = si.flashSize;
               obj.querySelector('.safemode').textContent = si.safemode;
             })
