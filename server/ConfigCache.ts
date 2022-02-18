@@ -67,7 +67,7 @@ export class ConfigCache {
         const txt = await req.text();
         // const j = await req.json();
         this.netConfigs[host] = JSON.parse(txt);
-        Logger.info(`config from ${host}:`, this.netConfigs[host]);
+        Logger.trace(`config from ${host}:`, this.netConfigs[host]);
       } catch (err) {
         Logger.error(`no config from ${host}`); // , err
       }

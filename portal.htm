@@ -85,7 +85,7 @@
 
   <script>
     const param = {
-      SCREENTIMEOUT: 10 * 1000
+      SCREENTIMEOUT: 4 * 60 * 1000
     };
 
     var iframeObj = document.querySelector('iframe#content');
@@ -97,7 +97,6 @@
     var devList = [];
 
     function resetTimeout() {
-      document.title = (new Date()).toISOString();
       console.log(iframeObj.src);
       if (timerRef) window.clearTimeout(timerRef);
       timerRef = window.setTimeout(() => {
