@@ -146,9 +146,6 @@ export class DeviceDiscovery {
     const now = new Date();
 
     for (const host in this.netDevices) {
-      // Logger.trace(`old ${host} : ${this.netDevices[host]}`);
-      // Logger.trace(now.valueOf() - this.netDevices[host].valueOf());
-
       if (now.valueOf() - this.netDevices[host].ts.valueOf() > 5 * 60 * 1000) { // 5 minutes
         Logger.trace('-', 'http://' + this.netDevices[host].host);
         delete this.netDevices[host];

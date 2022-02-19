@@ -1,5 +1,6 @@
 // Registry.ts
 
+import Logger from "./Logger.js";
 import { VirtualBaseElement } from "./VirtualBaseElement";
 
 export class RegistryClass {
@@ -16,7 +17,7 @@ export class RegistryClass {
   newElement(typeName: string, id: string): VirtualBaseElement | undefined {
     const eType = this.registry[typeName];
     if (!eType) {
-      console.error(`unknown type ${typeName}`);
+      Logger.error(`unknown type ${typeName}`);
       return (undefined);
     } else {
       const c = new eType(typeName, id);
