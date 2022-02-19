@@ -45,7 +45,7 @@ mdns.on('response', function (response) {
           });
       });
 
-    console.log('http://' + hdd.host, JSON.stringify(hdd));
+    // console.log('http://' + hdd.host, JSON.stringify(hdd));
 
   } // if
 })
