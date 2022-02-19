@@ -135,7 +135,7 @@ export class DeviceDiscovery {
         ts: new Date()
       };
       if (isNew) {
-        Logger.info('+', 'http://' + item.host, JSON.stringify(item));
+        Logger.trace('+', 'http://' + item.host, JSON.stringify(item));
       }
     } // if
   } // addDevice
@@ -150,7 +150,7 @@ export class DeviceDiscovery {
       // Logger.trace(now.valueOf() - this.netDevices[host].valueOf());
 
       if (now.valueOf() - this.netDevices[host].ts.valueOf() > 5 * 60 * 1000) { // 5 minutes
-        Logger.info('-', 'http://' + this.netDevices[host].host);
+        Logger.trace('-', 'http://' + this.netDevices[host].host);
         delete this.netDevices[host];
         ConfigCache.getInstance().remove(host);
       }

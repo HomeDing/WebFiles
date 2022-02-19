@@ -175,7 +175,7 @@ export class HomeDingServer {
 
     } else {
       // no mock-case
-      Logger.info('Starting...');
+      Logger.info('Starting portal mode...');
 
       this._allConfig = Object.assign({},
         JSON.parse(fs.readFileSync('env.json', 'utf8')),

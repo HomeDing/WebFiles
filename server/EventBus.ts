@@ -21,7 +21,7 @@ export class EventBusClass {
     const elem = this._registry?.newElement(typeName, id);
     if (elem) {
       elem.setConfig(this, conf);
-      this.activeVirtuals[typeName + '/' + id] = elem;
+      this.activeVirtuals[elem.typeId] = elem;
     }
   } // addElement()
 
