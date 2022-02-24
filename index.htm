@@ -19,90 +19,87 @@
   <link rel="icon" type="image/png" href="/favicon48.png" sizes="48x48">
 
   <link Content-Type="text/css" href="/iotstyle.css" rel="stylesheet" />
-
   <script src="/micro.js"></script>
 </head>
 
 <body>
-  <div class="container-fluid">
-    <div class="row u-header">
-      <img class="icon" src="/favicon.svg" />
-      <h1>Device</h1>
+  <div class="u-header">
+    <img class="icon" src="/favicon.svg" />
+    <h1>Device</h1>
+  </div>
+
+  <div class="u-navbar">
+    <a href="/">Home</a>
+    <a href="/board.htm">Board</a>
+    <a href="/microide.htm">IDE</a>
+    <a href="/log.htm">Log</a>
+  </div>
+
+  <div class="panel">
+    <div class="card">
+      <div class="block header">
+        <h3>Build-in Setup Pages</h3>
+      </div>
+      <div class="block">
+        <p><a href="$setup.htm">WiFi Setup</a></p>
+        <p><a href="$update.htm">Web Update</a></p>
+        <p><a href="$upload.htm">File Upload</a></p>
+        <p><a href="updateicons.htm">Update FavIcons</a></p>
+        <p><a href="/panel.htm">Panel</a></p>
+      </div>
     </div>
 
-    <div class="row u-navbar">
-      <a href="/">Home</a>
-      <a href="/board.htm">Board</a>
-      <a href="/microide.htm">IDE</a>
-      <a href="/log.htm">Log</a>
+    <div class="card">
+      <div class="block header">
+        <h3>Insights</h3>
+      </div>
+
+      <div class="block">
+        <p><a href="/env.json">Env file</a></p>
+        <p><a href="/config.json">Config file</a></p>
+
+        <p><a href="/$board">State of elements</a></p>
+        <p><a href="/$list">current files</a></p>
+        <p><a href="/ssdp.xml">SSDP description</a></p>
+        <p><a href="/$reboot">reboot</a></p>
+      </div>
     </div>
 
-    <div class="row wrap">
-      <div class="col card">
-        <div class="block header">
-          <h3>Build-in Setup Pages</h3>
-        </div>
-        <div class="block">
-          <p><a href="$setup.htm">WiFi Setup</a></p>
-          <p><a href="$update.htm">Web Update</a></p>
-          <p><a href="$upload.htm">File Upload</a></p>
-          <p><a href="updateicons.htm">Update FavIcons</a></p>
-          <p><a href="/panel.htm">Panel</a></p>
-        </div>
+    <div class="card">
+      <div class="block header">
+        <h3>File System Memory</h3>
       </div>
 
-      <div class="col card">
-        <div class="block header">
-          <h3>Insights</h3>
-        </div>
-
-        <div class="block">
-          <p><a href="/env.json">Env file</a></p>
-          <p><a href="/config.json">Config file</a></p>
-
-          <p><a href="/$board">State of elements</a></p>
-          <p><a href="/$list">current files</a></p>
-          <p><a href="/ssdp.xml">SSDP description</a></p>
-          <p><a href="/$reboot">reboot</a></p>
-        </div>
+      <div class="block">
+        <object id="meminfo" data="chartpie.svg" type="image/svg+xml" style="float:left;width:120px;height:120px;"></object>
+        <p><span id="memTotal"></span> bytes available.</p>
+        <p><span id="memUsed"></span> bytes (<span id="memPart"></span>%) in use</p>
       </div>
-
-      <div class="col card">
-        <div class="block header">
-          <h3>File System Memory</h3>
-        </div>
-
-        <div class="block">
-          <object id="meminfo" data="chartpie.svg" type="image/svg+xml" style="float:left;width:120px;height:120px;"></object>
-          <p><span id="memTotal"></span> bytes available.</p>
-          <p><span id="memUsed"></span> bytes (<span id="memPart"></span>%) in use</p>
-        </div>
-      </div>
-
-      <div class="col card">
-        <div class="block header">
-          <h3>SysInfo</h3>
-        </div>
-        <div class="block">
-          <pre id="sysinfo"></pre>
-        </div>
-      </div>
-
-      <div class="col card">
-        <div class="block">
-          <h3>Dev-Links</h3>
-          <p><a href="portal.htm">portal.htm</a></p>
-          <p><a href="portalconfig.htm">portalConfig.htm</a></p>
-          <p><a href="monitor.htm">monitor.htm</a></p>
-          <p><a href="iotstylecheck.htm">iotStyleCheck</a></p>
-          <p><a href="chartline-test.htm">chartLine-test</a></p>
-          <p><a href="chartpie-test.htm">chartPie-test</a></p>
-          <p><a href="chartgauge-test.htm">gauge-test</a></p>
-          <p><a href="elementcheck.htm">elementcheck</a></p>
-        </div>
-      </div>
-
     </div>
+
+    <div class="card">
+      <div class="block header">
+        <h3>SysInfo</h3>
+      </div>
+      <div class="block">
+        <pre id="sysinfo"></pre>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="block">
+        <h3>Dev-Links</h3>
+        <p><a href="portal.htm">portal.htm</a></p>
+        <p><a href="portalconfig.htm">portalConfig.htm</a></p>
+        <p><a href="monitor.htm">monitor.htm</a></p>
+        <p><a href="iotstylecheck.htm">iotStyleCheck</a></p>
+        <p><a href="chartline-test.htm">chartLine-test</a></p>
+        <p><a href="chartpie-test.htm">chartPie-test</a></p>
+        <p><a href="chartgauge-test.htm">gauge-test</a></p>
+        <p><a href="elementcheck.htm">elementcheck</a></p>
+      </div>
+    </div>
+
   </div>
 
   <script>

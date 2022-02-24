@@ -689,7 +689,7 @@ DialogFormClass = DialogFormClass_1 = __decorate([
 let DisplayDotWidgetClass = class DisplayDotWidgetClass extends GenericWidgetClass {
     connectedCallback() {
         super.connectedCallback();
-        this._dispElem = document.querySelector('#panel .display');
+        this._dispElem = document.querySelector('.panel .display');
         if (this._dispElem) {
             this._elem = createHTMLElement(this._dispElem, 'span', { class: 'dot' });
             this.updateElem();
@@ -733,7 +733,7 @@ DisplayDotWidgetClass = __decorate([
 let DisplayLineWidgetClass = class DisplayLineWidgetClass extends GenericWidgetClass {
     connectedCallback() {
         super.connectedCallback();
-        this._dispElem = document.querySelector('#panel .display');
+        this._dispElem = document.querySelector('.panel .display');
         if (this._dispElem) {
             this._elem = createHTMLElement(this._dispElem, 'span', { class: 'line' });
             this.updateElem();
@@ -773,7 +773,7 @@ DisplayLineWidgetClass = __decorate([
 let DisplayTextWidgetClass = class DisplayTextWidgetClass extends GenericWidgetClass {
     connectedCallback() {
         super.connectedCallback();
-        this._dispElem = document.querySelector('#panel .display');
+        this._dispElem = document.querySelector('.panel .display');
         if (this._dispElem) {
             this._grid = Number(this._dispElem.getAttribute('grid') || 1);
             this._elem = createHTMLElement(this._dispElem, 'span', { class: 'text', style: 'top:0;left:0;display:none' });

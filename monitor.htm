@@ -49,37 +49,31 @@
 </head>
 
 <body>
-  <div class="container-fluid">
-    <div class="row u-header">
-      <a href="/" title="Startpage"><svg class="icon">
-          <use href="./icons.svg#device" />
-        </svg></a>
-      <h1>IoT HomeDing Monitor</h1>
-    </div>
-
-    <div class="row">
-      <div class="col">
-        <table is="table-sortable" id="devices" class="dataTab">
-          <thead>
-            <tr>
-              <th>*</th>
-              <th sort>hostname</th>
-              <th sort>room</th>
-              <th sort>title</th>
-              <th>memory</th>
-              <th sort>core</th>
-              <th sort=date>date</th>
-              <th>uptime</th>
-              <th sort>flash</th>
-              <th>safemode</th>
-              <th>...</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-      </div>
-    </div>
+  <div class="u-header">
+    <a href="/" title="Startpage"><svg class="icon">
+        <use href="./icons.svg#device" />
+      </svg></a>
+    <h1>IoT HomeDing Monitor</h1>
   </div>
+
+  <table is="table-sortable" id="devices" class="dataTab">
+    <thead>
+      <tr>
+        <th>*</th>
+        <th sort>hostname</th>
+        <th sort>room</th>
+        <th sort>title</th>
+        <th>memory</th>
+        <th sort>core</th>
+        <th sort=date>date</th>
+        <th>uptime</th>
+        <th sort>flash</th>
+        <th>safemode</th>
+        <th>...</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
 
   <script>
     window.onerror = function (msg, url, lineNo, columnNo, error) {
@@ -135,14 +129,14 @@
 
     function fmtDuration(dur) {
       var ret = '';
-      if (dur < 24*60*60) {
+      if (dur < 24 * 60 * 60) {
         var d = new Date(dur * 1000);
         ret = d.toISOString().split(/[T\.]/)[1];
       } else {
-        var d = dur / (24*60*60);
+        var d = dur / (24 * 60 * 60);
         ret = d.toFixed(1) + 'd';
       }
-      return(ret);
+      return (ret);
     }
 
     function addDevice(name, data) {

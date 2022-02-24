@@ -18,7 +18,7 @@ class DisplayLineWidgetClass extends GenericWidgetClass {
 
   connectedCallback() {
     super.connectedCallback();
-    this._dispElem = document.querySelector('#panel .display');
+    this._dispElem = document.querySelector('.panel .display');
     if (this._dispElem) {
       this._elem = createHTMLElement(this._dispElem, 'span', { class: 'line' });
       this.updateElem();

@@ -125,13 +125,8 @@ const assets = [
   { m: 'xml', src: 'icons.svg' },
   { m: 'xml', src: 'i/start.svg' },
   { m: 'xml', src: 'i/stop.svg' },
-  { m: 'xml', src: 'i/plus.svg' },
-  { m: 'xml', src: 'i/minus.svg' },
   { m: 'xml', src: 'i/default.svg' },
-  { m: 'xml', src: 'i/ide.svg' },
   { m: 'xml', src: 'i/no.svg' },
-  { m: 'xml', src: 'i/device.svg' },
-  { m: 'xml', src: 'i/config.svg' },
   { m: 'css', src: 'iotstyle.scss', tar: 'iotstyle.css' },
 
   { m: 'xml', src: 'chartline.svg' },

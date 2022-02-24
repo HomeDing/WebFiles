@@ -2,6 +2,7 @@
 // colors, dark mode, sizes, page level layout
 // This is part of the micro css implementation.
 
+
 // ===== Colors =====
 // hue of 220 is signature of this style
 
@@ -21,9 +22,6 @@ $u-disabled: gray; // disabled objects
 $u-heading: $u-primary; // any headlines
 $u-connect: #00cc00; // connectivity / net
 
-$u-card-border: none;
-$u-card-radius: 0.4rem;
-
 $u-on: lighten(green, 10%);
 $u-off: red;
 
@@ -34,17 +32,26 @@ $u-border-active: 0.1em solid $u-border-color-active;
 $u-navbar: $u-primary;
 $u-navbar-text: white;
 
+
 // ===== Sizes =====
 
 $white-space: 1rem;
 $gutter: calc($white-space / 2);
 $gutter2: calc($white-space / 4);
 
-// @debug $gutter;
-// @debug $gutter2;
-
 $u-btn-radius: 0.2em;
 $u-output-border: $u-border-none;
+
+
+// ===== global Layout =====
+
+$u-card-border: none;
+$u-card-radius: 0.4rem;
+$u-card-small-width: 11.5rem;
+$u-card-width: 2* $u-card-small-width + $gutter;
+
+
+// ===== font =====
 
 $font-sans-serif: Arial, ui-sans-serif, sans-serif;
 
@@ -78,6 +85,12 @@ body {
   font-size: 1em;
   color: var(--color);
   background-color: var(--back);
+}
+
+@media (min-width: 720px) {
+  body {
+    padding: $white-space;
+  }
 }
 
 /* apply a natural box layout model to all elements, but allowing components to change */
@@ -186,7 +199,7 @@ button {
 
 input[type='color'] {
   padding: 0;
-  border:none;
+  border: none;
 }
 
 input::placeholder {
@@ -276,98 +289,7 @@ dialog {
   }
 }
 
-// ===== Grid Design with grid of 6 =====
-
-.container {
-  margin-right: 2rem;
-  margin-left: 2rem;
-
-  @media (max-width: 720px) {
-    margin-right: 0.6rem;
-    margin-left: 0.6rem;
-  }
-}
-
-.container-fluid {
-  margin-right: 0;
-  margin-left: 0;
-  padding: $white-space;
-
-  @media (max-width: 720px) {
-    padding: 0;
-  }
-}
-
-.row {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  align-items: flex-start;
-  margin: 0 0 0 -$gutter;
-  clear: both;
-  padding: 0 0 $gutter 0;
-
-  &.wrap {
-    flex-wrap: wrap;
-  }
-
-  @media (max-width: 720px) {
-    margin: 0;
-  }
-
-  &.nogutter {
-    margin: 0;
-    padding: 0;
-
-    > .col {
-      margin: 0;
-      padding: 0;
-    }
-  }
-}
-
-.col,
-.col-1,
-.col-2,
-.col-3,
-.col-4,
-.col-5,
-.col-6 {
-  flex: 0 0 auto;
-  margin: $gutter 0 0 $gutter;
-
-  @media (max-width: 720px) {
-    margin-left: 1px;
-  }
-}
-
-.col.stretch {
-  flex-grow: 1;
-}
-
-.col-1 {
-  flex-basis: 16.66666667%;
-}
-
-.col-2 {
-  flex-basis: 33.33333333%;
-}
-
-.col-3 {
-  flex-basis: 50%;
-}
-
-.col-4 {
-  flex-basis: 66.66666667%;
-}
-
-.col-5 {
-  flex-basis: 83.33333334%;
-}
-
-.col-6 {
-  flex-basis: 100%;
-}
+// use-cases of svg icons
 
 svg {
   color: currentColor;
@@ -437,7 +359,10 @@ main {
 // The header in the micro css is used to display the primary icon of the device and title.
 
 .u-header {
-  margin-bottom: 0;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  margin-bottom: $gutter;
 
   .icon {
     margin-right: $gutter;
@@ -457,7 +382,11 @@ main {
 // u-navbar is a horizontal always visible menu just below the header.
 
 .u-navbar {
-  margin-bottom: 0;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  margin-bottom: $gutter;
+
   padding: $gutter $white-space;
   background-color: $u-navbar;
   color: $u-navbar-text;

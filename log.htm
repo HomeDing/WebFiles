@@ -20,48 +20,43 @@
 
   <script src="micro.js"></script>
   <style>
-    html,
-    body {
-      height: 100%;
+    .flex-container {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      padding: 1rem;
     }
 
     pre.code {
-      display: block;
-      margin: 0;
-      border: solid 1px black;
       padding: 0.2em;
-      font-family: Courier New, Courier, monospace;
       font-size: 0.75rem;
       line-height: 1.2;
-      color: black;
       background-color: #fffff8;
+      color: black;
+      border: 1px solid black;
       overflow-x: hidden;
       overflow-y: scroll;
-      height: 100%;
-      width: 100%;
     }
   </style>
 </head>
 
-<body style="height:100%;">
-  <div class="container-fluid">
-    <div class="row u-header">
-      <svg class="icon"><use href="./icons.svg#log" /></svg>
+<body style="margin:0;padding:0">
+  <div class="flex-container">
+    <div class="u-header">
+      <svg class="icon">
+        <use href="./icons.svg#log" />
+      </svg>
       <h1>Log output</h1>
     </div>
 
-    <div class="row u-navbar">
+    <div class="u-navbar">
       <a href="/">Home</a>
       <a href="/board.htm">Board</a>
       <a href="/microide.htm">IDE</a>
       <a href="/log.htm">Log</a>
     </div>
 
-    <div class="row " style="flex:1 1 auto;overflow:hidden">
-      <div class="col stretch" style="align-self:stretch;overflow:hidden">
-        <pre class="code" id="logtext"></pre>
-      </div>
-    </div>
+    <pre class="code" style="flex-grow:1" id="logtext"></pre>
   </div>
 
   <script>

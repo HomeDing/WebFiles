@@ -18,7 +18,7 @@ class DisplayDotWidgetClass extends GenericWidgetClass {
   // When the card is created also create a html tag inside the display.
   connectedCallback() {
     super.connectedCallback();
-    this._dispElem = document.querySelector('#panel .display');
+    this._dispElem = document.querySelector('.panel .display');
     if (this._dispElem) {
       this._elem = createHTMLElement(this._dispElem, 'span', { class: 'dot' });
       this.updateElem();
