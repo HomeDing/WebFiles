@@ -12,8 +12,30 @@ class GenericWidgetClass extends MicroControlClass {
   actions!: string[];
   subId!: number;
 
+  static idc = 42;
+  protected uid(obj: HTMLElement): string {
+    if (!obj.id) {
+      obj.id = 'o' + (GenericWidgetClass.idc++);
+    }
+    return (obj.id);
+  }
+
+
   connectedCallback() {
     super.connectedCallback();
+
+    // attach labels to inputs
+    this.querySelectorAll('label:not([for])+input').forEach(iObj => {
+      const lObj = iObj.previousElementSibling as HTMLLabelElement;
+      lObj.htmlFor = this.uid(iObj as HTMLInputElement);
+    });
+    
+    this.querySelectorAll('label:not([for])+div input').forEach(iObj => {
+      const lObj = iObj.parentElement?.previousElementSibling as HTMLLabelElement;
+      lObj.htmlFor = 
+      this.uid(iObj as HTMLInputElement);
+    });
+
     if (!this.microid) { this.microid = ''; }
     this.data = { id: this.microid };
     this.actions = [];

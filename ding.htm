@@ -55,9 +55,9 @@
       <div class="block">
         <span class="u-bool ux-value border" u-active="value"></span>
         <div u-is="input">
-          <label class="down">off</label>
+          <span class="down">off</span>
           <input class="switch" u-value="value" type="range">
-          <label class="up">on</label>
+          <span class="up">on</span>
         </div>
       </div>
     </div>
@@ -72,10 +72,8 @@
           <label><input name="mode" u-value="mode" type="radio" value="on">On</label>
           <label><input name="mode" u-value="mode" type="radio" value="timer">Timer</label>
         </div>
-        <label>Start:</label>
-        <span u-text="ontime"></span>
-        <label>End:</label>
-        <span u-text="offtime"></span>
+        <label>Start:</label><output u-text="ontime"></output>
+        <label>End:</label><output u-text="offtime"></output>
       </div>
     </form>
 
@@ -126,7 +124,7 @@
       <div u-is="include" ref=".cHead"></div>
       <div class="block">
         <span class="u-bool ux-value" u-active="value"></span>
-        <div class="form-grid"><label>value:</label><span u-text="value"></span></div>
+        <div class="form-grid"><label>value:</label><output u-text="value"></output></div>
       </div>
     </div>
 

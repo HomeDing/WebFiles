@@ -154,15 +154,6 @@
             <label><input name="mode" u-value="mode" type="radio" value="on">On</label>
             <label><input name="mode" u-value="mode" type="radio" value="timer">Timer</label>
           </div>
-          <!-- <div class="form-inline">
-              <label class="down"><svg class="icon">
-                  <use href="./icons.svg#minus" />
-                </svg></label>
-              <label class="down">off</label>
-              <input class="switch" type="range">
-              <label class="up">on</label>
-              <input style="width: 6ch;">
-            </div> -->
           <label>label:</label>
           <span><label><input type="checkbox">done.</label></span>
           <div class="btn-group">
@@ -173,13 +164,13 @@
 
           <label>volume:</label>
           <div u-is="input">
-            <label class="down"><svg class="icon">
+            <span class="down"><svg class="icon">
                 <use href="./icons.svg#minus" />
-              </svg></label>
+              </svg></span>
             <input type="range" min="0" max="8">
-            <label class="up"><svg class="icon">
+            <span class="up"><svg class="icon">
                 <use href="./icons.svg#plus" />
-              </svg></label>
+              </svg></span>
           </div>
 
           <label>hue:</label>
@@ -187,9 +178,9 @@
 
           <label>mute:</label>
           <div u-is="input" u-active="value">
-            <label class="down">off</label>
+            <span class="down">off</span>
             <input class="switch" type="range">
-            <label class="up">on</label>
+            <span class="up">on</span>
           </div>
 
         </div>
@@ -261,9 +252,9 @@
         </svg>
         <h3>.icon.small</h3>
         <div u-is="input" u-active="value">
-          <label class="down">off</label>
+          <span class="down">off</span>
           <input class="switch" type="range">
-          <label class="up">on</label>
+          <span class="up">on</span>
         </div>
       </div>
     </div>

@@ -5,8 +5,8 @@
   "and/0": { "active": "true", "value": "0" },
   "or/0": { "active": "true", "value": "1" },
   "analog/0": { "active": "true", "value": "555" },
-  "color/0": { "active": "true", "value": "x345600" },
-  "neo/0": { "active": "true", "value": "x123456" },
+  "color/0": { "active": "true", "value": "#345600" },
+  "neo/0": { "active": "true", "value": "#123456" },
   "bme680": { "0": { "active":1, "temperature": "12.45", "pressure": "977.00"}} 
 
 }

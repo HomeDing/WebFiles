@@ -65,7 +65,7 @@
   </div>
 
   <main class="panel"></main>
-  
+
   <div id="u-templates" style="display:none">
 
     <div u-control="modal" u-is="modal">
@@ -87,7 +87,7 @@
     <div class="card" u-control="generic" u-is="generic" microID="${id}">
       <div u-is="include" ref=".cHead"></div>
       <div class="block">
-        <div class="form-grid"><label>Value:</label><span u-text="value"></span></div>
+        <div class="form-grid"><label>Value:</label><output u-text="value"></output></div>
       </div>
     </div>
 
@@ -102,8 +102,8 @@
       </fieldset>
       <div class="block">
         <div class="form-grid">
-          <label>Start:</label><span u-text="ontime"></span>
-          <label>End:</label><span u-text="offtime"></span>
+          <label>Start:</label><output u-text="ontime"></output>
+          <label>End:</label><output u-text="offtime"></output>
         </div>
       </div>
     </form>
@@ -113,8 +113,8 @@
       <div class="block">
         <div class="form-grid">
           <label>ReadTime:</label><input u-value="readtime" type="time" step="1" />
-          <label>Now:</label><span u-text="now"></span>
-          <label>set Time:</label><span class="now"></span>
+          <label>Now:</label><output u-text="now"></output>
+          <label>set Time:</label><output class="now"></output>
         </div>
         <div class="block footer">
           <button style="float:right">set</button>
@@ -127,9 +127,9 @@
       <div class="block">
         <span class="u-bool ux-value border" u-active="value"></span>
         <div u-is="input">
-          <label class="down">off</label>
-          <input class="switch" u-value="value" type="range">
-          <label class="up">on</label>
+          <span class="down">off</span>
+          <input id="${id}O" class="switch" u-value="value" type="range">
+          <span class="up">on</span>
         </div>
       </div>
     </div>
@@ -139,7 +139,7 @@
       <div class="block form-grid">
         <label>value:</label>
         <span u-is="input">
-          <input type="range" u-value="value"><span u-text="value"></span></span>
+          <input type="range" u-value="value"><output u-text="value"></output></span>
       </div>
     </div>
 
@@ -147,7 +147,7 @@
       <div u-is="include" ref=".cHead"></div>
       <div class="block">
         <span class="u-bool ux-value" u-active="value"></span>
-        <div class="form-grid"><label>value:</label><span u-text="value"></span></div>
+        <div class="form-grid"><label>value:</label><output u-text="value"></output></div>
       </div>
     </div>
 
@@ -181,7 +181,7 @@
       <div u-is="include" ref=".cHead"></div>
       <div class="block">
         <span u-color="value" class="border" style="width:4rem;height:4rem;float:right;border-radius:50%;"></span>
-        <div class="form-grid"><label>value:</label><output u-text="value">xxx</output>
+        <div class="form-grid"><label>value:</label><output u-text="value"></output>
           <label>brightness:</label><output u-text="brightness"></output>
         </div>
       </div>
@@ -191,16 +191,16 @@
       <div u-is="include" ref=".cHead"></div>
       <div class="block">
         <div style="text-align: center;"><span u-text="value" style="font-size:4rem;font-style: italic;"></span></div>
-        <div class="form-grid"><label>brightness:</label><span u-text="brightness"></span></div>
+        <div class="form-grid"><label>brightness:</label><output u-text="brightness"></output></div>
       </div>
     </div>
 
     <div class="card" u-control="ina2xx" id="${id}" u-is="generic" microID="${id}">
       <div u-is="include" ref=".cHead"></div>
-      <div class="block">
-        <div class="form-grid"><label>Voltage:</label><span u-text="voltage"></span></div>
-        <div class="form-grid"><label>Current:</label><span u-text="current"></span></div>
-        <div class="form-grid"><label>Power:</label><span u-text="power"></span></div>
+      <div class="block form-grid">
+        <label>Voltage:</label><output u-text="voltage"></output>
+        <label>Current:</label><output u-text="current"></output>
+        <label>Power:</label><output u-text="power"></output>
       </div>
     </div>
 
@@ -233,6 +233,14 @@
         <h3>Scenes</h3>
       </div>
       <div class="block"></div>
+    </div>
+
+    <div class="card" u-control="my" id="${id}" u-is="generic" microID="${id}">
+      <div u-is="include" ref=".cHead"></div>
+      <div class="block form-grid">
+        <label>Pin:</label><output u-text="pin"></output>
+        <label>Interval:</label><output u-text="interval"></output>
+      </div>
     </div>
 
   </div>

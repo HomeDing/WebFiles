@@ -17,7 +17,6 @@ class ValueWidget extends GenericWidgetClass {
   }
 
   newData(path: string, key?: string, value?: string) {
-    console.log(path, key, value);
     if ((this._input) && (value)) {
       if (key === 'min') {
         this._input.min = value;

@@ -232,9 +232,26 @@ function MicroControl(isSelector) {
         return target;
     };
 }
-let GenericWidgetClass = class GenericWidgetClass extends MicroControlClass {
+var GenericWidgetClass_1;
+let GenericWidgetClass = GenericWidgetClass_1 = class GenericWidgetClass extends MicroControlClass {
+    uid(obj) {
+        if (!obj.id) {
+            obj.id = 'o' + (GenericWidgetClass_1.idc++);
+        }
+        return (obj.id);
+    }
     connectedCallback() {
         super.connectedCallback();
+        this.querySelectorAll('label:not([for])+input').forEach(iObj => {
+            const lObj = iObj.previousElementSibling;
+            lObj.htmlFor = this.uid(iObj);
+        });
+        this.querySelectorAll('label:not([for])+div input').forEach(iObj => {
+            var _a;
+            const lObj = (_a = iObj.parentElement) === null || _a === void 0 ? void 0 : _a.previousElementSibling;
+            lObj.htmlFor =
+                this.uid(iObj);
+        });
         if (!this.microid) {
             this.microid = '';
         }
@@ -358,7 +375,8 @@ let GenericWidgetClass = class GenericWidgetClass extends MicroControlClass {
         });
     }
 };
-GenericWidgetClass = __decorate([
+GenericWidgetClass.idc = 42;
+GenericWidgetClass = GenericWidgetClass_1 = __decorate([
     MicroControl('generic')
 ], GenericWidgetClass);
 let BL0937WidgetClass = class BL0937WidgetClass extends GenericWidgetClass {
@@ -890,9 +908,6 @@ let InputWidgetClass = class InputWidgetClass extends MicroControlClass {
             this._input.dispatchEvent(new Event('change', { bubbles: true }));
         }
     }
-    newData(path, key, value) {
-        console.log(path, key, value);
-    }
     on_change() {
         this._check();
     }
@@ -1105,7 +1120,6 @@ let SceneWidgetClass = SceneWidgetClass_1 = class SceneWidgetClass extends Gener
         this._buttonObj.textContent = '-';
     }
     on_click(evt) {
-        console.log(evt.target);
         const btnObj = evt.target;
         let action = btnObj.getAttribute('microid');
         if (action) {
@@ -1282,7 +1296,6 @@ let ValueWidget = class ValueWidget extends GenericWidgetClass {
         this._input = this.querySelector('input');
     }
     newData(path, key, value) {
-        console.log(path, key, value);
         if ((this._input) && (value)) {
             if (key === 'min') {
                 this._input.min = value;

@@ -249,7 +249,13 @@ export class HomeDingServer {
         this._boardState = {};
         if (this._caseFolder) {
           // get current state from case-folder
-          this._boardState = JSON.parse(await fs.promises.readFile(this._boardFileName, 'utf8'));
+          try {
+            this._boardState = JSON.parse(await fs.promises.readFile(this._boardFileName, 'utf8'));
+          } catch(err) {
+            Logger.error("State could be loaded:", err);
+            res.sendStatus(500);
+            return;
+          }
         }
       }
 

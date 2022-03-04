@@ -97,7 +97,6 @@
     var devList = [];
 
     function resetTimeout() {
-      console.log(iframeObj.src);
       if (timerRef) window.clearTimeout(timerRef);
       timerRef = window.setTimeout(() => {
         iframeObj.src = 'portalidle.htm';

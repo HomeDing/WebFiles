@@ -53,13 +53,11 @@
 <form method="dialog" class="card" u-control="timer" microID="${id}" u-is="timer">
   <div u-is="include" ref=".cHead"></div>
   <span class="u-bool ux-value" u-active="value" style="top:2rem;"></span>
-  <fieldset class="block">
+  <fieldset class="block btn-group">
     <legend>Mode</legend>
-    <div class="btn-group" style="float: left;">
-      <label><input name="mode" u-value="mode" type="radio" value="off">Off</label>
-      <label><input name="mode" u-value="mode" type="radio" value="on">On</label>
-      <label><input name="mode" u-value="mode" type="radio" value="timer">Timer</label>
-    </div>
+    <label><input name="mode" u-value="mode" type="radio" value="off">Off</label>
+    <label><input name="mode" u-value="mode" type="radio" value="on">On</label>
+    <label><input name="mode" u-value="mode" type="radio" value="timer">Timer</label>
   </fieldset>
 
   <div class="block">
@@ -87,7 +85,7 @@
   <div u-is="include" ref=".cHead"></div>
   <div class="block Element">
     <span class="u-bool ux-value" u-active="value" style="position: absolute;top:0.5rem;right:0.5rem"></span>
-    <div class="form-grid"><label>Value:</label><span u-text="value"></span></div>
+    <div class="form-grid"><label>Value:</label><output u-text="value"></output></div>
   </div>
 </div>
 
@@ -96,8 +94,8 @@
   <div class="block Element">
     <span class="u-bool ux-value" u-active="value" style="position: absolute;top:0.5rem;right:0.5rem"></span>
     <div class="form-grid">
-      <label>Reference:</label><span u-text="reference"></span>
-      <label>Value:</label><span u-text="value"></span>
+      <label>Reference:</label><output u-text="reference"></output>
+      <label>Value:</label><output u-text="value"></output>
     </div>
   </div>
 </div>
@@ -142,21 +140,21 @@
 </div>
 
 <div class="card hidden" u-control="displaytext" u-is="displaytext" microID="${id}">
-  <div u-is="include" ref=".cHead"></div>
+  <!-- <div u-is="include" ref=".cHead"></div>
   <div class="block">
-    <div class="form-grid"><label>Value:</label><span u-text="value"></span></div>
-  </div>
+    <div class="form-grid"><label>Value:</label><output u-text="value"></output></div>
+  </div> -->
 </div>
 
 <div class="card hidden" u-control="displaydot" u-is="displaydot" microID="${id}">
-  <div u-is="include" ref=".cHead"></div>
+  <!-- <div u-is="include" ref=".cHead"></div>
   <div class="block">
-    <div class="form-grid"><label>Value:</label><span u-text="value"></span></div>
-  </div>
+    <div class="form-grid"><label>Value:</label><output u-text="value"></output></div>
+  </div> -->
 </div>
 
 <div class="card hidden" u-control="displayline" u-is="displayline" microID="${id}">
-  <div u-is="include" ref=".cHead"></div>
-  <div class="block">(<span u-text="x0"></span>,<span u-text="y0"></span>) /
-    (<span u-text="x1"></span>,<span u-text="y1"></span>)</div>
+  <!-- <div u-is="include" ref=".cHead"></div>
+  <div class="block">(<output u-text="x0"></output>,<output u-text="y0"></output>) /
+    (<output u-text="x1"></output>,<output u-text="y1"></output>)</div> -->
 </div>

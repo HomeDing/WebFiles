@@ -28,7 +28,6 @@ class SceneWidgetClass extends GenericWidgetClass {
   }
 
   on_click(evt: MouseEvent) {
-    console.log(evt.target);
     const btnObj = evt.target as HTMLButtonElement;
     let action = btnObj.getAttribute('microid');
     if (action) {
