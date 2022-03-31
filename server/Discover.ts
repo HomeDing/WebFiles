@@ -84,15 +84,18 @@ export class DeviceDiscovery {
 
   // got a response, check for new device
   private addDevice(response: mDNS.ResponsePacket) {
-    // console.log('response:', response);
-    let isNew = true;
+    Logger.trace('Answer:', response.answers[0].name);
 
+    let isNew = true;
     const isHomeDingDevice = response.answers
       .filter((a) => (a.type === 'PTR'))
       .filter((a) => (a.name === '_homeding._tcp.local'))
       .length > 0;
 
     if (isHomeDingDevice) {
+      Logger.trace('Device:', response);
+      // Logger.trace('Device:', JSON.stringify(response));
+
       const hdd = {
         host: '',
         target: '',
@@ -101,19 +104,25 @@ export class DeviceDiscovery {
         path: ''
       };
 
+      // merge response.additionals and response.answers. both are "Answers" structures.
+      // mDNS implementations differ in using these collections.
+
       // console.log('HomeDing Device!');
       // console.log('response:', response);
 
-      response.additionals
+      const all = [...response.answers, ...response.additionals];
+
+      all
         .filter(a => (a.type === 'SRV'))
         .forEach(a => {
           const ta = a as SrvAnswer;
           // console.log("SRV", a.data);
           hdd.target = ta.data.target;
+          // hdd.host = hdd.target;
           hdd.host = hdd.target.replace(/\.local/, '');
         });
 
-      response.additionals
+      all
         .filter(a => (a.type === 'TXT'))
         .forEach(a => {
           const ta = a as TxtAnswer;
