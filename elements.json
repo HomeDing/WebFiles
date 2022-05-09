@@ -170,7 +170,7 @@
     "actions": ["ontemperature", "onhumidity"]
   },
 
-  "ds18b20": {
+  "dallas": {
     "properties": ["pin", "readtime", "warmuptime", "resendtime", "restart"],
     "actions": ["ontemperature"]
   },

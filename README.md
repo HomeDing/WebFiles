@@ -48,20 +48,14 @@ The steps to build the server:
 * Option to start a development server using `npm start`
 
 
-
 ## Building the portal project
 
+There is a device simulator integrated that allows to use mock files and some mock service implementations that helps
+developing and testing without the need for flashing physical devices.
 
+The portal server identifies all HomeDing devices by using mDNS and offers an easy navigation to the device specific pages.
 
-
-* There is a device simulator integrated that allows to use mock files and some mock service implementations that helps
-  developing and testing without the need for flashing physical devices. 
-* 
-* that identifies all HomeDing devices in the local network and offers an easy navigation to the device specific pages.
-* 
-*  is developed using TypeScript and SCSS compilation and packaging.
-* A 
-
+It is developed using TypeScript and SCSS compilation and packaging.
 
 This project relies on the nodejs runtime and several libraries. See installation.
 
@@ -70,10 +64,9 @@ This project relies on the nodejs runtime and several libraries. See installatio
 
 The project is not producing a npm library but a distributable solution in 2 variations. Therefore packing and publishing is not used as usual for libraries.
 
-
 npm tasks in use:
 
-```
+``` txt
 install ---> build ------------+---> start 
               |                |
               +-> build:ts     +--> pack
@@ -103,11 +96,11 @@ The resulting files are not uglified or packed to enable easily debugging.
 
 This is a pre-requisite to start the local server that simulates a device and mocks data. `npm start` will do a `npm run build` before actually starting the server.
 
-- **build:css:** compile iotstyle.scss to iotstyle.css
-- **build:css-watch:** compile iotstyle.scss to iotstyle.css and watch for changes
-- **build:ts:** compile the typescript files to micro.js
-- **build:ts-watch:** compile the typescript files to micro.js and watch for changes
-- **build:** compile typescript and SCSS
+* **build:css**: compile iotstyle.scss to iotstyle.css
+* **build:css-watch**: compile iotstyle.scss to iotstyle.css and watch for changes
+* **build:ts**: compile the typescript files to micro.js
+* **build:ts-watch**: compile the typescript files to micro.js and watch for changes
+* **build**: compile typescript and SCSS
 
 
 ## Starting the server 
@@ -151,7 +144,7 @@ This command will create a `dist` folder with all files required for upload into
 In this packing job is implemented using a nodejs implementation that you can find in `packdist.js`. It knows the required files and will copy them (no minifying etc) into the `dist` folder.
 
 In addition a list.txt file is formed that will also name all the files that can be updated by the built-in `boot.htm` implementation
-that can be started using <http://[devname]/$boot.htm> even on devices that only have a sketch uploaded and still an empty filesystem. 
+that can be started using <http://[devname]/$boot.htm> even on devices that only have a sketch uploaded and still an empty filesystem.
 
 
 ### Packing for minimal distributions
@@ -162,7 +155,7 @@ The minimal pack contains all Web UI files for a small device. This requires a f
 npm run pack:minimal
 ```
 
-This command will create a `dist-mini` folder with all files required for upload to minimal devices. 
+This command will create a `dist-mini` folder with all files required for upload to minimal devices.
 
 
 In this packing job is implemented using a nodejs implementation that you can find in `packminimal.js`.
@@ -188,6 +181,7 @@ This command will create the `upload.h` file with the embedded pages for setup
 The generated `upload.h` file needs to be copied to the Arduino library folder.
 
 The source files used are:
+
 * makeembedtemplate.txt
 * setup.htm
 * upload.htm
@@ -198,15 +192,14 @@ The source files used are:
 
 The server and the build tasks are using the following packages:
 
-- **express:** web server 
-- **debug:** logging output
-- **multer:** express middleware for uploading files 
-- **yargs:** command line for starting the server
-- **typescript:** compile typescript to javascript
-- **html-minifier :** reduce html file size
-- **node-sass :** compile SCSS to CSS
-- **uglify-js:** minify javascript files
-- **shell:** shell operations of files and folders 
+- **express**: web server 
+- **debug**: logging output
+- **multer**: express middleware for uploading files 
+- **yargs**: command line for starting the server
+- **typescript**: compile typescript to javascript
+- **html-minifier-terser**: reduce html file size
+- **sass**: compile SCSS to CSS
+- **shell**: shell operations of files and folders 
 
 
 ## See also:

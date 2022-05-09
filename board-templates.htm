@@ -1,19 +1,26 @@
 <div class="card" u-control="dht" id="${id}" microID="${id}" u-is="generic">
   <div u-is="include" ref=".cHead"></div>
-<hr />
-  <div class="block">
-    <table>
-      <tr>
-        <td style="font-size: 2rem"><span u-text="temperature">__.__</span>&deg;C</td>
-        <td style="width:1rem"></td>
-        <td style="font-size: 2rem"><span u-text="humidity">__.__</span>%</td>
-      </tr>
-      <tr>
-        <td>Temperature</td>
-        <td></td>
-        <td>Humidity</td>
-      </tr>
-    </table>
+  <hr />
+  <div class="block" style="display: flex;">
+    <div style="flex: 1">
+      <div style="font-size: 2rem"><span u-text="temperature"></span>&deg;C</div>
+      <div>Temperature</div>
+    </div>
+    <div style="flex: 1">
+      <div style="font-size: 2rem"><span u-text="humidity"></span>%</div>
+      <div>Humidity</div>
+    </div>
+  </div>
+</div>
+
+<div class="card" u-control="dallas" id="${id}" microID="${id}" u-is="generic">
+  <div u-is="include" ref=".cHead"></div>
+  <hr />
+  <div class="block" style="display: flex;">
+    <div style="flex: 1">
+      <div style="font-size: 2rem"><span u-text="temperature"></span>&deg;C</div>
+      <div>Temperature</div>
+    </div>
   </div>
 </div>
 
@@ -21,7 +28,9 @@
   <div class="block"><svg class="icon">
       <use href="./icons.svg#bme680" />
     </svg>
-    <svg class="setconfig"><use href="./icons.svg#config" /></svg>
+    <svg class="setconfig">
+      <use href="./icons.svg#config" />
+    </svg>
     <table>
       <tr>
         <td colspan="3"><span u-text="description"></span></td>
@@ -72,7 +81,7 @@
   </div>
 </form>
 
-<div class="card" u-control="button" microID="${id}" u-is="button"> 
+<div class="card" u-control="button" microID="${id}" u-is="button">
   <div u-is="include" ref=".cHead"></div>
   <div class="block"><button u-text="description">.</button></div>
 </div>
@@ -110,11 +119,17 @@
 
 <div class="card" u-control="log" u-is="log" microID="${id}">
   <div class="block header">
-    <svg class="icon"><use href="./icons.svg#${type}" /></svg>
+    <svg class="icon">
+      <use href="./icons.svg#${type}" />
+    </svg>
     <h3 u-text="title"></h3>
     <h4 u-text="description"></h4>
-    <svg class="fullscreen"><use href="./icons.svg#fullscreen" /></svg>
-    <svg class="setconfig"><use href="./icons.svg#config" /></svg>
+    <svg class="fullscreen">
+      <use href="./icons.svg#fullscreen" />
+    </svg>
+    <svg class="setconfig">
+      <use href="./icons.svg#config" />
+    </svg>
   </div>
   <div class="block"><object data="chartline.svg" type="image/svg+xml" style="width:100%"></object></div>
 </div>

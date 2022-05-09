@@ -2,9 +2,9 @@
   --color: #111111;
   --back: #e0e0e0;
   --card-back: white;
-  --card-head: #b3b3b3;
-  --card-head-active: #759ef0;
-  --focus: #406abf;
+  --card-head: hsl(220deg, 0%, 70%);
+  --card-head-active: hsl(220deg, 80%, 70%);
+  --focus: hsl(220deg, 50%, 50%);
   color-scheme: dark light;
 }
 @media (prefers-color-scheme: dark) {
@@ -12,8 +12,8 @@
     --color: #eeeeee;
     --back: #111111;
     --card-back: #373737;
-    --card-head: #4d4d4d;
-    --card-head-active: #0f388a;
+    --card-head: hsl(220deg, 0%, 30%);
+    --card-head-active: hsl(220deg, 80%, 30%);
   }
 }
 
@@ -112,7 +112,7 @@ code,
 .code,
 code.hljs,
 pre > code {
-  background-color: #ffffb9;
+  background-color: rgb(255, 255, 185);
   color: #111111;
   font-size: 1rem;
   font-family: "Courier New", Courier, monospace;
@@ -245,7 +245,7 @@ svg.button {
   height: 2em;
 }
 svg.button .object {
-  fill: #0f388a;
+  fill: hsl(220deg, 80%, 30%);
   fill-opacity: 1;
 }
 svg.button .connect {
@@ -319,7 +319,7 @@ main {
   flex-wrap: nowrap;
   margin-bottom: 0.5rem;
   padding: 0.5rem 1rem;
-  background-color: #0f388a;
+  background-color: hsl(220deg, 80%, 30%);
   color: white;
 }
 .u-navbar > .gap {
@@ -392,10 +392,10 @@ main {
   text-align: left;
 }
 .card.active .border {
-  border-color: #003399;
+  border-color: hsl(220deg, 100%, 30%);
 }
 .card.active .band::-webkit-slider-thumb {
-  border-color: #003399 transparent;
+  border-color: hsl(220deg, 100%, 30%) transparent;
 }
 .card.active > .block.header {
   background-color: var(--card-head-active);
@@ -482,8 +482,8 @@ button,
   min-width: 6.5ch;
   padding: 0.1em 0.2em;
   border-radius: 0.2em;
-  border-color: #0f388a;
-  background-color: #0f388a;
+  border-color: hsl(220deg, 80%, 30%);
+  background-color: hsl(220deg, 80%, 30%);
   color: white;
   cursor: pointer;
   user-select: none;
@@ -652,7 +652,7 @@ input.switch[type=range] {
 
 .ux-levelbar {
   display: inline-block;
-  border-color: #0f388a;
+  border-color: hsl(220deg, 80%, 30%);
   border-style: solid;
   border-width: 1px;
   width: 32px;
