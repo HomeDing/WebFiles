@@ -21,7 +21,7 @@ class LogWidgetClass extends GenericWidgetClass {
   private _api: any;
   private _chart: any;
 
-  connectedCallback() {
+  override connectedCallback() {
     super.connectedCallback();
     this._SVGObj = this.querySelector('object');
     this._xFormat = 'datetime';
@@ -97,7 +97,7 @@ class LogWidgetClass extends GenericWidgetClass {
   } // loadSVG()
 
 
-  newData(path: string, key?: string, value?: string) {
+  override newData(path: string, key?: string, value?: string) {
     super.newData(path, key, value);
     if (key === 'filename') {
       this._fName = value;

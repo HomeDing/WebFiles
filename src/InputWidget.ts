@@ -17,7 +17,7 @@ class InputWidgetClass extends MicroControlClass {
   _type!: string;
   _value!: string;
 
-  connectedCallback() {
+  override connectedCallback() {
     const inObj = this.querySelector('input');
     this._input = <HTMLInputElement><any>this;
     if ((this.tagName !== 'INPUT') && inObj) {

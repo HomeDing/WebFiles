@@ -15,7 +15,7 @@ class DisplayTextWidgetClass extends GenericWidgetClass {
   _prefix!: string;
   _postfix!: string;
 
-  connectedCallback() {
+  override connectedCallback() {
     super.connectedCallback();
     this._dispElem = document.querySelector('.panel .display');
     if (this._dispElem) {
@@ -30,7 +30,7 @@ class DisplayTextWidgetClass extends GenericWidgetClass {
     this._postfix = '';
   }
 
-  newData(path: string, key?: string, value?: string) {
+  override newData(path: string, key?: string, value?: string) {
     super.newData(path, key, value);
     if (key && value && this._elem) {
 

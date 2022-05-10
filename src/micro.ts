@@ -117,8 +117,8 @@ class MicroRegistry {
 
   // load the image when image is visible
   loadDataImage(imgElem: HTMLElement) {
-    if ((imgElem.dataset.src) && (this.isVisible(imgElem))) {
-      (imgElem as HTMLImageElement).src = imgElem.dataset.src;
+    if ((imgElem.dataset['src']) && (this.isVisible(imgElem))) {
+      (imgElem as HTMLImageElement).src = imgElem.dataset['src'];
     }
   }
 

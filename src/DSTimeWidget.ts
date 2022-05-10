@@ -11,7 +11,7 @@
 class DSTimeWidgetClass extends GenericWidgetClass {
   _nowObj!: HTMLElement;
 
-  connectedCallback() {
+  override connectedCallback() {
     super.connectedCallback();
     this._nowObj = <HTMLElement>this.querySelector('.setnow');
     window.setInterval(function (this: DSTimeWidgetClass) {
@@ -20,7 +20,7 @@ class DSTimeWidgetClass extends GenericWidgetClass {
   } // connectedCallback()
 
 
-  on_click(this: DSTimeWidgetClass, e: MouseEvent) {
+  override on_click(this: DSTimeWidgetClass, e: MouseEvent) {
     const src = e.target as HTMLElement;
     if ((src) && (src.classList.contains('setnow'))) {
       this.dispatchAction('time', this.isoDate());

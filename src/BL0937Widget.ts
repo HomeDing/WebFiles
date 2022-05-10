@@ -11,7 +11,7 @@
 class BL0937WidgetClass extends GenericWidgetClass {
   mode!: string;
 
-  connectedCallback() {
+  override connectedCallback() {
     super.connectedCallback();
     if (!this.mode) { this.mode = 'current'; }
     this.data = { id: this.microid };
@@ -32,14 +32,14 @@ class BL0937WidgetClass extends GenericWidgetClass {
   }
 
   // visualize any new data for the widget.
-  newData(path: string, key?: string, value?: string): void {
+  override newData(path: string, key?: string, value?: string): void {
     super.newData(path, key, value);
     if (key === 'mode') {
       this.setMode(value);
     }
   }
 
-  on_click(e: MouseEvent) {
+  override on_click(e: MouseEvent) {
     const src = e.target as HTMLElement;
     if (src.getAttribute('u-action') === 'mode') {
       this.setMode((<any>src)['value']);

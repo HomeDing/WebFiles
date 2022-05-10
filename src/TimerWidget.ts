@@ -16,7 +16,7 @@ class TimerWidgetClass extends GenericWidgetClass {
   ct = 0;
   time = 0;
 
-  newData(path: string, key: string, value: string) {
+  override newData(path: string, key: string, value: string) {
     super.newData(path, key, value);
     if (key === 'waittime') {
       this.wt = toSeconds(value);

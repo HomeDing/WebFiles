@@ -12,7 +12,7 @@ class PWMOutWidgetClass extends GenericWidgetClass {
   _range!: number;
   _last!: string;
 
-  connectedCallback() {
+  override connectedCallback() {
     super.connectedCallback();
     hub.subscribe(this.microid + '?*', this.newValue.bind(this));
     this._range = 255;

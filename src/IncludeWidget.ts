@@ -15,7 +15,7 @@
 class IncludeWidgetClass extends MicroControlClass {
   ref!: string | null;
 
-  connectedCallback() {
+  override connectedCallback() {
     const obj = document.querySelector('#u-templates ' + this.ref);
 
     if (obj) {

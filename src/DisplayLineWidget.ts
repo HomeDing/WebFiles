@@ -16,7 +16,7 @@ class DisplayLineWidgetClass extends GenericWidgetClass {
   _y0!: number;
   _y1!: number;
 
-  connectedCallback() {
+  override connectedCallback() {
     super.connectedCallback();
     this._dispElem = document.querySelector('.panel .display');
     if (this._dispElem) {
@@ -32,7 +32,7 @@ class DisplayLineWidgetClass extends GenericWidgetClass {
     this._y1 = 0;
   } // connectedCallback
 
-  newData(path: string, key?: string, value?: string) {
+  override newData(path: string, key?: string, value?: string) {
     super.newData(path, key, value);
     if (key && value && this._elem) {
       if (key === 'page') {

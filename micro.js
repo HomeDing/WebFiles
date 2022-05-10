@@ -87,8 +87,8 @@ class MicroRegistry {
         return (vis);
     }
     loadDataImage(imgElem) {
-        if ((imgElem.dataset.src) && (this.isVisible(imgElem))) {
-            imgElem.src = imgElem.dataset.src;
+        if ((imgElem.dataset['src']) && (this.isVisible(imgElem))) {
+            imgElem.src = imgElem.dataset['src'];
         }
     }
     insertTemplate(root, controlName, props) {

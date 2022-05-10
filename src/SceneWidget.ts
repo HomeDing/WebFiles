@@ -12,7 +12,7 @@ class SceneWidgetClass extends GenericWidgetClass {
   static _sceneCard?: HTMLElement;
   _buttonObj!: HTMLButtonElement;
 
-  connectedCallback() {
+  override connectedCallback() {
     super.connectedCallback();
     if (!SceneWidgetClass._sceneCard) {
       // used first scene as container for all buttons
@@ -27,7 +27,7 @@ class SceneWidgetClass extends GenericWidgetClass {
     this._buttonObj.textContent = '-';
   }
 
-  on_click(evt: MouseEvent) {
+  override on_click(evt: MouseEvent) {
     const btnObj = evt.target as HTMLButtonElement;
     let action = btnObj.getAttribute('microid');
     if (action) {
@@ -38,7 +38,7 @@ class SceneWidgetClass extends GenericWidgetClass {
 
   startScene() { 0 }
 
-  newData(path: string, key: string, value: string) {
+  override newData(path: string, key: string, value: string) {
     super.newData(path, key, value);
     if (key && value) {
       if (key === 'title') {

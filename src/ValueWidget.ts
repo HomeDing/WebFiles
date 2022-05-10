@@ -11,12 +11,12 @@
 class ValueWidget extends GenericWidgetClass {
   _input!: HTMLInputElement | null;
 
-  connectedCallback() {
+  override connectedCallback() {
     super.connectedCallback();
     this._input = this.querySelector('input')
   }
 
-  newData(path: string, key?: string, value?: string) {
+  override newData(path: string, key?: string, value?: string) {
     if ((this._input) && (value)) {
       if (key === 'min') {
         this._input.min = value;

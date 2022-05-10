@@ -16,7 +16,7 @@ class ColorWidgetClass extends GenericWidgetClass {
   private _white: number | undefined;   // actual white value from the slider
   private _brightness!: number;   // actual brightness value from the slider
 
-  connectedCallback() {
+  override connectedCallback() {
     super.connectedCallback();
     this._value = '00000000';
     this._color = 'x000000';
@@ -25,7 +25,7 @@ class ColorWidgetClass extends GenericWidgetClass {
 
 
   // visualize any new data for the widget.
-  newData(_path: string, key?: string, value?: string) {
+  override newData(_path: string, key?: string, value?: string) {
     let newValue: string = this._value;
 
     if (!value) {

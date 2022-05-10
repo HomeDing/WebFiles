@@ -21,7 +21,7 @@ class GenericWidgetClass extends MicroControlClass {
   }
 
 
-  connectedCallback() {
+  override connectedCallback() {
     super.connectedCallback();
 
     // attach labels to inputs

@@ -16,7 +16,7 @@ class DisplayDotWidgetClass extends GenericWidgetClass {
   _value!: boolean;
 
   // When the card is created also create a html tag inside the display.
-  connectedCallback() {
+  override connectedCallback() {
     super.connectedCallback();
     this._dispElem = document.querySelector('.panel .display');
     if (this._dispElem) {
@@ -33,7 +33,7 @@ class DisplayDotWidgetClass extends GenericWidgetClass {
 
 
   // new value is set in the element.
-  newData(path: string, key?: string, value?: string) {
+  override newData(path: string, key?: string, value?: string) {
     super.newData(path, key, value);
     if (key && value && this._elem) {
       if (key === 'value') {

@@ -4,6 +4,7 @@
   
   "compilerOptions": {
     "target": "es6",
+    "strict": true,
     "outFile": "../micro.js",
 
     "allowJs": false,
@@ -15,15 +16,22 @@
       "dom.iterable"
     ],
     "skipLibCheck": true,
-    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "allowUnusedLabels": false,
+    "allowUnreachableCode": false,
+
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitOverride": true,
+    "noImplicitReturns": true,
+    "noPropertyAccessFromIndexSignature": true,
+    // "noUncheckedIndexedAccess": true,
+
     "sourceMap": true,
     "newLine": "LF",
     "removeComments": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "allowUnreachableCode": false,
     "downlevelIteration": true
-
   },
   "include": [
     "./*.ts"

@@ -16,7 +16,7 @@ class ButtonWidgetClass extends GenericWidgetClass {
   _start!: number;
   _duration!: number;
 
-  newData(path: string, key: string, value: string) {
+  override newData(path: string, key: string, value: string) {
     super.newData(path, key, value);
     if (key === 'onclick') {
       this._onclick = value;
@@ -27,7 +27,7 @@ class ButtonWidgetClass extends GenericWidgetClass {
     } // if
   } // newData()
 
-  on_click() {
+  override on_click() {
     if (this._duration > 800) {
       // press event
       if (this._onpress) {

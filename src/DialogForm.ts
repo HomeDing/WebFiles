@@ -29,7 +29,7 @@ class DialogFormClass extends MicroControlClass {
       (<DialogFormClass>dlg).openModalForm(data, cb);
   } // open
 
-  connectedCallback() {
+  override connectedCallback() {
     super.connectedCallback();
 
     const f = this.querySelector('form');
