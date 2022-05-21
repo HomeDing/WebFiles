@@ -215,7 +215,7 @@
       document.querySelector("meta[name=application-name]").content = value;
     });
 
-    function updateAsap(ev) {
+    function updateAsap() {
       if (timer)
         window.clearTimeout(timer);
       timer = window.setTimeout(updateState, 20);

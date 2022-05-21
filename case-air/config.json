@@ -25,12 +25,14 @@
   },
   "log": {
     "aq": {
+      "description": "Air Quality Log",
       "filename": "/aq.txt",
-      "description": "Air Quality Log"
+      "linetype": "bezier"
     },
     "hum": {
+      "description": "Humidity Log",
       "filename": "/humlog.txt",
-      "description": "Humidity Log"
+      "linetype": "bezier"
     },
     "pm": {
       "filename": "/pmlog.txt",

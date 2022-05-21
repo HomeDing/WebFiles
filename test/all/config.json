@@ -35,7 +35,7 @@
   "light": { "0": { "active":1}},
   "neo": { "0": { "active":1, "value" : "#000000"}},
   "rotary": { "0": { "active":1}},
-  "ds18b20": { "0": { "active":1}},
+  "dallas": { "0": { "active":1}},
   "bme680": { "0": { "active":1, "temperature": "12.45"}},
   "sht20": { "0": { "active":1}},
   "my9291": { "0": { "active":1}},

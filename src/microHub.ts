@@ -67,7 +67,7 @@ class MicroHub {
           let fullPath: string = path + (key ? '?' + key : '');
           if (fullPath) {
             fullPath = fullPath.toLocaleLowerCase();
-            if (fullPath.match(newEntry.match)) { newEntry.callback(path, key ? key.toLowerCase() : undefined, value); }
+            if (fullPath.match(newEntry.match)) { newEntry.callback(path, (key || '').toLowerCase(), (value || '')); }
           } // if
         }.bind(this)
       );
@@ -98,7 +98,7 @@ class MicroHub {
           let fullPath: string = path + (key ? '?' + key : '');
           if (fullPath) {
             fullPath = fullPath.toLocaleLowerCase();
-            if (fullPath.match(e.match)) { e.callback(path, key ? key.toLowerCase() : undefined, value); }
+            if (fullPath.match(e.match)) { e.callback(path, (key || '').toLowerCase(), (value || '')); }
           } // if
         }.bind(this)
       );

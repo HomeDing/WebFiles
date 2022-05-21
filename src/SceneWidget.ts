@@ -40,10 +40,8 @@ class SceneWidgetClass extends GenericWidgetClass {
 
   override newData(path: string, key: string, value: string) {
     super.newData(path, key, value);
-    if (key && value) {
-      if (key === 'title') {
-        this._buttonObj.textContent = value;
-      }
+    if (key === 'title') {
+      this._buttonObj.textContent = value;
     } // if
   } // newData()
 }

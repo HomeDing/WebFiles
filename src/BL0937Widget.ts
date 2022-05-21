@@ -32,7 +32,7 @@ class BL0937WidgetClass extends GenericWidgetClass {
   }
 
   // visualize any new data for the widget.
-  override newData(path: string, key?: string, value?: string): void {
+  override newData(path: string, key: string, value: string): void {
     super.newData(path, key, value);
     if (key === 'mode') {
       this.setMode(value);

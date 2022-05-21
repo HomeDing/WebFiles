@@ -32,9 +32,9 @@ class DisplayLineWidgetClass extends GenericWidgetClass {
     this._y1 = 0;
   } // connectedCallback
 
-  override newData(path: string, key?: string, value?: string) {
+  override newData(path: string, key: string, value: string) {
     super.newData(path, key, value);
-    if (key && value && this._elem) {
+    if (this._elem) {
       if (key === 'page') {
         this._elem.setAttribute('displayPage', value);
 

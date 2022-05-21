@@ -19,17 +19,15 @@ class DisplayWidgetClass extends GenericWidgetClass {
   }
 
   // new value is set in the element.
-  override newData(path: string, key?: string, value?: string) {
+  override newData(path: string, key: string, value: string) {
     super.newData(path, key, value);
-    if (key && value) {
-      if (key === 'page') {
-        if (value !== this._page) {
-          this._page = value;
-          this._dialogElem?.querySelectorAll(':scope > span').forEach((e) => {
-            const p = (<HTMLElement>e).getAttribute('displayPage') || '1';
-            (<any>e).style.display = (p === this._page) ? '' : 'none';
-          });
-        }
+    if (key === 'page') {
+      if (value !== this._page) {
+        this._page = value;
+        this._dialogElem?.querySelectorAll(':scope > span').forEach((e) => {
+          const p = (<HTMLElement>e).getAttribute('displayPage') || '1';
+          (<any>e).style.display = (p === this._page) ? '' : 'none';
+        });
       }
     }
   } // newValue

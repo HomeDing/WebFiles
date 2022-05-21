@@ -29,11 +29,11 @@ class GenericWidgetClass extends MicroControlClass {
       const lObj = iObj.previousElementSibling as HTMLLabelElement;
       lObj.htmlFor = this.uid(iObj as HTMLInputElement);
     });
-    
+
     this.querySelectorAll('label:not([for])+div input').forEach(iObj => {
       const lObj = iObj.parentElement?.previousElementSibling as HTMLLabelElement;
-      lObj.htmlFor = 
-      this.uid(iObj as HTMLInputElement);
+      lObj.htmlFor =
+        this.uid(iObj as HTMLInputElement);
     });
 
     if (!this.microid) { this.microid = ''; }
@@ -44,58 +44,56 @@ class GenericWidgetClass extends MicroControlClass {
   } // connectedCallback
 
   // visualize any new data for the widget.
-  newData(_path: string, key?: string, value?: string) {
+  newData(_path: string, key: string, value: string) {
     // save data to title
-    if (key && value) {
-      this.data[key] = value;
-      const ic = this.querySelector('img,h3') as HTMLElement;
-      if (ic) {
-        setAttr(ic, 'title',
-          JSON.stringify(this.data, null, 1)
-            .replace('{\n', '')
-            .replace('\n}', '')
-        );
-      }
-
-      // active card
-      if (key === 'active') {
-        this.classList.toggle('active', toBool(value));
-      }
-
-      // u-active flags
-      ['span', 'div'].forEach(elType => {
-        this.querySelectorAll(`${elType}[u-active='${key}']`).forEach(function (elem) {
-          const b = toBool(value);
-          setAttr(elem as HTMLElement, 'value', b ? '1' : '0');
-          setAttr(elem as HTMLElement, 'title', b ? 'active' : 'not active');
-          elem.classList.toggle('active', b);
-        });
-      });
-
-      // u-text: substitude textContent
-      this.querySelectorAll(`*[u-text='${key}']`).forEach(elem => {
-        if (elem.textContent !== value) { elem.textContent = value; }
-      });
-
-      // u-value: value of input and select fields
-      ['input', 'select'].forEach(elType => {
-        this.querySelectorAll(`${elType}[u-value='${key}']`)
-          .forEach(elem => {
-            if ((elem as HTMLInputElement).type === 'radio') {
-              (<HTMLInputElement>elem).checked = (<HTMLInputElement>elem).value === value;
-            } else if ((elem as HTMLInputElement).value !== value) {
-              (elem as HTMLInputElement).value = value ? value : '';
-            }
-          });
-      });
-
-      // Color
-      this.querySelectorAll(`span[u-color='${key}']`).forEach(function (elem) {
-        let col = value ? value.replace(/^x/, '#') : '#888';
-        col = col.replace(/^#\S{2}(\S{6})$/, '#$1');
-        (elem as HTMLElement).style.backgroundColor = col;
-      });
+    this.data[key] = value;
+    const ic = this.querySelector('img,h3') as HTMLElement;
+    if (ic) {
+      setAttr(ic, 'title',
+        JSON.stringify(this.data, null, 1)
+          .replace('{\n', '')
+          .replace('\n}', '')
+      );
     }
+
+    // active card
+    if (key === 'active') {
+      this.classList.toggle('active', toBool(value));
+    }
+
+    // u-active flags
+    ['span', 'div'].forEach(elType => {
+      this.querySelectorAll(`${elType}[u-active='${key}']`).forEach(function (elem) {
+        const b = toBool(value);
+        setAttr(elem as HTMLElement, 'value', b ? '1' : '0');
+        setAttr(elem as HTMLElement, 'title', b ? 'active' : 'not active');
+        elem.classList.toggle('active', b);
+      });
+    });
+
+    // u-text: substitude textContent
+    this.querySelectorAll(`*[u-text='${key}']`).forEach(elem => {
+      if (elem.textContent !== value) { elem.textContent = value; }
+    });
+
+    // u-value: value of input and select fields
+    ['input', 'select'].forEach(elType => {
+      this.querySelectorAll(`${elType}[u-value='${key}']`)
+        .forEach(elem => {
+          if ((elem as HTMLInputElement).type === 'radio') {
+            (<HTMLInputElement>elem).checked = (<HTMLInputElement>elem).value === value;
+          } else if ((elem as HTMLInputElement).value !== value) {
+            (elem as HTMLInputElement).value = value ? value : '';
+          }
+        });
+    });
+
+    // Color
+    this.querySelectorAll(`span[u-color='${key}']`).forEach(function (elem) {
+      let col = value ? value.replace(/^x/, '#') : '#888';
+      col = col.replace(/^#\S{2}(\S{6})$/, '#$1');
+      (elem as HTMLElement).style.backgroundColor = col;
+    });
   } // newData()
 
 

@@ -16,6 +16,7 @@ declare interface PromiseConstructor {
 class LogWidgetClass extends GenericWidgetClass {
   private _fName?: string;
   private _SVGObj!: HTMLObjectElement | null;
+  private _lineType!: string;
   private _xFormat!: string;
   private _yFormat!: string;
   private _api: any;
@@ -24,6 +25,7 @@ class LogWidgetClass extends GenericWidgetClass {
   override connectedCallback() {
     super.connectedCallback();
     this._SVGObj = this.querySelector('object');
+    this._lineType = 'line';
     this._xFormat = 'datetime';
     this._yFormat = 'num';
   }
@@ -33,32 +35,29 @@ class LogWidgetClass extends GenericWidgetClass {
     let allData = '';
 
     const p1 = fetch(fName, { cache: 'no-store' })
-      .then(function (result) {
-        return result.text();
+      .then(res => {
+        if (res.ok) { return res.text(); }
+        throw new Error();
       })
       .then(function (txt) {
         allData = allData + '\n' + txt;
       });
 
     const p2 = fetch(fName.replace('.txt', '_old.txt'), { cache: 'no-store' })
-      .then(function (result) {
-        return result.text();
+      .then(res => {
+        if (res.ok) { return res.text(); }
+        throw new Error();
       })
       .then(function (txt) {
         allData = txt + '\n' + allData;
-      })
-      .catch(function () {
-        // empty
       });
     Promise.allSettled([p1, p2]).then(function (this: LogWidgetClass) {
       const re = /^\d{4,},\d+/;
-      const pmArray = allData.split('\n').filter(function (e) {
-        return e.match(re);
-      });
+      const pmArray = allData.split('\n').filter(e => e.match(re));
 
       this._api.draw(
         this._chart,
-        pmArray.map(function (v) {
+        pmArray.map(v => {
           const p = v.split(',');
           return { x: p[0], y: p[1] };
         })
@@ -80,7 +79,7 @@ class LogWidgetClass extends GenericWidgetClass {
       if ((svgObj) && (svgObj.api)) {
         // now setup
         this._api = (this._SVGObj.getSVGDocument() as any).api;
-        this._chart = this._api.add('line', { linetype: 'line' });
+        this._chart = this._api.add('line', { linetype: this._lineType });
         this._api.add(['VAxis',
           { type: 'hAxis', options: { format: 'datetime' } },
           { type: 'indicator', options: { xFormat: this._xFormat, yFormat: this._yFormat } },
@@ -97,15 +96,17 @@ class LogWidgetClass extends GenericWidgetClass {
   } // loadSVG()
 
 
-  override newData(path: string, key?: string, value?: string) {
+  override newData(path: string, key: string, value: string) {
     super.newData(path, key, value);
     if (key === 'filename') {
       this._fName = value;
       this.loadSVG();
     } else if (key === 'xformat') {
-      this._xFormat = <string>value;
+      this._xFormat = value;
     } else if (key === 'yformat') {
-      this._yFormat = <string>value;
+      this._yFormat = value;
+    } else if (key === 'linetype') {
+      this._lineType = value;
     }
   } // newValue()
 }

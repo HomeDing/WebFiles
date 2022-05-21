@@ -33,9 +33,9 @@ class DisplayDotWidgetClass extends GenericWidgetClass {
 
 
   // new value is set in the element.
-  override newData(path: string, key?: string, value?: string) {
+  override newData(path: string, key: string, value: string) {
     super.newData(path, key, value);
-    if (key && value && this._elem) {
+    if (this._elem) {
       if (key === 'value') {
         this._value = toBool(value);
 

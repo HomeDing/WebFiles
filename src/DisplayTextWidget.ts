@@ -30,10 +30,9 @@ class DisplayTextWidgetClass extends GenericWidgetClass {
     this._postfix = '';
   }
 
-  override newData(path: string, key?: string, value?: string) {
+  override newData(path: string, key: string, value: string) {
     super.newData(path, key, value);
-    if (key && value && this._elem) {
-
+    if (this._elem) {
       if (key === 'value') {
         const t = `${this._prefix}${value}${this._postfix}`.replace(/ /g, '&nbsp;');
         if (this._elem.innerHTML !== t) {

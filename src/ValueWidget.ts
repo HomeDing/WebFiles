@@ -16,15 +16,15 @@ class ValueWidget extends GenericWidgetClass {
     this._input = this.querySelector('input')
   }
 
-  override newData(path: string, key?: string, value?: string) {
-    if ((this._input) && (value)) {
+  override newData(path: string, key: string, value: string) {
+    super.newData(path, key, value);
+    if (this._input) {
       if (key === 'min') {
         this._input.min = value;
       } else if (key === 'max') {
         this._input.max = value;
       }
     }
-    super.newData(path, key, value);
   }
 }
 

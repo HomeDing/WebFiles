@@ -84,7 +84,7 @@ function _calcDateSteps(l, h) {
   var ret = {};
   var v = h - l;
 
-  if ((v > day/2) && (v < day)) {
+  if ((v > day / 2) && (v < day)) {
     step = day / 4;
   } else if ((v > day) && (v < 2 * day)) {
     step = day / 2;
@@ -93,7 +93,7 @@ function _calcDateSteps(l, h) {
   } else if ((v > 6 * day) && (v < 14 * day)) {
     step = 2 * day;
   } else {
-    return(_calcSteps(l,h));
+    return (_calcSteps(l, h));
   }
   ret.high = Math.ceil(h / step) * step - tzOff;
   ret.low = Math.floor(l / step) * step + tzOff;
@@ -226,39 +226,34 @@ var ChartLineClass = function (options) {
       // remove existing line
       if (this.svgObj) this.svgObj.remove();
 
-      var values = this.data;
-      if (values) {
+      var vals = this.data;
+      if (vals) {
         var scaleX = 128 / (box.right - box.left);
         var scaleY = REGION_HEIGHT / (box.maxY - box.minY);
         var points = [];
 
         if (this.options.linetype == 'steps') {
-          points = values.map(function (p, n) {
-            return 'H' + (p.x - box.left) * scaleX + ' V' + (p.y - box.minY) * scaleY;
-          });
+          points = vals.map((p) => 'H' + (p.x - box.left) * scaleX + ' V' + (p.y - box.minY) * scaleY);
           // starting point
-          points[0] = "M" + (values[0].x - box.left) * scaleX + ',' + (values[0].y - box.minY) * scaleY;
+          points[0] = "M" + (vals[0].x - box.left) * scaleX + ',' + (vals[0].y - box.minY) * scaleY;
 
         } else if (this.options.linetype == 'line') {
-          points = values.map(function (p, n) {
-            return (n > 0 ? 'L' : 'M') + (p.x - box.left) * scaleX + ',' + (p.y - box.minY) * scaleY;
-          });
+          points = vals.map((p, n) => (n > 0 ? 'L' : 'M') + (p.x - box.left) * scaleX + ',' + (p.y - box.minY) * scaleY);
 
         } else if (this.options.linetype == 'bezier') {
-          var p = values.map(function (p) {
-            return ({ x: (p.x - box.left) * scaleX, y: (p.y - box.minY) * scaleY });
-          });
+          var p = vals.map(p => { return ({ x: (p.x - box.left) * scaleX, y: (p.y - box.minY) * scaleY }) });
+          const vl = vals.length;
 
-          var cpLen = ((box.right - box.left) / values.length / 2) * scaleX;
+          var cpLen = ((box.right - box.left) / vl / 2) * scaleX;
 
           // opposite lines as deltas with length cpLen
           var ol = [];
 
           // opposite Line at start point [is 0/0
           ol.push({ dx: 0, dy: 0 });
-          for (let n = 1; n < values.length - 1; n++) {
+          for (let n = 1; n < vl - 1; n++) {
             // calculate the opposite line, dx, dy
-            var dx = (p[n + 1].x - p[n - 10].x);
+            var dx = (p[n + 1].x - p[n - 1].x);
             var dy = (p[n + 1].y - p[n - 1].y);
             var l = Math.sqrt(dx * dx + dy * dy);
             ol.push({ dx: cpLen * dx / l, dy: cpLen * dy / l });
@@ -267,11 +262,7 @@ var ChartLineClass = function (options) {
           ol.push({ dx: 0, dy: 0 });
 
           points.push('M' + p[0].x + ',' + p[0].y);
-          for (let n = 0; n < values.length - 1; n++) {
-            // calculate the opposite line, dx, dy
-            // var dx = (p[n+1].x - p[n-1].x) * cpLen;
-            // var dy = (p[n+1].y - p[n-1].y) * cpLen;
-
+          for (let n = 0; n < vl - 1; n++) {
             points.push('C' + (p[n].x + ol[n].dx) + ',' + (p[n].y + ol[n].dy)
               + ' ' + (p[n + 1].x - ol[n + 1].dx) + ',' + (p[n + 1].y - ol[n + 1].dy)
               + ' ' + p[n + 1].x + ',' + p[n + 1].y);

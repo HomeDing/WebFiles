@@ -261,47 +261,45 @@ let GenericWidgetClass = GenericWidgetClass_1 = class GenericWidgetClass extends
         hub.replay(this.subId);
     }
     newData(_path, key, value) {
-        if (key && value) {
-            this.data[key] = value;
-            const ic = this.querySelector('img,h3');
-            if (ic) {
-                setAttr(ic, 'title', JSON.stringify(this.data, null, 1)
-                    .replace('{\n', '')
-                    .replace('\n}', ''));
-            }
-            if (key === 'active') {
-                this.classList.toggle('active', toBool(value));
-            }
-            ['span', 'div'].forEach(elType => {
-                this.querySelectorAll(`${elType}[u-active='${key}']`).forEach(function (elem) {
-                    const b = toBool(value);
-                    setAttr(elem, 'value', b ? '1' : '0');
-                    setAttr(elem, 'title', b ? 'active' : 'not active');
-                    elem.classList.toggle('active', b);
-                });
+        this.data[key] = value;
+        const ic = this.querySelector('img,h3');
+        if (ic) {
+            setAttr(ic, 'title', JSON.stringify(this.data, null, 1)
+                .replace('{\n', '')
+                .replace('\n}', ''));
+        }
+        if (key === 'active') {
+            this.classList.toggle('active', toBool(value));
+        }
+        ['span', 'div'].forEach(elType => {
+            this.querySelectorAll(`${elType}[u-active='${key}']`).forEach(function (elem) {
+                const b = toBool(value);
+                setAttr(elem, 'value', b ? '1' : '0');
+                setAttr(elem, 'title', b ? 'active' : 'not active');
+                elem.classList.toggle('active', b);
             });
-            this.querySelectorAll(`*[u-text='${key}']`).forEach(elem => {
-                if (elem.textContent !== value) {
-                    elem.textContent = value;
+        });
+        this.querySelectorAll(`*[u-text='${key}']`).forEach(elem => {
+            if (elem.textContent !== value) {
+                elem.textContent = value;
+            }
+        });
+        ['input', 'select'].forEach(elType => {
+            this.querySelectorAll(`${elType}[u-value='${key}']`)
+                .forEach(elem => {
+                if (elem.type === 'radio') {
+                    elem.checked = elem.value === value;
+                }
+                else if (elem.value !== value) {
+                    elem.value = value ? value : '';
                 }
             });
-            ['input', 'select'].forEach(elType => {
-                this.querySelectorAll(`${elType}[u-value='${key}']`)
-                    .forEach(elem => {
-                    if (elem.type === 'radio') {
-                        elem.checked = elem.value === value;
-                    }
-                    else if (elem.value !== value) {
-                        elem.value = value ? value : '';
-                    }
-                });
-            });
-            this.querySelectorAll(`span[u-color='${key}']`).forEach(function (elem) {
-                let col = value ? value.replace(/^x/, '#') : '#888';
-                col = col.replace(/^#\S{2}(\S{6})$/, '#$1');
-                elem.style.backgroundColor = col;
-            });
-        }
+        });
+        this.querySelectorAll(`span[u-color='${key}']`).forEach(function (elem) {
+            let col = value ? value.replace(/^x/, '#') : '#888';
+            col = col.replace(/^#\S{2}(\S{6})$/, '#$1');
+            elem.style.backgroundColor = col;
+        });
     }
     dispatchNext() {
         if (this.actions) {
@@ -471,11 +469,9 @@ let ColorWidgetClass = class ColorWidgetClass extends GenericWidgetClass {
         this._white = undefined;
     }
     newData(_path, key, value) {
-        let newValue = this._value;
-        if (!value) {
-        }
-        else if (key === 'value') {
-            newValue = this.normColor(value);
+        super.newData(_path, key, value);
+        if (key === 'value') {
+            const newValue = this.normColor(value);
             if (newValue.match(/[0-9a-z]{8}/)) {
                 this._color = '#' + newValue.substring(2);
             }
@@ -509,7 +505,6 @@ let ColorWidgetClass = class ColorWidgetClass extends GenericWidgetClass {
                 }
             }
         }
-        super.newData(_path, key, value);
     }
     on_input(evt) {
         const n = evt.target.name;
@@ -721,7 +716,7 @@ let DisplayDotWidgetClass = class DisplayDotWidgetClass extends GenericWidgetCla
     }
     newData(path, key, value) {
         super.newData(path, key, value);
-        if (key && value && this._elem) {
+        if (this._elem) {
             if (key === 'value') {
                 this._value = toBool(value);
             }
@@ -766,7 +761,7 @@ let DisplayLineWidgetClass = class DisplayLineWidgetClass extends GenericWidgetC
     }
     newData(path, key, value) {
         super.newData(path, key, value);
-        if (key && value && this._elem) {
+        if (this._elem) {
             if (key === 'page') {
                 this._elem.setAttribute('displayPage', value);
             }
@@ -804,7 +799,7 @@ let DisplayTextWidgetClass = class DisplayTextWidgetClass extends GenericWidgetC
     }
     newData(path, key, value) {
         super.newData(path, key, value);
-        if (key && value && this._elem) {
+        if (this._elem) {
             if (key === 'value') {
                 const t = `${this._prefix}${value}${this._postfix}`.replace(/ /g, '&nbsp;');
                 if (this._elem.innerHTML !== t) {
@@ -847,15 +842,13 @@ let DisplayWidgetClass = class DisplayWidgetClass extends GenericWidgetClass {
     newData(path, key, value) {
         var _a;
         super.newData(path, key, value);
-        if (key && value) {
-            if (key === 'page') {
-                if (value !== this._page) {
-                    this._page = value;
-                    (_a = this._dialogElem) === null || _a === void 0 ? void 0 : _a.querySelectorAll(':scope > span').forEach((e) => {
-                        const p = e.getAttribute('displayPage') || '1';
-                        e.style.display = (p === this._page) ? '' : 'none';
-                    });
-                }
+        if (key === 'page') {
+            if (value !== this._page) {
+                this._page = value;
+                (_a = this._dialogElem) === null || _a === void 0 ? void 0 : _a.querySelectorAll(':scope > span').forEach((e) => {
+                    const p = e.getAttribute('displayPage') || '1';
+                    e.style.display = (p === this._page) ? '' : 'none';
+                });
             }
         }
     }
@@ -958,7 +951,7 @@ function jsonParse(obj, cbFunc) {
             }
         }
         else if (typeof value === 'object') {
-            cbFunc(path2, undefined, undefined);
+            cbFunc(path2, '', '');
             Object.getOwnPropertyNames(value).forEach(k => _jsonParse(path2, k, value[k]));
         }
         else {
@@ -997,6 +990,7 @@ let LogWidgetClass = class LogWidgetClass extends GenericWidgetClass {
     connectedCallback() {
         super.connectedCallback();
         this._SVGObj = this.querySelector('object');
+        this._lineType = 'line';
         this._xFormat = 'datetime';
         this._yFormat = 'num';
     }
@@ -1004,27 +998,29 @@ let LogWidgetClass = class LogWidgetClass extends GenericWidgetClass {
         const fName = this._fName;
         let allData = '';
         const p1 = fetch(fName, { cache: 'no-store' })
-            .then(function (result) {
-            return result.text();
+            .then(res => {
+            if (res.ok) {
+                return res.text();
+            }
+            throw new Error();
         })
             .then(function (txt) {
             allData = allData + '\n' + txt;
         });
         const p2 = fetch(fName.replace('.txt', '_old.txt'), { cache: 'no-store' })
-            .then(function (result) {
-            return result.text();
+            .then(res => {
+            if (res.ok) {
+                return res.text();
+            }
+            throw new Error();
         })
             .then(function (txt) {
             allData = txt + '\n' + allData;
-        })
-            .catch(function () {
         });
         Promise.allSettled([p1, p2]).then(function () {
             const re = /^\d{4,},\d+/;
-            const pmArray = allData.split('\n').filter(function (e) {
-                return e.match(re);
-            });
-            this._api.draw(this._chart, pmArray.map(function (v) {
+            const pmArray = allData.split('\n').filter(e => e.match(re));
+            this._api.draw(this._chart, pmArray.map(v => {
                 const p = v.split(',');
                 return { x: p[0], y: p[1] };
             }));
@@ -1040,7 +1036,7 @@ let LogWidgetClass = class LogWidgetClass extends GenericWidgetClass {
             catch (err) { }
             if ((svgObj) && (svgObj.api)) {
                 this._api = this._SVGObj.getSVGDocument().api;
-                this._chart = this._api.add('line', { linetype: 'line' });
+                this._chart = this._api.add('line', { linetype: this._lineType });
                 this._api.add(['VAxis',
                     { type: 'hAxis', options: { format: 'datetime' } },
                     { type: 'indicator', options: { xFormat: this._xFormat, yFormat: this._yFormat } },
@@ -1064,6 +1060,9 @@ let LogWidgetClass = class LogWidgetClass extends GenericWidgetClass {
         }
         else if (key === 'yformat') {
             this._yFormat = value;
+        }
+        else if (key === 'linetype') {
+            this._lineType = value;
         }
     }
 };
@@ -1131,10 +1130,8 @@ let SceneWidgetClass = SceneWidgetClass_1 = class SceneWidgetClass extends Gener
     startScene() { 0; }
     newData(path, key, value) {
         super.newData(path, key, value);
-        if (key && value) {
-            if (key === 'title') {
-                this._buttonObj.textContent = value;
-            }
+        if (key === 'title') {
+            this._buttonObj.textContent = value;
         }
     }
 };
@@ -1296,7 +1293,8 @@ let ValueWidget = class ValueWidget extends GenericWidgetClass {
         this._input = this.querySelector('input');
     }
     newData(path, key, value) {
-        if ((this._input) && (value)) {
+        super.newData(path, key, value);
+        if (this._input) {
             if (key === 'min') {
                 this._input.min = value;
             }
@@ -1304,7 +1302,6 @@ let ValueWidget = class ValueWidget extends GenericWidgetClass {
                 this._input.max = value;
             }
         }
-        super.newData(path, key, value);
     }
 };
 ValueWidget = __decorate([
@@ -1345,7 +1342,7 @@ class MicroHub {
                 if (fullPath) {
                     fullPath = fullPath.toLocaleLowerCase();
                     if (fullPath.match(newEntry.match)) {
-                        newEntry.callback(path, key ? key.toLowerCase() : undefined, value);
+                        newEntry.callback(path, (key || '').toLowerCase(), (value || ''));
                     }
                 }
             }.bind(this));
@@ -1363,7 +1360,7 @@ class MicroHub {
                 if (fullPath) {
                     fullPath = fullPath.toLocaleLowerCase();
                     if (fullPath.match(e.match)) {
-                        e.callback(path, key ? key.toLowerCase() : undefined, value);
+                        e.callback(path, (key || '').toLowerCase(), (value || ''));
                     }
                 }
             }.bind(this));

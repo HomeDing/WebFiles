@@ -25,12 +25,11 @@ class ColorWidgetClass extends GenericWidgetClass {
 
 
   // visualize any new data for the widget.
-  override newData(_path: string, key?: string, value?: string) {
-    let newValue: string = this._value;
+  override newData(_path: string, key: string, value: string) {
+    super.newData(_path, key, value);
 
-    if (!value) {
-    } else if (key === 'value') {
-      newValue = this.normColor(value);
+    if (key === 'value') {
+      const newValue = this.normColor(value);
       if (newValue.match(/[0-9a-z]{8}/)) {
         this._color = '#' + newValue.substring(2);
       } else {
@@ -68,7 +67,6 @@ class ColorWidgetClass extends GenericWidgetClass {
       //   this._wObj.style.display = this._hasWhite ? '' : 'none';
       // }
     }
-    super.newData(_path, key, value);
   }
 
 

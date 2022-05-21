@@ -263,6 +263,19 @@
       config: {}
     }
 
+    async function loadPlugins() {
+      var ret;
+      if (!document.querySelector('dialog#addElement')) {
+        // lazy load dialogs.
+        ret = fetch("./board-new.htm")
+          .then(res => res.text())
+          .then(txt => {
+            document.body.appendChild(document.createRange().createContextualFragment(txt));
+          });
+      }
+      return (ret);
+    } // loadPlugins()
+
     var params = getHashParams({
       sys: false
     });
@@ -277,15 +290,7 @@
 
     addObj.addEventListener('click', async function (evt) {
       // load dialogs on demand.
-
-      if (!document.querySelector('dialog#addElement')) {
-        // lazy load dialogs.
-        await fetch("./board-new.htm")
-          .then(res => res.text())
-          .then(txt => {
-            document.body.appendChild(document.createRange().createContextualFragment(txt));
-          });
-      }
+      await loadPlugins();
       DialogFormClass.openModalForm('addElement', {});
     });
 
@@ -337,7 +342,7 @@
     * @param {number} timeout time to next fetch in msecs.
     */
     function updateAsap(timeout) {
-      if (!timeout) timeout = 50;
+      if (!timeout) timeout = 20;
 
       if (refreshState == 'w') {
         window.clearTimeout(updateTimer);
@@ -379,7 +384,9 @@
         .then(json => uElements.env = json);
 
       var p4 = fetchJSON('/config.json')
-        .then(json => uElements.config = json);
+        .then(json => {
+          uElements.config = json
+        });
 
       Promise.allSettled([p0, p2, p3, p4]).then(function () {
         // env data should be published before config data
@@ -396,11 +403,12 @@
           hub.write('config', JSON.stringify(c));
           hub.publishObj(c);
         }
+        updateAsap();
 
         // defer metadata and dialogs
         fetchJSON('/$elements')
           .then(json => uElements.impl = json);
-        updateAsap();
+        loadPlugins();
       });
     } // init()
 
