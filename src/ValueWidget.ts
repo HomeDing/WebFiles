@@ -23,6 +23,8 @@ class ValueWidget extends GenericWidgetClass {
         this._input.min = value;
       } else if (key === 'max') {
         this._input.max = value;
+      } else if (key === 'step') {
+        this._input.step = value;
       }
     }
   }

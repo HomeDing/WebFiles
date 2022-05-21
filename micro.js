@@ -789,7 +789,7 @@ let DisplayTextWidgetClass = class DisplayTextWidgetClass extends GenericWidgetC
         this._dispElem = document.querySelector('.panel .display');
         if (this._dispElem) {
             this._grid = Number(this._dispElem.getAttribute('grid') || 1);
-            this._elem = createHTMLElement(this._dispElem, 'span', { class: 'text', style: 'top:0;left:0;display:none' });
+            this._elem = createHTMLElement(this._dispElem, 'span', { class: 'text', style: 'top:0;left:0' });
         }
         if (!this.showSys()) {
             this.style.display = 'none';
@@ -1300,6 +1300,9 @@ let ValueWidget = class ValueWidget extends GenericWidgetClass {
             }
             else if (key === 'max') {
                 this._input.max = value;
+            }
+            else if (key === 'step') {
+                this._input.step = value;
             }
         }
     }
