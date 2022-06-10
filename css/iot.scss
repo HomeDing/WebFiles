@@ -27,7 +27,7 @@
     .form-grid {
       grid-template-columns: auto;
 
-      > label {
+      >label {
         text-align: left;
       }
     }
@@ -42,7 +42,7 @@
       border-color: $u-border-color-active transparent;
     }
 
-    > .block.header {
+    >.block.header {
       background-color: var(--card-head-active);
     }
   }
@@ -62,12 +62,12 @@
     }
   }
 
-  > .block {
+  >.block {
     position: relative;
     flex: 1 1 auto;
     padding: $gutter $white-space;
     min-height: 2rem;
-    
+
     &.header {
       background-color: var(--card-head);
       border-top-right-radius: $u-card-radius;
@@ -87,7 +87,7 @@
     }
   }
 
-  > hr {
+  >hr {
     background-color: rgba(0, 0, 0, 0.125);
     border: 0;
     height: 1px;
@@ -102,15 +102,16 @@
   display: grid;
   gap: $gutter;
   grid-template-columns: repeat(auto-fill, $u-card-small-width);
+  grid-auto-rows: minmax(min-content, max-content);
   grid-auto-flow: row;
   margin-top: 0.5rem;
 
-  > .card {
+  >.card {
     grid-column: span 2;
     align-self: start;
   }
 
-  > .card.small {
+  >.card.small {
     grid-column: span 1;
   }
 
@@ -121,16 +122,12 @@
     margin-right: auto;
   }
 
-  @media (min-width: 48.5rem) {
-    /* 2 col: 1+1+23+0.5+23 = 48.5rem) */
-    max-width: 1 + $u-card-width + $gutter + $u-card-width + 1;
-    margin-left: 0;
+  @media (min-width: 2 * $u-card-width + $gutter) {
+    max-width: 2 * $u-card-width + $gutter;
   }
 
-  @media (min-width: 72rem) {
-    /* 3 col: 1+1+23+0.5+23+0.5+23 = 72rem) */
-    max-width: 1 + $u-card-width + $gutter + $u-card-width + $gutter +
-      $u-card-width + 1;
+  @media (min-width: 3 * $u-card-width + 2* $gutter) {
+    max-width: 3 * $u-card-width + 2* $gutter;
   }
 }
 
@@ -225,18 +222,18 @@ input.switch[type='range'] {
   flex-wrap: nowrap;
   align-items: flex-start;
 
-  > * {
+  >* {
     flex: 1 1 auto;
     margin: 0;
     border-radius: 0;
   }
 
-  > *:first-child {
+  >*:first-child {
     border-top-left-radius: $u-btn-radius;
     border-bottom-left-radius: $u-btn-radius;
   }
 
-  > *:last-child {
+  >*:last-child {
     border-top-right-radius: $u-btn-radius;
     border-bottom-right-radius: $u-btn-radius;
   }
@@ -248,16 +245,16 @@ input.switch[type='range'] {
   grid-gap: 5px;
   margin-bottom: 0.5rem;
 
-  > * {
+  >* {
     grid-column-end: -1;
   }
 
-  > label {
+  >label {
     grid-column: 1;
     text-align: right;
   }
 
-  > .wide {
+  >.wide {
     grid-column: 1/-1;
   }
 }
@@ -265,7 +262,7 @@ input.switch[type='range'] {
 .form-inline {
   height: 1.6em;
 
-  > * {
+  >* {
     vertical-align: top;
   }
 }
@@ -292,8 +289,8 @@ input.switch[type='range'] {
     width: 10rem;
   }
 
-  > svg,
-  > img {
+  >svg,
+  >img {
     position: relative;
     left: 1rem;
     top: 0.4rem;
@@ -301,7 +298,7 @@ input.switch[type='range'] {
     width: 4rem;
   }
 
-  > .id {
+  >.id {
     position: absolute;
     display: inline-block;
     bottom: 0.4rem;
@@ -311,7 +308,7 @@ input.switch[type='range'] {
     text-align: center;
   }
 
-  > .info {
+  >.info {
     position: absolute;
     display: inline-block;
     top: 0.4rem;
@@ -368,20 +365,20 @@ input.switch[type='range'] {
   background-color: #aaaaaa;
 }
 
-.u-bar > .pulse,
-.u-bar > .current {
+.u-bar>.pulse,
+.u-bar>.current {
   display: inline-block;
   position: absolute;
 }
 
-.u-bar > .pulse {
+.u-bar>.pulse {
   top: 0;
   left: 0;
   height: 1.4em;
   background-color: green;
 }
 
-.u-bar > .current {
+.u-bar>.current {
   top: 0.4em;
   height: 0.6em;
   background-color: red;
@@ -407,7 +404,7 @@ input.switch[type='range'] {
   border: 2px solid $u-border-color;
   zoom: 2;
 
-  > span {
+  >span {
     box-sizing: border-box;
     display: inline-block;
     position: absolute;
@@ -437,14 +434,16 @@ input.switch[type='range'] {
       border-top: 1px solid black;
     }
   }
-} // #display
+}
+
+// #display
 
 .displayinc {
   position: relative;
   margin: auto;
   zoom: 2;
 
-  > .icon {
+  >.icon {
     width: 1.2em;
     height: 1.2em;
     margin: 0;
@@ -459,16 +458,14 @@ input.band {
   border-width: 1px;
 
   &.hue {
-    background: linear-gradient(
-      to right,
-      red 0%,
-      yellow 17%,
-      lime 33%,
-      aqua 50%,
-      blue 67%,
-      fuchsia 83%,
-      red 100%
-    );
+    background: linear-gradient(to right,
+        red 0%,
+        yellow 17%,
+        lime 33%,
+        aqua 50%,
+        blue 67%,
+        fuchsia 83%,
+        red 100%);
   }
 
   &.white,

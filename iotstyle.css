@@ -28,7 +28,7 @@ body {
   background-color: var(--back);
 }
 
-@media (min-width: 720px) {
+@media (min-width: 801px) {
   body {
     padding: 1rem;
   }
@@ -444,6 +444,7 @@ main {
   display: grid;
   gap: 0.5rem;
   grid-template-columns: repeat(auto-fill, 11.5rem);
+  grid-auto-rows: minmax(min-content, max-content);
   grid-auto-flow: row;
   margin-top: 0.5rem;
 }
@@ -462,17 +463,14 @@ main {
     margin-right: auto;
   }
 }
-@media (min-width: 48.5rem) {
+@media (min-width: 47.5rem) {
   .panel {
-    /* 2 col: 1+1+23+0.5+23 = 48.5rem) */
-    max-width: 49.5rem;
-    margin-left: 0;
+    max-width: 47.5rem;
   }
 }
-@media (min-width: 72rem) {
+@media (min-width: 71.5rem) {
   .panel {
-    /* 3 col: 1+1+23+0.5+23+0.5+23 = 72rem) */
-    max-width: 73.5rem;
+    max-width: 71.5rem;
   }
 }
 

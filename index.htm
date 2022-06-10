@@ -87,6 +87,24 @@
     </div>
 
     <div class="card">
+      <div class="block header">
+        <h3>State</h3>
+      </div>
+      <div class="block">
+        <pre id="stateInfo"></pre>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="block header">
+        <h3>Available Elements</h3>
+      </div>
+      <div class="block">
+        <p id="elementsInfo"></p>
+      </div>
+    </div>
+
+    <div class="card">
       <div class="block">
         <h3>Dev-Links</h3>
         <p><a href="portal.htm">portal.htm</a></p>
@@ -152,11 +170,33 @@
               value: Number(d['fsUsedBytes'])
             },
             {
-              color: '#aaaaaa',
+              color: '#AAFFAA',
               title: "Available",
               value: Number(d.fsTotalBytes) - Number(d.fsUsedBytes)
             }
           ]);
+        });
+
+      fetch('/$board')
+        .then(function (result) {
+          return result.json();
+        })
+        .then(function (d) {
+          var o = document.querySelector('#stateInfo');
+          o.innerText = JSON.stringify(d, null, 1)
+            .replace('{\n', '')
+            .replace('\n}', '')
+            .replace(/^\s*/gm, '');
+
+        });
+
+      fetch('/$elements')
+        .then(function (result) {
+          return result.json();
+        })
+        .then(function (d) {
+          var o = document.querySelector('#elementsInfo');
+          o.innerText = d.join(', ');
         });
     });
   </script>

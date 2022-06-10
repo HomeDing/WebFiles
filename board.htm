@@ -227,12 +227,9 @@
 
     <div class="card" u-control="scene" microID="${id}" u-is="scene">
       <div class="cHead block header">
-        <svg class="icon">
-          <use href="./icons.svg#scene" />
-        </svg>
         <h3>Scenes</h3>
       </div>
-      <div class="block"></div>
+      <div class="block form-actions"></div>
     </div>
 
     <div class="card" u-control="my" id="${id}" u-is="generic" microID="${id}">
@@ -297,6 +294,7 @@
     // Element type reuse
     var alias = {
       "sht20": "dht",
+      "am2320": "dht",
       "displayssd1306": "displayoled",
       "displaysh1106": "displayoled",
       "neo": "color", "my9291": "light",
