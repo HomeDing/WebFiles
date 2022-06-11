@@ -458,14 +458,7 @@ input.band {
   border-width: 1px;
 
   &.hue {
-    background: linear-gradient(to right,
-        red 0%,
-        yellow 17%,
-        lime 33%,
-        aqua 50%,
-        blue 67%,
-        fuchsia 83%,
-        red 100%);
+    background: linear-gradient(to right, red 0%, yellow 17%, lime 33%, aqua 50%, blue 67%, fuchsia 83%, red 100%);
   }
 
   &.white,

@@ -1,6 +1,6 @@
 :root {
   --color: #111111;
-  --back: #c0c0c0;
+  --back: #c2c3c5;
   --card-back: white;
   --card-head: hsl(220deg, 20%, 85%);
   --card-head-active: hsl(220deg, 80%, 70%);
@@ -154,7 +154,7 @@ button {
 
 input[type=color] {
   padding: 0;
-  border: none;
+  border: 0;
 }
 
 input::placeholder {
@@ -701,7 +701,7 @@ input.switch[type=range] {
 .display {
   position: relative;
   box-sizing: content-box;
-  background-color: #c0c0c0;
+  background-color: #c2c3c5;
   margin: auto;
   width: 128px;
   height: 64px;

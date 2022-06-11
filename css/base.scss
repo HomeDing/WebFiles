@@ -7,7 +7,7 @@
 // hue of 220 is signature of this style
 
 $u-hue: 220;
-$u-background: #c0c0c0;
+$u-background: #c2c3c5;
 $u-background-darkmode: #111111;
 $u-text: #111111; // any text
 $u-text-darkmode: #eeeeee; // any text
@@ -199,7 +199,7 @@ button {
 
 input[type='color'] {
   padding: 0;
-  border: none;
+  border: 0;
 }
 
 input::placeholder {
