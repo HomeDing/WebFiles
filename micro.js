@@ -18,15 +18,26 @@ class MicroRegistry {
         this._state = MicroState.PREP;
         this._unloadedList = [];
         this.List = [];
-        window.addEventListener('load', this.init.bind(this));
+        console.log("reg()");
+        this._state = MicroState.INIT;
+        window.addEventListener('DOMContentLoaded', this.init.bind(this));
     }
     loadFile(url) {
+        console.log("reg-loadFile:", url);
         const ret = fetch(url)
             .then(raw => raw.text())
             .then(htm => {
+            console.log("reg-txt.");
             const f = document.createRange().createContextualFragment(htm);
+            if (!this._tco) {
+                this._tco = document.getElementById('u-templates');
+            }
+            if (!this._tco) {
+                this._tco = createHTMLElement(document.body, 'div', { id: 'u-templates' });
+            }
             if (this._tco) {
                 this._tco.appendChild(f);
+                console.log("reg-done.");
             }
         });
         return ret;
@@ -165,33 +176,18 @@ class MicroRegistry {
         this._registry[name] = mixin;
     }
     init() {
-        this._state = MicroState.INIT;
-        this._tco = document.getElementById('u-templates');
-        if (!this._tco) {
-            this._tco = createHTMLElement(document.body, 'div', { id: 'u-templates' });
-        }
-        if (document.readyState === 'complete') {
-            this.init2();
-        }
-        else {
-            document.addEventListener('readystatechange', this.init2);
-        }
-    }
-    init2() {
-        if (document.readyState === 'complete') {
-            this._state = MicroState.LOADED;
-            this._unloadedList.forEach(el => {
-                const cn = el.getAttribute('u-is');
-                if (cn) {
-                    const bc = this._registry[cn];
-                    if (bc) {
-                        this.loadBehavior(el, bc);
-                    }
-                    this.List.push(el);
+        this._state = MicroState.LOADED;
+        this._unloadedList.forEach(el => {
+            const cn = el.getAttribute('u-is');
+            if (cn) {
+                const bc = this._registry[cn];
+                if (bc) {
+                    this.loadBehavior(el, bc);
                 }
-            });
-            this._unloadedList = [];
-        }
+                this.List.push(el);
+            }
+        });
+        this._unloadedList = [];
     }
 }
 const micro = new MicroRegistry();

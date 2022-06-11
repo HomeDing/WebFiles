@@ -21,8 +21,9 @@ class MicroRegistry {
   protected List: Array<HTMLElement> = [];
 
   constructor() {
-    window.addEventListener('load', this.init.bind(this));
-    // window.addEventListener('unload', this.onunload.bind(this));
+    console.log("reg()");
+    this._state = MicroState.INIT;
+    window.addEventListener('DOMContentLoaded', this.init.bind(this));
   }
 
   /**
@@ -31,12 +32,20 @@ class MicroRegistry {
    */
   loadFile(url: string): Promise<void> {
     // const scope = this;
+    console.log("reg-loadFile:", url);
+
     const ret = fetch(url)
       .then(raw => raw.text())
       .then(htm => {
+        console.log("reg-txt.");
         const f = document.createRange().createContextualFragment(htm);
+
+        if (!this._tco) { this._tco = document.getElementById('u-templates'); }
+        if (!this._tco) { this._tco = createHTMLElement(document.body, 'div', { id: 'u-templates' }); }
+
         if (this._tco) {
           this._tco.appendChild(f);
+          console.log("reg-done.");
         }
       });
     return ret;
@@ -207,53 +216,23 @@ class MicroRegistry {
     this._registry[name] = mixin;
   }
 
-
-  // onunload(_evt: Event) {
-  //   this.List.forEach(obj => {
-  //     if (obj && (<any>obj).term) { (<any>obj).term(); }
-  //     for (let a = 0; a < obj.attributes.length; a++) { (<any>obj)[obj.attributes[a].name] = null; }
-  //   });
-  //   for (let n = 0; n < this.List.length; n++) {
-  //     delete this.List[n]; // free up any memory
-  //   }
-  //   this.List = [];
-  // } // onunload
-
-  /// Initialize the template and behaviors.
+  // defer initialization of controls after DOM is loaded
   protected init() {
-    this._state = MicroState.INIT;
+    this._state = MicroState.LOADED;
 
-    // be sure to have a template container object.
-    this._tco = document.getElementById('u-templates');
-
-    if (!this._tco) {
-      this._tco = createHTMLElement(document.body, 'div', { id: 'u-templates' });
-    }
-    if (document.readyState === 'complete') {
-      this.init2();
-    } else {
-      document.addEventListener('readystatechange', this.init2);
-    }
+    this._unloadedList.forEach(el => {
+      const cn = el.getAttribute('u-is');
+      if (cn) {
+        const bc = this._registry[cn];
+        if (bc) {
+          this.loadBehavior(el, bc);
+        }
+        this.List.push(el);
+      }
+    });
+    this._unloadedList = [];
   } // init()
 
-  // defer init of controls after all is loaded
-  protected init2() {
-    if (document.readyState === 'complete') {
-      this._state = MicroState.LOADED;
-
-      this._unloadedList.forEach(el => {
-        const cn = el.getAttribute('u-is');
-        if (cn) {
-          const bc = this._registry[cn];
-          if (bc) {
-            this.loadBehavior(el, bc);
-          }
-          this.List.push(el);
-        }
-      });
-      this._unloadedList = [];
-    }
-  } // init2()
 } // MicroRegistry class
 
 const micro = new MicroRegistry();
