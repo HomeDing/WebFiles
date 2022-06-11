@@ -7,7 +7,7 @@
 // hue of 220 is signature of this style
 
 $u-hue: 220;
-$u-background: #e0e0e0;
+$u-background: #c0c0c0;
 $u-background-darkmode: #111111;
 $u-text: #111111; // any text
 $u-text-darkmode: #eeeeee; // any text
@@ -61,8 +61,8 @@ $font-sans-serif: Arial, ui-sans-serif, sans-serif;
   --color: #{$u-text};
   --back: #{$u-background};
 
-  --card-back: #{lighten($u-background, 20%)};
-  --card-head: #{hsl($u-hue, 0%, 70%)};
+  --card-back: white;
+  --card-head: #{hsl($u-hue, 20%, 85%)};
   --card-head-active: #{hsl($u-hue, 80%, 70%)};
   --focus: #{hsl($u-hue, 50%, 50%)};
 
@@ -71,7 +71,7 @@ $font-sans-serif: Arial, ui-sans-serif, sans-serif;
     --color: #{$u-text-darkmode};
     --back: #{$u-background-darkmode};
     --card-back: #{lighten($u-background-darkmode, 15%)};
-    --card-head: #{hsl($u-hue, 0%, 30%)};
+    --card-head: #{hsl($u-hue, 20%, 30%)};
     --card-head-active: #{hsl($u-hue, 80%, 30%)};
   }
 }

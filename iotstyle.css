@@ -1,8 +1,8 @@
 :root {
   --color: #111111;
-  --back: #e0e0e0;
+  --back: #c0c0c0;
   --card-back: white;
-  --card-head: hsl(220deg, 0%, 70%);
+  --card-head: hsl(220deg, 20%, 85%);
   --card-head-active: hsl(220deg, 80%, 70%);
   --focus: hsl(220deg, 50%, 50%);
   color-scheme: dark light;
@@ -12,7 +12,7 @@
     --color: #eeeeee;
     --back: #111111;
     --card-back: #373737;
-    --card-head: hsl(220deg, 0%, 30%);
+    --card-head: hsl(220deg, 20%, 30%);
     --card-head-active: hsl(220deg, 80%, 30%);
   }
 }
@@ -701,7 +701,7 @@ input.switch[type=range] {
 .display {
   position: relative;
   box-sizing: content-box;
-  background-color: #e0e0e0;
+  background-color: #c0c0c0;
   margin: auto;
   width: 128px;
   height: 64px;
