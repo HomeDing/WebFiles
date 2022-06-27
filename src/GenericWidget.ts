@@ -71,6 +71,11 @@ class GenericWidgetClass extends MicroControlClass {
       });
     });
 
+    // u-display flags
+    this.querySelectorAll(`*[u-display='${key}']`).forEach(elem => {
+      (elem as HTMLElement).style.display = (value ? '':'none');
+    });
+
     // u-text: substitude textContent
     this.querySelectorAll(`*[u-text='${key}']`).forEach(elem => {
       if (elem.textContent !== value) { elem.textContent = value; }

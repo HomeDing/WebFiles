@@ -275,6 +275,9 @@ let GenericWidgetClass = GenericWidgetClass_1 = class GenericWidgetClass extends
                 elem.classList.toggle('active', b);
             });
         });
+        this.querySelectorAll(`*[u-display='${key}']`).forEach(elem => {
+            elem.style.display = (value ? '' : 'none');
+        });
         this.querySelectorAll(`*[u-text='${key}']`).forEach(elem => {
             if (elem.textContent !== value) {
                 elem.textContent = value;

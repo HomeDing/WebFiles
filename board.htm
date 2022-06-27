@@ -225,6 +225,28 @@
       </div>
     </div>
 
+    <div class="card" u-control="radio" id="${id}" u-is="generic" microID="${id}">
+      <div u-is="include" ref=".cHead"></div>
+      <div class="block form-grid">
+        <label>Frequency:</label>
+        <span>
+          <output u-text="frequency" style="width: 7ch;"></output>
+          <button u-action="seek" value="0">&lt;&lt;</button>
+          <button u-action="seek" value="1">&gt;&gt;</button>
+        </span>
+        <label>RSSI:</label><output u-text="rssi"></output>
+        <label>SNR:</label><output u-text="snr"></output>
+        <label>station:</label><output u-text="stationname"></output>
+      </div>
+      <div class="block footer form-actions">
+        <button u-action="frequency" value="9440">hr1</button>
+        <button u-action="frequency" value="8930">hr3</button>
+        <button u-action="frequency" value="10300">AB</button>
+        <button u-action="frequency" value="8840">B2</button>
+      </div>
+
+    </div>
+
     <div class="card" u-control="scene" microID="${id}" u-is="scene">
       <div class="cHead block header">
         <h3>Scenes</h3>
@@ -293,10 +315,8 @@
 
     // Element type reuse
     var alias = {
-      "sht20": "dht",
-      "am2320": "dht",
-      "displayssd1306": "displayoled",
-      "displaysh1106": "displayoled",
+      "dht": "air", "sht20": "air", "am2320": "air", "scd4x": "air", "bme680": "air",
+      "displayssd1306": "displayoled", "displaysh1106": "displayoled",
       "neo": "color", "my9291": "light",
       "and": "logic", "or": "logic",
       "ina219": "ina2xx", "ina226": "ina2xx"

@@ -1,14 +1,26 @@
-<div class="card" u-control="dht" id="${id}" microID="${id}" u-is="generic">
+<div class="card" u-control="air" id="${id}" microID="${id}" u-is="generic">
   <div u-is="include" ref=".cHead"></div>
   <hr />
-  <div class="block" style="display: flex;">
-    <div style="flex: 1">
+  <div class="block" style="display: flex;flex-wrap: wrap;column-gap: 1rem;">
+    <div style="flex: 1;min-width:8rem;text-align:center;display:none" u-display="temperature">
       <div style="font-size: 2rem"><span u-text="temperature"></span>&deg;C</div>
       <div>Temperature</div>
     </div>
-    <div style="flex: 1">
+    <div style="flex: 1;min-width:8rem;text-align:center;display:none" u-display="humidity">
       <div style="font-size: 2rem"><span u-text="humidity"></span>%</div>
       <div>Humidity</div>
+    </div>
+    <div style="flex: 1;min-width:8rem;text-align:center;display:none" u-display="co2">
+      <div style="font-size: 2rem"><span u-text="co2"></span></div>
+      <div>CO2 (ppm)</div>
+    </div>
+    <div style="flex: 1;min-width:8rem;text-align:center;display:none" u-display="pressure">
+      <div style="font-size: 2rem"><span u-text="pressure"></span></div>
+      <div>Pressure</div>
+    </div>
+    <div style="flex: 1;min-width:8rem;text-align:center;display:none" u-display="gas">
+      <div style="font-size: 2rem"><span u-text="gas"></span></div>
+      <div>VOC</div>
     </div>
   </div>
 </div>
@@ -21,41 +33,6 @@
       <div style="font-size: 2rem"><span u-text="temperature"></span>&deg;C</div>
       <div>Temperature</div>
     </div>
-  </div>
-</div>
-
-<div class="card" u-control="bme680" id="${id}" microID="${id}" u-is="generic">
-  <div class="block"><svg class="icon">
-      <use href="./icons.svg#bme680" />
-    </svg>
-    <svg class="setconfig">
-      <use href="./icons.svg#config" />
-    </svg>
-    <table>
-      <tr>
-        <td colspan="3"><span u-text="description"></span></td>
-      </tr>
-      <tr>
-        <td style="font-size: 1.8rem"><span u-text="temperature">__.__</span>&deg;C</td>
-        <td style="width:1rem"></td>
-        <td style="font-size: 1.8rem"><span u-text="humidity">__.__</span>%</td>
-      </tr>
-      <tr>
-        <td>Temperature</td>
-        <td></td>
-        <td>Humidity</td>
-      </tr>
-      <tr>
-        <td style="font-size: 1.8rem"><span u-text="pressure">_____</span></td>
-        <td style="width:1rem"></td>
-        <td style="font-size: 1.8rem"><span u-text="gas">_____</span></td>
-      </tr>
-      <tr>
-        <td>Pressure</td>
-        <td></td>
-        <td>Gas Quality</td>
-      </tr>
-    </table>
   </div>
 </div>
 
