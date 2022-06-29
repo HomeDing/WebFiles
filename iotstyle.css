@@ -703,6 +703,8 @@ input.switch[type=range] {
   box-sizing: content-box;
   background-color: #c2c3c5;
   margin: auto;
+  line-height: 10px;
+  font-size: 10px;
   width: 128px;
   height: 64px;
   border: 2px solid #555555;
@@ -720,8 +722,6 @@ input.switch[type=range] {
 }
 .display > span.text {
   color: #111111;
-  font-size: 10px;
-  line-height: 10px;
 }
 .display > span.dot {
   height: 10px;

@@ -175,7 +175,7 @@
     </div>
 
     <!-- <div class="row" style="margin-bottom:0;overflow:hidden"> -->
-    <div id="files" style="grid-column: 1;flex:1 1 auto;overflow:hidden">...</div>
+    <div id="files" style="grid-column: 1;flex:1 1 auto;overflow:scroll">...</div>
 
     <pre style="grid-column: 2;" class="code" contenteditable id="content" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></pre>
   </div>
@@ -186,11 +186,11 @@
     function runOnce() {
       var scope = this;
       this.disabled = true;
-      DelayPromise(200)  // give some time to display progress stuff
+      DelayPromise(90)  // give some time to display progress stuff
         .then(function () {
           return fetch('/$reboot');
         }).then(function () {
-          return DelayPromise(200)
+          return DelayPromise(90)
         }).finally(function (result) {
           scope.disabled = false;
         });

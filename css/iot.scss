@@ -399,6 +399,8 @@ input.switch[type='range'] {
   box-sizing: content-box;
   background-color: $u-background;
   margin: auto;
+  line-height: 10px;
+  font-size: 10px;
   width: 128px;
   height: 64px;
   border: 2px solid $u-border-color;
@@ -416,8 +418,6 @@ input.switch[type='range'] {
 
     &.text {
       color: $u-text;
-      font-size: 10px;
-      line-height: 10px;
     }
 
     &.dot {

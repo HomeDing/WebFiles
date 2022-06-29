@@ -809,11 +809,10 @@ let DisplayTextWidgetClass = class DisplayTextWidgetClass extends GenericWidgetC
                 this._elem.setAttribute('displayPage', value);
             }
             else if (key === 'x') {
-                const n = Number(value) * this._grid;
-                this._elem.style.left = (this._grid > 1 ? (n * 7 / 10) : n) + 'px';
+                this._elem.style.left = value + (this._grid > 1 ? 'ch' : 'px');
             }
             else if (key === 'y') {
-                this._elem.style.top = (Number(value) * this._grid) + 'px';
+                this._elem.style.top = value + (this._grid > 1 ? 'em' : 'px');
             }
             else if (key === 'fontsize') {
                 this._elem.style.fontSize = value + 'px';
@@ -1175,12 +1174,12 @@ function toSeconds(v) {
     return ret;
 }
 function setTextContent(el, txt) {
-    if (el.textContent !== txt) {
+    if (el && (el.textContent !== txt)) {
         el.textContent = txt;
     }
 }
 function setAttr(el, name, value) {
-    if (el.getAttribute(name) !== value) {
+    if (el && (el.getAttribute(name) !== value)) {
         el.setAttribute(name, value);
     }
 }

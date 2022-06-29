@@ -39,11 +39,11 @@ function toSeconds(v: string): number {
 
 
 function setTextContent(el: HTMLElement, txt: string) {
-  if (el.textContent !== txt) { el.textContent = txt; }
+  if (el && (el.textContent !== txt)) { el.textContent = txt; }
 } // setTextContent
 
 function setAttr(el: HTMLElement, name: string, value: string) {
-  if (el.getAttribute(name) !== value) { el.setAttribute(name, value); }
+  if (el && (el.getAttribute(name) !== value)) { el.setAttribute(name, value); }
 } // setAttr
 
 
