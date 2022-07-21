@@ -50,6 +50,11 @@
     "events": ["on", "off", "value"]
   },
 
+  "touch": {
+    "properties": ["pin", "reference"],
+    "actions": ["onvalue", "onhigh", "onlow"]
+  },
+
   "displaydot": {
     "sys": "false",
     "properties": ["page", "x", "y"],

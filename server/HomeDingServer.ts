@@ -305,7 +305,7 @@ export class HomeDingServer {
       const httpsServer = https.createServer(httpsOptions, this._app);
       httpsServer.listen(opts.port, () => {
         Logger.info('Web Server started.');
-        Logger.info('open https://localhost:${opts.port}/');
+        Logger.info(`open https://localhost:${opts.port}/`);
       });
     } // if
 

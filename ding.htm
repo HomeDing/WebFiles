@@ -65,13 +65,13 @@
     <form method="dialog" class="card" u-control="schedule" microID="${id}" u-is="generic">
       <div u-is="include" ref=".cHead"></div>
       <span class="u-bool ux-value" u-active="value"></span>
+      <fieldset class="block btn-group">
+        <legend>Mode</legend>
+        <label><input name="mode" u-value="mode" type="radio" value="off">Off</label>
+        <label><input name="mode" u-value="mode" type="radio" value="on">On</label>
+        <label><input name="mode" u-value="mode" type="radio" value="timer">Timer</label>
+      </fieldset>
       <div class="block form-grid">
-        <label>Mode:</label>
-        <div class="btn-group">
-          <label><input name="mode" u-value="mode" type="radio" value="off">Off</label>
-          <label><input name="mode" u-value="mode" type="radio" value="on">On</label>
-          <label><input name="mode" u-value="mode" type="radio" value="timer">Timer</label>
-        </div>
         <label>Start:</label><output u-text="ontime"></output>
         <label>End:</label><output u-text="offtime"></output>
       </div>
@@ -80,14 +80,12 @@
     <form method="dialog" class="card" u-control="timer" microID="${id}" u-is="timer">
       <div u-is="include" ref=".cHead"></div>
       <span class="u-bool ux-value" u-active="value"></span>
-      <div class="block form-grid">
-        <label>Mode:</label>
-        <div class="btn-group">
-          <label><input name="mode" u-value="mode" type="radio" value="off">Off</label>
-          <label><input name="mode" u-value="mode" type="radio" value="on">On</label>
-          <label><input name="mode" u-value="mode" type="radio" value="timer">Timer</label>
-        </div>
-      </div>
+      <fieldset class="block btn-group">
+        <legend>Mode</legend>
+        <label><input name="mode" u-value="mode" type="radio" value="off">Off</label>
+        <label><input name="mode" u-value="mode" type="radio" value="on">On</label>
+        <label><input name="mode" u-value="mode" type="radio" value="timer">Timer</label>
+      </fieldset>
       <div class="block">
         <div class="u-bar">
           <span class="pulse"></span>
