@@ -147,9 +147,8 @@ const assets = [
   { m: 'm', src: 'panel.htm' },
   { m: 'js', src: 'panel.js' },
 
-  { m: 'm', src: 'microide.htm' },
-  { m: 'js', src: 'microide.js' },
-  { m: 'js', src: 'micro.js' }
+  { m: 'js', src: 'micro.js' },
+  { m: 'm', src: 'microide.htm' }
 ];
 
 // create fresh dist folders

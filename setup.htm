@@ -21,9 +21,10 @@
   <p style="text-align: right;"><a id="nextLink" title="next step" href="/$update.htm" style="text-decoration: none;">&gt;&gt;&gt;</a></p>
 
   <script>
+    var d = document;
     var state = 0;  // 0: start, 1: get sysinfo, 2: sysinfo-done,  3: scan, 4, scan-done
     var timer;
-    var oSel = document.getElementById('n');
+    var oSel = d.getElementById('n');
 
     function check() {
       if (state == 0) {
@@ -34,10 +35,10 @@
             return (result.text());
           }).then(function (t) {
             if (t.length > 0) {
-              var d = JSON.parse(t).devicename;
-              document.getElementById('d').textContent = d;
-              var a = document.getElementById('nextLink');
-              a.href = a.href.replace(/\/\/[^\/]+\//, '//' + d + '/');
+              var dn = JSON.parse(t).devicename;
+              d.getElementById('d').textContent = dn;
+              var a = d.getElementById('nextLink');
+              a.href = a.href.replace(/\/\/[^\/]+\//, '//' + dn + '/');
               state = 2;
             } // if
           });
@@ -65,22 +66,22 @@
     function scanned(netList) {
       oSel.innerHTML = '';
 
-      var o = document.createElement('option');
+      var o = d.createElement('option');
       o.value = 0;
       o.text = 'select...';
       o.disabled = true;
       oSel.options.add(o);
 
       netList.forEach(function (n) {
-        var o = document.createElement('option');
+        var o = d.createElement('option');
         o.value = o.text = n.id;
         oSel.options.add(o);
       });
     } // scanned()
 
     // connect using network name and password
-    document.getElementById('b').addEventListener('click', function () {
-      fetch('/$connect?n=' + oSel.value + '&p=' + document.getElementById('pass').value);
+    d.getElementById('b').addEventListener('click', function () {
+      fetch('/$connect?n=' + oSel.value + '&p=' + d.getElementById('pass').value);
     });
     timer = window.setInterval(check, 800);
   </script>

@@ -114,15 +114,14 @@ logInfo(`Starting...`);
 // array with files that get copied as they are
 const assets = [
   { m: 'xml', src: 'browserconfig.xml' },
-  { m: 'json', src: 'site.webmanifest' },
+  { m: 'json', src: 'site.min.webmanifest', tar: 'site.webmanifest'},
   { m: 'xml', src: 'favicon.svg' },
   { m: 'xml', src: 'icons-mini.svg', tar:'icons.svg'},
   { m: 'css', src: 'iotstyle.scss', tar: 'iotstyle.css' },
-  { m: 'm', src: 'updateicons.htm' },
+  { m: 'js', src: 'micro.js' },
   { m: 'm', src: 'ding.htm' },
   { m: 'm', src: 'microide.htm' },
-  { m: 'js', src: 'microide.js' },
-  { m: 'js', src: 'micro.js' }
+  { m: 'm', src: 'updateicons.min.htm', tar: 'updateicons.htm' }
 ];
 
 

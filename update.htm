@@ -25,7 +25,7 @@
     var eStart = document.querySelector('button');
     var eBar = document.querySelector('progress');
     var eLog = document.querySelector('#l');
-    var work = { status: '0', list: null, files: 0, done: 0 };
+    var work = { s: '0', l: null, f: 0, d: 0 }; // status, list, files, done
     var timer = 0;
     var seed = "?" + new Date().valueOf();
 
@@ -34,7 +34,7 @@
     } // log
 
     function next() {
-      work.status = 'r';
+      work.s = 'r';
     } // next
 
     if (location.hash) {
@@ -46,7 +46,7 @@
 
     // fetch list of files
     function doS() {
-      work.status = 'w'; // wait
+      work.s = 'w'; // wait
       fetch(repo + 'list.txt' + seed)
         .then(function (result) {
           return result.text();
@@ -54,8 +54,8 @@
         .then(function (txt) {
           var s = txt.replace(/\r?\n/g, ';');
           s = s.replace(/;$/, '');
-          work.list = s.split(';');
-          work.files = work.list.length;
+          work.l = s.split(';');
+          work.f = work.l.length;
           next();
         });
     } // doS()
@@ -63,13 +63,13 @@
 
     // grab next file
     function doF() {
-      work.status = 'w'; // wait
-      var theItem = work.list.shift();
+      work.s = 'w'; // wait
+      var theItem = work.l.shift();
 
       // set progress
-      work.done++;
-      eBar.max = work.files;
-      eBar.value = work.done;
+      work.d++;
+      eBar.max = work.f;
+      eBar.value = work.d;
       eLog.innerText = theItem; // log
 
       if (theItem[0] == '-') {
@@ -94,15 +94,15 @@
 
     eStart.addEventListener('click', function () {
       timer = window.setInterval(function () {
-        if (work.status == '0') { // not yet started
+        if (work.s == '0') { // not yet started
           // fetch file list;
           doS();
-        } else if (work.status == 'r') { // run
-          if (work.list.length == 0)
-            work.status = 'e';
+        } else if (work.s == 'r') { // run
+          if (work.l.length == 0)
+            work.s = 'e';
           else
             doF();
-        } else if (work.status == 'e') { // end
+        } else if (work.s == 'e') { // end
           window.clearInterval(timer);
           log('done');
         }

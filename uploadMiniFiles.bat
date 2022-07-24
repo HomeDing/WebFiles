@@ -21,10 +21,4 @@ FOR %%F IN ("dist-mini/*.*") DO (
   curl --form "fileupload=@dist-mini/%%F;filename=/%%~nxF" http://%devicename%/ %curlopts%
 )
 
-@REM rem upload all element icons
-@REM FOR %%F IN ("dist/i/*.svg") DO (
-@REM   echo Uploading file %%F...
-@REM   curl --form "fileupload=@dist/i/%%F;filename=/i/%%~nxF" http://%devicename%/ %curlopts%
-@REM )
-
 :end
