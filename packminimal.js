@@ -133,7 +133,6 @@ packAssets(assets).then(() => {
   logInfo(`Files created.`);
 
   let listText =
-    shell.cat('oldlist.txt').stdout +
     shell.ls('-R', distFolder).grep(/^.*\..*$/).stdout;
   shell.ShellString(listText).to(distFolder + '/list.txt');
 

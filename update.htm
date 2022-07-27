@@ -18,23 +18,29 @@
   <div style="text-align: right;"><button>Start</button></div>
 
   <hr>
-  <p style="text-align: right;"><a href="/updateicons.htm" title="next step"
-      style="text-decoration: none;">&gt;&gt;&gt;</a></p>
+  <p style="text-align: right;"><a href="/updateicons.htm" title="next step" style="text-decoration: none;">&gt;&gt;&gt;</a></p>
   <script>
+    var s = 0;
+    // s == 0 => not started yet
+    // s == 1 => fetching list
+    // s == 2 => cleanweb
+    // s == 3 => copy file 
+    // s == 4 => wait for file finished 
+
     var repo = 'https://homeding.github.io/';
-    var eStart = document.querySelector('button');
-    var eBar = document.querySelector('progress');
-    var eLog = document.querySelector('#l');
-    var work = { s: '0', l: null, f: 0, d: 0 }; // status, list, files, done
+    var d = document;
+    var eBar = d.querySelector('progress');
+    var done = 0;
+    var work = null;
     var timer = 0;
     var seed = "?" + new Date().valueOf();
 
     function log(t) {
-      eLog.innerText = t;
+      d.querySelector('#l').innerText = t;
     } // log
 
     function next() {
-      work.s = 'r';
+      s = 3;
     } // next
 
     if (location.hash) {
@@ -44,39 +50,30 @@
     }
     log('loading from:\n' + repo);
 
-    // fetch list of files
+    /** fetch list of files */
     function doS() {
-      work.s = 'w'; // wait
       fetch(repo + 'list.txt' + seed)
         .then(function (result) {
           return result.text();
         })
-        .then(function (txt) {
-          var s = txt.replace(/\r?\n/g, ';');
-          s = s.replace(/;$/, '');
-          work.l = s.split(';');
-          work.f = work.l.length;
-          next();
+        .then(function (t) {
+          work = t.replace(/\r?\n/g, ';').replace(/;$/, '').split(';');
+          eBar.max = work.length;
         });
     } // doS()
 
 
     // grab next file
     function doF() {
-      work.s = 'w'; // wait
-      var theItem = work.l.shift();
+      s = 3; // wait
+      var theItem = work.shift();
 
       // set progress
-      work.d++;
-      eBar.max = work.f;
-      eBar.value = work.d;
-      eLog.innerText = theItem; // log
+      eBar.value = ++done;
+      log(theItem);
 
-      if (theItem[0] == '-') {
-        // delete the file
-        fetch('/' + theItem.substring(1), { method: 'DELETE' })
-          .then(next).catch(next);
-
+      if (theItem[0] === '-') {
+        next();
       } else {
         fetch(repo + theItem + seed)
           .catch(next)
@@ -88,23 +85,38 @@
             formData.append('file', new Blob([buf]), '/' + theItem);
             fetch('/', { method: 'POST', body: formData }).then(next);
           });
-      };
+      }
     } // doF()
 
 
-    eStart.addEventListener('click', function () {
+    d.querySelector('button').addEventListener('click', function () {
       timer = window.setInterval(function () {
-        if (work.s == '0') { // not yet started
+        if (s == 0) { // not yet started
           // fetch file list;
+          log('get...');
+          s++;
           doS();
-        } else if (work.s == 'r') { // run
-          if (work.l.length == 0)
-            work.s = 'e';
-          else
+
+        } else if ((s == 1) && (work)) {
+          // clean files in filesystem first
+          log('clean...');
+          s++;
+          fetch('/api/cleanweb')
+            .then(function (result) {
+              s++;
+            });
+
+          // } else if (s == 2)  { nothing... }
+
+        } else if (s == 3) {
+          if (work.length > 0) {
             doF();
-        } else if (work.s == 'e') { // end
-          window.clearInterval(timer);
-          log('done');
+          } else {
+            window.clearInterval(timer);
+            log('done');
+          }
+
+          // } else if (s == 4)  { nothing... }
         }
       }, 100);
     });
