@@ -382,38 +382,17 @@ GenericWidgetClass = GenericWidgetClass_1 = __decorate([
 let BL0937WidgetClass = class BL0937WidgetClass extends GenericWidgetClass {
     connectedCallback() {
         super.connectedCallback();
-        if (!this.mode) {
-            this.mode = 'current';
-        }
         this.data = { id: this.microid };
         hub.replay(this.subId);
-    }
-    setMode(newMode) {
-        if (newMode && (newMode !== this.mode)) {
-            let td;
-            td = this.querySelector(`[u-text="${this.mode}"]`);
-            if (td === null || td === void 0 ? void 0 : td.parentElement) {
-                td.parentElement.style.display = 'none';
-            }
-            td = this.querySelector(`span[u-text="${newMode}"]`);
-            if (td === null || td === void 0 ? void 0 : td.parentElement) {
-                td.parentElement.style.display = '';
-            }
-            this.mode = newMode;
-        }
     }
     newData(path, key, value) {
         super.newData(path, key, value);
         if (key === 'mode') {
-            this.setMode(value);
+            ['current', 'voltage'].forEach(m => {
+                const td = this.querySelector(`[u-text="${m}"]`);
+                td.parentElement.style.display = (m === value ? '' : 'none');
+            });
         }
-    }
-    on_click(e) {
-        const src = e.target;
-        if (src.getAttribute('u-action') === 'mode') {
-            this.setMode(src['value']);
-        }
-        super.on_click(e);
     }
 };
 BL0937WidgetClass = __decorate([

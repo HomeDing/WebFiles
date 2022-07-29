@@ -9,42 +9,23 @@
 
 @MicroControl('bl0937')
 class BL0937WidgetClass extends GenericWidgetClass {
-  mode!: string;
 
   override connectedCallback() {
     super.connectedCallback();
-    if (!this.mode) { this.mode = 'current'; }
     this.data = { id: this.microid };
     hub.replay(this.subId);
   } // connectedCallback
-
-  setMode(newMode?: string) {
-    if (newMode && (newMode !== this.mode)) {
-      let td;
-      // hide old mode output
-      td = this.querySelector(`[u-text="${this.mode}"]`);
-      if (td?.parentElement) { td.parentElement.style.display = 'none'; }
-      // show new mode output
-      td = this.querySelector(`span[u-text="${newMode}"]`);
-      if (td?.parentElement) { td.parentElement.style.display = ''; }
-      this.mode = newMode;
-    }
-  }
 
   // visualize any new data for the widget.
   override newData(path: string, key: string, value: string): void {
     super.newData(path, key, value);
     if (key === 'mode') {
-      this.setMode(value);
+      ['current', 'voltage'].forEach(m => {
+        const td = this.querySelector(`[u-text="${m}"]`);
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        td!.parentElement!.style.display = (m === value ? '' : 'none');
+      });
     }
-  }
-
-  override on_click(e: MouseEvent) {
-    const src = e.target as HTMLElement;
-    if (src.getAttribute('u-action') === 'mode') {
-      this.setMode((<any>src)['value']);
-    }
-    super.on_click(e);
   }
 }
 
