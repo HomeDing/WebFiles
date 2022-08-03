@@ -39,7 +39,7 @@
     "GenericWidgetClass": "readonly",
     "hub": "readonly", 
     "jsonFind": "readonly", 
-    "updateAsap": "readonly", 
+    "updateState": "readonly", 
     "jsonLocate": "readonly"
 
   }

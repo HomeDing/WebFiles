@@ -315,7 +315,7 @@ let GenericWidgetClass = GenericWidgetClass_1 = class GenericWidgetClass extends
                     }
                     else {
                         try {
-                            updateAsap();
+                            window.updateState();
                         }
                         catch (_a) { }
                     }

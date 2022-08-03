@@ -1,6 +1,7 @@
 {
   "name": "HomeDing based device",
   "short_name": "Ding",
+  "version": "0.90",
   "icons": [
     {
       "src": "/favicon192.png",
@@ -9,6 +10,6 @@
     }
   ],
   "theme_color": "#ffffff",
-  "background_color": "#ffffff",
+  "background_color": "#c2c3c5",
   "display": "standalone"
 }

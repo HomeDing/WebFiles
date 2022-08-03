@@ -186,7 +186,8 @@ export class HomeDingServer {
     proxy.register(this.registry);
     this.eventBus.startup(this._allConfig);
 
-    this._app.get(/^\/\$list$/, this.expressNoCache, async function (req, res) {
+
+    async function handleList(_req: express.Request, res: express.Response) {
       const fl = [];
       const files = await fs.promises.readdir('.');
       for (const i in files) {
@@ -199,10 +200,13 @@ export class HomeDingServer {
         }
       }
       res.json(fl);
-    });
+    } // handleList
+
+    this._app.get(/^\/api\/list$/, this.expressNoCache, handleList);
+    this._app.get(/^\/\$list$/, this.expressNoCache, handleList);
 
 
-    this._app.get(/^\/\$sysinfo$/, this.expressNoCache, (_req, res) => {
+    function handleSysInfo(_req: express.Request, res: express.Response) {
       const fl = {
         devicename: 'nodejsding',
         build: 'Dec  1 2018',
@@ -215,12 +219,15 @@ export class HomeDingServer {
         // 'bssid':'74:DA:11:22:33:44'
       };
       res.json(fl);
-    });
+    } // handleSysInfo
+
+    this._app.get(/^\/api\/sysinfo/, this.expressNoCache, handleSysInfo);
+    this._app.get(/^\/\$sysinfo$/, this.expressNoCache, handleSysInfo);
 
 
-    // ===== serving /$board status for a single element
+    // ===== handling status requests
 
-    this._app.get('/\\$board/:type/:id', this.expressNoCache, async (req, res) => {
+    const handleElementState = async (req: express.Request, res: express.Response) => {
       if (!this._boardState) {
         this._boardState = {};
         if (this._caseFolder) {
@@ -241,17 +248,21 @@ export class HomeDingServer {
         res.json(this._boardState[id]);
       }
       // next();
-    });
+    } // handleElementState
+
+    this._app.get('/\\api/state/:type/:id', this.expressNoCache, handleElementState);
+    this._app.get('/\\$board/:type/:id', this.expressNoCache, handleElementState);
 
 
-    this._app.get(/^\/\$board$/, this.expressNoCache, async (req, res) => {
+    const handleState = async (req: express.Request, res: express.Response) => {
+      console.error('depricated call to /$board');
       if (!this._boardState) {
         this._boardState = {};
         if (this._caseFolder) {
           // get current state from case-folder
           try {
             this._boardState = JSON.parse(await fs.promises.readFile(this._boardFileName, 'utf8'));
-          } catch(err) {
+          } catch (err) {
             Logger.error("State could be loaded:", err);
             res.sendStatus(500);
             return;
@@ -266,7 +277,11 @@ export class HomeDingServer {
       // debugSend('send:' , boardStatus);
       res.type('application/json');
       res.send(JSON.stringify(this._boardState, null, 2));
-    });
+    } // handleState
+
+
+    this._app.get(/^\/api\/state$/, this.expressNoCache, handleState);
+    this._app.get(/^\/\$board$/, this.expressNoCache, handleState);
 
 
     this._app.get(/^\/\$flush$/, this.expressNoCache, async (_req, res) => {
@@ -313,4 +328,5 @@ export class HomeDingServer {
     this.timer = setInterval(this.loop.bind(this), 200);
 
   }
+
 }

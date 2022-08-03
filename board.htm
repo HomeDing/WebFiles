@@ -16,7 +16,8 @@
   <meta name="theme-color" content="#ffffff" />
   <link rel="icon" type="image/png" href="/favicon48.png" sizes="48x48">
 
-  <link Content-Type="text/css" href="/iotstyle.css" rel="stylesheet" />
+  <link Content-Type="text/css" href="/iotstyle.css" rel="stylesheet" defer />
+  <script src="/micro.js" defer></script>
 
   <style>
     svg.setconfig {
@@ -47,7 +48,6 @@
       border-color: red;
     }
   </style>
-  <script src="/micro.js"></script>
 </head>
 
 <body>
@@ -268,182 +268,158 @@
   </div>
 
   <script>
-    var panelObj = document.querySelector('.panel');
-    var addObj = document.getElementById('addButton');
-    var sysObj = document.getElementById('sysButton');
-    var refreshState = ''; // nothing in progress
-    var updateTimer;
-    var DEBUG_STARTTIME = Date.now();
-
-    var REFRESH_IDLEINTERVALL = 4000;
-
-    // Element definitions and list of implemented elements
-    var uElements = {
-      defs: {},
-      impl: [],
-      env: {},
-      config: {}
-    }
-
-    async function loadPlugins() {
-      var ret;
-      if (!document.querySelector('dialog#addElement')) {
-        // lazy load dialogs.
-        ret = fetch("./board-new.htm")
-          .then(res => res.text())
-          .then(txt => {
-            document.body.appendChild(document.createRange().createContextualFragment(txt));
-          });
-      }
-      return (ret);
-    } // loadPlugins()
-
-    var params = getHashParams({
-      sys: false
-    });
-    window.addEventListener('hashchange', function () {
-      window.location.reload();
-    });
-
-    sysObj.addEventListener('click', function (evt) {
-      params.sys = !toBool(params.sys);
-      window.location.hash = 'sys=' + params.sys;
-    });
-
-    addObj.addEventListener('click', async function (evt) {
-      // load dialogs on demand.
-      await loadPlugins();
-      DialogFormClass.openModalForm('addElement', {});
-    });
-
-    // Element type reuse
-    var alias = {
-      "dht": "air", "sht20": "air", "am2320": "air", "scd4x": "air", "bme680": "air",
-      "aht20": "air",
-      "bmp280": "air",
-      "displayssd1306": "displayoled", "displaysh1106": "displayoled",
-      "neo": "color", "my9291": "light",
-      "and": "logic", "or": "logic",
-      "ina219": "ina2xx", "ina226": "ina2xx"
-    };
-
-    hub.subscribe('/*/*', function (path, key, value) {
-      if (path) {
-        path = path.toLowerCase();
-        var hElem = document.querySelector("[microID='" + path + "']");
-        if (!hElem) {
-          // create a new card
-          var t = path.split('/')[1];
-          var p = {
-            id: path,
-            type: t,
-            icon: t
-          };
-
-          var def = uElements.defs[t];
-          if (toBool(params.sys) || !def || toBool(def.sys) == false) {
-            if ((def) && (def.icon)) {
-              p.icon = def.icon;
-            }
-            var e = micro.insertTemplate(panelObj, t, p);
-            if (!e) {
-              t = alias[t] || 'generic';
-              e = micro.insertTemplate(panelObj, t, p);
-            }
-          } // if
-        } // if
-      } // if
-    }); // create new card
-
-    hub.subscribe('/device/*?name', function (path, key, value) {
-      document.title = value;
-      document.querySelector("meta[name=application-name]").content = value;
-    });
-
-
-    /**
-    * @param {number} timeout time to next fetch in msecs.
-    */
-    function updateAsap(timeout) {
-      if (!timeout) timeout = 20;
-
-      if (refreshState == 'w') {
-        window.clearTimeout(updateTimer);
-        refreshState = '';
-      }
-
-      if (refreshState == '') {
-        refreshState = 'w';
-        updateTimer = window.setTimeout(
-          function () {
-            refreshState = 'f';
-            fetch('/$board')
-              .then(raw => raw.json())
-              .then(json => hub.publishObj(json))
-              .finally(() => {
-                refreshState = '';
-                updateAsap(REFRESH_IDLEINTERVALL);
-              });
-          }, timeout);
-      }
-    } // updateAsap()
-
-
-    // initiate a fetch with JSON res expected.
-    async function fetchJSON(url, options) {
-      var p = fetch(url, options)
-        .then(raw => raw.json());
-      return (p)
-    }
-
-    function init() {
-      // load templates from other file.
-      var p0 = micro.loadFile('/board-templates.htm');
-
-      var p2 = fetchJSON('/elements.json')
-        .then(json => uElements.defs = json);
-
-      var p3 = fetchJSON('/env.json')
-        .then(json => uElements.env = json);
-
-      var p4 = fetchJSON('/config.json')
-        .then(json => {
-          uElements.config = json
-        });
-
-      Promise.allSettled([p0, p2, p3, p4]).then(function () {
-        // env data should be published before config data
-        if (uElements.env) {
-          hub.write('env', JSON.stringify(uElements.env));
-          hub.publishObj(uElements.env);
-        }
-        if (uElements.config) {
-          const c = uElements.config;
-          // adjust title locally
-          for (var t in c) for (var i in c[t]) {
-            if (!c[t][i].title) c[t][i].title = t + '/' + i;
-          }
-          hub.write('config', JSON.stringify(c));
-          hub.publishObj(c);
-        }
-        updateAsap();
-
-        // defer metadata and dialogs
-        fetchJSON('/$elements')
-          .then(json => uElements.impl = json);
-        loadPlugins();
-      });
-    } // init()
-
-    window.addEventListener('DOMContentLoaded', init);
-
     if (window !== window.top) {
       // disable header and navbar in portal mode.
       document.querySelector('.u-header').style.display = 'none';
       document.querySelector('.u-navbar').style.display = 'none';
     } // if
-  </script>
 
+    (function () { // allows variable names to be packed by minifier
+      const REFRESH_INTERVAL = 4000;
+      var panelObj = document.querySelector('.panel');
+      var addObj = document.getElementById('addButton');
+      var sysObj = document.getElementById('sysButton');
+      var params = { sys: false };
+      var timer;
+
+      // Element type reuse
+      var alias = {
+        "dht": "air", "sht20": "air", "am2320": "air", "scd4x": "air", "bme680": "air",
+        "aht20": "air",
+        "bmp280": "air",
+        "displayssd1306": "displayoled", "displaysh1106": "displayoled",
+        "neo": "color", "my9291": "light",
+        "and": "logic", "or": "logic",
+        "ina219": "ina2xx", "ina226": "ina2xx"
+      };
+
+      // Element definitions and config+state of running elements
+      const uElements = {
+        defs: {},
+        impl: [],
+        env: {},
+        config: {},
+        state: {}
+      }
+
+      async function loadPlugins() {
+        var ret;
+        if (!document.querySelector('dialog#addElement')) {
+          // lazy load dialogs.
+          ret = fetch("./board-new.htm")
+            .then(res => res.text())
+            .then(txt => {
+              document.body.appendChild(document.createRange().createContextualFragment(txt));
+            });
+        }
+        return (ret);
+      } // loadPlugins()
+
+      window.addEventListener('hashchange', function () {
+        window.location.reload();
+      });
+
+      sysObj.addEventListener('click', function (evt) {
+        params.sys = !toBool(params.sys);
+        window.location.hash = 'sys=' + params.sys;
+      });
+
+      addObj.addEventListener('click', async function (evt) {
+        // load dialogs on demand.
+        await loadPlugins();
+        DialogFormClass.openModalForm('addElement', {});
+      });
+
+      /** start updating the state of elements */
+      function updateState() {
+        window.clearTimeout(timer);
+        fetchJSON('/api/state')
+          .then(json => hub.publishObj(json))
+          .finally(() => timer = window.setTimeout(updateState, REFRESH_INTERVAL));
+      } // updateState()
+      window.updateState = updateState;
+
+      // initiate a fetch with JSON res expected.
+      async function fetchJSON(url, options) {
+        var p = fetch(url, options)
+          .then(raw => raw.json());
+        return (p)
+      }
+
+      // load templates from other file.
+      var p2 = fetchJSON('/elements.json').then(json => uElements.defs = json);
+      var p3 = fetchJSON('/env.json').then(json => uElements.env = json);
+      var p4 = fetchJSON('/config.json').then(json => uElements.config = json);
+      var pState = fetchJSON('/api/state').then(json => uElements.state = json);
+
+
+      function loaded() {
+        params = getHashParams({ sys: false });
+        var p0 = micro.loadFile('/board-templates.htm');
+
+        // create new card
+        hub.subscribe('/*/*', function (path, key, value) {
+          if (path) {
+            path = path.toLowerCase();
+            var hElem = document.querySelector("[microID='" + path + "']");
+            if (!hElem) {
+              var t = path.split('/')[1];
+              var p = {
+                icon: t,
+                id: path,
+                type: t
+              };
+
+              var def = uElements.defs[t];
+              if (toBool(params.sys) || !def || toBool(def.sys) == false) {
+                if ((def) && (def.icon)) {
+                  p.icon = def.icon;
+                }
+                var e = micro.insertTemplate(panelObj, t, p);
+                if (!e) {
+                  t = alias[t] || 'generic';
+                  e = micro.insertTemplate(panelObj, t, p);
+                }
+              } // if
+            } // if
+          } // if
+        }); // create new card
+
+        hub.subscribe('/device/*?name', function (path, key, value) {
+          document.title = value;
+          document.querySelector("meta[name=application-name]").content = value;
+        });
+
+
+        Promise.allSettled([p0, p2, p3, p4]).then(function () {
+          if (uElements.env) {
+            hub.write('env', JSON.stringify(uElements.env));
+            hub.publishObj(uElements.env);
+          }
+
+          const c = uElements.config;
+          if (c) {
+            // create missing titles from type/id
+            for (var t in c) for (var i in c[t]) {
+              if (!c[t][i].title) c[t][i].title = t + '/' + i;
+            }
+            hub.write('config', JSON.stringify(c));
+            hub.publishObj(c);
+          }
+
+          hub.publishObj(uElements.state);
+          timer = window.setTimeout(updateState, REFRESH_INTERVAL);
+
+          // defer metadata and dialogs
+          fetchJSON('/$elements')
+            .then(json => uElements.impl = json);
+          loadPlugins();
+        });
+      } // loaded()
+
+      window.addEventListener('DOMContentLoaded', loaded);
+    })();
+  </script>
 </body>
 
 </html>

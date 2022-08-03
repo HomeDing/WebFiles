@@ -15,8 +15,9 @@
   <link rel="manifest" href="/site.webmanifest" />
   <meta name="theme-color" content="#ffffff" />
   <link rel="icon" type="image/png" href="/favicon48.png" sizes="48x48">
-  <link Content-Type="text/css" href="/iotstyle.css" rel="stylesheet" />
-  <script src="/micro.js"></script>
+
+  <link Content-Type="text/css" href="/iotstyle.css" rel="stylesheet" defer />
+  <script src="/micro.js" defer></script>
 
   <style>
     img,
@@ -178,87 +179,100 @@
   </div>
 
 
-  <hr />
-  <a href="/microide.htm">IDE</a>
+  <a style="position:absolute;top:1em;right:1em" href="/microide.htm">IDE</a>
 
   <script>
-    var panelObj = document.querySelector('.panel');
-    var timer;
+    (function () { // allows variable names to be packed by minifier
+      const REFRESH_INTERVAL = 4000;
+      var panelObj = document.querySelector('.panel');
+      var timer;
 
-    // Element type reuse
-    var alias = {
-      "sht20": "dht",
-      "neo": "color"
-    };
+      // Element type reuse
+      var alias = {
+        "sht20": "dht",
+        "neo": "color"
+      };
 
-    hub.subscribe('/*/*', function (path, key, value) {
-      if (path) {
-        path = path.toLowerCase();
-        var hElem = document.querySelector("[microID='" + path + "']");
-        if (!hElem) {
-          var t = path.split('/')[1];
-          var p = {
-            id: path,
-            type: t
-          };
+      // Element definitions and config+state of running elements
+      const uElements = {
+        // defs: {},
+        // impl: [],
+        env: {},
+        config: {},
+        state: {}
+      }
 
-          var e = micro.insertTemplate(panelObj, t, p);
-          if (!e) {
-            t = alias[t]; // || 'generic';
-            e = micro.insertTemplate(panelObj, t, p);
-          }
-        } // if
-      } // if
-    });
+      // initiate a fetch with JSON res expected.
+      async function fetchJSON(url, options) {
+        var p = fetch(url, options)
+          .then(raw => raw.json());
+        return (p)
+      }
 
-    hub.subscribe('/device/*?name', function (path, key, value) {
-      document.title = value;
-      document.querySelector("meta[name=application-name]").content = value;
-    });
+      function updateState() {
+        fetchJSON('/api/state')
+          .then(json => hub.publishObj(json))
+          .finally(() => timer = window.setTimeout(updateState, REFRESH_INTERVAL));
+      } // updateState()
+      window.updateState = updateState;
 
-    function updateAsap() {
-      if (timer)
-        window.clearTimeout(timer);
-      timer = window.setTimeout(updateState, 20);
-    }
+      // fetch element definitions from env.json and config.json asap
+      var p3 = fetchJSON('/env.json').then(json => uElements.env = json);
+      var p4 = fetchJSON('/config.json').then(json => uElements.config = json);
+      var pState = fetchJSON('/api/state').then(json => uElements.state = json);
 
-    function updateState(ev) {
-      if (timer)
-        window.clearTimeout(timer);
-      timer = null;
+      function loaded() {
 
-      fetch('/$board')
-        .then(raw => raw.json())
-        .then(json => {
-          hub.publishObj(json);
-        })
-        .then(function (json) {
-          timer = window.setTimeout(updateState, 4000);
+        // create new card
+        hub.subscribe('/*/*', function (path, key, value) {
+          if (path) {
+            path = path.toLowerCase();
+            var hElem = document.querySelector("[microID='" + path + "']");
+            if (!hElem) {
+              var t = path.split('/')[1];
+              var p = {
+                icon: t,
+                id: path,
+                type: t
+              };
+
+              var e = micro.insertTemplate(panelObj, t, p);
+              if (!e) {
+                t = alias[t]; // || 'generic';
+                e = micro.insertTemplate(panelObj, t, p);
+              }
+            } // if
+          } // if
+        }); // create new card
+
+        hub.subscribe('/device/*?name', function (path, key, value) {
+          document.title = value;
+          document.querySelector("meta[name=application-name]").content = value;
         });
-    } // updateState()
 
-    function init() {
-      // element definitions -> env.json -> config.json
-      fetch('/env.json')
-        .then(raw => raw.json())
-        .then(function (json) {
-          hub.publishObj(json);
-
-          return fetch('/config.json');
-        })
-        .then(raw => raw.json())
-        .then(function (c) {
-          for (var t in c) for (var i in c[t]) {
-            if (!c[t][i].title) c[t][i].title = t + '/' + i;
+        Promise.allSettled([p3, p4, pState]).then(() => {
+          if (uElements.env) {
+            // hub.write('env', JSON.stringify(uElements.env));
+            hub.publishObj(uElements.env);
           }
-          hub.publishObj(c);
-        })
-        .then(function () {
-          updateState();
-        });
-    } // init()
 
-    window.addEventListener('load', init);
+          const c = uElements.config;
+          if (c) {
+            // create missing titles from type/id
+            for (var t in c) for (var i in c[t]) {
+              if (!c[t][i].title) c[t][i].title = t + '/' + i;
+            }
+            // hub.write('config', JSON.stringify(c));
+            hub.publishObj(c);
+          }
+
+          hub.publishObj(uElements.state);
+          timer = window.setTimeout(updateState, REFRESH_INTERVAL);
+        });
+      } // loaded()
+
+      window.addEventListener('load', loaded);
+    })();
   </script>
 </body>
 
