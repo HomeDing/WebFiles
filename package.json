@@ -58,7 +58,7 @@
     "pack:embed": "node packembedweb.js",
     "pack": "npm run pack:icons && npm run pack:dist && npm run pack:minimal && npm run pack:embed",
     "publish:doku": "cmd /C publishDoku.bat",
-    "publish:webfiles": "cmd /C publishWebFiles.bat v04",
+    "publish:webfiles": "cmd /C publishWebFiles.bat v09",
     "publish": "npm run publish:doku && npm run publish:webfiles",
     "prestart": "npm run build",
     "start": "node app.js"

@@ -6,6 +6,7 @@ echo.
 echo *** create the distribution files using `npm run build` and `npm run pack`
 echo.
 
+echo.
 echo Updating public released files on homeding.github.io...
 
 if [%1]==[] (
@@ -19,21 +20,25 @@ set tar=C:\Users\Matthias\OneDrive\Dokumente\homeding
 set rcflags=/XO /FFT /NJH /NS /NC /NFL /NDL /NJS
 
 robocopy dist %tar%\%version% /S /PURGE %rcflags%
-echo Full WebUI copied.
+echo copied: Full WebUI
 
 robocopy dist-mini %tar%\%version%m /S /PURGE %rcflags%
-echo Minimal WebUI copied.
+echo copied: Minimal WebUI
 
+echo.
 echo Updating data folders in examples
 
-set tar=C:\Users\Matthias\Projects\Arduino\Sketches\Libraries\HomeDing\examples
-robocopy dist %tar%\standard\data /S /PURGE %rcflags% 
-echo standard example copied.
+set tar=C:\Users\Matthias\Projects\Arduino\Sketches\Libraries\HomeDing
 
-robocopy dist-mini %tar%\minimal\data /S /PURGE %rcflags% 
-echo minimal example copied.
+robocopy dist %tar%\examples\standard\data /S /PURGE %rcflags% 
+echo copied: standard example
+
+robocopy dist-mini %tar%\examples\minimal\data /S /PURGE %rcflags% 
+echo copied: minimal example
+
+copy upload.h %tar%\src 
+echo copied: upload.h
 
 echo done.
 
 :end
-@REM exit 0
