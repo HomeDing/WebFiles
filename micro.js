@@ -18,16 +18,13 @@ class MicroRegistry {
         this._state = MicroState.PREP;
         this._unloadedList = [];
         this.List = [];
-        console.log("reg()");
         this._state = MicroState.INIT;
         window.addEventListener('DOMContentLoaded', this.init.bind(this));
     }
     loadFile(url) {
-        console.log("reg-loadFile:", url);
         const ret = fetch(url)
             .then(raw => raw.text())
             .then(htm => {
-            console.log("reg-txt.");
             const f = document.createRange().createContextualFragment(htm);
             if (!this._tco) {
                 this._tco = document.getElementById('u-templates');
@@ -37,7 +34,6 @@ class MicroRegistry {
             }
             if (this._tco) {
                 this._tco.appendChild(f);
-                console.log("reg-done.");
             }
         });
         return ret;
@@ -261,7 +257,7 @@ let GenericWidgetClass = GenericWidgetClass_1 = class GenericWidgetClass extends
     }
     newData(_path, key, value) {
         this.data[key] = value;
-        const ic = this.querySelector('img,h3');
+        const ic = this.querySelector('h1,h3,img');
         if (ic) {
             setAttr(ic, 'title', JSON.stringify(this.data, null, 1)
                 .replace('{\n', '')

@@ -62,11 +62,28 @@ export class ConfigCache {
       Logger.error(`not online: ${host}`); // , err
     } else if (!this.netConfigs[host]) {
       try {
-        const url = `http://${hostname}/config.json`;
-        const req = await fetch(url, { signal: timeoutSignal(this.options.timeout) });
-        const txt = await req.text();
-        // const j = await req.json();
-        this.netConfigs[host] = JSON.parse(txt);
+        let eObj: any = {}, cObj: any = {};
+
+        const eReq = await fetch(`http://${hostname}/env.json`, { signal: timeoutSignal(this.options.timeout) });
+        if (eReq.status === 200) {
+          eObj = await eReq.json();
+        }
+
+        const cReq = await fetch(`http://${hostname}/config.json`, { signal: timeoutSignal(this.options.timeout) });
+        if (eReq.status === 200) {
+          cObj = await cReq.json();
+        }
+
+        // use device.title as default on all elements
+        const conf = { ...eObj, ...cObj };
+        const title = conf.device[0].title;
+
+        for (const t in conf) for (const i in conf[t]) {
+           if (!conf[t][i].title) conf[t][i].title = title;
+        }
+
+
+        this.netConfigs[host] = conf;
         Logger.trace(`config from ${host}:`, this.netConfigs[host]);
       } catch (err) {
         Logger.error(`no config from ${host}`); // , err

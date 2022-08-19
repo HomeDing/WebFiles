@@ -21,7 +21,6 @@ class MicroRegistry {
   protected List: Array<HTMLElement> = [];
 
   constructor() {
-    console.log("reg()");
     this._state = MicroState.INIT;
     window.addEventListener('DOMContentLoaded', this.init.bind(this));
   }
@@ -32,12 +31,10 @@ class MicroRegistry {
    */
   loadFile(url: string): Promise<void> {
     // const scope = this;
-    console.log("reg-loadFile:", url);
 
     const ret = fetch(url)
       .then(raw => raw.text())
       .then(htm => {
-        console.log("reg-txt.");
         const f = document.createRange().createContextualFragment(htm);
 
         if (!this._tco) { this._tco = document.getElementById('u-templates'); }
@@ -45,7 +42,6 @@ class MicroRegistry {
 
         if (this._tco) {
           this._tco.appendChild(f);
-          console.log("reg-done.");
         }
       });
     return ret;

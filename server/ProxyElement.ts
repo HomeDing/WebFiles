@@ -26,8 +26,9 @@ export class ProxyElement extends VirtualBaseElement {
   private requested = false; // set true when a state request is on the way.
   private nextTry = 0;
   private configs = ConfigCache.getInstance();
-  private TIMEOUT = 4000;
 
+  private TIMEOUT = 3000; // timeout for getting resaults from a device.
+  private NEXT_TRY = 8 * 1000; // duration for next data from device
 
   setConfig(_bus: EventBusClass, config: any, _default = {}) {
     this.eventBus = _bus;
@@ -36,10 +37,16 @@ export class ProxyElement extends VirtualBaseElement {
     // 'http:(0)//host(2)/$board/type(4)/id(5)'
     const url: string[] = config.url.split('/');
     const baseurl = url.slice(0, 3).join('/');
-
     this.host = url[2];
-    this.type = url[4];
-    this.id = url[5];
+
+    if (url[3] == '$board') {
+      this.type = url[4];
+      this.id = url[5];
+    } else if (url[3] == 'api') {
+      this.type = url[5];
+      this.id = url[6];
+    }
+
     this.url = `${baseurl}/$board/${this.type}/${this.id}`;
 
     // create a unique id to be used on the board.
@@ -49,13 +56,14 @@ export class ProxyElement extends VirtualBaseElement {
     this.state = Object.assign(this.state, {
       url: baseurl
     });
-  }
+  } // setConfig()
+
 
   async getState(): Promise<any> {
     if (!this.requested && (Date.now() > this.nextTry)) {
       // fetch configuration
       this.requested = true;
-      this.nextTry = Date.now() + (10 * 1000);
+      this.nextTry = Date.now() + (this.NEXT_TRY * 1000);
 
       if (!this.configJson) {
         try {

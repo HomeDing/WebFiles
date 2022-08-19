@@ -96,6 +96,9 @@
     var mbObj = document.querySelector('#menuButton');
     var devList = [];
 
+    // when the user is not using the application for SCREENTIMEOUT milliseconds
+    // the portal will go to idle mode.
+    // call resetTimeout when user activity is detected.
     function resetTimeout() {
       if (timerRef) window.clearTimeout(timerRef);
       timerRef = window.setTimeout(() => {
@@ -138,19 +141,20 @@
 
     // display to content in iframe, specified by url-hash
     function startContent() {
-      // #nodeding/board.htm
       var h = String(window.location.hash);
-      var m = h.match(/^#(\w*)\/(\w*\.?\w*)/);
-      if (!m) {
-        // no match
-      } else if (!m[1] && m[2]) {
-        iframeObj.src = '/' + m[2];
 
-      } else if (m[1] && m[2]) {
-        iframeObj.src = 'http://' + m[1] + '/' + m[2];
-      } else if (m[1]) {
-        iframeObj.src = "data:text/html;charset=utf-8,pleasewait";
-        iframeObj.src = 'http://' + m[1];
+      if (h) {
+        h = h.substring(1);
+        if (h.startsWith('/')) {
+          // "/monitor.htm"
+          // show html from the portal app
+          iframeObj.src = h;
+
+        } else {
+          // "#nodeding/board.htm"
+          // show html from a device
+          iframeObj.src = 'http://' + h;
+        } // if
       } // if
       resetTimeout();
     } // startContent()
@@ -159,7 +163,9 @@
 
     window.addEventListener('load', () => {
       loadDevices();
-      window.location.hash = "/board.htm";
+      if (!window.location.hash) {
+        window.location.hash = "#/board.htm";
+      }
     });
 
     document.querySelector('#reload').addEventListener('click', function () {

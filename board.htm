@@ -330,14 +330,23 @@
         DialogFormClass.openModalForm('addElement', {});
       });
 
+
       /** start updating the state of elements */
-      function updateState() {
+      function updateStateNow() {
         window.clearTimeout(timer);
         fetchJSON('/api/state')
           .then(json => hub.publishObj(json))
-          .finally(() => timer = window.setTimeout(updateState, REFRESH_INTERVAL));
-      } // updateState()
-      window.updateState = updateState;
+          .finally(() => timer = window.setTimeout(updateStateNow, REFRESH_INTERVAL));
+      } // updateStateNow()
+      
+
+      // will be called after activity
+      // defer update after all activities and actions are sent.
+      window.updateState = function () {
+        window.clearTimeout(timer);
+        timer = window.setTimeout(updateStateNow, 200);
+      };
+
 
       // initiate a fetch with JSON res expected.
       async function fetchJSON(url, options) {
@@ -408,7 +417,7 @@
           }
 
           hub.publishObj(uElements.state);
-          timer = window.setTimeout(updateState, REFRESH_INTERVAL);
+          timer = window.setTimeout(updateStateNow, REFRESH_INTERVAL);
 
           // defer metadata and dialogs
           fetchJSON('/$elements')
