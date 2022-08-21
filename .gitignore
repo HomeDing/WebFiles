@@ -1,13 +1,10 @@
 node_modules/**
 .vscode
 *.code-workspace
-dist
-dist-mini
-dist-server
+/dist*
 uploads
 _*
 desktop.ini
 
-server/*.js
-server/*.js.map
 certs
+/config.json
