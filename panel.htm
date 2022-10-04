@@ -23,10 +23,12 @@
       display: none;
     }
 
-    #links>line {
+    #links>line,
+    #links>path {
       stroke: #080808;
-      stroke-width: 2;
+      stroke-width: 3;
       stroke-linecap: round;
+      marker-end: url(#arrow);
     }
 
     .node {
@@ -74,8 +76,16 @@
       <button id="sysButton">sys</button>
     </div>
 
-    <div class="row" style="margin-top:0.5em">
+    <div class="row" style="margin-top:0.5em;user-select: none;">
       <svg id="panel">
+        <defs>
+          <marker id="arrow" markerWidth="6" markerHeight="6" refX="16" refY="8" orient="auto" xmarkerUnits="strokeWidth" viewBox="0 0 16 16">
+            <path d="M0,0 L0,16 L16,8 z" fill="currentColor" />
+          </marker>
+          <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="0" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" />
+          </marker>
+        </defs>
         <rect height="100%" width="100%"></rect>
         <g id="templates">
           <g dragabble="true" class="node">
@@ -99,11 +109,15 @@
   </div>
 
   <script>
-    var sysObj = document.getElementById('sysButton');
+    // GRID dimension and size
+    const PANEL_GRIDSIZE = 72; // px
+    const PANEL_WIDTH = 16;
+    const PANEL_HEIGHT = 12;
 
-    var PANEL_GRIDSIZE = 72; // px
-    var PANEL_WIDTH = 16;
-    var PANEL_HEIGHT = 12;
+    // using localstorage to remember placing the elements.
+    const XY = "uXY";
+
+    var sysObj = document.getElementById('sysButton');
 
     var params = getHashParams({
       sys: false
@@ -116,7 +130,34 @@
       window.location.hash = 'sys=' + params.sys;
     });
 
-    var elementDef, envDef, configDef;
+    async function loadPlugins() {
+      var ret;
+      if (!document.querySelector('dialog#addElement')) {
+        // lazy load dialogs.
+        ret = fetch("./board-new.htm")
+          .then(res => res.text())
+          .then(txt => {
+            document.body.appendChild(document.createRange().createContextualFragment(txt));
+          });
+      }
+      return (ret);
+    } // loadPlugins()
+
+    // initiate a fetch with JSON res expected.
+    async function fetchJSON(url, options) {
+      var p = fetch(url, options)
+        .then(raw => raw.json());
+      return (p)
+    }
+
+    // Element definitions and config+state of running elements
+    const uElements = {
+      defs: {},
+      impl: [],
+      env: {},
+      config: {},
+      state: {}
+    }
 
     var panelObj = document.getElementById('panel');
     var viewObj = document.getElementById('viewport');
@@ -127,7 +168,10 @@
     var DragObj = null;
     var DragOffset = null;
 
+    // nodes are all existing elements from the device configuration
+    // extended by _x, _y
     var nodes = {};
+
     var edges = [];
 
     // create all edges from the actions of a node.
@@ -145,7 +189,7 @@
 
     /*
     HomeDing config data model ->
-      create nodes = {id, xPos, yPos, onXXX, obj }
+      create nodes = {id, xPos, _y, onXXX, obj }
       create edges = {src, srcPin, tar, tarPin, obj}
     */
 
@@ -160,7 +204,7 @@
           var t = p[0].toLowerCase();
           var id = t + '/' + p[1].toLowerCase();
 
-          if (toBool(params.sys) || (!elementDef[t]) || (toBool(elementDef[t].sys) == false)) {
+          if (toBool(params.sys) || (!uElements.defs[t]) || (toBool(uElements.defs[t].sys) == false)) {
             var n = nodes[id];
             if (!n) {
               n = nodes[id] = {
@@ -185,6 +229,7 @@
     function placeNodes() {
       var px = 0;
       var py = 1;
+
       // remove edge going into the nirvana
       edges = edges.filter(function (l) {
         const fits = (nodes[l.src] && nodes[l.tar]);
@@ -195,42 +240,53 @@
         return (fits);
       });
 
-      // find nodes without edges:
-      p = 0;
-      for (n in nodes) {
-        nodes[n]._out = nodes[n]._in = 0;
-      }
-      edges.forEach(function (l) {
+      // == find nodes without edges:
+
+      // reset in/out counters to 0
+      Object.values(nodes).forEach(v => { v._out = v._in = 0; });
+      edges.forEach(l => {
         nodes[l.src]._out++;
         nodes[l.tar]._in++;
       });
-      for (n in nodes) {
-        if (nodes[n]._out == 0 && nodes[n]._in == 0) {
+
+      let locs = JSON.parse(window.localStorage.getItem(XY) || "{}");
+      Object.entries(nodes).forEach(([key, value]) => {
+        if (locs[key]) {
+          value._x = locs[key]._x;
+          value._y = locs[key]._y;
+          value._fixed = true;
+
+        } else if (value._out == 0 && value._in == 0) {
           // nodes without edges in line 1:
-          nodes[n].xPos = px++;
-          nodes[n].yPos = 0;
+          value._x = px++;
+          value._y = 0;
+
         } else {
           // nodes with edges vertically;
-          nodes[n].xPos = 6 + nodes[n]._in - nodes[n]._out;
-          nodes[n].xPos = Math.max(nodes[n].xPos, 0);
-          nodes[n].yPos = py++;
+          value._x = 6 + value._in - value._out;
+          value._x = Math.max(value._x, 0);
+          value._y = py++;
         }
-      };
+      });
     } // placeNodes()
 
-    function posInUse(x, y) {
-      var found = null;
-      Object.values(nodes).forEach(function (o) {
-        if ((!found) && (o.xPos == x) && (o.yPos == y))
-          found = o;
-      });
-      return (found);
-    };
 
+    // return node that is placed on the grid at the (x/y) position.
+    function posInUse(x, y) {
+      const f = Object.values(nodes).find(o => {
+        if ((o._x == x) && (o._y == y)) {
+          return (o);
+        }
+      });
+      return (f);
+    } // posInUse()
+
+
+    // return any node that is placed on the grid in line (y).
     function lineInUse(y) {
       var found = null;
       Object.values(nodes).forEach(function (o) {
-        if ((!found) && (o.yPos == y))
+        if ((!found) && (o._y == y))
           found = o;
       });
       return (found);
@@ -240,14 +296,14 @@
     function yForce(nodeId) {
       var dist = 0;
       var num = 0;
-      var yPos = nodes[nodeId].yPos;
+      var _y = nodes[nodeId]._y;
       edges.forEach(function (l) {
         if (l.src == nodeId) {
-          dist += nodes[l.tar].yPos - yPos;
+          dist += nodes[l.tar]._y - _y;
           num++;
         }
         if (l.tar == nodeId) {
-          dist += nodes[l.src].yPos - yPos;
+          dist += nodes[l.src]._y - _y;
           num++;
         }
       });
@@ -257,21 +313,26 @@
 
     function moveNodes() {
       var moved = false;
+
+      // move according the force of connections
       for (var nodeId in nodes) {
         var node = nodes[nodeId];
-        f = yForce(nodeId);
-        if ((f < -0.5) && (!posInUse(node.xPos, node.yPos - 1))) {
-          node.yPos--;
-          moved = true;
+        if (!(node._fixed)) {
+          f = yForce(nodeId);
+          if ((f < -0.5) && (!posInUse(node._x, node._y - 1))) {
+            node._y--;
+            moved = true;
+          }
         }
       } // for
 
+      // remove empty lines.
       for (var n = 0; n < 12; n++) {
         if (!lineInUse(n)) {
           for (var nodeId in nodes) {
             var e = nodes[nodeId];
-            if (e.yPos === n + 1) {
-              e.yPos--;
+            if (e._y === n + 1) {
+              e._y--;
               moved = true;
             }
           } // for
@@ -280,52 +341,56 @@
       return (moved);
     } // moveNodes()
 
+
     function handleNode(id) {
       var moved = false;
       var n = nodes[id];
-      var px = n.xPos;
-      var py = n.yPos;
+      var px = n._x;
+      var py = n._y;
       var fx = 0;
       var fy = 0;
 
-      // calculate force.
-      edges.forEach(function (l) {
-        if (l.src == id) {
-          var tar = nodes[l.tar];
-          if (tar.xPos - px < 2) fx -= 1; // keep min x distance
-          if (tar.xPos - px > 2) fx += 1;
-          if (tar.yPos < py) fy -= 1;
-          if (tar.yPos > py) fy += 1;
+      if (!n._fixed) {
+        // calculate force.
+        edges.forEach(l => {
+          if (l.src == id) {
+            var tar = nodes[l.tar];
+            if (tar._x - px < 2) fx -= 1; // keep min x distance
+            if (tar._x - px > 2) fx += 1;
+            if (tar._y < py) fy -= 1;
+            if (tar._y > py) fy += 1;
+          }
+          if (l.tar == id) {
+            var src = nodes[l.src];
+            if (px - src._x < 2) fx += 1; // keep min x distance
+            if (px - src._x > 2) fx -= 1;
+            if (py < src._y) fy += 1;
+            if (py > src._y) fy -= 1;
+          }
+        });
+        if (fx > 0) px++;
+        if (fx < 0) px--;
+        if (fy > 0) py++;
+        if (fy < 0) py--;
+        if (!posInUse(px, py)) {
+          n._x = px;
+          n._y = py;
+          drawNodes();
+          drawEdges();
+          moved = true;
         }
-        if (l.tar == id) {
-          var src = nodes[l.src];
-          if (px - src.xPos < 2) fx += 1; // keep min x distance
-          if (px - src.xPos > 2) fx -= 1;
-          if (py < src.yPos) fy += 1;
-          if (py > src.yPos) fy -= 1;
-        }
-      });
-      if (fx > 0) px++;
-      if (fx < 0) px--;
-      if (fy > 0) py++;
-      if (fy < 0) py--;
-      if (!posInUse(px, py)) {
-        n.xPos = px;
-        n.yPos = py;
-        updateNodes();
-        updateEdges();
-        moved = true;
       }
+
       return (moved);
     } // handleNode
 
 
     // create / update svg objects for all nodes
-    function updateNodes() {
+    function drawNodes() {
       for (var nodeId in nodes) {
         var t = nodeId.split('/')[0];
         var e = nodes[nodeId];
-        var ed = elementDef[t];
+        var ed = uElements.defs[t];
 
         var obj = e.obj;
         if (!obj) {
@@ -346,9 +411,13 @@
             }
           }
 
-          obj.querySelector('.config').addEventListener('click', function (e) {
-            var t = e.target;
+          obj.querySelector('.config').addEventListener('click', function (evt) {
+            var t = evt.target;
             while (t && !t.classList.contains('node')) t = t.parentElement;
+            // console.log(t.getAttribute('data'));
+            const d = t.getAttribute('data');
+            const id = t.getAttribute('id').split('/');
+            DialogFormClass.openModalForm('configElement', { ...JSON.parse(d), type: id[0], id: id[1] });
           });
         }
 
@@ -360,14 +429,21 @@
         obj.setAttribute("data", e.conf);
         obj.querySelector('.id').firstChild.textContent = nodeId;
 
-        moveSVGGroup(obj, e.xPos * PANEL_GRIDSIZE + 4, e.yPos * PANEL_GRIDSIZE + 4);
+        moveSVGGroup(obj, e._x * PANEL_GRIDSIZE + 4, e._y * PANEL_GRIDSIZE + 4);
       } // for
-    } // updateNodes()
+
+      // save pos
+      const uPos = {};
+      Object.values(nodes).forEach(n => {
+        uPos[n.id] = { _x: n._x, _y: n._y }
+      })
+      window.localStorage.setItem(XY, JSON.stringify(uPos));
+    } // drawNodes()
 
 
     // create / update all svg objects edges to current position of nodes
-    function updateEdges() {
-      var aPos;
+    function drawEdges() {
+      var aPos, ePos;
       var linksObj = document.getElementById('links');
 
       for (var n = 0; n < edges.length; n++) {
@@ -377,46 +453,30 @@
 
         if (sObj && tObj) {
           var obj = f.obj;
+          aPos = _pinPos(sObj, f.srcPin);
+          ePos = _pinPos(tObj, f.tarPin);
+
+          // spline version
           if (!obj) {
-            obj = f.obj = linksObj.ownerDocument.createElementNS("http://www.w3.org/2000/svg", 'line');
+            obj = f.obj = linksObj.ownerDocument.createElementNS("http://www.w3.org/2000/svg", 'path');
             linksObj.appendChild(obj);
           } // if
-          aPos = _pinPos(sObj, f.srcPin);
-          obj.setAttribute("x1", aPos.x);
-          obj.setAttribute("y1", aPos.y);
-
-          aPos = _pinPos(tObj, f.tarPin);
-          obj.setAttribute("x2", aPos.x);
-          obj.setAttribute("y2", aPos.y);
+          obj.setAttribute("d", `M ${aPos.x},${aPos.y} C ${aPos.x + 48},${aPos.y} ${ePos.x - 48},${ePos.y} ${ePos.x-12},${ePos.y} L ${ePos.x},${ePos.y}`);
         } // for
       }
-    } // updateEdges()
+    } // drawEdges()
 
     // get configuration data
-    var p1 = fetch('/env.json')
-      .then(function (result) {
-        return (result.json())
-      }).then(function (json) {
-        envDef = json;
-        return (fetch('/config.json'));
-      }).then(function (result) {
-        return (result.json())
-      }).then(function (json) {
-        configDef = json;
-      });
-
-    // get element meta data
-    var p2 = fetch('/elements.json')
-      .then(function (result) {
-        return (result.json())
-      }).then(function (json) {
-        elementDef = json;
-      });
+    var p2 = fetchJSON('/elements.json').then(json => uElements.defs = json);
+    var p3 = fetchJSON('/env.json').then(json => uElements.env = json);
+    var p4 = fetchJSON('/config.json').then(json => uElements.config = json);
 
     // start when all data is available
-    Promise.all([p1, p2]).then(function () {
-      createNodes(envDef);
-      createNodes(configDef);
+    Promise.all([p2, p3, p4]).then(function () {
+      hub.write('env', JSON.stringify(uElements.env));
+      hub.write('config', JSON.stringify(uElements.config));
+      createNodes(uElements.env);
+      createNodes(uElements.config);
       placeNodes();
       while (moveNodes()) { };
 
@@ -430,10 +490,12 @@
         moveCnt--;
       } while (moved && moveCnt > 0);
 
-
-      updateNodes();
-      updateEdges();
+      drawNodes();
+      drawEdges();
+      loadPlugins();
     });
+
+    // === drag & drop
 
     panelObj.addEventListener("mousedown", function (evt) {
       if (!DragObj) {
@@ -459,7 +521,7 @@
       if (DragObj) {
         var DragPos = getSVGPos(panelObj, evt);
         moveSVGGroup(DragObj, DragPos.x - DragOffset.x, DragPos.y - DragOffset.y);
-        updateEdges();
+        drawEdges();
       } // if
     }); // mousemove
 
@@ -470,13 +532,13 @@
 
         for (var n in nodes) {
           if (nodes[n].obj == DragObj) {
-            nodes[n].xPos = Math.floor(DragPos.x / PANEL_GRIDSIZE);
-            nodes[n].yPos = Math.floor(DragPos.y / PANEL_GRIDSIZE);
+            nodes[n]._x = Math.floor(DragPos.x / PANEL_GRIDSIZE);
+            nodes[n]._y = Math.floor(DragPos.y / PANEL_GRIDSIZE);
             break;
           }
         } // for
-        updateNodes();
-        updateEdges();
+        drawNodes();
+        drawEdges();
 
         DragObj = null;
       } // if
