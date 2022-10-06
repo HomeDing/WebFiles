@@ -42,6 +42,15 @@
 </dialog>
 
 <script>
+
+  function lowerKeys(d) {
+    const out = {};
+    Object.entries(d).forEach(([key, value]) => {
+      out[key.toLowerCase()] = value;
+    });
+    return (out);
+  }
+
   let d2 = document.querySelector('dialog#addElement');
 
   // new Element dialog
@@ -63,7 +72,7 @@
   // Element config dialog
   let d3 = document.querySelector('dialog#configElement');
   d3.addEventListener('open', evt => {
-    const data = evt.detail.data;
+    const data = lowerKeys(evt.detail.data);
     const fg = d3.querySelector('.form-grid');
     fg.innerHTML = '';
 
@@ -87,9 +96,9 @@
     d3.setAttribute('_id', data.type + '/' + data.id);
     var d = uElements.defs[data.type];
     uElements.defs["element"].properties.forEach(k => add(k, false, false));
-    if (d.properties) { d.properties.forEach(k => add(k, false, false)) };
-    if (d.events) { d.events.forEach(k => add(k, true, false)) };
-    if (d.actions) { d.actions.forEach(k => add(k, false, true)) };
+    if (d?.properties) { d.properties.forEach(k => add(k, false, false)) };
+    if (d?.events) { d.events.forEach(k => add(k, true, false)) };
+    if (d?.actions) { d.actions.forEach(k => add(k, false, true)) };
   });
 
   d3.addEventListener('click', evt => {
@@ -118,6 +127,7 @@
       if (ua === 'done') {
         const data = new FormData(oForm);
         const ret = Object.fromEntries(data.entries());
+        debugger;
         changeConfig(d3.getAttribute('_id'), ret);
       }
     }

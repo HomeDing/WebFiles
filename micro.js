@@ -176,6 +176,7 @@ class MicroRegistry {
         if (!this._tco) {
             this._tco = document.getElementById('u-templates');
         }
+        document.querySelectorAll('[u-is]').forEach(el => micro.attach(el));
         this._unloadedList.forEach(el => {
             const cn = el.getAttribute('u-is');
             if (cn) {

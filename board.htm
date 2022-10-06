@@ -274,6 +274,15 @@
       document.querySelector('.u-navbar').style.display = 'none';
     } // if
 
+    // Element definitions and config+state of running elements
+    const uElements = {
+      defs: {},
+      impl: [],
+      env: {},
+      config: {},
+      state: {}
+    };
+
     (function () { // allows variable names to be packed by minifier
       const REFRESH_INTERVAL = 4000;
       var panelObj = document.querySelector('.panel');
@@ -293,15 +302,6 @@
         "ina219": "ina2xx", "ina226": "ina2xx"
       };
 
-      // Element definitions and config+state of running elements
-      const uElements = {
-        defs: {},
-        impl: [],
-        env: {},
-        config: {},
-        state: {}
-      }
-
       async function loadPlugins() {
         var ret;
         if (!document.querySelector('dialog#addElement')) {
@@ -310,6 +310,7 @@
             .then(res => res.text())
             .then(txt => {
               document.body.appendChild(document.createRange().createContextualFragment(txt));
+              document.querySelectorAll('[u-is]').forEach(el => micro.attach(el));
             });
         }
         return (ret);
@@ -338,7 +339,7 @@
           .then(json => hub.publishObj(json))
           .finally(() => timer = window.setTimeout(updateStateNow, REFRESH_INTERVAL));
       } // updateStateNow()
-      
+
 
       // will be called after activity
       // defer update after all activities and actions are sent.
@@ -398,7 +399,6 @@
           document.title = value;
           document.querySelector("meta[name=application-name]").content = value;
         });
-
 
         Promise.allSettled([p0, p2, p3, p4]).then(function () {
           if (uElements.env) {
