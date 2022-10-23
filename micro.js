@@ -677,61 +677,57 @@ let DialogFormClass = DialogFormClass_1 = class DialogFormClass extends MicroCon
 DialogFormClass = DialogFormClass_1 = __decorate([
     MicroControl('dialogform')
 ], DialogFormClass);
-let DisplayDotWidgetClass = class DisplayDotWidgetClass extends GenericWidgetClass {
+class DisplayItemWidgetClass extends GenericWidgetClass {
     connectedCallback() {
         super.connectedCallback();
         this._dispElem = document.querySelector('.panel .display');
         if (this._dispElem) {
-            this._elem = createHTMLElement(this._dispElem, 'span', { class: 'dot' });
-            this.updateElem();
+            this._grid = Number(this._dispElem.getAttribute('grid') || 1);
         }
         if (!this.showSys()) {
             this.style.display = 'none';
         }
-        this._x = 0;
-        this._y = 0;
-        this._value = false;
+    }
+    newData(path, key, value) {
+        super.newData(path, key, value);
+        if (this._elem) {
+            const sty = this._elem.style;
+            if (key === 'x') {
+                sty.left = value + (this._grid > 1 ? 'ch' : 'px');
+            }
+            else if (key === 'y') {
+                sty.top = value + (this._grid > 1 ? 'em' : 'px');
+            }
+            else if (key === 'page') {
+                this._elem.setAttribute('displayPage', value);
+            }
+            else if (key === 'color') {
+                sty.color = value;
+            }
+        }
+    }
+}
+let DisplayDotWidgetClass = class DisplayDotWidgetClass extends DisplayItemWidgetClass {
+    connectedCallback() {
+        super.connectedCallback();
+        this._elem = createHTMLElement(this._dispElem, 'span', { class: 'dot' });
     }
     newData(path, key, value) {
         super.newData(path, key, value);
         if (this._elem) {
             if (key === 'value') {
-                this._value = toBool(value);
+                this._elem.classList.toggle('active', toBool(value));
             }
-            else if (key === 'page') {
-                this._elem.setAttribute('displayPage', value);
-            }
-            else if (key === 'x') {
-                this._x = Number(value);
-            }
-            else if (key === 'y') {
-                this._y = Number(value);
-            }
-            this.updateElem();
-        }
-    }
-    updateElem() {
-        if (this._elem) {
-            this._elem.style.top = this._y + 'px';
-            this._elem.style.left = this._x + 'px';
-            this._elem.classList.toggle('active', this._value);
         }
     }
 };
 DisplayDotWidgetClass = __decorate([
     MicroControl('displaydot')
 ], DisplayDotWidgetClass);
-let DisplayLineWidgetClass = class DisplayLineWidgetClass extends GenericWidgetClass {
+let DisplayLineWidgetClass = class DisplayLineWidgetClass extends DisplayItemWidgetClass {
     connectedCallback() {
         super.connectedCallback();
-        this._dispElem = document.querySelector('.panel .display');
-        if (this._dispElem) {
-            this._elem = createHTMLElement(this._dispElem, 'span', { class: 'line' });
-            this.updateElem();
-        }
-        if (!this.showSys()) {
-            this.style.display = 'none';
-        }
+        this._elem = createHTMLElement(this._dispElem, 'span', { class: 'line' });
         this._x0 = 0;
         this._x1 = 0;
         this._y0 = 0;
@@ -761,17 +757,10 @@ let DisplayLineWidgetClass = class DisplayLineWidgetClass extends GenericWidgetC
 DisplayLineWidgetClass = __decorate([
     MicroControl('displayline')
 ], DisplayLineWidgetClass);
-let DisplayTextWidgetClass = class DisplayTextWidgetClass extends GenericWidgetClass {
+let DisplayTextWidgetClass = class DisplayTextWidgetClass extends DisplayItemWidgetClass {
     connectedCallback() {
         super.connectedCallback();
-        this._dispElem = document.querySelector('.panel .display');
-        if (this._dispElem) {
-            this._grid = Number(this._dispElem.getAttribute('grid') || 1);
-            this._elem = createHTMLElement(this._dispElem, 'span', { class: 'text', style: 'top:0;left:0' });
-        }
-        if (!this.showSys()) {
-            this.style.display = 'none';
-        }
+        this._elem = createHTMLElement(this._dispElem, 'span', { class: 'text', style: 'top:0;left:0' });
         this._prefix = '';
         this._postfix = '';
     }
@@ -783,15 +772,6 @@ let DisplayTextWidgetClass = class DisplayTextWidgetClass extends GenericWidgetC
                 if (this._elem.innerHTML !== t) {
                     this._elem.innerHTML = t;
                 }
-            }
-            else if (key === 'page') {
-                this._elem.setAttribute('displayPage', value);
-            }
-            else if (key === 'x') {
-                this._elem.style.left = value + (this._grid > 1 ? 'ch' : 'px');
-            }
-            else if (key === 'y') {
-                this._elem.style.top = value + (this._grid > 1 ? 'em' : 'px');
             }
             else if (key === 'fontsize') {
                 this._elem.style.fontSize = value + 'px';
@@ -811,18 +791,52 @@ DisplayTextWidgetClass = __decorate([
     MicroControl('displaytext')
 ], DisplayTextWidgetClass);
 let DisplayWidgetClass = class DisplayWidgetClass extends GenericWidgetClass {
+    constructor() {
+        super(...arguments);
+        this._height = 64;
+        this._width = 64;
+        this._rotation = 0;
+    }
+    _resize() {
+        const d = this._dialogElem;
+        if ((this._rotation === 90 || this._rotation === 270)) {
+            d.style.width = this._height + 'px';
+            d.style.height = this._width + 'px';
+        }
+        else {
+            d.style.width = this._width + 'px';
+            d.style.height = this._height + 'px';
+        }
+        d.style.transform = "scale(0.9)";
+    }
     connectedCallback() {
         super.connectedCallback();
         this._page = '';
         this._dialogElem = this.querySelector('.display');
     }
     newData(path, key, value) {
-        var _a;
         super.newData(path, key, value);
-        if (key === 'page') {
+        if (key === 'height') {
+            this._height = parseInt(value);
+            this._resize();
+        }
+        else if (key === 'width') {
+            this._width = parseInt(value);
+            this._resize();
+        }
+        else if (key === 'rotation') {
+            this._rotation = parseInt(value);
+            this._resize();
+        }
+        else if (key === 'back') {
+            value = value.replace(/^x/, '#');
+            this._dialogElem.style.backgroundColor = value;
+            this._resize();
+        }
+        else if (key === 'page') {
             if (value !== this._page) {
                 this._page = value;
-                (_a = this._dialogElem) === null || _a === void 0 ? void 0 : _a.querySelectorAll(':scope > span').forEach((e) => {
+                this._dialogElem.querySelectorAll(':scope > span').forEach((e) => {
                     const p = e.getAttribute('displayPage') || '1';
                     e.style.display = (p === this._page) ? '' : 'none';
                 });

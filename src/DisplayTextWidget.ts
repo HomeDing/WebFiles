@@ -8,24 +8,13 @@
 /// <reference path="GenericWidget.ts" />
 
 @MicroControl('displaytext')
-class DisplayTextWidgetClass extends GenericWidgetClass {
-  _dispElem!: HTMLElement | null;
-  _grid!: number;
-  _elem!: HTMLElement | null;
-  _prefix!: string;
-  _postfix!: string;
+class DisplayTextWidgetClass extends DisplayItemWidgetClass {
+  private _prefix!: string;
+  private _postfix!: string;
 
   override connectedCallback() {
     super.connectedCallback();
-    this._dispElem = document.querySelector('.panel .display');
-    if (this._dispElem) {
-      this._grid = Number(this._dispElem.getAttribute('grid') || 1);
-      this._elem = createHTMLElement(this._dispElem, 'span', { class: 'text', style: 'top:0;left:0' });
-    }
-
-    if (!this.showSys()) {
-      this.style.display = 'none';
-    }
+    this._elem = createHTMLElement(this._dispElem, 'span', { class: 'text', style: 'top:0;left:0' });
     this._prefix = '';
     this._postfix = '';
   }
@@ -38,15 +27,6 @@ class DisplayTextWidgetClass extends GenericWidgetClass {
         if (this._elem.innerHTML !== t) {
           this._elem.innerHTML = t;
         }
-
-      } else if (key === 'page') {
-        this._elem.setAttribute('displayPage', value);
-
-      } else if (key === 'x') {
-        this._elem.style.left = value + (this._grid > 1 ? 'ch' :'px');
-
-      } else if (key === 'y') {
-        this._elem.style.top = value + (this._grid > 1 ? 'em' :'px');
 
       } else if (key === 'fontsize') {
         this._elem.style.fontSize = value + 'px';

@@ -1,4 +1,4 @@
-// PWMOutWidget.ts: Widget Behavior implementation for PWMOut Elements
+// ValueWidget.ts: Widget Behavior implementation for Value Elements
 
 // This file is part of the Widget implementation for the HomeDing Library
 // implementing the Web UI corresponding to an internal configured element.

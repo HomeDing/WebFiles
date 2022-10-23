@@ -398,13 +398,12 @@ input.switch[type='range'] {
   position: relative;
   box-sizing: content-box;
   background-color: $u-background;
+  width: 128px;
+  height: 64px;
   margin: auto;
   line-height: 10px;
   font-size: 10px;
-  width: 128px;
-  height: 64px;
   border: 2px solid $u-border-color;
-  zoom: 2;
 
   >span {
     box-sizing: border-box;

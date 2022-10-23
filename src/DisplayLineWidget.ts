@@ -8,9 +8,7 @@
 /// <reference path="GenericWidget.ts" />
 
 @MicroControl('displayline')
-class DisplayLineWidgetClass extends GenericWidgetClass {
-  _dispElem!: HTMLElement | null;
-  _elem!: HTMLElement | null;
+class DisplayLineWidgetClass extends DisplayItemWidgetClass {
   _x0!: number;
   _x1!: number;
   _y0!: number;
@@ -18,14 +16,8 @@ class DisplayLineWidgetClass extends GenericWidgetClass {
 
   override connectedCallback() {
     super.connectedCallback();
-    this._dispElem = document.querySelector('.panel .display');
-    if (this._dispElem) {
-      this._elem = createHTMLElement(this._dispElem, 'span', { class: 'line' });
-      this.updateElem();
-    }
-    if (!this.showSys()) {
-      this.style.display = 'none';
-    }
+    this._elem = createHTMLElement(this._dispElem, 'span', { class: 'line' });
+
     this._x0 = 0;
     this._x1 = 0;
     this._y0 = 0;
@@ -43,7 +35,7 @@ class DisplayLineWidgetClass extends GenericWidgetClass {
       }
       this.updateElem();
     }
-  } // newValue
+  } // newData
 
 
   // update the html inside the display to reflect the properties.
