@@ -6,6 +6,7 @@
 /// <reference path="micro.ts" />
 /// <reference path="microControls.ts" />
 /// <reference path="GenericWidget.ts" />
+/// <reference path="DisplayItemWidget.ts" />
 
 @MicroControl('displaytext')
 class DisplayTextWidgetClass extends DisplayItemWidgetClass {
@@ -21,23 +22,21 @@ class DisplayTextWidgetClass extends DisplayItemWidgetClass {
 
   override newData(path: string, key: string, value: string) {
     super.newData(path, key, value);
-    if (this._elem) {
-      if (key === 'value') {
-        const t = `${this._prefix}${value}${this._postfix}`.replace(/ /g, '&nbsp;');
-        if (this._elem.innerHTML !== t) {
-          this._elem.innerHTML = t;
-        }
-
-      } else if (key === 'fontsize') {
-        this._elem.style.fontSize = value + 'px';
-        this._elem.style.lineHeight = value + 'px';
-        this._elem.style.height = value + 'px';
-
-      } else if (key === 'prefix') {
-        this._prefix = value;
-      } else if (key === 'postfix') {
-        this._postfix = value;
+    if (key === 'value') {
+      const t = `${this._prefix}${value}${this._postfix}`.replace(/ /g, '&nbsp;');
+      if (this._elem.innerHTML !== t) {
+        this._elem.innerHTML = t;
       }
+
+    } else if (key === 'fontsize') {
+      this._elem.style.fontSize = value + 'px';
+      this._elem.style.lineHeight = value + 'px';
+      this._elem.style.height = value + 'px';
+
+    } else if (key === 'prefix') {
+      this._prefix = value;
+    } else if (key === 'postfix') {
+      this._postfix = value;
     }
   }
 }

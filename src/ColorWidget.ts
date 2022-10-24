@@ -39,11 +39,8 @@ class ColorWidgetClass extends GenericWidgetClass {
 
       if (newValue !== this._value) {
         this._value = newValue;
-
         this.querySelectorAll('*[name=value]').forEach(e => { (e as HTMLInputElement).value = value; });
-        this.querySelectorAll('*[name=color]').forEach(e => {
-          (e as HTMLInputElement).value = this._color;
-        });
+        this.querySelectorAll('*[name=color]').forEach(e => { (e as HTMLInputElement).value = this._color; });
         this.querySelectorAll('*[name=white]').forEach(e => { (e as HTMLInputElement).value = String(this._white); });
       }
 
@@ -63,9 +60,6 @@ class ColorWidgetClass extends GenericWidgetClass {
           (o.previousElementSibling as HTMLElement).style.display = '';
         }
       }
-      // if (this._wObj) {
-      //   this._wObj.style.display = this._hasWhite ? '' : 'none';
-      // }
     }
   }
 
@@ -81,32 +75,36 @@ class ColorWidgetClass extends GenericWidgetClass {
 
     } else if (n === 'white') {
       this._white = parseInt(val, 10);
-      const v = 'x' + this.to16(this._white) + this._color.substring(1);
+      const v = 'x' + this.x16(this._white) + this._color.substring(1);
       this.dispatchAction('value', v);
 
     } else if (n === 'color') {
       this._color = val;
       let v = this._color.substring(1);
       if (this._white) {
-        v = this.to16(this._white) + v;
+        v = this.x16(this._white) + v;
       }
       this.dispatchAction('value', 'x' + v);
     }
   } // on_input
 
+  private _colNames: { [key: string]: string } = {
+    "black": "000000",
+    "red": "ff0000",
+    "green": "00ff00",
+    "blue": "0000ff",
+    "white": "ffffff"
+  }
 
   // convert from various value formats to 'wwrrggbb'
   private normColor(color: string): string {
+
+
     if ((!color) || (color.length === 0)) {
       color = '00000000';
     } else {
       color = color.toLowerCase();
-      if (color === 'black') { color = '000000';}
-      if (color === 'red') { color = 'ff0000';}
-      if (color === 'green') { color = '00ff00';}
-      if (color === 'blue') { color = '0000ff';}
-      if (color === 'white') { color = 'ffffff';}
-
+      color = this._colNames[color] ?? color;
       if ((color.substring(0, 1) === 'x') || (color.substring(0, 1) === '#')) {
         color = color.substring(1);
       }
@@ -117,7 +115,7 @@ class ColorWidgetClass extends GenericWidgetClass {
     return (color.toLowerCase());
   } // normColor()
 
-  private to16(d: number): string {
+  private x16(d: number): string {
     let x = d.toString(16);
     if (x.length === 1) {
       x = '0' + x;

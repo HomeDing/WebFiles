@@ -10,7 +10,7 @@
 class DisplayItemWidgetClass extends GenericWidgetClass {
   _dispElem!: HTMLElement;
   _grid!: number;
-  _elem!: HTMLElement | null;
+  _elem!: HTMLElement;
 
   override connectedCallback() {
     super.connectedCallback();
@@ -26,20 +26,18 @@ class DisplayItemWidgetClass extends GenericWidgetClass {
 
   override newData(path: string, key: string, value: string) {
     super.newData(path, key, value);
-    if (this._elem) {
-      const sty = this._elem.style;
-      if (key === 'x') {
-        sty.left = value + (this._grid > 1 ? 'ch' : 'px');
+    const sty = this._elem.style;
+    if (key === 'x') {
+      sty.left = value + (this._grid > 1 ? 'ch' : 'px');
 
-      } else if (key === 'y') {
-        sty.top = value + (this._grid > 1 ? 'em' : 'px');
+    } else if (key === 'y') {
+      sty.top = value + (this._grid > 1 ? 'em' : 'px');
 
-      } else if (key === 'page') {
-        this._elem.setAttribute('displayPage', value);
+    } else if (key === 'page') {
+      this._elem.setAttribute('displayPage', value);
 
-      } else if (key === 'color') {
-        sty.color = value;
-      }
+    } else if (key === 'color') {
+      sty.color = value.replace(/^x/, '#');
     }
   }
 }

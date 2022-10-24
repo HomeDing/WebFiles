@@ -20,10 +20,8 @@ class DisplayDotWidgetClass extends DisplayItemWidgetClass {
   // new value is set in the element.
   override newData(path: string, key: string, value: string) {
     super.newData(path, key, value);
-    if (this._elem) {
-      if (key === 'value') {
-        this._elem.classList.toggle('active', toBool(value));
-      }
+    if (key === 'value') {
+      this._elem.classList.toggle('active', toBool(value));
     }
   } // newData
 

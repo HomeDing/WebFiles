@@ -11,26 +11,32 @@
 class DisplayWidgetClass extends GenericWidgetClass {
   _page!: string;
   _dialogElem!: HTMLElement;
+  _bk!: HTMLElement;
   _height = 64;
   _width = 64;
   _rotation = 0;
 
-  _resize() {
-    const d = this._dialogElem;
+  private _resize() {
+    // assume 260px max width for scale factor
+    const sty = this._dialogElem.style;
+    let w = this._width;
+    let h = this._height;
     if ((this._rotation === 90 || this._rotation === 270)) {
-      d.style.width = this._height + 'px';
-      d.style.height = this._width + 'px';
-    } else {
-      d.style.width = this._width + 'px';
-      d.style.height = this._height + 'px';
+      w = h;
+      h = this._width;
     }
-    d.style.transform = "scale(0.9)";
+    sty.width = w + 'px';
+    sty.height = h + 'px';
+    const sf = 280 / w;
+    sty.transform = `scale(${sf})`;
+    this._bk.style.height = (h * sf) + 'px';
   }
 
   override connectedCallback() {
     super.connectedCallback();
     this._page = '';
     this._dialogElem = this.querySelector('.display') as HTMLElement;
+    this._bk = this.querySelector('.bk') as HTMLElement;
   }
 
   // new value is set in the element.
@@ -50,8 +56,7 @@ class DisplayWidgetClass extends GenericWidgetClass {
       this._resize();
 
     } else if (key === 'back') {
-      value = value.replace(/^x/, '#');
-      this._dialogElem.style.backgroundColor = value;
+      this._dialogElem.style.backgroundColor = value.replace(/^x/, '#');
       this._resize();
 
     } else if (key === 'page') {
@@ -63,7 +68,8 @@ class DisplayWidgetClass extends GenericWidgetClass {
         });
       }
     }
-  } // newValue
+  } // newData
+  
 } // class DisplayWidgetClass
 
 // End.

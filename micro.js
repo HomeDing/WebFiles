@@ -12,12 +12,12 @@ var MicroState;
     MicroState[MicroState["LOADED"] = 3] = "LOADED";
 })(MicroState || (MicroState = {}));
 class MicroRegistry {
+    _tco = null;
+    _registry = {};
+    _state = MicroState.PREP;
+    _unloadedList = [];
+    List = [];
     constructor() {
-        this._tco = null;
-        this._registry = {};
-        this._state = MicroState.PREP;
-        this._unloadedList = [];
-        this.List = [];
         this._state = MicroState.INIT;
         window.addEventListener('DOMContentLoaded', this.init.bind(this));
     }
@@ -211,12 +211,11 @@ class MicroControlClass {
     connectedCallback() {
     }
     _clearWhitespace() {
-        var _a;
         let obj = this.firstChild;
         while (obj) {
             const nextObj = obj.nextSibling;
             if (obj.nodeType === 3) {
-                (_a = obj.parentNode) === null || _a === void 0 ? void 0 : _a.removeChild(obj);
+                obj.parentNode?.removeChild(obj);
             }
             obj = nextObj;
         }
@@ -230,6 +229,11 @@ function MicroControl(isSelector) {
 }
 var GenericWidgetClass_1;
 let GenericWidgetClass = GenericWidgetClass_1 = class GenericWidgetClass extends MicroControlClass {
+    microid;
+    data;
+    actions;
+    subId;
+    static idc = 42;
     uid(obj) {
         if (!obj.id) {
             obj.id = 'o' + (GenericWidgetClass_1.idc++);
@@ -243,8 +247,7 @@ let GenericWidgetClass = GenericWidgetClass_1 = class GenericWidgetClass extends
             lObj.htmlFor = this.uid(iObj);
         });
         this.querySelectorAll('label:not([for])+div input').forEach(iObj => {
-            var _a;
-            const lObj = (_a = iObj.parentElement) === null || _a === void 0 ? void 0 : _a.previousElementSibling;
+            const lObj = iObj.parentElement?.previousElementSibling;
             lObj.htmlFor =
                 this.uid(iObj);
         });
@@ -314,7 +317,7 @@ let GenericWidgetClass = GenericWidgetClass_1 = class GenericWidgetClass extends
                         try {
                             window.updateState();
                         }
-                        catch (_a) { }
+                        catch { }
                     }
                 });
             }
@@ -357,7 +360,7 @@ let GenericWidgetClass = GenericWidgetClass_1 = class GenericWidgetClass extends
             }
             else if (p.classList.contains('setconfig')) {
                 const ti = this.microid.split('/');
-                DialogFormClass.openModalForm('configElement', Object.assign(Object.assign({}, this.data), { type: ti[1], id: ti[2] }));
+                DialogFormClass.openModalForm('configElement', { ...this.data, type: ti[1], id: ti[2] });
             }
             else if (p.classList.contains('setactive')) {
                 this.dispatchAction(toBool(this.data.active) ? 'stop' : 'start', '1');
@@ -372,7 +375,6 @@ let GenericWidgetClass = GenericWidgetClass_1 = class GenericWidgetClass extends
         });
     }
 };
-GenericWidgetClass.idc = 42;
 GenericWidgetClass = GenericWidgetClass_1 = __decorate([
     MicroControl('generic')
 ], GenericWidgetClass);
@@ -396,6 +398,12 @@ BL0937WidgetClass = __decorate([
     MicroControl('bl0937')
 ], BL0937WidgetClass);
 let ButtonWidgetClass = class ButtonWidgetClass extends GenericWidgetClass {
+    _onclick;
+    _ondoubleclick;
+    _onpress;
+    _timer;
+    _start;
+    _duration;
     newData(path, key, value) {
         super.newData(path, key, value);
         if (key === 'onclick') {
@@ -440,6 +448,10 @@ ButtonWidgetClass = __decorate([
     MicroControl('button')
 ], ButtonWidgetClass);
 let ColorWidgetClass = class ColorWidgetClass extends GenericWidgetClass {
+    _value;
+    _color;
+    _white;
+    _brightness;
     connectedCallback() {
         super.connectedCallback();
         this._value = '00000000';
@@ -460,9 +472,7 @@ let ColorWidgetClass = class ColorWidgetClass extends GenericWidgetClass {
             if (newValue !== this._value) {
                 this._value = newValue;
                 this.querySelectorAll('*[name=value]').forEach(e => { e.value = value; });
-                this.querySelectorAll('*[name=color]').forEach(e => {
-                    e.value = this._color;
-                });
+                this.querySelectorAll('*[name=color]').forEach(e => { e.value = this._color; });
                 this.querySelectorAll('*[name=white]').forEach(e => { e.value = String(this._white); });
             }
         }
@@ -493,39 +503,32 @@ let ColorWidgetClass = class ColorWidgetClass extends GenericWidgetClass {
         }
         else if (n === 'white') {
             this._white = parseInt(val, 10);
-            const v = 'x' + this.to16(this._white) + this._color.substring(1);
+            const v = 'x' + this.x16(this._white) + this._color.substring(1);
             this.dispatchAction('value', v);
         }
         else if (n === 'color') {
             this._color = val;
             let v = this._color.substring(1);
             if (this._white) {
-                v = this.to16(this._white) + v;
+                v = this.x16(this._white) + v;
             }
             this.dispatchAction('value', 'x' + v);
         }
     }
+    _colNames = {
+        "black": "000000",
+        "red": "ff0000",
+        "green": "00ff00",
+        "blue": "0000ff",
+        "white": "ffffff"
+    };
     normColor(color) {
         if ((!color) || (color.length === 0)) {
             color = '00000000';
         }
         else {
             color = color.toLowerCase();
-            if (color === 'black') {
-                color = '000000';
-            }
-            if (color === 'red') {
-                color = 'ff0000';
-            }
-            if (color === 'green') {
-                color = '00ff00';
-            }
-            if (color === 'blue') {
-                color = '0000ff';
-            }
-            if (color === 'white') {
-                color = 'ffffff';
-            }
+            color = this._colNames[color] ?? color;
             if ((color.substring(0, 1) === 'x') || (color.substring(0, 1) === '#')) {
                 color = color.substring(1);
             }
@@ -535,7 +538,7 @@ let ColorWidgetClass = class ColorWidgetClass extends GenericWidgetClass {
         }
         return (color.toLowerCase());
     }
-    to16(d) {
+    x16(d) {
         let x = d.toString(16);
         if (x.length === 1) {
             x = '0' + x;
@@ -547,6 +550,7 @@ ColorWidgetClass = __decorate([
     MicroControl('color')
 ], ColorWidgetClass);
 let DSTimeWidgetClass = class DSTimeWidgetClass extends GenericWidgetClass {
+    _nowObj;
     connectedCallback() {
         super.connectedCallback();
         this._nowObj = this.querySelector('.setnow');
@@ -578,13 +582,10 @@ DSTimeWidgetClass = __decorate([
 ], DSTimeWidgetClass);
 var DialogFormClass_1;
 let DialogFormClass = DialogFormClass_1 = class DialogFormClass extends MicroControlClass {
-    constructor() {
-        super(...arguments);
-        this._defaultData = {};
-        this._data = {};
-        this._form = undefined;
-        this._callback = undefined;
-    }
+    _defaultData = {};
+    _data = {};
+    _form = undefined;
+    _callback = undefined;
     static openModalForm(id, data = {}, cb) {
         const dlg = document.querySelector('dialog#' + id);
         if (dlg)
@@ -644,7 +645,7 @@ let DialogFormClass = DialogFormClass_1 = class DialogFormClass extends MicroCon
         if (uSub && this._form) {
             const ret = this._formData();
             const ua = uSub.getAttribute('u-action');
-            if (ua === null || ua === void 0 ? void 0 : ua.startsWith('next:')) {
+            if (ua?.startsWith('next:')) {
                 this.returnValue = 'ok';
                 const nextID = ua.substring(5);
                 DialogFormClass_1.openModalForm(nextID, ret);
@@ -678,6 +679,9 @@ DialogFormClass = DialogFormClass_1 = __decorate([
     MicroControl('dialogform')
 ], DialogFormClass);
 class DisplayItemWidgetClass extends GenericWidgetClass {
+    _dispElem;
+    _grid;
+    _elem;
     connectedCallback() {
         super.connectedCallback();
         this._dispElem = document.querySelector('.panel .display');
@@ -690,20 +694,18 @@ class DisplayItemWidgetClass extends GenericWidgetClass {
     }
     newData(path, key, value) {
         super.newData(path, key, value);
-        if (this._elem) {
-            const sty = this._elem.style;
-            if (key === 'x') {
-                sty.left = value + (this._grid > 1 ? 'ch' : 'px');
-            }
-            else if (key === 'y') {
-                sty.top = value + (this._grid > 1 ? 'em' : 'px');
-            }
-            else if (key === 'page') {
-                this._elem.setAttribute('displayPage', value);
-            }
-            else if (key === 'color') {
-                sty.color = value;
-            }
+        const sty = this._elem.style;
+        if (key === 'x') {
+            sty.left = value + (this._grid > 1 ? 'ch' : 'px');
+        }
+        else if (key === 'y') {
+            sty.top = value + (this._grid > 1 ? 'em' : 'px');
+        }
+        else if (key === 'page') {
+            this._elem.setAttribute('displayPage', value);
+        }
+        else if (key === 'color') {
+            sty.color = value.replace(/^x/, '#');
         }
     }
 }
@@ -714,10 +716,8 @@ let DisplayDotWidgetClass = class DisplayDotWidgetClass extends DisplayItemWidge
     }
     newData(path, key, value) {
         super.newData(path, key, value);
-        if (this._elem) {
-            if (key === 'value') {
-                this._elem.classList.toggle('active', toBool(value));
-            }
+        if (key === 'value') {
+            this._elem.classList.toggle('active', toBool(value));
         }
     }
 };
@@ -728,29 +728,15 @@ let DisplayLineWidgetClass = class DisplayLineWidgetClass extends DisplayItemWid
     connectedCallback() {
         super.connectedCallback();
         this._elem = createHTMLElement(this._dispElem, 'span', { class: 'line' });
-        this._x0 = 0;
-        this._x1 = 0;
-        this._y0 = 0;
-        this._y1 = 0;
     }
     newData(path, key, value) {
         super.newData(path, key, value);
-        if (this._elem) {
-            if (key === 'page') {
-                this._elem.setAttribute('displayPage', value);
-            }
-            else if (this['_' + key] != null) {
-                this['_' + key] = value;
-            }
-            this.updateElem();
+        const sty = this._elem.style;
+        if (key === 'w') {
+            sty.width = value + 'px';
         }
-    }
-    updateElem() {
-        if (this._elem) {
-            this._elem.style.top = this._y0 + 'px';
-            this._elem.style.left = this._x0 + 'px';
-            this._elem.style.width = (this._x1 - this._x0) + 'px';
-            this._elem.style.height = (this._y1 - this._y0) + 'px';
+        else if (key === 'h') {
+            sty.height = value + 'px';
         }
     }
 };
@@ -758,6 +744,8 @@ DisplayLineWidgetClass = __decorate([
     MicroControl('displayline')
 ], DisplayLineWidgetClass);
 let DisplayTextWidgetClass = class DisplayTextWidgetClass extends DisplayItemWidgetClass {
+    _prefix;
+    _postfix;
     connectedCallback() {
         super.connectedCallback();
         this._elem = createHTMLElement(this._dispElem, 'span', { class: 'text', style: 'top:0;left:0' });
@@ -766,24 +754,22 @@ let DisplayTextWidgetClass = class DisplayTextWidgetClass extends DisplayItemWid
     }
     newData(path, key, value) {
         super.newData(path, key, value);
-        if (this._elem) {
-            if (key === 'value') {
-                const t = `${this._prefix}${value}${this._postfix}`.replace(/ /g, '&nbsp;');
-                if (this._elem.innerHTML !== t) {
-                    this._elem.innerHTML = t;
-                }
+        if (key === 'value') {
+            const t = `${this._prefix}${value}${this._postfix}`.replace(/ /g, '&nbsp;');
+            if (this._elem.innerHTML !== t) {
+                this._elem.innerHTML = t;
             }
-            else if (key === 'fontsize') {
-                this._elem.style.fontSize = value + 'px';
-                this._elem.style.lineHeight = value + 'px';
-                this._elem.style.height = value + 'px';
-            }
-            else if (key === 'prefix') {
-                this._prefix = value;
-            }
-            else if (key === 'postfix') {
-                this._postfix = value;
-            }
+        }
+        else if (key === 'fontsize') {
+            this._elem.style.fontSize = value + 'px';
+            this._elem.style.lineHeight = value + 'px';
+            this._elem.style.height = value + 'px';
+        }
+        else if (key === 'prefix') {
+            this._prefix = value;
+        }
+        else if (key === 'postfix') {
+            this._postfix = value;
         }
     }
 };
@@ -791,28 +777,31 @@ DisplayTextWidgetClass = __decorate([
     MicroControl('displaytext')
 ], DisplayTextWidgetClass);
 let DisplayWidgetClass = class DisplayWidgetClass extends GenericWidgetClass {
-    constructor() {
-        super(...arguments);
-        this._height = 64;
-        this._width = 64;
-        this._rotation = 0;
-    }
+    _page;
+    _dialogElem;
+    _bk;
+    _height = 64;
+    _width = 64;
+    _rotation = 0;
     _resize() {
-        const d = this._dialogElem;
+        const sty = this._dialogElem.style;
+        let w = this._width;
+        let h = this._height;
         if ((this._rotation === 90 || this._rotation === 270)) {
-            d.style.width = this._height + 'px';
-            d.style.height = this._width + 'px';
+            w = h;
+            h = this._width;
         }
-        else {
-            d.style.width = this._width + 'px';
-            d.style.height = this._height + 'px';
-        }
-        d.style.transform = "scale(0.9)";
+        sty.width = w + 'px';
+        sty.height = h + 'px';
+        const sf = 280 / w;
+        sty.transform = `scale(${sf})`;
+        this._bk.style.height = (h * sf) + 'px';
     }
     connectedCallback() {
         super.connectedCallback();
         this._page = '';
         this._dialogElem = this.querySelector('.display');
+        this._bk = this.querySelector('.bk');
     }
     newData(path, key, value) {
         super.newData(path, key, value);
@@ -829,8 +818,7 @@ let DisplayWidgetClass = class DisplayWidgetClass extends GenericWidgetClass {
             this._resize();
         }
         else if (key === 'back') {
-            value = value.replace(/^x/, '#');
-            this._dialogElem.style.backgroundColor = value;
+            this._dialogElem.style.backgroundColor = value.replace(/^x/, '#');
             this._resize();
         }
         else if (key === 'page') {
@@ -848,12 +836,13 @@ DisplayWidgetClass = __decorate([
     MicroControl('display')
 ], DisplayWidgetClass);
 let IncludeWidgetClass = class IncludeWidgetClass extends MicroControlClass {
+    ref;
     connectedCallback() {
         const obj = document.querySelector('#u-templates ' + this.ref);
         if (obj) {
             const e = obj.cloneNode(true);
             const root = this.parentElement;
-            root === null || root === void 0 ? void 0 : root.replaceChild(e, this);
+            root?.replaceChild(e, this);
         }
     }
 };
@@ -861,6 +850,9 @@ IncludeWidgetClass = __decorate([
     MicroControl('include')
 ], IncludeWidgetClass);
 let InputWidgetClass = class InputWidgetClass extends MicroControlClass {
+    _input;
+    _type;
+    _value;
     connectedCallback() {
         const inObj = this.querySelector('input');
         this._input = this;
@@ -978,6 +970,13 @@ function jsonLocate(obj, path) {
     return obj;
 }
 let LogWidgetClass = class LogWidgetClass extends GenericWidgetClass {
+    _fName;
+    _SVGObj;
+    _lineType;
+    _xFormat;
+    _yFormat;
+    _api;
+    _chart;
     connectedCallback() {
         super.connectedCallback();
         this._SVGObj = this.querySelector('object');
@@ -1061,6 +1060,8 @@ LogWidgetClass = __decorate([
     MicroControl('log')
 ], LogWidgetClass);
 let PWMOutWidgetClass = class PWMOutWidgetClass extends GenericWidgetClass {
+    _range;
+    _last;
     connectedCallback() {
         super.connectedCallback();
         hub.subscribe(this.microid + '?*', this.newValue.bind(this));
@@ -1095,6 +1096,8 @@ PWMOutWidgetClass = __decorate([
 ], PWMOutWidgetClass);
 var SceneWidgetClass_1;
 let SceneWidgetClass = SceneWidgetClass_1 = class SceneWidgetClass extends GenericWidgetClass {
+    static _sceneCard;
+    _buttonObj;
     connectedCallback() {
         super.connectedCallback();
         if (!SceneWidgetClass_1._sceneCard) {
@@ -1214,7 +1217,7 @@ function debounce(func, wait = 20) {
     };
 }
 function getHashParams(defaults) {
-    const params = Object.assign({}, defaults);
+    const params = { ...defaults };
     window.location.hash
         .substring(1)
         .split('&')
@@ -1240,13 +1243,10 @@ function createHTMLElement(parentNode, tag, attr, beforeNode = null) {
     return (o);
 }
 let TimerWidgetClass = class TimerWidgetClass extends GenericWidgetClass {
-    constructor() {
-        super(...arguments);
-        this.wt = 0;
-        this.pt = 0;
-        this.ct = 0;
-        this.time = 0;
-    }
+    wt = 0;
+    pt = 0;
+    ct = 0;
+    time = 0;
     newData(path, key, value) {
         super.newData(path, key, value);
         if (key === 'waittime') {
@@ -1279,6 +1279,7 @@ TimerWidgetClass = __decorate([
     MicroControl('timer')
 ], TimerWidgetClass);
 let ValueWidget = class ValueWidget extends GenericWidgetClass {
+    _input;
     connectedCallback() {
         super.connectedCallback();
         this._input = this.querySelector('input');
@@ -1302,11 +1303,9 @@ ValueWidget = __decorate([
     MicroControl('value')
 ], ValueWidget);
 class MicroHub {
-    constructor() {
-        this._registrations = {};
-        this._registrationsId = 0;
-        this._store = {};
-    }
+    _registrations = {};
+    _registrationsId = 0;
+    _store = {};
     read(path) {
         const o = this._findStoreObject(this.pPath(path));
         return o[this.pKey(path)];
