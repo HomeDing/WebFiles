@@ -1,0 +1,61 @@
+{
+  "device/0": {
+    "active": "true",
+    "name": "c3dev",
+    "title": "CORE-ESP32-C3",
+    "description": "ESP32-C3 Dev board",
+    "safemode": "0",
+    "sd": "1",
+    "nextboot": "4294967114"
+  },
+  "displayst7735/0": {
+    "active": "true",
+    "brightness": "80",
+    "page": "1"
+  },
+  "digitalin/right": {
+    "active": "true",
+    "value": "0"
+  },
+  "digitalin/up": {
+    "active": "true",
+    "value": "0"
+  },
+  "digitalin/press": {
+    "active": "true",
+    "value": "0"
+  },
+  "digitalin/left": {
+    "active": "true",
+    "value": "0"
+  },
+  "digitalin/down": {
+    "active": "true",
+    "value": "0"
+  },
+  "ota/0": {
+    "active": "true"
+  },
+  "ntptime/0": {
+    "active": "true",
+    "now": "2022-10-22 18:32:02"
+  },
+  "diag/0": {
+    "active": "true"
+  },
+  "time/clock": {
+    "active": "true"
+  },
+  "displaytext/hello": {
+    "active": "true",
+    "value": "Hello"
+  },
+  "displaytext/world": {
+    "active": "true",
+    "value": "World"
+  },
+  "displaytext/time": {
+    "active": "true",
+    "value": "18:32:02"
+  }
+}

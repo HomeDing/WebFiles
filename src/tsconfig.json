@@ -3,7 +3,7 @@
   "display": "client-side",
   
   "compilerOptions": {
-    "target": "es6",
+    "target": "ES2022",
     "strict": true,
     "outFile": "../micro.js",
 

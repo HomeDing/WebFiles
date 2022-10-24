@@ -255,7 +255,6 @@ export class HomeDingServer {
 
 
     const handleState = async (req: express.Request, res: express.Response) => {
-      console.error('depricated call to /$board');
       if (!this._boardState) {
         this._boardState = {};
         if (this._caseFolder) {
@@ -281,7 +280,12 @@ export class HomeDingServer {
 
 
     this._app.get(/^\/api\/state$/, this.expressNoCache, handleState);
-    this._app.get(/^\/\$board$/, this.expressNoCache, handleState);
+    this._app.get(/^\/\$board$/, this.expressNoCache, 
+      async (req, res) => {
+        console.error('depricated call to /$board');
+        handleState(req, res);
+      }
+    );
 
 
     this._app.get(/^\/\$flush$/, this.expressNoCache, async (_req, res) => {

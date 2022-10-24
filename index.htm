@@ -58,10 +58,10 @@
         <p><a href="/env.json">Env file</a></p>
         <p><a href="/config.json">Config file</a></p>
 
-        <p><a href="/$board">State of elements</a></p>
-        <p><a href="/$list">current files</a></p>
+        <p><a href="/api/state">State of elements</a></p>
+        <p><a href="/api/list">current files</a></p>
         <p><a href="/ssdp.xml">SSDP description</a></p>
-        <p><a href="/$reboot">reboot</a></p>
+        <p><a href="/api/reboot">reboot</a></p>
       </div>
     </div>
 
@@ -177,7 +177,7 @@
           ]);
         });
 
-      fetch('/$board')
+      fetch('/api/state')
         .then(function (result) {
           return result.json();
         })
