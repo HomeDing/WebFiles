@@ -15,6 +15,7 @@ class ColorWidgetClass extends GenericWidgetClass {
   private _color!: string;   // actual color value from the color input
   private _white: number | undefined;   // actual white value from the slider
   private _brightness!: number;   // actual brightness value from the slider
+  private _duration!: number;   // actual duration of the effect in msec.
 
   override connectedCallback() {
     super.connectedCallback();
@@ -51,6 +52,13 @@ class ColorWidgetClass extends GenericWidgetClass {
         (e as HTMLInputElement).value = String(this._brightness);
       });
 
+    } else if (key === 'duration') {
+      this._duration = parseInt(value, 10);
+
+      this.querySelectorAll('*[name=duration]').forEach(e => {
+        (e as HTMLInputElement).value = String(this._duration);
+      });
+
     } else if (key === 'config') {
       if (value.toLowerCase() === 'wrgb') {
         let o = this.querySelector('input[name=white]') as HTMLElement | null;
@@ -85,26 +93,29 @@ class ColorWidgetClass extends GenericWidgetClass {
         v = this.x16(this._white) + v;
       }
       this.dispatchAction('value', 'x' + v);
+
+    } else if (n === 'duration') {
+      this._duration = parseInt(val, 10);
+      this.dispatchAction(n, val + "ms");
+
     }
   } // on_input
 
-  private _colNames: { [key: string]: string } = {
-    "black": "000000",
-    "red": "ff0000",
-    "green": "00ff00",
-    "blue": "0000ff",
-    "white": "ffffff"
-  }
-
   // convert from various value formats to 'wwrrggbb'
   private normColor(color: string): string {
-
+    const colNames: { [key: string]: string } = {
+      "black": "000000",
+      "red": "ff0000",
+      "green": "00ff00",
+      "blue": "0000ff",
+      "white": "ffffff"
+    }
 
     if ((!color) || (color.length === 0)) {
       color = '00000000';
     } else {
       color = color.toLowerCase();
-      color = this._colNames[color] ?? color;
+      color = colNames[color] ?? color;
       if ((color.substring(0, 1) === 'x') || (color.substring(0, 1) === '#')) {
         color = color.substring(1);
       }

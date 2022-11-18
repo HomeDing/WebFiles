@@ -2,7 +2,61 @@
 // Element and card rules for iot dashboards
 // This is part of the micro css implementation.
 
-// ===== Cards =====
+
+// ===== panel grid Layout =====
+
+$u-grid-width: 11.5rem;
+$u-grid-gap: $gutter;
+
+$u-card-width: 2* $u-grid-width + $gutter;
+$u-card-wide-width: calc(4 * $u-grid-width + 3 * $gutter);
+
+// ===== Dashboard of cards =====
+
+.panel {
+  display: grid;
+  gap: $u-grid-gap;
+  grid-template-columns: repeat(auto-fill, $u-grid-width);
+  grid-auto-rows: minmax(min-content, max-content);
+  grid-auto-flow: row;
+  margin-top: 0.5rem;
+
+  >.card {
+    grid-column: span 2;
+    width: $u-card-width;
+    min-width: $u-card-width;
+    align-self: start;
+  }
+
+  >.card.small {
+    grid-column: span 1;
+    width: $u-grid-width;
+    min-width: $u-grid-width;
+  }
+
+  >.card.wide {
+    grid-column: span 4;
+    width: $u-card-wide-width;
+    min-width: $u-card-wide-width;
+  }
+
+  @media (min-width: 0) {
+    /* 1 col */
+    max-width: $u-card-width;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  @media (min-width: 2 * $u-card-width + $gutter) {
+    max-width: 2 * $u-card-width + $gutter;
+  }
+
+  @media (min-width: 3 * $u-card-width + 2* $gutter) {
+    max-width: 3 * $u-card-width + 2* $gutter;
+  }
+}
+
+// ===== Cards layout =====
 
 .card {
   position: relative;
@@ -11,8 +65,6 @@
   background-color: var(--card-back);
   border: $u-card-border;
   border-radius: $u-card-radius;
-  width: 23rem;
-  min-width: 23rem;
 
   @media print {
     border: 1px solid $u-text;
@@ -21,8 +73,6 @@
   &.small {
     // reduced width and text size
     font-size: 0.8rem;
-    width: 11.25rem;
-    min-width: 11.25rem;
 
     .form-grid {
       grid-template-columns: auto;
@@ -96,40 +146,7 @@
   }
 }
 
-// ===== Dashboard of cards =====
 
-.panel {
-  display: grid;
-  gap: $gutter;
-  grid-template-columns: repeat(auto-fill, $u-card-small-width);
-  grid-auto-rows: minmax(min-content, max-content);
-  grid-auto-flow: row;
-  margin-top: 0.5rem;
-
-  >.card {
-    grid-column: span 2;
-    align-self: start;
-  }
-
-  >.card.small {
-    grid-column: span 1;
-  }
-
-  @media (min-width: 0) {
-    /* 1 col */
-    max-width: $u-card-width;
-    margin-left: auto;
-    margin-right: auto;
-  }
-
-  @media (min-width: 2 * $u-card-width + $gutter) {
-    max-width: 2 * $u-card-width + $gutter;
-  }
-
-  @media (min-width: 3 * $u-card-width + 2* $gutter) {
-    max-width: 3 * $u-card-width + 2* $gutter;
-  }
-}
 
 // ===== forms / input / groups =====
 
@@ -400,6 +417,7 @@ input.switch[type='range'] {
   margin: auto;
   line-height: 10px;
   font-size: 10px;
+  font-family: Verdana, Geneva, sans-serif;
   border: 2px solid $u-border-color;
 
   >span {

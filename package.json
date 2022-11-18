@@ -40,26 +40,32 @@
     "typescript": "^4.7.4"
   },
   "scripts": {
-    "test:ts": "eslint src\\*.ts",
-    "test:server": "eslint server\\*.ts",
-    "test:css": "stylelint *.scss css/*.scss",
+    "build": "npm run build:ts && npm run build:css && npm run build:server",
     "test": "npm outdated && npm run test:ts && npm run test:server && npm run test:css",
+    "pack": "npm run pack:icons && npm run pack:dist && npm run pack:minimal && npm run pack:embed",
+    "publish": "npm run publish:doku && npm run publish:webfiles",
+    
     "clean": "shx rm -rf dist && shx rm -rf dist-mini",
+
+    "xprebuild": "npm run test",
     "build:css": "sass iotstyle.scss iotstyle.css",
     "build:css-watch": "npm run build:css -- -w",
     "build:server": "tsc -p server",
     "build:ts": "tsc -p src",
     "build:ts-watch": "npm run build:ts -- -w",
-    "xprebuild": "npm run test",
-    "build": "npm run build:ts && npm run build:css && npm run build:server",
+
+    "test:server": "eslint server\\*.ts",
+    "test:css": "stylelint *.scss css/*.scss",
+    "test:ts": "eslint src\\*.ts",
+
     "pack:dist": "node packdist.js",
     "pack:minimal": "node packminimal.js",
     "pack:icons": "node packicons.js",
     "pack:embed": "node packembedweb.js",
-    "pack": "npm run pack:icons && npm run pack:dist && npm run pack:minimal && npm run pack:embed",
+
     "publish:doku": "cmd /C publishDoku.bat",
     "publish:webfiles": "cmd /C publishWebFiles.bat v09",
-    "publish": "npm run publish:doku && npm run publish:webfiles",
+
     "prestart": "npm run build",
     "start": "node app.js"
   },

@@ -119,9 +119,9 @@ pre > code {
 }
 @media print {
   code,
-.code,
-code.hljs,
-pre > code {
+  .code,
+  code.hljs,
+  pre > code {
     border: 1px solid #111111;
   }
 }
@@ -365,6 +365,49 @@ main {
   color: #111111;
 }
 
+.panel {
+  display: grid;
+  gap: 0.5rem;
+  grid-template-columns: repeat(auto-fill, 11.5rem);
+  grid-auto-rows: minmax(min-content, max-content);
+  grid-auto-flow: row;
+  margin-top: 0.5rem;
+}
+.panel > .card {
+  grid-column: span 2;
+  width: 23.5rem;
+  min-width: 23.5rem;
+  align-self: start;
+}
+.panel > .card.small {
+  grid-column: span 1;
+  width: 11.5rem;
+  min-width: 11.5rem;
+}
+.panel > .card.wide {
+  grid-column: span 4;
+  width: 47.5rem;
+  min-width: 47.5rem;
+}
+@media (min-width: 0) {
+  .panel {
+    /* 1 col */
+    max-width: 23.5rem;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+@media (min-width: 47.5rem) {
+  .panel {
+    max-width: 47.5rem;
+  }
+}
+@media (min-width: 71.5rem) {
+  .panel {
+    max-width: 71.5rem;
+  }
+}
+
 .card {
   position: relative;
   display: flex;
@@ -372,8 +415,6 @@ main {
   background-color: var(--card-back);
   border: none;
   border-radius: 0.4rem;
-  width: 23rem;
-  min-width: 23rem;
 }
 @media print {
   .card {
@@ -382,8 +423,6 @@ main {
 }
 .card.small {
   font-size: 0.8rem;
-  width: 11.25rem;
-  min-width: 11.25rem;
 }
 .card.small .form-grid {
   grid-template-columns: auto;
@@ -438,40 +477,6 @@ main {
   height: 1px;
   margin: 0;
   padding: 0;
-}
-
-.panel {
-  display: grid;
-  gap: 0.5rem;
-  grid-template-columns: repeat(auto-fill, 11.5rem);
-  grid-auto-rows: minmax(min-content, max-content);
-  grid-auto-flow: row;
-  margin-top: 0.5rem;
-}
-.panel > .card {
-  grid-column: span 2;
-  align-self: start;
-}
-.panel > .card.small {
-  grid-column: span 1;
-}
-@media (min-width: 0) {
-  .panel {
-    /* 1 col */
-    max-width: 23.5rem;
-    margin-left: auto;
-    margin-right: auto;
-  }
-}
-@media (min-width: 47.5rem) {
-  .panel {
-    max-width: 47.5rem;
-  }
-}
-@media (min-width: 71.5rem) {
-  .panel {
-    max-width: 71.5rem;
-  }
 }
 
 button,
@@ -704,6 +709,7 @@ input.switch[type=range] {
   margin: auto;
   line-height: 10px;
   font-size: 10px;
+  font-family: Verdana, Geneva, sans-serif;
   border: 2px solid #555555;
 }
 .display > span {

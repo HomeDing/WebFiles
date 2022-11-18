@@ -21,15 +21,15 @@ class DisplayWidgetClass extends GenericWidgetClass {
     const sty = this._dialogElem.style;
     let w = this._width;
     let h = this._height;
-    if ((this._rotation === 90 || this._rotation === 270)) {
+    if ((this._rotation % 180) === 90) {
       w = h;
       h = this._width;
     }
     sty.width = w + 'px';
     sty.height = h + 'px';
-    const sf = 280 / w;
-    sty.transform = `scale(${sf})`;
-    this._bk.style.height = (h * sf) + 'px';
+    if (w > 260) {
+      this.classList.add('wide');
+    }
   }
 
   override connectedCallback() {

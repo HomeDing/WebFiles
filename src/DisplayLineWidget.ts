@@ -13,18 +13,20 @@ class DisplayLineWidgetClass extends DisplayItemWidgetClass {
 
   override connectedCallback() {
     super.connectedCallback();
-    this._elem = createHTMLElement(this._dispElem, 'span', { class: 'line' });
+    if (this._dispElem)
+      this._elem = createHTMLElement(this._dispElem, 'span', { class: 'line' });
   } // connectedCallback
 
   override newData(path: string, key: string, value: string) {
     super.newData(path, key, value);
-    const sty = this._elem.style;
-
-    if (key === 'w') {
-      sty.width = value + 'px';
+    const e = this._elem;
+    if (!e) {
+      // not visible
+    } else if (key === 'w') {
+      e.style.width = value + 'px';
 
     } else if (key === 'h') {
-      sty.height = value + 'px';
+      e.style.height = value + 'px';
     }
   } // newData
 

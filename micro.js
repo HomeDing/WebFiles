@@ -452,6 +452,7 @@ let ColorWidgetClass = class ColorWidgetClass extends GenericWidgetClass {
     _color;
     _white;
     _brightness;
+    _duration;
     connectedCallback() {
         super.connectedCallback();
         this._value = '00000000';
@@ -480,6 +481,12 @@ let ColorWidgetClass = class ColorWidgetClass extends GenericWidgetClass {
             this._brightness = parseInt(value, 10);
             this.querySelectorAll('*[name=brightness]').forEach(e => {
                 e.value = String(this._brightness);
+            });
+        }
+        else if (key === 'duration') {
+            this._duration = parseInt(value, 10);
+            this.querySelectorAll('*[name=duration]').forEach(e => {
+                e.value = String(this._duration);
             });
         }
         else if (key === 'config') {
@@ -514,21 +521,25 @@ let ColorWidgetClass = class ColorWidgetClass extends GenericWidgetClass {
             }
             this.dispatchAction('value', 'x' + v);
         }
+        else if (n === 'duration') {
+            this._duration = parseInt(val, 10);
+            this.dispatchAction(n, val + "ms");
+        }
     }
-    _colNames = {
-        "black": "000000",
-        "red": "ff0000",
-        "green": "00ff00",
-        "blue": "0000ff",
-        "white": "ffffff"
-    };
     normColor(color) {
+        const colNames = {
+            "black": "000000",
+            "red": "ff0000",
+            "green": "00ff00",
+            "blue": "0000ff",
+            "white": "ffffff"
+        };
         if ((!color) || (color.length === 0)) {
             color = '00000000';
         }
         else {
             color = color.toLowerCase();
-            color = this._colNames[color] ?? color;
+            color = colNames[color] ?? color;
             if ((color.substring(0, 1) === 'x') || (color.substring(0, 1) === '#')) {
                 color = color.substring(1);
             }
@@ -727,16 +738,19 @@ DisplayDotWidgetClass = __decorate([
 let DisplayLineWidgetClass = class DisplayLineWidgetClass extends DisplayItemWidgetClass {
     connectedCallback() {
         super.connectedCallback();
-        this._elem = createHTMLElement(this._dispElem, 'span', { class: 'line' });
+        if (this._dispElem)
+            this._elem = createHTMLElement(this._dispElem, 'span', { class: 'line' });
     }
     newData(path, key, value) {
         super.newData(path, key, value);
-        const sty = this._elem.style;
-        if (key === 'w') {
-            sty.width = value + 'px';
+        const e = this._elem;
+        if (!e) {
+        }
+        else if (key === 'w') {
+            e.style.width = value + 'px';
         }
         else if (key === 'h') {
-            sty.height = value + 'px';
+            e.style.height = value + 'px';
         }
     }
 };
@@ -787,15 +801,15 @@ let DisplayWidgetClass = class DisplayWidgetClass extends GenericWidgetClass {
         const sty = this._dialogElem.style;
         let w = this._width;
         let h = this._height;
-        if ((this._rotation === 90 || this._rotation === 270)) {
+        if ((this._rotation % 180) === 90) {
             w = h;
             h = this._width;
         }
         sty.width = w + 'px';
         sty.height = h + 'px';
-        const sf = 280 / w;
-        sty.transform = `scale(${sf})`;
-        this._bk.style.height = (h * sf) + 'px';
+        if (w > 260) {
+            this.classList.add('wide');
+        }
     }
     connectedCallback() {
         super.connectedCallback();
