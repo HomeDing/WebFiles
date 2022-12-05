@@ -43,7 +43,7 @@ export class EventBusClass {
       ev = ev.replaceAll('$v', value);
       // Logger.trace(`queue: ${ev}`);
       this.events.push(ev);
-    })
+    });
   }
 
   executeEvents() {
@@ -59,7 +59,7 @@ export class EventBusClass {
           args.split('&').forEach(a => {
             const [key, val] = a.split('=');
             actions[key] = val;
-          })
+          });
           e.doAction(actions);
         }
       }

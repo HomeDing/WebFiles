@@ -10,62 +10,53 @@
   },
   "dependencies": {
     "debug": "^4.3.4",
-    "express": "^4.18.1",
-    "html-minifier-terser": "^7.0.0",
+    "express": "^4.18.2",
+    "html-minifier-terser": "^7.1.0",
     "multer": "^1.4.5-lts.1",
-    "multicast-dns": "^7.2.3",
-    "node-fetch": "^3.2.10",
-    "terser": "^5.14.2",
-    "timeout-signal": "^1.1.0",
-    "yargs": "^17.3.1"
+    "multicast-dns": "^7.2.5",
+    "node-fetch": "^3.3.0",
+    "timeout-signal": "^2.0.0",
+    "yargs": "^17.6.2"
   },
   "devDependencies": {
     "@types/debug": "^4.1.7",
-    "@types/express": "^4.17.13",
+    "@types/express": "^4.17.14",
     "@types/multer": "^1.4.7",
     "@types/multicast-dns": "^7.2.1",
-    "@types/yargs": "^17.0.8",
-    "@typescript-eslint/eslint-plugin": "^5.33.1",
-    "@typescript-eslint/parser": "^5.33.1",
-    "eslint": "^8.22.0",
-    "eslint-config-node": "^4.1.0",
-    "eslint-config-promise": "^2.0.2",
-    "eslint-config-standard": "^17.0.0",
-    "sass": "^1.54.5",
+    "@types/yargs": "^17.0.15",
+    "@typescript-eslint/eslint-plugin": "^5.45.0",
+    "@typescript-eslint/parser": "^5.45.0",
+    "eslint-plugin-html": "^7.1.0",
+    "sass": "^1.56.1",
     "shelljs": "^0.8.5",
     "shx": "^0.3.4",
-    "stylelint": "^14.11.0",
+    "stylelint": "^14.15.0",
     "stylelint-config-sass-guidelines": "^9.0.1",
     "svgstore": "^3.0.1",
-    "typescript": "^4.7.4"
+    "terser": "^5.16.0",
+    "typescript": "^4.9.3"
   },
   "scripts": {
     "build": "npm run build:ts && npm run build:css && npm run build:server",
     "test": "npm outdated && npm run test:ts && npm run test:server && npm run test:css",
     "pack": "npm run pack:icons && npm run pack:dist && npm run pack:minimal && npm run pack:embed",
     "publish": "npm run publish:doku && npm run publish:webfiles",
-    
     "clean": "shx rm -rf dist && shx rm -rf dist-mini",
-
     "xprebuild": "npm run test",
     "build:css": "sass iotstyle.scss iotstyle.css",
     "build:css-watch": "npm run build:css -- -w",
     "build:server": "tsc -p server",
     "build:ts": "tsc -p src",
     "build:ts-watch": "npm run build:ts -- -w",
-
     "test:server": "eslint server\\*.ts",
     "test:css": "stylelint *.scss css/*.scss",
     "test:ts": "eslint src\\*.ts",
-
     "pack:dist": "node packdist.js",
     "pack:minimal": "node packminimal.js",
     "pack:icons": "node packicons.js",
     "pack:embed": "node packembedweb.js",
-
     "publish:doku": "cmd /C publishDoku.bat",
     "publish:webfiles": "cmd /C publishWebFiles.bat v09",
-
     "prestart": "npm run build",
     "start": "node app.js"
   },

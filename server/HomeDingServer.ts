@@ -40,7 +40,7 @@ export class HomeDingServer {
     monitor: false,
     secure: false,
     case: undefined
-  }
+  };
 
   // file based settings
   private _settings = {} as any;
@@ -108,22 +108,22 @@ export class HomeDingServer {
     this._api.use('/config', this.expressNoCache, configService.router);
 
     // ----- enable start page redirect -----
-    this._app.get('/', function (req, res, _next) {
+    this._app.get('/', function(req, res, _next) {
       Logger.info('redirect...');
       res.redirect('/index.htm');
     });
 
     // ----- enable buildin setup pages -----
-    this._app.get('/\\$setup*', function (_req, res) { res.sendFile(path.join(process.cwd(), 'setup.htm')); });
-    this._app.get('/\\$update*', function (_req, res) { res.sendFile(path.join(process.cwd(), 'update.htm')); });
-    this._app.get('/\\$upload*', function (_req, res) { res.sendFile(path.join(process.cwd(), 'upload.htm')); });
+    this._app.get('/\\$setup*', function(_req, res) { res.sendFile(path.join(process.cwd(), 'setup.htm')); });
+    this._app.get('/\\$update*', function(_req, res) { res.sendFile(path.join(process.cwd(), 'update.htm')); });
+    this._app.get('/\\$upload*', function(_req, res) { res.sendFile(path.join(process.cwd(), 'upload.htm')); });
 
     // configure upload storage to save in /uploads and use the filename+date
     const storage = multer.diskStorage({
-      destination: function (_req, _file, cb) {
+      destination: function(_req, _file, cb) {
         cb(null, './uploads/');
       },
-      filename: function (req, file, cb) {
+      filename: function(req, file, cb) {
         const p = file.originalname.split('/');
         cb(null, '/' + Date.now() + '-' + p[p.length - 1]);
       }
@@ -135,7 +135,7 @@ export class HomeDingServer {
      * Test uploading files without overwriting existing files.
      * new files are saved to the `uploads` folder
     */
-    this._app.post('/', upload.any(), function (req, res) {
+    this._app.post('/', upload.any(), function(req, res) {
       res.send('');
     });
 
@@ -227,7 +227,7 @@ export class HomeDingServer {
 
     // ===== handling status requests
 
-    const handleElementState = async (req: express.Request, res: express.Response) => {
+    const handleElementState = async(req: express.Request, res: express.Response) => {
       if (!this._boardState) {
         this._boardState = {};
         if (this._caseFolder) {
@@ -248,13 +248,13 @@ export class HomeDingServer {
         res.json(this._boardState[id]);
       }
       // next();
-    } // handleElementState
+    }; // handleElementState
 
     this._app.get('/\\api/state/:type/:id', this.expressNoCache, handleElementState);
     this._app.get('/\\$board/:type/:id', this.expressNoCache, handleElementState);
 
 
-    const handleState = async (req: express.Request, res: express.Response) => {
+    const handleState = async(req: express.Request, res: express.Response) => {
       if (!this._boardState) {
         this._boardState = {};
         if (this._caseFolder) {
@@ -276,26 +276,26 @@ export class HomeDingServer {
       // debugSend('send:' , boardStatus);
       res.type('application/json');
       res.send(JSON.stringify(this._boardState, null, 2));
-    } // handleState
+    }; // handleState
 
 
     this._app.get(/^\/api\/state$/, this.expressNoCache, handleState);
     this._app.get(/^\/\$board$/, this.expressNoCache, 
-      async (req, res) => {
+      async(req, res) => {
         console.error('depricated call to /$board');
         handleState(req, res);
       }
     );
 
 
-    this._app.get(/^\/\$flush$/, this.expressNoCache, async (_req, res) => {
+    this._app.get(/^\/\$flush$/, this.expressNoCache, async(_req, res) => {
       configService.flush();
       res.send();
     });
 
     // ===== serving file system
 
-    this._app.delete('/:fn', function (req, res) {
+    this._app.delete('/:fn', function(req, res) {
       const filename = req.params.fn;
       Logger.info('DELETE: %s not implemented.', filename);
       res.send('done');

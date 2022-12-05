@@ -27,12 +27,12 @@ export class ConfigCache {
     this.options = Object.assign({}, this.defaultOptions, options);
 
     // express function: list all found devices.
-    this.router.get('/', async (req, res) => {
+    this.router.get('/', async(req, res) => {
       res.json({});
     });
 
     // express function: list all found devices.
-    this.router.get('/:hostname', async (req, res) => {
+    this.router.get('/:hostname', async(req, res) => {
       let cnf = {};
       if (req.params.hostname) {
         cnf = await this.get(req.params.hostname);

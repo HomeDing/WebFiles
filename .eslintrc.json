@@ -1,5 +1,5 @@
 {
-"root": true,
+  "root": true,
   "env": {
     "browser": true,
     "es2021": true,
@@ -16,15 +16,17 @@
     "sourceType": "module"
   },
   "plugins": [
+    "html",
     "@typescript-eslint"
   ],
   "rules": {
-    "semi": "off",
-    "no-multiple-empty-lines": ["error", { "max": 2, "maxBOF": 1}],
-    "space-before-function-paren": "off",
+    "semi": [2, "always"],
+    "no-multiple-empty-lines": ["error", { "max": 2, "maxBOF": 1 }],
+    "space-before-function-paren": ["warn", "never"],
     "padded-blocks": 0,
     "no-explicit-any": 0,
     "no-empty": 0,
+    "no-unused-expressions": 0,
     "@typescript-eslint/triple-slash-reference": 0,
     "@typescript-eslint/no-unused-vars": 0,
     "@typescript-eslint/no-explicit-any": 0,
@@ -37,9 +39,9 @@
     "toSeconds": "readonly",
     "createHTMLElement": "readonly",
     "GenericWidgetClass": "readonly",
-    "hub": "readonly", 
-    "jsonFind": "readonly", 
-    "updateState": "readonly", 
+    "hub": "readonly",
+    "jsonFind": "readonly",
+    "updateState": "readonly",
     "jsonLocate": "readonly"
 
   }
