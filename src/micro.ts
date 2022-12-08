@@ -237,7 +237,7 @@ const micro = new MicroRegistry();
 
 
 // detect that a new micro control was created using Mutation Observe Callback
-const obs = new MutationObserver(function (mutationsList: MutationRecord[], _observer) {
+const obs = new MutationObserver(function(mutationsList: MutationRecord[], _observer) {
   for (const mutation of mutationsList) {
     mutation.addedNodes.forEach(n => {
       const e = <Element>n;
@@ -249,7 +249,7 @@ const obs = new MutationObserver(function (mutationsList: MutationRecord[], _obs
 });
 obs.observe(document, { childList: true, subtree: true });
 
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', function() {
   function f() { document.querySelectorAll('[data-src]:not([src])').forEach(e => micro.loadDataImage(e as HTMLElement)); }
   window.addEventListener('scroll', f);
   window.setTimeout(f, 40);

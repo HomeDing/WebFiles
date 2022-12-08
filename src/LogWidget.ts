@@ -39,7 +39,7 @@ class LogWidgetClass extends GenericWidgetClass {
         if (res.ok) { return res.text(); }
         throw new Error();
       })
-      .then(function (txt) {
+      .then(function(txt) {
         allData = allData + '\n' + txt;
       });
 
@@ -48,10 +48,10 @@ class LogWidgetClass extends GenericWidgetClass {
         if (res.ok) { return res.text(); }
         throw new Error();
       })
-      .then(function (txt) {
+      .then(function(txt) {
         allData = txt + '\n' + allData;
       });
-    Promise.allSettled([p1, p2]).then(function (this: LogWidgetClass) {
+    Promise.allSettled([p1, p2]).then(function(this: LogWidgetClass) {
       const re = /^\d{4,},\d+/;
       const pmArray = allData.split('\n').filter(e => e.match(re));
 

@@ -36,7 +36,7 @@ class SceneWidgetClass extends GenericWidgetClass {
     }
   }
 
-  startScene() { 0 }
+  startScene() { 0; }
 
   override newData(path: string, key: string, value: string) {
     super.newData(path, key, value);

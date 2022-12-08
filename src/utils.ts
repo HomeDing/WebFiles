@@ -73,7 +73,7 @@ function changeConfig(id: string, newConfig: any) {
 
   const formData = new FormData();
   formData.append(fName, new Blob([JSON.stringify(c)], { type: 'text/html' }), fName);
-  fetch('/', { method: 'POST', body: formData }).then(function () {
+  fetch('/', { method: 'POST', body: formData }).then(function() {
     window.alert('saved.');
   });
 } // changeConfig()
@@ -84,7 +84,7 @@ function changeConfig(id: string, newConfig: any) {
  * by deferring the function execution. */
 function debounce(func: () => void, wait = 20) {
   let timer: number;
-  return function () {
+  return function() {
     if (timer) { clearTimeout(timer); }
     timer = window.setTimeout(() => {
       timer = 0;
@@ -121,7 +121,7 @@ function getHashParams(defaults: object) {
   window.location.hash
     .substring(1)
     .split('&')
-    .forEach(function (p) {
+    .forEach(function(p) {
       const pa = p.split('=');
       params[pa[0]] = pa[1];
     });

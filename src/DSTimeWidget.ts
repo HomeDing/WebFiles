@@ -14,7 +14,7 @@ class DSTimeWidgetClass extends GenericWidgetClass {
   override connectedCallback() {
     super.connectedCallback();
     this._nowObj = <HTMLElement>this.querySelector('.setnow');
-    window.setInterval(function (this: DSTimeWidgetClass) {
+    window.setInterval(function(this: DSTimeWidgetClass) {
       setTextContent(this._nowObj, this.isoDate());
     }.bind(this), 200);
   } // connectedCallback()

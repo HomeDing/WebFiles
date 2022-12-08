@@ -13,7 +13,7 @@ class ValueWidget extends GenericWidgetClass {
 
   override connectedCallback() {
     super.connectedCallback();
-    this._input = this.querySelector('input')
+    this._input = this.querySelector('input');
   }
 
   override newData(path: string, key: string, value: string) {

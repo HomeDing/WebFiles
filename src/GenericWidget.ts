@@ -63,7 +63,7 @@ class GenericWidgetClass extends MicroControlClass {
 
     // u-active flags
     ['span', 'div'].forEach(elType => {
-      this.querySelectorAll(`${elType}[u-active='${key}']`).forEach(function (elem) {
+      this.querySelectorAll(`${elType}[u-active='${key}']`).forEach(function(elem) {
         const b = toBool(value);
         setAttr(elem as HTMLElement, 'value', b ? '1' : '0');
         setAttr(elem as HTMLElement, 'title', b ? 'active' : 'not active');
@@ -94,7 +94,7 @@ class GenericWidgetClass extends MicroControlClass {
     });
 
     // Color
-    this.querySelectorAll(`span[u-color='${key}']`).forEach(function (elem) {
+    this.querySelectorAll(`span[u-color='${key}']`).forEach(function(elem) {
       let col = value ? value.replace(/^x/, '#') : '#888';
       col = col.replace(/^#\S{2}(\S{6})$/, '#$1');
       (elem as HTMLElement).style.backgroundColor = col;

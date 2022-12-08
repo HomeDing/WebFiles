@@ -36,7 +36,7 @@ class ColorWidgetClass extends GenericWidgetClass {
       } else {
         this._color = newValue;
       }
-      this._white = parseInt(newValue.substring(0, 2), 16)
+      this._white = parseInt(newValue.substring(0, 2), 16);
 
       if (newValue !== this._value) {
         this._value = newValue;
@@ -109,7 +109,7 @@ class ColorWidgetClass extends GenericWidgetClass {
       "green": "00ff00",
       "blue": "0000ff",
       "white": "ffffff"
-    }
+    };
 
     if ((!color) || (color.length === 0)) {
       color = '00000000';

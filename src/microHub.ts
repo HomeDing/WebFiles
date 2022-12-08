@@ -63,7 +63,7 @@ class MicroHub {
     if (replay) {
       jsonParse(
         this._store,
-        function (path: string, key?: string, value?: string) {
+        function(path: string, key?: string, value?: string) {
           let fullPath: string = path + (key ? '?' + key : '');
           if (fullPath) {
             fullPath = fullPath.toLocaleLowerCase();
@@ -94,7 +94,7 @@ class MicroHub {
     if (e) {
       jsonParse(
         this._store,
-        function (path: string, key?: string, value?: string) {
+        function(path: string, key?: string, value?: string) {
           let fullPath: string = path + (key ? '?' + key : '');
           if (fullPath) {
             fullPath = fullPath.toLocaleLowerCase();
@@ -112,7 +112,7 @@ class MicroHub {
   publishObj(obj: any) {
     jsonParse(
       obj,
-      function (this: MicroHub, path: string, key?: string, value?: string) {
+      function(this: MicroHub, path: string, key?: string, value?: string) {
         this.publishValue(path, key ? key.toLowerCase() : '', value ? value : '');
       }.bind(this)
     );
