@@ -69,6 +69,7 @@
     "IoT",
     "Arduino",
     "ESP8266",
+    "ESP32",
     "HomeDing",
     "HomeDingPortal",
     "HomeDingNode",
