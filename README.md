@@ -1,6 +1,6 @@
 # HomeDing WebFiles
 
-Build Status: [![Build Status](https://dev.azure.com/HomeDing/WebFiles/_apis/build/status/HomeDing.WebFiles?branchName=master)](https://dev.azure.com/HomeDing/WebFiles/_build)
+![Build Status](https://github.com/HomeDing/WebFiles/actions/workflows/node.js.yml/badge.svg)
 
 This is the project of the HomeDing library related to web technologies. It is used for multiple purposes:
 
