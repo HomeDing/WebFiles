@@ -168,12 +168,23 @@
         <div style="display:none"><input type="range" max="255" name="white"><output name="white"></output></div>
         <label>brightness:</label>
         <div><input type="range" max="100" name="brightness"><output name="brightness"></output></div>
+        <label>duration:</label>
+        <div><input type="range" max="120000" name="duration"><output name="duration"></output></div>
       </div>
       <div class="block footer form-actions">
         <button u-action="mode" value="fade">fade</button>
         <button u-action="mode" value="fix">fix</button>
         <button u-action="mode" value="pulse">pulse</button>
         <button u-action="mode" value="wheel">wheel</button>
+      </div>
+    </div>
+    <div class="card" u-control="neo" id="${id}" u-is="color" microID="${id}">
+      <div u-is="include" ref=".cHead"></div>
+      <div class="block form-grid">
+        <label>color:</label><input type="color" name="color">
+      </div>
+      <div class="block footer form-actions">
+        <button u-action="mode" value="flow">flow</button>
       </div>
     </div>
 
