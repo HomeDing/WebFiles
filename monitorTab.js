@@ -44,7 +44,7 @@ class TableSortable extends HTMLTableElement {
       data.push({
         key: tr.children[col].innerText.toLowerCase(),
         val: tr
-      })
+      });
     });
     data.sort(fCmp).forEach(r => body.appendChild(r.val));
   } // sortTable()
