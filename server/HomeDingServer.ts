@@ -187,16 +187,30 @@ export class HomeDingServer {
     this.eventBus.startup(this._allConfig);
 
 
-    async function handleList(_req: express.Request, res: express.Response) {
+    async function handleList(req: express.Request, res: express.Response) {
+      let p = '';
+      if (req.query.path) {
+        p = req.query.path as string;
+      }
+      p = p.replaceAll('..', '.');
+      if (!p.startsWith('/')) { p = '/' + p; }
+      if (!p.endsWith('/')) { p = p + '/'; }
+
       const fl = [];
-      const files = await fs.promises.readdir('.');
+      const files = await fs.promises.readdir('.' + p);
       for (const i in files) {
-        const aFile = await fs.promises.stat(files[i]);
+        const aFile = await fs.promises.stat('.' + p + files[i]);
         if (aFile.isFile()) {
           fl.push({
-            name: '/' + files[i],
+            name: p + files[i],
             size: aFile.size
           });
+        } else if (aFile.isDirectory()) {
+          fl.push({
+            name: p + files[i],
+            type: "dir"
+          });
+
         }
       }
       res.json(fl);
@@ -227,7 +241,7 @@ export class HomeDingServer {
 
     // ===== handling status requests
 
-    const handleElementState = async(req: express.Request, res: express.Response) => {
+    const handleElementState = async (req: express.Request, res: express.Response) => {
       if (!this._boardState) {
         this._boardState = {};
         if (this._caseFolder) {
@@ -254,7 +268,7 @@ export class HomeDingServer {
     this._app.get('/\\$board/:type/:id', this.expressNoCache, handleElementState);
 
 
-    const handleState = async(req: express.Request, res: express.Response) => {
+    const handleState = async (req: express.Request, res: express.Response) => {
       if (!this._boardState) {
         this._boardState = {};
         if (this._caseFolder) {
@@ -280,15 +294,15 @@ export class HomeDingServer {
 
 
     this._app.get(/^\/api\/state$/, this.expressNoCache, handleState);
-    this._app.get(/^\/\$board$/, this.expressNoCache, 
-      async(req, res) => {
+    this._app.get(/^\/\$board$/, this.expressNoCache,
+      async (req, res) => {
         console.error('depricated call to /$board');
         handleState(req, res);
       }
     );
 
 
-    this._app.get(/^\/\$flush$/, this.expressNoCache, async(_req, res) => {
+    this._app.get(/^\/\$flush$/, this.expressNoCache, async (_req, res) => {
       configService.flush();
       res.send();
     });

@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
   <title>IoT-IDE</title>
 
-  <link rel="icon" type="image/png" href="/favicon48.png" sizes="48x48">
+  <link rel="icon" type="image/png" href="/favicon48.png" sizes="48x48" />
   <!-- no web site meta data here -->
   <link Content-Type="text/css" href="iotstyle.css" rel="stylesheet" />
   <script src="micro.js"></script>
@@ -25,7 +25,6 @@
       display: flex;
     }
 
-
     #files>div:hover {
       background-color: #eeeeee;
     }
@@ -37,7 +36,6 @@
       padding: 0 0.1em;
       height: 1.2em;
     }
-
 
     #files>div div.file-entry {
       overflow: hidden;
@@ -99,7 +97,7 @@
     }
 
     button:disabled.once:after {
-      content: "";
+      content: '';
       position: absolute;
       height: 0.6em;
       width: 0.6em;
@@ -136,9 +134,8 @@
   </style>
 </head>
 
-<body style="margin:0;padding:0">
-  <div class="grid-container" style="padding:1rem">
-
+<body style="margin: 0; padding: 0">
+  <div class="grid-container" style="padding: 1rem">
     <progress id="progress" class="fadeout" max="1" value="0"></progress>
 
     <div class="u-header">
@@ -160,14 +157,18 @@
       <button class="once" id="doReboot">reboot</button>
     </div>
 
-    <div style="grid-column: 1;">
-      <h3 style="display: inline-block; margin:0">Files</h3>
+    <div style="grid-column: 1">
+      <h3 style="display: inline-block; margin: 0">Files</h3>
       <button style="float: right" onclick="handleReloadFS()">reload</button>
     </div>
 
-    <div style="grid-column: 2;">
-      <h3 style="display: inline-block;margin:0">File: <span id="activeFile"></span></h3>
-      <button class="once secondary" style="float: right" onclick="handleFmt()">format</button>
+    <div style="grid-column: 2">
+      <h3 style="display: inline-block; margin: 0">
+        File: <span id="activeFile"></span>
+      </h3>
+      <button class="once secondary" style="float: right" onclick="handleFmt()">
+        format
+      </button>
       <span class="btn-group" style="float: right">
         <button class="once" onclick="handleSave()">save</button>
         <label class="valid" id="checker">ok</label>
@@ -175,9 +176,12 @@
     </div>
 
     <!-- <div class="row" style="margin-bottom:0;overflow:hidden"> -->
-    <div id="files" style="grid-column: 1;flex:1 1 auto;overflow:scroll">...</div>
+    <div id="files" style="grid-column: 1; flex: 1 1 auto; overflow: scroll">
+      ...
+    </div>
 
-    <pre style="grid-column: 2;" class="code" contenteditable id="content" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></pre>
+    <pre style="grid-column: 2" class="code" contenteditable id="content" autocomplete="off" autocorrect="off"
+      autocapitalize="off" spellcheck="false"></pre>
   </div>
 
   <script>
@@ -188,25 +192,45 @@
     const activeFileObj = document.getElementById('activeFile');
     const checkerObj = document.getElementById('checker');
 
-    let activeFileName;
+    let thisFile;
 
     // load file into editor from the server
-    function handleLoadFile(e) {
+    function loadEntry(e) {
+      let path = getPath();
       const s = e.target.innerText;
-      activeFileName = s.split(' ')[0];
-      activeFileObj.innerText = activeFileName;
 
-      fetch(activeFileName)
-        .then(function (result) {
-          return (result.text());
-        }).then(function (txt) {
-          contentObj.innerText = txt;
-        });
+      const name = s.split(' ')[0].substring(1);
+      contentObj.innerText = '';
+
+      if (!s.endsWith(')')) {
+        // a folder
+        if (s === '..') {
+          // one level up.
+          path = path.split('/');
+          path.splice(path.length - 2, 1);
+          path = path.join('/');
+        } else {
+          path = s + '/';
+        }
+        activeFileObj.innerText = thisFile = path;
+        location.hash = path;
+
+      } else {
+        // load file
+        fetch(name)
+          .then(function(result) {
+            return result.text();
+          })
+          .then(function(txt) {
+            contentObj.innerText = txt;
+            activeFileObj.innerText = thisFile = name;
+          });
+      }
     } // handleLoadFile()
 
     // General Purpose Promise
     function DelayPromise(ms) {
-      return new Promise(function (resolve) {
+      return new Promise(function(resolve) {
         setTimeout(resolve, ms);
       });
     }
@@ -224,52 +248,61 @@
       } // if
     } // handleDeleteFile()
 
-
     // add one file to the directory listing.
-    function addFileEntry(container, f) {
-      const row = createHTMLElement(container, 'div', { class: 'row nogutter' });
-      row.addEventListener('click', handleLoadFile);
+    function addEntry(f) {
+      const row = createHTMLElement(filesObj, 'div', {
+        class: 'row nogutter',
+      });
+      row.addEventListener('click', loadEntry);
 
       // add file name and size
-      const entry = createHTMLElement(row, 'div', { class: 'col stretch file-entry' });
-      entry.innerText = entry.title = f.name + ' (' + f.size + ')';
-
-      const delx = createHTMLElement(row, 'div', { class: 'col file-delete' });
-      delx.innerText = '[X]';
-      delx.addEventListener('click', handleDeleteFile);
+      const entry = createHTMLElement(row, 'div', {
+        class: 'col stretch file-entry',
+      });
+      if (f.type === 'dir') {
+        entry.innerText = entry.title = f.name;
+      } else {
+        entry.innerText = entry.title = f.name + ' (' + f.size + ')';
+        const delx = createHTMLElement(row, 'div', {
+          class: 'col file-delete',
+        });
+        delx.innerText = '[X]';
+        delx.addEventListener('click', handleDeleteFile);
+      }
     } // addFileEntry()
 
-    // create the directory listing from the fileList dataset.
-    function listFiles(fileList) {
-      // remove all exiting entries
-      filesObj.innerHTML = '';
-
-      fileList.forEach(function (f) {
-        addFileEntry(filesObj, f);
-      })
-    } // listFiles()
-
+    function getPath() {
+      let path = '/';
+      if (location.hash.length > 0) path = location.hash.substring(1);
+      if (!path.endsWith('/')) path += '/';
+      return path;
+    }
 
     function handleReloadFS() {
-      fetch('/$list')
-        .then(function (result) {
-          return (result.json());
-        }).then(function (x) {
-          x.sort(function (a, b) {
+      const path = getPath();
+      fetch(`/api/list?path=${path}`)
+        .then(function(result) {
+          return result.json();
+        })
+        .then(function(x) {
+          x.sort(function(a, b) {
+            if (a.type && !b.type) return -1;
+            if (!a.type && b.type) return 1;
             const an = a.name.toLowerCase();
             const bn = b.name.toLowerCase();
-            if (an < bn) {
-              return -1;
-            }
-            if (an > bn) {
-              return 1;
-            }
+            if (an < bn) return -1;
+            if (an > bn) return 1;
             return 0;
           });
-          listFiles(x);
+
+          filesObj.innerHTML = '';
+          if (path !== '/') addEntry({ name: '..', type: 'dir' });
+
+          x.forEach(function(f) {
+            addEntry(f);
+          });
         });
     } // handleReloadFS()
-
 
     // some drag events need to call stopPropagation and preventDefault to allow custom interactions
     function dragHelper(e) {
@@ -278,7 +311,7 @@
     } // dragHelper()
 
     // only paste plain text at cursor position.
-    contentObj.addEventListener('paste', function (e) {
+    contentObj.addEventListener('paste', function(e) {
       const sel = window.getSelection();
       if (sel.rangeCount) {
         const txt = e.clipboardData.getData('text/plain');
@@ -287,7 +320,7 @@
         sel.collapseToEnd();
         e.preventDefault();
       }
-    })
+    });
 
     // start uploading file content
     function startUpload(filename, contentType, content) {
@@ -295,7 +328,7 @@
 
       const formData = new FormData();
       const blob = new Blob([content], {
-        type: contentType
+        type: contentType,
       });
       formData.append(filename, blob, filename);
 
@@ -303,14 +336,18 @@
       objHTTP.open('POST', '/');
 
       if (objHTTP.upload) {
-        objHTTP.upload.addEventListener('progress', function (e) {
+        objHTTP.upload.addEventListener('progress', function(e) {
           progressObj.max = e.total;
           progressObj.value = e.loaded;
         });
       } // if
 
-      objHTTP.addEventListener('readystatechange', function (p) {
-        if ((objHTTP.readyState === 4) && (objHTTP.status >= 200) && (objHTTP.status < 300)) {
+      objHTTP.addEventListener('readystatechange', function(p) {
+        if (
+          objHTTP.readyState === 4 &&
+          objHTTP.status >= 200 &&
+          objHTTP.status < 300
+        ) {
           window.setTimeout(handleReloadFS, 200);
           progressObj.classList.add('fadeout');
         } // if
@@ -318,16 +355,14 @@
       objHTTP.send(formData);
     }
 
-
     // save file from editor back to server.
     function handleSave() {
       progressObj.value = 0;
       progressObj.max = 1;
-      activeFileName = window.prompt('Upload File:', activeFileName);
-      if (activeFileName !== undefined)
-        startUpload(activeFileName, 'text/html', contentObj.innerText);
+      thisFile = window.prompt('Upload File:', thisFile);
+      if (thisFile !== undefined)
+        startUpload(thisFile, 'text/html', contentObj.innerText);
     } // handleSave()
-
 
     // Format JSON file, remove ugly characters...
     function handleFmt() {
@@ -352,7 +387,6 @@
       }
     } // handleFmt()
 
-
     // files was dropped on dropzone
     function drop(e) {
       progressObj.classList.remove('fadeout');
@@ -364,20 +398,24 @@
       const dtFiles = e.dataTransfer.files;
 
       const formData = new FormData();
-      const root = '/' + (location.hash ? location.hash.substring(1) + '/' : '')
+      const path = getPath();
       for (let i = 0; i < dtFiles.length; i++) {
-        formData.append('file', dtFiles[i], root + dtFiles[i].name);
+        formData.append('file', dtFiles[i], path + dtFiles[i].name);
       }
 
       const xmlHttp = new XMLHttpRequest();
 
-      xmlHttp.upload.addEventListener('progress', function (e) {
+      xmlHttp.upload.addEventListener('progress', function(e) {
         progressObj.max = e.total;
         progressObj.value = e.loaded;
       });
 
-      xmlHttp.addEventListener('readystatechange', function (p) {
-        if ((xmlHttp.readyState === 4) && (xmlHttp.status >= 200) && (xmlHttp.status < 300)) {
+      xmlHttp.addEventListener('readystatechange', function(p) {
+        if (
+          xmlHttp.readyState === 4 &&
+          xmlHttp.status >= 200 &&
+          xmlHttp.status < 300
+        ) {
           window.setTimeout(handleReloadFS, 100);
           progressObj.classList.add('fadeout');
           // fade progress
@@ -393,6 +431,7 @@
     box.addEventListener('drop', drop, false);
 
     window.addEventListener('DOMContentLoaded', handleReloadFS);
+    window.addEventListener('hashchange', handleReloadFS);
 
     function jsonCheck() {
       const fName = activeFileObj.innerText;
@@ -401,7 +440,6 @@
           checkerObj.textContent = '--';
           checkerObj.className = '';
         }
-
       } else {
         let o = null;
         let t = contentObj.innerText;
@@ -429,20 +467,22 @@
         }
         window.status = t.length + '--' + (o !== null);
       } // if
-
     } // jsonCheck()
 
     window.setInterval(jsonCheck, 500);
     // call this to start blocking the button while activity is running.
     function runOnce() {
+      // eslint-disable-next-line @typescript-eslint/no-this-alias
       var scope = this;
       this.disabled = true;
-      DelayPromise(90)  // give some time to display progress stuff
-        .then(function () {
+      DelayPromise(90) // give some time to display progress stuff
+        .then(function() {
           return fetch('/$reboot');
-        }).then(function () {
-          return DelayPromise(90)
-        }).finally(function (result) {
+        })
+        .then(function() {
+          return DelayPromise(90);
+        })
+        .finally(function(result) {
           scope.disabled = false;
         });
     } // runOnce
