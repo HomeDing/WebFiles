@@ -2,59 +2,15 @@
 // Element and card rules for iot dashboards
 // This is part of the micro css implementation.
 
+@use "sass:color";
 
 // ===== panel grid Layout =====
 
 $u-grid-width: 11.5rem;
-$u-grid-gap: $gutter;
+$u-grid-gap: $u-gutter;
 
-$u-card-width: 2* $u-grid-width + $gutter;
-$u-card-wide-width: calc(4 * $u-grid-width + 3 * $gutter);
-
-// ===== Dashboard of cards =====
-
-.panel {
-  display: grid;
-  gap: $u-grid-gap;
-  grid-template-columns: repeat(auto-fill, $u-grid-width);
-  grid-auto-rows: minmax(min-content, max-content);
-  grid-auto-flow: row;
-  margin-top: 0.5rem;
-
-  >.card {
-    grid-column: span 2;
-    width: $u-card-width;
-    min-width: $u-card-width;
-    align-self: start;
-  }
-
-  >.card.small {
-    grid-column: span 1;
-    width: $u-grid-width;
-    min-width: $u-grid-width;
-  }
-
-  >.card.wide {
-    grid-column: span 4;
-    width: $u-card-wide-width;
-    min-width: $u-card-wide-width;
-  }
-
-  @media (min-width: 0) {
-    /* 1 col */
-    max-width: $u-card-width;
-    margin-left: auto;
-    margin-right: auto;
-  }
-
-  @media (min-width: 2 * $u-card-width + $gutter) {
-    max-width: 2 * $u-card-width + $gutter;
-  }
-
-  @media (min-width: 3 * $u-card-width + 2* $gutter) {
-    max-width: 3 * $u-card-width + 2* $gutter;
-  }
-}
+$u-card-width: 2 * $u-grid-width + $u-gutter;
+$u-card-wide-width: calc(4 * $u-grid-width + 3 * $u-gutter);
 
 // ===== Cards layout =====
 
@@ -101,7 +57,7 @@ $u-card-wide-width: calc(4 * $u-grid-width + 3 * $gutter);
     width: 2.75rem;
     height: 2.75rem;
     float: left;
-    margin-right: $gutter;
+    margin-right: $u-gutter;
     overflow: hidden;
   }
 
@@ -115,7 +71,7 @@ $u-card-wide-width: calc(4 * $u-grid-width + 3 * $gutter);
   >.block {
     position: relative;
     flex: 1 1 auto;
-    padding: $gutter $white-space;
+    padding: $u-gutter $u-white-space;
     min-height: 2rem;
 
     &.header {
@@ -132,17 +88,63 @@ $u-card-wide-width: calc(4 * $u-grid-width + 3 * $gutter);
     }
 
     &.footer {
-      padding: $gutter $white-space;
-      border-top: 1px solid rgba(0, 0, 0, 0.125);
+      padding: $u-gutter $u-white-space;
+      border-top: 1px solid rgb(0 0 0 / 12.5%);
     }
   }
 
   >hr {
-    background-color: rgba(0, 0, 0, 0.125);
+    background-color: rgb(0 0 0 / 12.5%);
     border: 0;
     height: 1px;
     margin: 0;
     padding: 0;
+  }
+}
+
+
+// ===== Dashboard of cards =====
+
+.panel {
+  display: grid;
+  gap: $u-grid-gap;
+  grid-template-columns: repeat(auto-fill, $u-grid-width);
+  grid-auto-rows: minmax(min-content, max-content);
+  grid-auto-flow: row;
+  margin-top: 0.5rem;
+
+  >.card {
+    grid-column: span 2;
+    width: $u-card-width;
+    min-width: $u-card-width;
+    align-self: start;
+  }
+
+  >.card.small {
+    grid-column: span 1;
+    width: $u-grid-width;
+    min-width: $u-grid-width;
+  }
+
+  >.card.wide {
+    grid-column: span 4;
+    width: $u-card-wide-width;
+    min-width: $u-card-wide-width;
+  }
+
+  @media (min-width: 0) {
+    /* 1 col */
+    max-width: $u-card-width;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  @media (min-width: 2 * $u-card-width + $u-gutter) {
+    max-width: 2 * $u-card-width + $u-gutter;
+  }
+
+  @media (min-width: 3 * $u-card-width + 2 * $u-gutter) {
+    max-width: 3 * $u-card-width + 2 * $u-gutter;
   }
 }
 
@@ -154,6 +156,7 @@ button,
 .button {
   display: inline-block;
   min-width: 6.5ch;
+
   // height: 1.4em;
   padding: 0.1em 0.2em;
   border-radius: $u-btn-radius;
@@ -185,7 +188,7 @@ button,
 
   // + button,
   // + .button {
-  //   margin-left: $gutter;
+  //   margin-left: $u-gutter;
   // }
 }
 
@@ -206,6 +209,7 @@ input[type='range'] {
   padding: 0;
   width: 9.8em;
   transition: 0.4s all ease-out;
+
   // border: 1px solid #555555;
   border-radius: 0.6em;
 
@@ -235,8 +239,7 @@ input.switch[type='range'] {
 
 .btn-group {
   display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
+  flex-flow: row nowrap;
   align-items: flex-start;
 
   >* {
@@ -286,10 +289,9 @@ input.switch[type='range'] {
 
 .form-actions {
   display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  column-gap: $gutter2;
-  row-gap: $gutter2;
+  flex-flow: row wrap;
+  column-gap: $u-gutter2;
+  row-gap: $u-gutter2;
 }
 
 
@@ -348,11 +350,11 @@ input.switch[type='range'] {
 }
 
 .u-bool[value='1'] {
-  background-image: linear-gradient(145deg, lighten($u-on, 30%), $u-on);
+  background-image: linear-gradient(145deg, color.adjust($u-on, $lightness: 30%), $u-on);
 }
 
 .u-bool[value='0'] {
-  background-image: linear-gradient(145deg, lighten($u-off, 30%), $u-off);
+  background-image: linear-gradient(145deg, color.adjust($u-off, $lightness: 30%), $u-off);
 }
 
 // visualizing the output level 0...max

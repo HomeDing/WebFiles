@@ -2,6 +2,7 @@
 // colors, dark mode, sizes, page level layout
 // This is part of the micro css implementation.
 
+@use "sass:color";
 
 // ===== Colors =====
 // hue of 220 is signature of this style
@@ -12,17 +13,18 @@ $u-background-darkmode: #111111;
 $u-text: #111111; // any text
 $u-text-darkmode: #eeeeee; // any text
 
-$u-primary: hsl(220, 80%, 30%); // active objects
+$u-primary: hsl(220deg 80% 30%); // active objects
 $u-primary-text: white;
 
 $u-border-color: #555555;
-$u-border-color-active: hsl(220, 100%, 30%);
+$u-border-color-active: hsl(220deg 100% 30%);
 
 $u-disabled: gray; // disabled objects
 $u-heading: $u-primary; // any headlines
 $u-connect: #00cc00; // connectivity / net
 
-$u-on: lighten(green, 10%);
+// $u-on: lighten(green, 10%);
+$u-on: color.adjust(green, $lightness: 10%);
 $u-off: red;
 
 $u-border: 0.1em solid $u-border-color;
@@ -35,9 +37,9 @@ $u-navbar-text: white;
 
 // ===== Sizes =====
 
-$white-space: 1rem;
-$gutter: calc($white-space / 2);
-$gutter2: calc($white-space / 4);
+$u-white-space: 1rem;
+$u-gutter: calc($u-white-space / 2);
+$u-gutter2: calc($u-white-space / 4);
 
 $u-btn-radius: 0.2em;
 $u-output-border: $u-border-none;
@@ -51,7 +53,7 @@ $u-card-radius: 0.4rem;
 
 // ===== font =====
 
-$font-sans-serif: Arial, ui-sans-serif, sans-serif;
+$u-font-sans-serif: arial, ui-sans-serif, sans-serif;
 
 // ===== main =====
 
@@ -65,10 +67,11 @@ $font-sans-serif: Arial, ui-sans-serif, sans-serif;
   --focus: #{hsl($u-hue, 50%, 50%)};
 
   color-scheme: dark light;
+
   @media (prefers-color-scheme: dark) {
     --color: #{$u-text-darkmode};
     --back: #{$u-background-darkmode};
-    --card-back: #{lighten($u-background-darkmode, 15%)};
+    --card-back: #{color.adjust($u-background-darkmode, $lightness: 15%)};
     --card-head: #{hsl($u-hue, 20%, 30%)};
     --card-head-active: #{hsl($u-hue, 80%, 30%)};
   }
@@ -79,7 +82,7 @@ body {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  font-family: $font-sans-serif;
+  font-family: $u-font-sans-serif;
   font-size: 1em;
   color: var(--color);
   background-color: var(--back);
@@ -87,7 +90,7 @@ body {
 
 @media (min-width: 801px) {
   body {
-    padding: $white-space;
+    padding: $u-white-space;
   }
 }
 
@@ -98,6 +101,37 @@ body {
   box-sizing: inherit;
 }
 
+img {
+  max-width: 600px;
+  height: auto;
+}
+
+// use-cases of svg icons
+
+svg {
+  color: currentcolor;
+
+  &.button {
+    width: 2em;
+    height: 2em;
+
+    .object {
+      fill: $u-primary;
+      fill-opacity: 1;
+    }
+
+    .connect {
+      fill: $u-connect;
+      fill-opacity: 1;
+    }
+  }
+
+  &.icon {
+    user-select: none;
+  }
+}
+
+
 // ===== Text containers =====
 p,
 pre,
@@ -105,13 +139,14 @@ code,
 h2,
 h3,
 h4 {
-  margin: 0 0 $gutter 0;
+  margin: 0 0 $u-gutter 0;
   min-height: 1rem;
 
-  > img,
-  > svg {
+  >img,
+  >svg {
     // assume image in text containers to be inline icons
     height: 1em;
+    height: auto;
 
     &:first-child {
       margin-right: 0.2em;
@@ -131,7 +166,7 @@ a:hover {
 h2,
 h3,
 h4 {
-  font-family: $font-sans-serif;
+  font-family: $u-font-sans-serif;
   font-weight: bold;
 }
 
@@ -156,8 +191,8 @@ h4 {
 code,
 .code,
 code.hljs,
-pre > code {
-  background-color: rgb(255, 255, 185);
+pre>code {
+  background-color: rgb(255 255 185);
   color: $u-text;
   font-size: 1rem;
   font-family: 'Courier New', Courier, monospace;
@@ -167,12 +202,12 @@ pre > code {
   }
 }
 
-p > code {
+p>code {
   padding-left: 0.1em;
   padding-right: 0.1em;
 }
 
-pre > code {
+pre>code {
   display: block;
   border-radius: $u-card-radius;
   padding: 0.1em;
@@ -182,7 +217,7 @@ pre > code {
 
 label,
 input,
-input + span,
+input+span,
 input::placeholder,
 select,
 output,
@@ -192,7 +227,7 @@ button {
   margin: 0;
   border: $u-border-none;
   padding: 0.1em 0.2em;
-  color: currentColor;
+  color: currentcolor;
 }
 
 input[type='color'] {
@@ -209,8 +244,8 @@ label {
   cursor: pointer;
   height: 1.6em;
 
-  > img,
-  > .icon {
+  >img,
+  >.icon {
     // vertical-align: middle;
     width: 1em !important;
     height: 1em !important;
@@ -224,6 +259,16 @@ button {
   border-color: var(--color);
 }
 
+input,
+select {
+  width: 22ch;
+  border-radius: 0.2em;
+}
+
+select {
+  padding-left: 0;
+}
+
 select:invalid,
 input:invalid {
   border-color: #ff5555;
@@ -235,26 +280,16 @@ input[type='radio'] {
   vertical-align: baseline;
 }
 
-input,
-select {
-  width: 22ch;
-  border-radius: 0.2em;
-}
-
-select {
-  padding-left: 0;
-}
-
 // ===== Native dialogs and focus Object
 
 dialog::backdrop {
-  background-color: rgba(200, 200, 200, 0.7);
+  background-color: rgb(200 200 200 / 70%);
 }
 
 dialog {
   position: relative;
   padding: 1rem;
-  background-color: Canvas;
+  background-color: canvas;
   border: 0;
 
   .u-close {
@@ -275,40 +310,12 @@ dialog {
   &::before {
     content: '';
     position: absolute;
-    z-index: -1;
-    width: 2rem;
-    height: 2rem;
-  }
-
-  &::before {
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'><path d='M0 0h48v48h-16v-32h-32z' fill='red' /></svg>");
     top: 0;
     right: 0;
-  }
-}
-
-// use-cases of svg icons
-
-svg {
-  color: currentColor;
-
-  &.button {
-    width: 2em;
-    height: 2em;
-
-    .object {
-      fill: $u-primary;
-      fill-opacity: 1;
-    }
-
-    .connect {
-      fill: $u-connect;
-      fill-opacity: 1;
-    }
-  }
-
-  &.icon {
-    user-select: none;
+    width: 2rem;
+    height: 2rem;
+    z-index: -1;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'><path d='M0 0h48v48h-16v-32h-32z' fill='red' /></svg>");
   }
 }
 
@@ -332,7 +339,7 @@ nav {
     left: 0;
   }
 
-  &.inpage.open + main {
+  &.inpage.open+main {
     margin-left: 24ch;
 
     @media print {
@@ -358,12 +365,11 @@ main {
 
 .u-header {
   display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  margin-bottom: $gutter;
+  flex-flow: row nowrap;
+  margin-bottom: $u-gutter;
 
   .icon {
-    margin-right: $gutter;
+    margin-right: $u-gutter;
     width: 2.6rem;
     height: 2.6rem;
     vertical-align: top;
@@ -372,7 +378,7 @@ main {
   h1 {
     margin: 0;
     font-size: 2.4rem;
-    font-family: $font-sans-serif;
+    font-family: $u-font-sans-serif;
     font-weight: bold;
   }
 }
@@ -381,23 +387,21 @@ main {
 
 .u-navbar {
   display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  margin-bottom: $gutter;
-
-  padding: $gutter $white-space;
+  flex-flow: row nowrap;
+  margin-bottom: $u-gutter;
+  padding: $u-gutter $u-white-space;
   background-color: $u-navbar;
   color: $u-navbar-text;
 
-  > .gap {
+  >.gap {
     flex-grow: 2;
   }
 
-  > a {
+  >a {
     text-decoration: none;
     font-size: 1.25em;
     min-width: 2em;
-    padding: 0 $gutter2;
+    padding: 0 $u-gutter2;
 
     &:hover {
       border-color: var(--focus);
@@ -405,16 +409,16 @@ main {
     }
   }
 
-  > img,
-  > svg {
+  >img,
+  >svg {
     padding: 0;
     min-width: 1.4em !important;
     width: 1.4em !important;
     height: 1.4em !important;
   }
 
-  > *:not(:first-child) {
-    margin-left: $gutter2;
+  >*:not(:first-child) {
+    margin-left: $u-gutter2;
   }
 
   @media print {

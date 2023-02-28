@@ -2,9 +2,9 @@
   --color: #111111;
   --back: #c2c3c5;
   --card-back: white;
-  --card-head: hsl(220deg, 20%, 85%);
-  --card-head-active: hsl(220deg, 80%, 70%);
-  --focus: hsl(220deg, 50%, 50%);
+  --card-head: hsl(220, 20%, 85%);
+  --card-head-active: hsl(220, 80%, 70%);
+  --focus: hsl(220, 50%, 50%);
   color-scheme: dark light;
 }
 @media (prefers-color-scheme: dark) {
@@ -12,8 +12,8 @@
     --color: #eeeeee;
     --back: #111111;
     --card-back: #373737;
-    --card-head: hsl(220deg, 20%, 30%);
-    --card-head-active: hsl(220deg, 80%, 30%);
+    --card-head: hsl(220, 20%, 30%);
+    --card-head-active: hsl(220, 80%, 30%);
   }
 }
 
@@ -22,7 +22,7 @@ body {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  font-family: Arial, ui-sans-serif, sans-serif;
+  font-family: arial, ui-sans-serif, sans-serif;
   font-size: 1em;
   color: var(--color);
   background-color: var(--back);
@@ -38,6 +38,30 @@ body {
 *::before,
 *::after {
   box-sizing: inherit;
+}
+
+img {
+  max-width: 600px;
+  height: auto;
+}
+
+svg {
+  color: currentcolor;
+}
+svg.button {
+  width: 2em;
+  height: 2em;
+}
+svg.button .object {
+  fill: hsl(220, 80%, 30%);
+  fill-opacity: 1;
+}
+svg.button .connect {
+  fill: #00cc00;
+  fill-opacity: 1;
+}
+svg.icon {
+  user-select: none;
 }
 
 p,
@@ -62,6 +86,7 @@ h3 > svg,
 h4 > img,
 h4 > svg {
   height: 1em;
+  height: auto;
 }
 p > img:first-child,
 p > svg:first-child,
@@ -89,7 +114,7 @@ a:hover {
 h2,
 h3,
 h4 {
-  font-family: Arial, ui-sans-serif, sans-serif;
+  font-family: arial, ui-sans-serif, sans-serif;
   font-weight: bold;
 }
 
@@ -149,7 +174,7 @@ button {
   margin: 0;
   border: 0.1em solid transparent;
   padding: 0.1em 0.2em;
-  color: currentColor;
+  color: currentcolor;
 }
 
 input[type=color] {
@@ -179,6 +204,16 @@ button {
   border-color: var(--color);
 }
 
+input,
+select {
+  width: 22ch;
+  border-radius: 0.2em;
+}
+
+select {
+  padding-left: 0;
+}
+
 select:invalid,
 input:invalid {
   border-color: #ff5555;
@@ -190,16 +225,6 @@ input[type=radio] {
   vertical-align: baseline;
 }
 
-input,
-select {
-  width: 22ch;
-  border-radius: 0.2em;
-}
-
-select {
-  padding-left: 0;
-}
-
 dialog::backdrop {
   background-color: rgba(200, 200, 200, 0.7);
 }
@@ -207,7 +232,7 @@ dialog::backdrop {
 dialog {
   position: relative;
   padding: 1rem;
-  background-color: Canvas;
+  background-color: canvas;
   border: 0;
 }
 dialog .u-close {
@@ -227,33 +252,12 @@ dialog .u-close {
 dialog::before {
   content: "";
   position: absolute;
-  z-index: -1;
-  width: 2rem;
-  height: 2rem;
-}
-dialog::before {
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'><path d='M0 0h48v48h-16v-32h-32z' fill='red' /></svg>");
   top: 0;
   right: 0;
-}
-
-svg {
-  color: currentColor;
-}
-svg.button {
-  width: 2em;
-  height: 2em;
-}
-svg.button .object {
-  fill: hsl(220deg, 80%, 30%);
-  fill-opacity: 1;
-}
-svg.button .connect {
-  fill: #00cc00;
-  fill-opacity: 1;
-}
-svg.icon {
-  user-select: none;
+  width: 2rem;
+  height: 2rem;
+  z-index: -1;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'><path d='M0 0h48v48h-16v-32h-32z' fill='red' /></svg>");
 }
 
 nav {
@@ -296,8 +300,7 @@ main {
 
 .u-header {
   display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
+  flex-flow: row nowrap;
   margin-bottom: 0.5rem;
 }
 .u-header .icon {
@@ -309,17 +312,16 @@ main {
 .u-header h1 {
   margin: 0;
   font-size: 2.4rem;
-  font-family: Arial, ui-sans-serif, sans-serif;
+  font-family: arial, ui-sans-serif, sans-serif;
   font-weight: bold;
 }
 
 .u-navbar {
   display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
+  flex-flow: row nowrap;
   margin-bottom: 0.5rem;
   padding: 0.5rem 1rem;
-  background-color: hsl(220deg, 80%, 30%);
+  background-color: hsl(220, 80%, 30%);
   color: white;
 }
 .u-navbar > .gap {
@@ -365,49 +367,6 @@ main {
   color: #111111;
 }
 
-.panel {
-  display: grid;
-  gap: 0.5rem;
-  grid-template-columns: repeat(auto-fill, 11.5rem);
-  grid-auto-rows: minmax(min-content, max-content);
-  grid-auto-flow: row;
-  margin-top: 0.5rem;
-}
-.panel > .card {
-  grid-column: span 2;
-  width: 23.5rem;
-  min-width: 23.5rem;
-  align-self: start;
-}
-.panel > .card.small {
-  grid-column: span 1;
-  width: 11.5rem;
-  min-width: 11.5rem;
-}
-.panel > .card.wide {
-  grid-column: span 4;
-  width: 47.5rem;
-  min-width: 47.5rem;
-}
-@media (min-width: 0) {
-  .panel {
-    /* 1 col */
-    max-width: 23.5rem;
-    margin-left: auto;
-    margin-right: auto;
-  }
-}
-@media (min-width: 47.5rem) {
-  .panel {
-    max-width: 47.5rem;
-  }
-}
-@media (min-width: 71.5rem) {
-  .panel {
-    max-width: 71.5rem;
-  }
-}
-
 .card {
   position: relative;
   display: flex;
@@ -431,10 +390,10 @@ main {
   text-align: left;
 }
 .card.active .border {
-  border-color: hsl(220deg, 100%, 30%);
+  border-color: hsl(220, 100%, 30%);
 }
 .card.active .band::-webkit-slider-thumb {
-  border-color: hsl(220deg, 100%, 30%) transparent;
+  border-color: hsl(220, 100%, 30%) transparent;
 }
 .card.active > .block.header {
   background-color: var(--card-head-active);
@@ -479,14 +438,57 @@ main {
   padding: 0;
 }
 
+.panel {
+  display: grid;
+  gap: 0.5rem;
+  grid-template-columns: repeat(auto-fill, 11.5rem);
+  grid-auto-rows: minmax(min-content, max-content);
+  grid-auto-flow: row;
+  margin-top: 0.5rem;
+}
+.panel > .card {
+  grid-column: span 2;
+  width: 23.5rem;
+  min-width: 23.5rem;
+  align-self: start;
+}
+.panel > .card.small {
+  grid-column: span 1;
+  width: 11.5rem;
+  min-width: 11.5rem;
+}
+.panel > .card.wide {
+  grid-column: span 4;
+  width: 47.5rem;
+  min-width: 47.5rem;
+}
+@media (min-width: 0) {
+  .panel {
+    /* 1 col */
+    max-width: 23.5rem;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+@media (min-width: 47.5rem) {
+  .panel {
+    max-width: 47.5rem;
+  }
+}
+@media (min-width: 71.5rem) {
+  .panel {
+    max-width: 71.5rem;
+  }
+}
+
 button,
 .button {
   display: inline-block;
   min-width: 6.5ch;
   padding: 0.1em 0.2em;
   border-radius: 0.2em;
-  border-color: hsl(220deg, 80%, 30%);
-  background-color: hsl(220deg, 80%, 30%);
+  border-color: hsl(220, 80%, 30%);
+  background-color: hsl(220, 80%, 30%);
   color: white;
   cursor: pointer;
   user-select: none;
@@ -550,8 +552,7 @@ input.switch[type=range] {
 
 .btn-group {
   display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
+  flex-flow: row nowrap;
   align-items: flex-start;
 }
 .btn-group > * {
@@ -594,8 +595,7 @@ input.switch[type=range] {
 
 .form-actions {
   display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
+  flex-flow: row wrap;
   column-gap: 0.25rem;
   row-gap: 0.25rem;
 }
@@ -655,7 +655,7 @@ input.switch[type=range] {
 
 .ux-levelbar {
   display: inline-block;
-  border-color: hsl(220deg, 80%, 30%);
+  border-color: hsl(220, 80%, 30%);
   border-style: solid;
   border-width: 1px;
   width: 32px;
