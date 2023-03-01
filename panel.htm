@@ -17,7 +17,7 @@
       background-color: silver;
       background-image: linear-gradient(to top, rgba(0, 0, 0, .2) 1px, transparent 1px),
         linear-gradient(to left, rgba(0, 0, 0, .2) 1px, transparent 1px);
-      background-size: 72px 72px;
+      background-size: 12px 12px;
     }
 
     #panel #templates {
@@ -74,26 +74,28 @@
       <a class="button" href="/microide.htm">IDE</a>
       <a class="button" href="/log.htm">Log</a>
       <span class="gap"></span>
+      <button id="unlock">unlock</button>
+      <button id="auto">auto</button>
       <button id="sysButton">sys</button>
     </div>
 
     <div class="row" style="margin-top:0.5em;user-select: none;">
       <svg id="panel">
         <defs>
-          <marker id="arrow" markerWidth="6" markerHeight="6" refX="16" refY="8" orient="auto" xmarkerUnits="strokeWidth" viewBox="0 0 16 16">
+          <marker id="arrow" markerWidth="6" markerHeight="6" refX="16" refY="8" orient="auto" viewBox="0 0 16 16">
             <path d="M0,0 L0,16 L16,8 z" fill="currentColor" />
           </marker>
         </defs>
         <rect height="100%" width="100%"></rect>
         <g id="templates">
-          <g dragabble="true" class="node">
+          <g draggable="true" class="node">
             <title></title>
             <rect width="64" height="64" rx="8"></rect>
             <use class="icon" x="16" y="8" width="32" height="32" color="#203050" href="" />
             <use class="config" x="48" y="4" width="12" height="12" color="#203050" href="/icons.svg#config" />
             <text class="id" x="32" y="56" text-anchor="middle">subtitle</text>
             <circle pin="in" cx="8" cy="40" r="5"></circle>
-            <circle pin="out" dragabble="true" cx="56" cy="40" r="5"></circle>
+            <circle pin="out" draggable="true" cx="56" cy="40" r="5"></circle>
           </g>
         </g>
         <g id="viewport">
@@ -101,14 +103,13 @@
           <g id="links"></g>
         </g>
 
-        <g id="connect" style="fill:lime">
+        <!-- <g id="connect" style="fill:lime">
           <rect x=474 y=112 width="64" height="64" rx="8"></rect>
-        </g>
+        </g> -->
 
       </svg>
     </div>
-    <div id="errors" style="margin-top:0.5em;color:red">
-    </div>
+  </div>
   </div>
 
   <script>
@@ -117,18 +118,114 @@
     const PANEL_WIDTH = 16;
     const PANEL_HEIGHT = 12;
 
+    class LAYOUT {
+      XY = "uXY"; // key in localstorage for placements
+
+      nodes = {};
+      edges = [];
+
+      // add a new node
+      addNode(id, t, s) {
+        var n = this.nodes[id] ?? (this.nodes[id] = {});
+        n.id = id;
+        n.icon = t;
+        n.conf = s;
+        n._x = 0;
+        n._y = 0;
+        n._fx = 0;
+        n._fy = 0;
+      }
+
+      // add a new edge
+      addEdge(srcPath, tarPath) {
+        this.edges.push({
+          src: srcPath,
+          srcPin: "out",
+          tar: tarPath,
+          tarPin: "in"
+        });
+      }
+
+      // analyse connections, find unconnected Nodes.
+      analyseChains() {
+        // reset in/out counters to 0
+        for (const n of Object.values(this.nodes)) {
+          n._out = n._in = 0;
+        }
+
+        // remove edge going into the nirvana
+        this.edges = this.edges.filter(l => {
+          const fits = (this.nodes[l.src] && this.nodes[l.tar]);
+
+          if (!fits) {
+            console.log("undeliverable action:", l.src, l.tar);
+          }
+
+          return (fits);
+        });
+
+        this.edges.forEach(l => {
+          this.nodes[l.src]._out++;
+          this.nodes[l.tar]._in++;
+        });
+      }
+
+
+      placeSingleNodes() {
+        let px = 1;
+        for (const n of Object.values(this.nodes)) {
+          if (n._out == 0 && n._in == 0) {
+            n._x = px++;
+            n._y = 0;
+            n._fixed = true;
+          }
+        }
+      } // placeSingleNodes()
+
+
+      loadPlacements() {
+        // read position from localstorage
+        const locs = JSON.parse(window.localStorage.getItem(this.XY) || "{}");
+
+        let px = 1;
+        for (const [id, n] of Object.entries(this.nodes)) {
+          if ((!n._fixed) && (locs[id])) {
+            n._x = locs[id]._x;
+            n._y = locs[id]._y;
+            n._fixed = true;
+          }
+        }
+      } // loadPlacements()
+
+
+    }
+
+    const layout = new LAYOUT();
+
     // using localstorage to remember placing the elements.
     const XY = "uXY";
 
     var sysObj = document.getElementById('sysButton');
 
+    document.getElementById('unlock').addEventListener("click", evt => {
+      calcReset(true);
+    });
+
+    document.getElementById('auto').addEventListener("click", evt => {
+      for (let n = 0; n < 200; n++) moveNodes();
+      drawNodes();
+      drawEdges();
+    });
+
+
     var params = getHashParams({
       sys: false
     });
-    window.addEventListener("hashchange", function () {
+    window.addEventListener("hashchange", function() {
       window.location.reload();
     });
-    sysObj.addEventListener('click', function (evt) {
+
+    sysObj.addEventListener('click', function(evt) {
       params.sys = !toBool(params.sys);
       window.location.hash = 'sys=' + params.sys;
     });
@@ -150,7 +247,7 @@
     async function fetchJSON(url, options) {
       var p = fetch(url, options)
         .then(raw => raw.json());
-      return (p)
+      return (p);
     }
 
     // Element definitions and config+state of running elements
@@ -160,7 +257,7 @@
       env: {},
       config: {},
       state: {}
-    }
+    };
 
     var panelObj = document.getElementById('panel');
     var linksObj = document.getElementById('links');
@@ -179,19 +276,6 @@
     var nodes = {};
     var edges = [];
 
-    // create all edges from the actions of a node.
-    function createEdges(srcPath, actions) {
-      actions.split(',').forEach(function (a) {
-        var tarPath = a.split('?')[0];
-        edges.push({
-          src: srcPath,
-          srcPin: "out",
-          tar: tarPath,
-          tarPin: "in"
-        });
-      });
-    } // createEdges()
-
     /*
     HomeDing config data model ->
       create nodes = {id, xPos, _y, onXXX, obj }
@@ -200,194 +284,135 @@
 
     // create all nodes and edges from the HomeDing config files
     function createNodes(conf) {
-      jsonParse(conf, function (path, key, val) {
-        if ((path.length > 1) && (path[0] === '/'))
-          path = path.substring(1);
-        var p = path.split('/');
-        if (p.length >= 2) {
-          var s = JSON.stringify(conf[p[0]][p[1]], null, 2)
-          var t = p[0].toLowerCase();
-          var id = t + '/' + p[1].toLowerCase();
+      for (let [eType, elem] of Object.entries(conf)) {
+        eType = eType.toLowerCase();
 
-          if (toBool(params.sys) || (!uElements.defs[t]) || (toBool(uElements.defs[t].sys) == false)) {
-            var n = nodes[id];
-            if (!n) {
-              n = nodes[id] = {
-                id: id
-              }; // create a new node
-              n.icon = t;
-              n.conf = s;
-            } // if
-            if (key) {
-              // n[key] = val;
+        for (let [eID, eConf] of Object.entries(elem)) {
+          eID = eID.toLowerCase();
+
+          if (toBool(params.sys) || (!uElements.defs[eType]) || (!toBool(uElements.defs[eType].sys))) {
+            // show this one.
+            const id = `${eType}/${eID}`;
+
+            // create node
+            layout.addNode(id, eType, eConf);
+
+            // create edges
+            for (let [key, actions] of Object.entries(eConf)) {
               if (key.substring(0, 2) == 'on') {
-                createEdges(id, val);
+                actions.split(',').forEach(function(a) {
+                  layout.addEdge(id, a.split('?')[0]);
+                });
               }
-            } // if
-          } // if
-        } // if
-      });
+            }
+          }
+        }
+      }
     } // createNodes()
 
 
     // initial placement of all nodes
     function placeNodes() {
-      var px = 0;
       var py = 1;
 
-      // remove edge going into the nirvana
-      edges = edges.filter(function (l) {
-        const fits = (nodes[l.src] && nodes[l.tar]);
-        if (!fits) {
-          createHTMLElement(document.querySelector('#errors'), 'p')
-            .textContent = `undeliverable action: ${l.src}->${l.tar}`;
-        }
-        return (fits);
-      });
+      layout.analyseChains();
+      layout.placeSingleNodes();
+      layout.loadPlacements();
 
-      // == find nodes without edges:
-
-      // reset in/out counters to 0
-      Object.values(nodes).forEach(v => { v._out = v._in = 0; });
-      edges.forEach(l => {
-        nodes[l.src]._out++;
-        nodes[l.tar]._in++;
-      });
-
-      let locs = JSON.parse(window.localStorage.getItem(XY) || "{}");
-      Object.entries(nodes).forEach(([key, value]) => {
-        if (locs[key]) {
-          value._x = locs[key]._x;
-          value._y = locs[key]._y;
-          value._fixed = true;
-
-        } else if (value._out == 0 && value._in == 0) {
-          // nodes without edges in line 1:
-          value._x = px++;
-          value._y = 0;
-
-        } else {
+      // heuristic initial placement from left to right
+      for (const n of Object.values(this.nodes)) {
+        if (!n._fixed) {
           // nodes with edges vertically;
-          value._x = 6 + value._in - value._out;
-          value._x = Math.max(value._x, 0);
-          value._y = py++;
+          if (n._in === 0) {
+            n._x = 3;
+          } else if (n._out === 0) {
+            n._x = 8;
+          } else {
+            n._x = 6 + n._in - n._out;
+          }
+          n._x = Math.max(n._x, 0);
+          n._y = py++;
         }
-      });
+      } // for
     } // placeNodes()
 
 
-    // return node that is placed on the grid at the (x/y) position.
-    function posInUse(x, y) {
-      const f = Object.values(nodes).find(o => {
-        if ((o._x == x) && (o._y == y)) {
-          return (o);
+    function calcReset(unlock = false) {
+      for (const n of Object.values(this.nodes)) {
+        n._fx = 0;
+        n._fy = 0;
+        if ((unlock) && (n._out > 0 || n._in > 0)) {
+          n._fixed = false;
         }
-      });
-      return (f);
-    } // posInUse()
+      }
+    }
+
+    // calc force given by 2 nodes repel each other 
+    function calcRepel(node1, node2) {
+      const dx = node2._x - node1._x;
+      const dy = node2._y - node1._y;
+      const d2 = dx * dx + dy * dy;
+
+      const f1 = 0.1;
+      const fx = f1 * dx / d2;
+      const fy = f1 * dy / d2;
+
+      node1._fx -= fx;
+      node1._fy -= fy;
+      node2._fx += fx;
+      node2._fy += fy;
+    } // calcRepel()
 
 
-    // return any node that is placed on the grid in line (y).
-    function lineInUse(y) {
-      var found = null;
-      Object.values(nodes).forEach(function (o) {
-        if ((!found) && (o._y == y))
-          found = o;
-      });
-      return (found);
-    };
+    // calc force given by 2 connected nodes attacting each other 
+    function calcSpring(node1, node2) {
+      if (node1 && node2) {
+        const dx = node2._x - node1._x;
+        const dy = node2._y - node1._y;
+        const d2 = dx * dx + dy * dy;
+        const d = Math.sqrt(d2);
+
+        const f1 = 2 * Math.log(d / 2);
+        let fx = f1 * dx / d;
+        let fy = f1 * dy / d;
+
+        // bended springs cause a force as well 
+        fx -= 0.3;
+        fy = 2 * fy;
+
+        node1._fx += fx;
+        node1._fy += fy;
+        node2._fx -= fx;
+        node2._fy -= fy;
+      }
+    } // calcSpring
 
 
-    function yForce(nodeId) {
-      var dist = 0;
-      var num = 0;
-      var _y = nodes[nodeId]._y;
-      edges.forEach(function (l) {
-        if (l.src == nodeId) {
-          dist += nodes[l.tar]._y - _y;
-          num++;
-        }
-        if (l.tar == nodeId) {
-          dist += nodes[l.src]._y - _y;
-          num++;
-        }
-      });
-      return (dist / num);
-    };
-
+    function moveForce(node) {
+      if (!node._fixed) {
+        node._x += node._fx * 0.1;
+        node._y += node._fy * 0.1;
+      }
+    }
 
     function moveNodes() {
-      var moved = false;
-
-      // move according the force of connections
-      for (var nodeId in nodes) {
-        var node = nodes[nodeId];
-        if (!(node._fixed)) {
-          f = yForce(nodeId);
-          if ((f < -0.5) && (!posInUse(node._x, node._y - 1))) {
-            node._y--;
-            moved = true;
-          }
+      calcReset();
+      const prev = [];
+      for (const node1 of Object.values(nodes)) {
+        for (const node2 of prev) {
+          calcRepel(node1, node2);
         }
-      } // for
-
-      // remove empty lines.
-      for (var n = 0; n < 12; n++) {
-        if (!lineInUse(n)) {
-          for (var nodeId in nodes) {
-            var e = nodes[nodeId];
-            if (e._y === n + 1) {
-              e._y--;
-              moved = true;
-            }
-          } // for
-        }
+        prev.push(node1);
       }
-      return (moved);
+
+      for (const edge of edges) {
+        calcSpring(nodes[edge.src], nodes[edge.tar]);
+      }
+
+      for (const node of Object.values(nodes)) {
+        moveForce(node);
+      }
     } // moveNodes()
-
-
-    function handleNode(id) {
-      var moved = false;
-      var n = nodes[id];
-      var px = n._x;
-      var py = n._y;
-      var fx = 0;
-      var fy = 0;
-
-      if (!n._fixed) {
-        // calculate force.
-        edges.forEach(l => {
-          if (l.src == id) {
-            var tar = nodes[l.tar];
-            if (tar._x - px < 2) fx -= 1; // keep min x distance
-            if (tar._x - px > 2) fx += 1;
-            if (tar._y < py) fy -= 1;
-            if (tar._y > py) fy += 1;
-          }
-          if (l.tar == id) {
-            var src = nodes[l.src];
-            if (px - src._x < 2) fx += 1; // keep min x distance
-            if (px - src._x > 2) fx -= 1;
-            if (py < src._y) fy += 1;
-            if (py > src._y) fy -= 1;
-          }
-        });
-        if (fx > 0) px++;
-        if (fx < 0) px--;
-        if (fy > 0) py++;
-        if (fy < 0) py--;
-        if (!posInUse(px, py)) {
-          n._x = px;
-          n._y = py;
-          drawNodes();
-          drawEdges();
-          moved = true;
-        }
-      }
-
-      return (moved);
-    } // handleNode
 
 
     // create / update svg objects for all nodes
@@ -416,10 +441,9 @@
             }
           }
 
-          obj.querySelector('.config').addEventListener('click', function (evt) {
+          obj.querySelector('.config').addEventListener('click', function(evt) {
             var t = evt.target;
             while (t && !t.classList.contains('node')) t = t.parentElement;
-            // console.log(t.getAttribute('data'));
             const d = t.getAttribute('data');
             const id = t.getAttribute('id').split('/');
             DialogFormClass.openModalForm('configElement', { ...JSON.parse(d), type: id[0], id: id[1] });
@@ -430,7 +454,7 @@
         if (e.icon)
           obj.querySelector('.icon').setAttribute("href", "/icons.svg#" + e.icon);
         if (e.conf)
-          obj.querySelector('title').textContent = e.conf;
+          obj.querySelector('title').textContent = JSON.stringify(e.conf, null, 2);
         obj.setAttribute("data", e.conf);
         obj.querySelector('.id').firstChild.textContent = nodeId;
 
@@ -440,8 +464,9 @@
       // save pos
       const uPos = {};
       Object.values(nodes).forEach(n => {
-        uPos[n.id] = { _x: n._x, _y: n._y }
-      })
+        if (n._fixed)
+          uPos[n.id] = { _x: n._x, _y: n._y };
+      });
       window.localStorage.setItem(XY, JSON.stringify(uPos));
     } // drawNodes()
 
@@ -487,24 +512,17 @@
     var p4 = fetchJSON('/config.json').then(json => uElements.config = json);
 
     // start when all data is available
-    Promise.all([p2, p3, p4]).then(function () {
+    Promise.all([p2, p3, p4]).then(function() {
       hub.write('env', JSON.stringify(uElements.env));
       hub.write('config', JSON.stringify(uElements.config));
       createNodes(uElements.env);
       createNodes(uElements.config);
+
+      nodes = layout.nodes;
+      edges = layout.edges;
+
       placeNodes();
-      while (moveNodes()) { };
-
-      var moveCnt = Object.keys(nodes).length * 2;
-      var moved;
-      do {
-        moved = false;
-        for (var nodeId in nodes) {
-          moved = moved || handleNode(nodeId);
-        } // for
-        moveCnt--;
-      } while (moved && moveCnt > 0);
-
+      for (let n = 0; n < 200; n++) moveNodes();
       drawNodes();
       drawEdges();
       loadPlugins();
@@ -516,13 +534,13 @@
     var _conObj;
 
 
-    panelObj.addEventListener("mousedown", function (evt) {
+    panelObj.addEventListener("mousedown", function(evt) {
       if (!DragObj) {
         var o = evt.target;
         // check for a draggable object.
-        while (o && o.attributes && (!o.attributes["dragabble"]))
+        while (o && o.attributes && (!o.attributes["draggable"]))
           o = o.parentNode;
-        if (o && o.attributes && (o.attributes["dragabble"]))
+        if (o && o.attributes && (o.attributes["draggable"]))
           DragObj = o;
       }
 
@@ -537,9 +555,8 @@
             r: 10,
             style: 'fill:lime'
           });
-          _conPos = {x:DragOffset.x, y:DragOffset.y};
+          _conPos = { x: DragOffset.x, y: DragOffset.y };
           _conObj = drawSingleEdge(undefined, _conPos, _conPos);
-          console.log(_conPos);
 
         } else {
           DragMode = 'n';
@@ -553,7 +570,7 @@
     }); // mouseDown
 
 
-    panelObj.addEventListener("mousemove", function (evt) {
+    panelObj.addEventListener("mousemove", function(evt) {
       if (DragObj) {
         var DragPos = getSVGPos(panelObj, evt);
         moveSVGGroup(DragObj, DragPos.x - DragOffset.x, DragPos.y - DragOffset.y);
@@ -567,14 +584,15 @@
     }); // mousemove
 
 
-    panelObj.addEventListener("mouseup", function (evt) {
+    panelObj.addEventListener("mouseup", function(evt) {
       if (DragObj) {
         var DragPos = getSVGPos(panelObj, evt);
 
         for (var n in nodes) {
           if (nodes[n].obj == DragObj) {
-            nodes[n]._x = Math.floor(DragPos.x / PANEL_GRIDSIZE);
-            nodes[n]._y = Math.floor(DragPos.y / PANEL_GRIDSIZE);
+            nodes[n]._x = Math.floor(6 * (DragPos.x - DragOffset.x) / PANEL_GRIDSIZE) / 6;
+            nodes[n]._y = Math.floor(6 * (DragPos.y - DragOffset.y) / PANEL_GRIDSIZE) / 6;
+            nodes[n]._fixed = true;
             break;
           }
         } // for
