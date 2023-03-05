@@ -404,6 +404,11 @@ let ButtonWidgetClass = class ButtonWidgetClass extends GenericWidgetClass {
     _timer;
     _start;
     _duration;
+    _objButton;
+    connectedCallback() {
+        super.connectedCallback();
+        this._objButton = this.querySelector('button');
+    }
     newData(path, key, value) {
         super.newData(path, key, value);
         if (key === 'onclick') {
@@ -416,32 +421,41 @@ let ButtonWidgetClass = class ButtonWidgetClass extends GenericWidgetClass {
             this._onpress = value;
         }
     }
-    on_click() {
-        if (this._duration > 800) {
-            if (this._onpress) {
-                this.dispatchAction(this._onpress, '1');
+    on_click(evt) {
+        super.on_click(evt);
+        if (evt.target === this._objButton) {
+            if (this._duration > 800) {
+                if (this._onpress) {
+                    this.dispatchAction(this._onpress, '1');
+                }
+            }
+            else {
+                if (this._timer) {
+                    window.clearTimeout(this._timer);
+                }
+                this._timer = window.setTimeout(() => {
+                    this.dispatchAction(this._onclick, '1');
+                }, 250);
             }
         }
-        else {
+    }
+    on_dblclick(evt) {
+        if (evt.target === this._objButton) {
             if (this._timer) {
                 window.clearTimeout(this._timer);
             }
-            this._timer = window.setTimeout(() => {
-                this.dispatchAction(this._onclick, '1');
-            }, 250);
+            this.dispatchAction(this._ondoubleclick, '1');
         }
     }
-    on_dblclick() {
-        if (this._timer) {
-            window.clearTimeout(this._timer);
+    on_pointerdown(evt) {
+        if (evt.target === this._objButton) {
+            this._start = new Date().valueOf();
         }
-        this.dispatchAction(this._ondoubleclick, '1');
     }
-    on_pointerdown() {
-        this._start = new Date().valueOf();
-    }
-    on_pointerup() {
-        this._duration = new Date().valueOf() - this._start;
+    on_pointerup(evt) {
+        if (evt.target === this._objButton) {
+            this._duration = new Date().valueOf() - this._start;
+        }
     }
 };
 ButtonWidgetClass = __decorate([

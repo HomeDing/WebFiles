@@ -1,0 +1,143 @@
+{
+  "displaytext": {
+    "time": {
+      "description": "Display the time",
+      "x": 260,
+      "y": 2,
+      "fontsize": 16,
+      "color": "#aaaaff"
+    },
+    "l1": {
+      "x": 0,
+      "y": 1,
+      "fontsize": 12,
+      "value": "Station:",
+      "color": "#dddddd"
+    },
+    "station": {
+      "x": 1,
+      "y": 17,
+      "fontsize": 32,
+      "color": "white"
+    },
+    "l2": {
+      "x": 0,
+      "y": 62,
+      "fontsize": 12,
+      "value": "Title:",
+      "color": "#dddddd"
+    },
+    "info": {
+      "x": 1,
+      "y": 78,
+      "fontsize": 12,
+      "color": "white"
+    },
+    "l3": {
+      "x": 30,
+      "y": 102,
+      "fontsize": 12,
+      "value": "Mono",
+      "color": "#dddddd"
+    }
+  },
+  "displaydot": {
+    "mono": {
+      "x": 10,
+      "y": 102,
+      "h": 12,
+      "color": "#4444FF",
+      "value": 1
+    }
+  },
+  "value": {
+    "volume": {
+      "value": 20,
+      "min": 0,
+      "max": 21,
+      "onValue": "audio/0?volume=$v"
+    },
+    "balance": {
+      "value": 0,
+      "min": "-16",
+      "max": "16",
+      "onValue": "audio/0?balance=$v"
+    },
+    "low": {
+      "value": 0,
+      "min": "-40",
+      "max": "6",
+      "onValue": "audio/0?low=$v"
+    },
+    "mid": {
+      "value": 0,
+      "min": "-40",
+      "max": "6",
+      "onValue": "audio/0?mid=$v"
+    },
+    "high": {
+      "value": 0,
+      "min": "-40",
+      "max": "6",
+      "onValue": "audio/0?high=$v"
+    }
+  },
+  "select": {
+    "station": {
+      "loglevel": 2,
+      "options": [
+        { "key": "hr3", "value": "https://dispatcher.rndfnk.com/hr/hr3/live/mp3/high" },
+        { "key": "hr-info", "value": "https://dispatcher.rndfnk.com/hr/hrinfo/live/mp3/high" },
+        { "key": "swr3", "value":       "audio/0?url=https://liveradio.swr.de/sw331ch/swr3/"},
+        { "key": "you-fm", "value":"audio/0?url=https://dispatcher.rndfnk.com/hr/youfm/live/mp3/high"},
+        { "key": "christmas", "value": "audio/0?url=https://1000christmashits.stream.laut.fm/1000christmashits" }
+      ],
+      "onkey": "displaytext/station?value=$v",
+      "onvalue": "audio/0?url=$v"
+    }
+  },
+  "switch": {
+    "mute": {
+      "value": 0,
+      "onvalue": "digitalout/mute?value=$v"
+    },
+    "mono": {
+      "value": 0,
+      "onvalue": "audio/0?mono=$v,displaydot/mono?value=$v"
+    }
+  },
+  "scene": {
+    "stations": {
+      "title": "Stations",
+      "loglevel": 2,
+      "steps": [
+        "audio/0?url=https://dispatcher.rndfnk.com/hr/hr3/live/mp3/high",
+        "audio/0?url=https://dispatcher.rndfnk.com/hr/hrinfo/live/mp3/high",
+        "audio/0?url=https://1000christmashits.stream.laut.fm/1000christmashits",
+        "audio/0?url=https://liveradio.swr.de/sw331ch/swr3/",
+        "audio/0?url=https://dispatcher.rndfnk.com/hr/youfm/live/mp3/high"
+      ]
+    },
+    "off": {
+      "title": "Off",
+      "steps": [
+        "audio/0?url="
+      ]
+    }
+  },
+  "audio": {
+    "0": {
+      "title": "audio processing",
+      "bclk": 26,
+      "lrc": 25,
+      "dout": 22,
+      "ontitle": "displaytext/info?value=$v",
+      "xonstation": "displaytext/station?value=$v"
+    }
+  },
+  "time": {
+    "clock": {
+      "onminute": "displaytext/time?value=$v"
+    }
+  }
+}

@@ -166,7 +166,7 @@
       <h3 style="display: inline-block; margin: 0">
         File: <span id="activeFile"></span>
       </h3>
-      <button class="once secondary" style="float: right" onclick="handleFmt()">
+      <button id="format" class="once secondary" style="float: right">
         format
       </button>
       <span class="btn-group" style="float: right">
@@ -271,6 +271,7 @@
       }
     } // addFileEntry()
 
+    // get the path to the current folder to be shown
     function getPath() {
       let path = '/';
       if (location.hash.length > 0) path = location.hash.substring(1);
@@ -364,17 +365,22 @@
         startUpload(thisFile, 'text/html', contentObj.innerText);
     } // handleSave()
 
+
     // Format JSON file, remove ugly characters...
-    function handleFmt() {
+    document.querySelector("#format").addEventListener('click', e => {
       const fName = activeFileObj.innerText;
       if (fName.toLowerCase().endsWith('.json')) {
         let t = contentObj.innerText;
         let o = null;
 
-        // missing comma in '}{'
+        // missing comma in '},{'
         t = t.replace(/\}\s*\{/g, '},{');
+        // missing comma in '},"nextkey"'
+        t = t.replace(/\}\s*"/g, '},"');
+        // missing comma in '"value","nextkey"' when there is \n
+        t = t.replace(/"\s*\n\s*"/g, '","');
         // comma before close brackets
-        t = t.replace(/,\s*([}\]])/g, '$1');
+        t = t.replace(/,\s*([\}\]])/g, '$1');
 
         try {
           o = JSON.parse(t);
@@ -385,7 +391,7 @@
           // do not report an error
         }
       }
-    } // handleFmt()
+    });
 
     // files was dropped on dropzone
     function drop(e) {
