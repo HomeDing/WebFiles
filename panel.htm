@@ -115,6 +115,7 @@
   <script>
     // GRID dimension and size
     const PANEL_GRIDSIZE = 72; // px
+    const NODE_SIZE = 64; // px
     const PANEL_WIDTH = 16;
     const PANEL_HEIGHT = 12;
     const XPref = 64; // x-prefering curve for Edges
@@ -199,8 +200,6 @@
           }
         }
       } // loadPlacements()
-
-
     }
 
     const layout = new LAYOUT();
@@ -602,14 +601,40 @@
       if (DragObj) {
         var DragPos = getSVGPos(panelObj, evt);
 
-        for (var n in nodes) {
-          if (nodes[n].obj == DragObj) {
-            nodes[n]._x = Math.floor(6 * (DragPos.x - DragOffset.x) / PANEL_GRIDSIZE) / 6;
-            nodes[n]._y = Math.floor(6 * (DragPos.y - DragOffset.y) / PANEL_GRIDSIZE) / 6;
-            nodes[n]._fixed = true;
-            break;
-          }
-        } // for
+        if (DragMode === 'c') {
+          // connector drop
+          DragObj.remove();
+          _conObj.remove();
+
+          // find target node
+          const x = DragPos.x / PANEL_GRIDSIZE;
+          const y = DragPos.y / PANEL_GRIDSIZE;
+          const node = Object.values(nodes).find(n =>
+            (n._x <= x) && (n._x + 1 > x) && (n._y <= y) && (n._y + 1 > y)
+          );
+
+          console.log(node);
+          console.log(node.id);
+          // TODO: start connect dialog
+
+
+        } else if (DragMode === 'n') {
+          // node drop
+          const node = Object.values(nodes).find(n => (n.obj === DragObj));
+          node._x = Math.floor(6 * (DragPos.x - DragOffset.x) / PANEL_GRIDSIZE) / 6;
+          node._y = Math.floor(6 * (DragPos.y - DragOffset.y) / PANEL_GRIDSIZE) / 6;
+          node._fixed = true;
+
+        }
+
+        // for (var n in nodes) {
+        //   if (nodes[n].obj === DragObj) {
+        //     nodes[n]._x = Math.floor(6 * (DragPos.x - DragOffset.x) / PANEL_GRIDSIZE) / 6;
+        //     nodes[n]._y = Math.floor(6 * (DragPos.y - DragOffset.y) / PANEL_GRIDSIZE) / 6;
+        //     nodes[n]._fixed = true;
+        //     break;
+        //   }
+        // } // for
         drawNodes();
         drawEdges();
 
