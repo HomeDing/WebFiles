@@ -73,7 +73,7 @@ class GenericWidgetClass extends MicroControlClass {
 
     // u-display flags
     this.querySelectorAll(`*[u-display='${key}']`).forEach(elem => {
-      (elem as HTMLElement).style.display = (value ? '':'none');
+      (elem as HTMLElement).style.display = (value ? '' : 'none');
     });
 
     // u-text: substitude textContent
@@ -124,15 +124,18 @@ class GenericWidgetClass extends MicroControlClass {
 
 
   // send an action to the board and dispatch to the element
-  dispatchAction(prop: string | null | undefined, val: string | null) {
+  dispatchAction(prop?: string | null, val?: string | null) {
     if (prop && val) {
       if (prop.includes('/')) {
         // list of actions with optional value placeholder
-        prop.replace('${v}', encodeURI(val));
-        prop.split(',').forEach((a) => this.actions.push('/$board/' + a));
+        prop = prop.replace('${v}', encodeURI(val));
+        prop.split(',').forEach((a) => {
+          if (!a.startsWith('/')) { a = '/' + a; }
+          this.actions.push('/api/state' + a);
+        });
       } else {
         // simple set one property to this element
-        this.actions.push(`/$board${this.microid}?${prop}=${encodeURI(val)}`);
+        this.actions.push(`/api/state${this.microid}?${prop}=${encodeURI(val)}`);
       }
       debounce(this.dispatchNext.bind(this))();
     }

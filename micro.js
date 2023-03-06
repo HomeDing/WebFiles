@@ -326,11 +326,16 @@ let GenericWidgetClass = GenericWidgetClass_1 = class GenericWidgetClass extends
     dispatchAction(prop, val) {
         if (prop && val) {
             if (prop.includes('/')) {
-                prop.replace('${v}', encodeURI(val));
-                prop.split(',').forEach((a) => this.actions.push('/$board/' + a));
+                prop = prop.replace('${v}', encodeURI(val));
+                prop.split(',').forEach((a) => {
+                    if (!a.startsWith('/')) {
+                        a = '/' + a;
+                    }
+                    this.actions.push('/api/state' + a);
+                });
             }
             else {
-                this.actions.push(`/$board${this.microid}?${prop}=${encodeURI(val)}`);
+                this.actions.push(`/api/state${this.microid}?${prop}=${encodeURI(val)}`);
             }
             debounce(this.dispatchNext.bind(this))();
         }
@@ -1160,6 +1165,44 @@ let SceneWidgetClass = SceneWidgetClass_1 = class SceneWidgetClass extends Gener
 SceneWidgetClass = SceneWidgetClass_1 = __decorate([
     MicroControl('scene')
 ], SceneWidgetClass);
+let SelectWidgetClass = class SelectWidgetClass extends GenericWidgetClass {
+    _objSelect;
+    connectedCallback() {
+        super.connectedCallback();
+        this._objSelect = this.querySelector('select');
+        this.subId = hub.subscribe(this.microid + '/options[*]?*', this.newData.bind(this));
+        hub.replay(this.subId);
+    }
+    newData(path, key, value) {
+        super.newData(path, key, value);
+        const m = path.match(/\/options\[(\d+)\]/);
+        if (m) {
+            const opts = this._objSelect.options;
+            let opt;
+            const indx = Number(m[1]);
+            if (indx < opts.length) {
+                opt = opts[indx];
+            }
+            else {
+                opt = document.createElement('option');
+                opts.add(opt);
+            }
+            if (key === 'key') {
+                opt.text = value;
+            }
+            else if (key === 'value') {
+                opt.value = value;
+            }
+        }
+    }
+    on_change(evt) {
+        super.on_change(evt);
+        this.dispatchAction(this.microid + "?index=${v}", String(this._objSelect.selectedIndex));
+    }
+};
+SelectWidgetClass = __decorate([
+    MicroControl('select')
+], SelectWidgetClass);
 function toBool(s) {
     if (!s) {
         return false;

@@ -81,18 +81,17 @@
 
   <script>
     const param = {
-      SCREENTIMEOUT: 4 * 60 * 1000
+      SCREEN_TIMEOUT: 4 * 60 * 1000,
+      MENU_MIN_WIDTH: 1030
     };
 
     var iframeObj = document.querySelector('iframe#content');
     var timerRef = 0;
 
     // handle nav menu
-    var navObj = document.querySelector('nav');
-    var mbObj = document.querySelector('#menuButton');
     var devList = [];
 
-    // when the user is not using the application for SCREENTIMEOUT milliseconds
+    // when the user is not using the application for SCREEN_TIMEOUT milliseconds
     // the portal will go to idle mode.
     // call resetTimeout when user activity is detected.
     function resetTimeout() {
@@ -100,29 +99,41 @@
       timerRef = window.setTimeout(() => {
         iframeObj.src = 'portalidle.htm';
         window.location.hash = '';
-      }, param.SCREENTIMEOUT);
+      }, param.SCREEN_TIMEOUT);
     }
 
-    mbObj.addEventListener('click', function (e) {
-      navObj.classList.toggle('open');
-      resetTimeout();
-    });
-    if (window.innerWidth > 880) {
-      navObj.classList.add('open');
-      navObj.classList.add('inpage');
-    }
-    navObj.addEventListener('click', function (e) {
-      if (!navObj.classList.contains('inpage'))
+    function setupMenu() {
+      var mbObj = document.querySelector('#menuButton');
+      var navObj = document.querySelector('nav');
+
+      if (window.innerWidth > param.MENU_MIN_WIDTH) {
+        // menu is inside the page
+        navObj.classList.add('open');
+        navObj.classList.add('inpage');
+      } else {
+        // menu is over the page and closed intially
         navObj.classList.remove('open');
-      resetTimeout();
-    });
+      }
+
+      navObj.addEventListener('click', function(e) {
+        if (!navObj.classList.contains('inpage'))
+          navObj.classList.remove('open');
+        resetTimeout();
+      });
+
+      mbObj.addEventListener('click', function(e) {
+        navObj.classList.toggle('open');
+        resetTimeout();
+      });
+
+    } // setupMenu()
 
     function loadDevices() {
       fetch('/api/discovery')
-        .then(function (result) {
+        .then(function(result) {
           return result.json();
         })
-        .then(function (data) {
+        .then(function(data) {
           devList = data;
           var devObj = document.querySelector('#devices')
 
@@ -158,16 +169,17 @@
     window.addEventListener('hashchange', startContent);
 
     window.addEventListener('load', () => {
+      setupMenu();
       loadDevices();
       if (!window.location.hash) {
         window.location.hash = "#/board.htm";
       }
     });
 
-    document.querySelector('#reload').addEventListener('click', function () {
+    document.querySelector('#reload').addEventListener('click', function() {
       window.location.reload(true);
       resetTimeout();
-    })
+    });
   </script>
 </body>
 

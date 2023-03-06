@@ -22,10 +22,24 @@
     "actions": ["onreference", "onhigh", "onlow"]
   },
 
+  "add": {
+    "sys": "false",
+    "properties": ["invert"],
+    "events": ["value[n]"],
+    "actions": ["onvalue"]
+  },
+
   "and": {
     "sys": "false",
     "properties": ["invert"],
-    "events": ["value01", "value02"],
+    "events": ["value[n]"],
+    "actions": ["onvalue"]
+  },
+
+  "or": {
+    "sys": "false",
+    "properties": ["invert"],
+    "events": ["value[n]"],
     "actions": ["onvalue"]
   },
 
@@ -159,6 +173,12 @@
   },  
 
   "ina219": {
+    "properties": ["address", "readtime", "warmuptime", "resendtime", "restart",
+    "gain", "mode", "samples", "range"],
+    "actions": ["onvoltage", "oncurrent", "onpower"]
+  },  
+
+  "ina226": {
     "properties": ["address", "readtime", "warmuptime", "resendtime", "restart",
     "gain", "mode", "samples", "range"],
     "actions": ["onvoltage", "oncurrent", "onpower"]

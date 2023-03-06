@@ -117,7 +117,10 @@
     const PANEL_GRIDSIZE = 72; // px
     const PANEL_WIDTH = 16;
     const PANEL_HEIGHT = 12;
+    const XPref = 64; // x-prefering curve for Edges
+    const ITERATE = 200;
 
+    // https://cs.brown.edu/people/rtamassi/gdhandbook/chapters/force-directed.pdf
     class LAYOUT {
       XY = "uXY"; // key in localstorage for placements
 
@@ -202,17 +205,21 @@
 
     const layout = new LAYOUT();
 
-    // using localstorage to remember placing the elements.
-    const XY = "uXY";
-
-    var sysObj = document.getElementById('sysButton');
+    function constrain(val, min, max) {
+      if (val < min) {
+        val = min;
+      } else if (val > max) {
+        val = max;
+      }
+      return (val);
+    } // constrain()
 
     document.getElementById('unlock').addEventListener("click", evt => {
       calcReset(true);
     });
 
     document.getElementById('auto').addEventListener("click", evt => {
-      for (let n = 0; n < 200; n++) moveNodes();
+      for (let n = 0; n < ITERATE; n++) moveNodes();
       drawNodes();
       drawEdges();
     });
@@ -225,7 +232,7 @@
       window.location.reload();
     });
 
-    sysObj.addEventListener('click', function(evt) {
+    document.getElementById('sysButton').addEventListener('click', function(evt) {
       params.sys = !toBool(params.sys);
       window.location.hash = 'sys=' + params.sys;
     });
@@ -390,19 +397,26 @@
 
     function moveForce(node) {
       if (!node._fixed) {
-        node._x += node._fx * 0.1;
-        node._y += node._fy * 0.1;
+        node._x = constrain(node._x + node._fx * 0.1, 0, PANEL_WIDTH - 1);
+        node._y = constrain(node._y + node._fy * 0.1, 1, PANEL_HEIGHT - 1);
       }
+      // console.log(node._y);
+      // if (node._y > PANEL_HEIGHT)
+      //   debugger;
+      // node._y = constrain(node._y + node._fy * 0.1, 1, PANEL_HEIGHT);
     }
 
     function moveNodes() {
       calcReset();
       const prev = [];
       for (const node1 of Object.values(nodes)) {
-        for (const node2 of prev) {
-          calcRepel(node1, node2);
+        if (node1._y > 0) {
+          // only use nodes with edges.
+          for (const node2 of prev) {
+            calcRepel(node1, node2);
+          }
+          prev.push(node1);
         }
-        prev.push(node1);
       }
 
       for (const edge of edges) {
@@ -467,7 +481,7 @@
         if (n._fixed)
           uPos[n.id] = { _x: n._x, _y: n._y };
       });
-      window.localStorage.setItem(XY, JSON.stringify(uPos));
+      window.localStorage.setItem(layout.XY, JSON.stringify(uPos));
     } // drawNodes()
 
 
@@ -477,7 +491,7 @@
         obj = linksObj.ownerDocument.createElementNS("http://www.w3.org/2000/svg", 'path');
         linksObj.appendChild(obj);
       } // if
-      obj.setAttribute("d", `M ${aPos.x},${aPos.y} C ${aPos.x + 48},${aPos.y} ${ePos.x - 48},${ePos.y} ${ePos.x - 12},${ePos.y} L ${ePos.x},${ePos.y}`);
+      obj.setAttribute("d", `M ${aPos.x},${aPos.y} C ${aPos.x + XPref},${aPos.y} ${ePos.x - XPref},${ePos.y} ${ePos.x - 12},${ePos.y} L ${ePos.x},${ePos.y}`);
       return (obj);
     } // drawSingleEdge()
 
@@ -501,7 +515,7 @@
             obj = f.obj = linksObj.ownerDocument.createElementNS("http://www.w3.org/2000/svg", 'path');
             linksObj.appendChild(obj);
           } // if
-          obj.setAttribute("d", `M ${aPos.x},${aPos.y} C ${aPos.x + 48},${aPos.y} ${ePos.x - 48},${ePos.y} ${ePos.x - 12},${ePos.y} L ${ePos.x},${ePos.y}`);
+          obj.setAttribute("d", `M ${aPos.x},${aPos.y} C ${aPos.x + XPref},${aPos.y} ${ePos.x - XPref},${ePos.y} ${ePos.x - 12},${ePos.y} L ${ePos.x},${ePos.y}`);
         } // for
       }
     } // drawEdges()
@@ -522,7 +536,7 @@
       edges = layout.edges;
 
       placeNodes();
-      for (let n = 0; n < 200; n++) moveNodes();
+      for (let n = 0; n < ITERATE; n++) moveNodes();
       drawNodes();
       drawEdges();
       loadPlugins();
