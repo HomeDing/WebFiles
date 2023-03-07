@@ -74,6 +74,7 @@
       <a class="button" href="/microide.htm">IDE</a>
       <a class="button" href="/log.htm">Log</a>
       <span class="gap"></span>
+      <button id="addButton">+</button>
       <button id="unlock">unlock</button>
       <button id="auto">auto</button>
       <button id="sysButton">sys</button>
@@ -223,6 +224,12 @@
       drawEdges();
     });
 
+    document.getElementById('addButton').addEventListener("click", async evt => {
+      // load dialogs on demand.
+      await loadPlugins();
+      DialogFormClass.openModalForm('addElement', {});
+    });
+
 
     var params = getHashParams({
       sys: false
@@ -273,7 +280,8 @@
     panelObj.style.width = PANEL_GRIDSIZE * PANEL_WIDTH + "px";
     panelObj.style.height = PANEL_GRIDSIZE * PANEL_HEIGHT + "px";
 
-    var DragObj = null;
+    var DragNode; // node element where dragging started. 
+    var DragObj = null; // SVGObject that will be dragged
     var DragMode = null;
     var DragOffset = null;
 
@@ -434,6 +442,7 @@
         var t = nodeId.split('/')[0];
         var e = nodes[nodeId];
         var ed = uElements.defs[t];
+        const sData = JSON.stringify(e.conf ?? {}, null, 2);
 
         var obj = e.obj;
         if (!obj) {
@@ -444,12 +453,12 @@
           obj.id = nodeId;
           // disable outgoing pin ?
           if (ed) {
-            if ((ed.events) && (ed.events.length == 0)) {
-              var pin = obj.querySelector('[pin="in"]');
+            if ((!ed.events) || (ed.events.length == 0)) {
+              const pin = obj.querySelector('[pin="in"]');
               if (pin) pin.style.display = "none";
             }
-            if ((ed.actions) && (ed.actions.length == 0)) {
-              var pin = obj.querySelector('[pin="out"]');
+            if ((!ed.actions) || (ed.actions.length == 0)) {
+              const pin = obj.querySelector('[pin="out"]');
               if (pin) pin.style.display = "none";
             }
           }
@@ -466,9 +475,9 @@
         // update svg object by node properties
         if (e.icon)
           obj.querySelector('.icon').setAttribute("href", "/icons.svg#" + e.icon);
-        if (e.conf)
-          obj.querySelector('title').textContent = JSON.stringify(e.conf, null, 2);
-        obj.setAttribute("data", e.conf);
+
+        obj.querySelector('title').textContent = sData;
+        obj.setAttribute("data", sData);
         obj.querySelector('.id').firstChild.textContent = nodeId;
 
         moveSVGGroup(obj, e._x * PANEL_GRIDSIZE + 4, e._y * PANEL_GRIDSIZE + 4);
@@ -523,9 +532,10 @@
     var p2 = fetchJSON('/elements.json').then(json => uElements.defs = json);
     var p3 = fetchJSON('/env.json').then(json => uElements.env = json);
     var p4 = fetchJSON('/config.json').then(json => uElements.config = json);
+    var p5 = fetchJSON('/api/elements').then(json => uElements.impl = json);
 
     // start when all data is available
-    Promise.all([p2, p3, p4]).then(function() {
+    Promise.all([p2, p3, p4, p5]).then(function() {
       hub.write('env', JSON.stringify(uElements.env));
       hub.write('config', JSON.stringify(uElements.config));
       createNodes(uElements.env);
@@ -557,10 +567,14 @@
           DragObj = o;
       }
 
+      let obj = DragObj;
+      while (obj && !obj.classList.contains('node')) obj = obj.parentElement;
+      DragNode = Object.values(nodes).find(n => (n.obj === obj));
+
       if (DragObj) {
         if (DragObj.getAttribute('pin') === 'out') {
           DragMode = 'c';
-          // create 
+          // create draggable circle
           DragOffset = getSVGPos(panelObj, evt);
           DragObj = createSVGNode(panelObj, 'circle', {
             cx: DragOffset.x,
@@ -613,10 +627,17 @@
             (n._x <= x) && (n._x + 1 > x) && (n._y <= y) && (n._y + 1 > y)
           );
 
-          console.log(node);
-          console.log(node.id);
-          // TODO: start connect dialog
-
+          // Start the action connect dialog
+          if (node !== DragNode) {
+            DialogFormClass.openModalForm('action',
+              { srcId: DragNode.id, tarId: node.id },
+              d => {
+                if ((d.srcEvent) && (d.target) && (d.action) && (d.value)) {
+                  DragNode.conf[d.srcEvent] = `${d.target}?${d.action}=${d.value}`;
+                  changeConfig(DragNode.id, DragNode.conf);
+                }
+              });
+          }
 
         } else if (DragMode === 'n') {
           // node drop

@@ -71,19 +71,19 @@
 
   "displaydot": {
     "sys": "false",
-    "properties": ["page", "x", "y"],
+    "properties": ["page", "x", "y", "color"],
     "events": ["value", "clear", "redraw"]
   },
 
   "displaytext": {
     "sys": "false",
-    "properties": ["page", "x", "y", "fontsize", "prefix", "postfix"],
+    "properties": ["page", "x", "y", "color", "fontsize", "prefix", "postfix"],
     "events": ["value", "clear", "redraw"]
   },
 
   "displayline": {
     "sys": "false",
-    "properties": ["page", "x", "y", "w", "h"],
+    "properties": ["page", "x", "y", "w", "h", "color"],
     "events": ["redraw"]
   },
 
@@ -130,6 +130,12 @@
   "scene": {
     "properties": ["steps", "delay"],
     "events": ["start"]
+  },
+
+  "select": {
+    "properties": ["options"],
+    "events": ["key", "index", "next", "prev"],
+    "actions": ["onkey", "onvalue"]
   },
 
   "ota": {

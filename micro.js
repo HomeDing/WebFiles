@@ -614,7 +614,7 @@ var DialogFormClass_1;
 let DialogFormClass = DialogFormClass_1 = class DialogFormClass extends MicroControlClass {
     _defaultData = {};
     _data = {};
-    _form = undefined;
+    _form;
     _callback = undefined;
     static openModalForm(id, data = {}, cb) {
         const dlg = document.querySelector('dialog#' + id);
@@ -626,7 +626,7 @@ let DialogFormClass = DialogFormClass_1 = class DialogFormClass extends MicroCon
         const f = this.querySelector('form');
         if (f) {
             this._form = f;
-            this._defaultData = this._formData();
+            this._defaultData = this._form.getJsonData();
         }
     }
     openModalForm(data = {}, cb) {
@@ -650,15 +650,7 @@ let DialogFormClass = DialogFormClass_1 = class DialogFormClass extends MicroCon
             }
         });
         if (this._form) {
-            const fields = this._form.querySelectorAll('*[name]');
-            fields.forEach((f) => {
-                if ((f.tagName == 'INPUT') || (f.tagName == 'SELECT')) {
-                    const val = data[f.name];
-                    if (val) {
-                        f.value = val;
-                    }
-                }
-            });
+            this._form.setJsonData(data);
         }
         this.showModal();
     }
@@ -673,7 +665,7 @@ let DialogFormClass = DialogFormClass_1 = class DialogFormClass extends MicroCon
     on_submit(evt) {
         const uSub = evt.submitter;
         if (uSub && this._form) {
-            const ret = this._formData();
+            const ret = this._form.getJsonData();
             const ua = uSub.getAttribute('u-action');
             if (ua?.startsWith('next:')) {
                 this.returnValue = 'ok';
@@ -695,14 +687,6 @@ let DialogFormClass = DialogFormClass_1 = class DialogFormClass extends MicroCon
     }
     on_cancel(_evt) {
         this.returnValue = 'cancel';
-    }
-    _formData() {
-        let ret = {};
-        if (this._form) {
-            const fd = new FormData(this._form);
-            ret = Object.fromEntries(fd.entries());
-        }
-        return (ret);
     }
 };
 DialogFormClass = DialogFormClass_1 = __decorate([
@@ -868,6 +852,75 @@ let DisplayWidgetClass = class DisplayWidgetClass extends GenericWidgetClass {
 DisplayWidgetClass = __decorate([
     MicroControl('display')
 ], DisplayWidgetClass);
+class FormJsonData extends HTMLFormElement {
+    #analyzed = false;
+    #emptyRecord = {};
+    #booleanAttributes = new Set();
+    renderedCallback() {
+        console.log('forjson:', 'rendered');
+    }
+    analyze() {
+        this.querySelectorAll('input[name]').forEach(e => this.#emptyRecord[e.name] = '');
+        this.querySelectorAll('textarea[name]').forEach(e => this.#emptyRecord[e.name] = '');
+        this.querySelectorAll('select[name]').forEach(e => this.#emptyRecord[e.name] = e.value || '');
+        this.querySelectorAll('input[name][type=range]').forEach(e => this.#emptyRecord[e.name] = 0);
+        this.querySelectorAll('input[name][type=color]').forEach(e => this.#emptyRecord[e.name] = '#000000');
+        this.querySelectorAll('input[name][type=checkbox]').forEach(e => {
+            this.#emptyRecord[e.name] = false;
+            this.#booleanAttributes.add(e.name);
+        });
+        this.#analyzed = true;
+        console.log('forjson:', 'emptyRecord:', this.#emptyRecord);
+    }
+    getJsonData() {
+        if (!this.#analyzed)
+            this.analyze();
+        const formData = new FormData(this);
+        let jData = Object.fromEntries(formData);
+        jData = Object.assign({}, this.#emptyRecord, jData);
+        Object.entries(jData).forEach(([name, value]) => {
+            if (this.#booleanAttributes.has(name)) {
+                jData[name] = Boolean(value === 'on');
+            }
+        });
+        return (jData);
+    }
+    setJsonData(jData) {
+        let hasChanged = false;
+        if (!this.#analyzed)
+            this.analyze();
+        Object.entries(jData).forEach(([name, value]) => {
+            this.querySelectorAll(`*[name=${name}]`).forEach(el => {
+                if (el.type === 'radio') {
+                    if (el.checked !== (el.value === value)) {
+                        el.checked = (el.value === value);
+                        hasChanged = true;
+                    }
+                }
+                else if (el.type === 'checkbox') {
+                    if (el.checked !== (!!value)) {
+                        el.checked = (!!value);
+                        hasChanged = true;
+                    }
+                }
+                else if ((el.tagName === 'METER') || (el.tagName === 'OUTPUT')) {
+                    el.value = value;
+                }
+                else {
+                    if (el.value !== value) {
+                        el.value = value;
+                        hasChanged = true;
+                    }
+                }
+            });
+        });
+        if (hasChanged) {
+            const evt = new Event('change');
+            this.dispatchEvent(evt);
+        }
+    }
+}
+customElements.define('form-json', FormJsonData, { extends: 'form' });
 let IncludeWidgetClass = class IncludeWidgetClass extends MicroControlClass {
     ref;
     connectedCallback() {

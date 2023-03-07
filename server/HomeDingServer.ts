@@ -268,6 +268,13 @@ export class HomeDingServer {
     this._app.get('/\\$board/:type/:id', this.expressNoCache, handleElementState);
 
 
+    const handleElements = async (_req: express.Request, res: express.Response) => {
+      const elems = JSON.parse(await fs.promises.readFile('./$elements', 'utf8'));
+      res.json(elems);
+    }; // handleElements
+
+    this._app.get(/^\/api\/elements/, this.expressNoCache, handleElements);
+
     const handleState = async (req: express.Request, res: express.Response) => {
       if (!this._boardState) {
         this._boardState = {};

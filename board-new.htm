@@ -1,7 +1,7 @@
 <dialog id="addElement" u-is="dialogform">
   <h2>Add a new Element</h2>
   <div class="u-close" u-action="close"></div>
-  <form method="dialog">
+  <form is="form-json" method="dialog">
     <div class="form-grid">
       <label>Type:</label>
       <select name="type" value="0">
@@ -19,22 +19,25 @@
   <h2>Config <span u-text="type"></span>/<span u-text="id"></span></h2>
   <div class="u-close" u-action="close"></div>
 
-  <form method="dialog">
+  <form is="form-json" method="dialog">
     <div class="form-grid"></div>
     <div><button u-action="done" type="submit" style="float:right">save</button></div>
   </form>
 </dialog>
 
 <dialog id="action" u-is="dialogform">
-  <h2>Config <span u-text="srcId">/t/0</span>.<span u-text="srcAction">onSome</span></h2>
+  <h2>Config <span u-text="srcId">/t/0</span>.<span u-text="srcEvent">onSome</span></h2>
   <div class="u-close" u-action="close"></div>
 
-  <form method="dialog">
+  <form method="dialog" is="form-json">
     <div class="form-grid">
+      <label>Source:</label><input name="srcId" />
+      <label>Event:</label><select name="srcEvent"></select>
+
       <label>Target:</label><select name="target">
         <option disabled selected hidden>Select target...</option>
       </select>
-      <label>Action:</label><select name="event" disabled></select>
+      <label>Action:</label><select name="action"></select>
       <label>Value:</label><input name="value" value="$v" />
     </div>
     <div><button u-action="return" style="float:right">Save</button></div>
@@ -42,13 +45,18 @@
 </dialog>
 
 <script>
-
   function lowerKeys(d) {
     const out = {};
     Object.entries(d).forEach(([key, value]) => {
       out[key.toLowerCase()] = value;
     });
     return (out);
+  }
+
+  // get definitions for an element type
+  function getDefs(id) {
+    const type = id.split('/')[0];
+    return (uElements.defs[type] ?? {});
   }
 
   let d2 = document.querySelector('dialog#addElement');
@@ -60,7 +68,7 @@
     // populate SELECT with available element types
     var sel = form.querySelector('select[name=type]');
     if ((sel) && (sel.options.length <= 1)) {
-      Object.keys(uElements.defs).forEach(function (e) {
+      Object.keys(uElements.defs).forEach(function(e) {
         var o = createHTMLElement(sel, 'option', { value: e });
         o.textContent = e;
         o.disabled = !uElements.impl.includes(e);
@@ -94,11 +102,11 @@
 
     // create properties, events and actions inputs
     d3.setAttribute('_id', data.type + '/' + data.id);
-    var d = uElements.defs[data.type];
-    uElements.defs["element"].properties.forEach(k => add(k, false, false));
-    if (d?.properties) { d.properties.forEach(k => add(k, false, false)) };
-    if (d?.events) { d.events.forEach(k => add(k, true, false)) };
-    if (d?.actions) { d.actions.forEach(k => add(k, false, true)) };
+    var d = getDefs(data.type);
+    getDefs("element").properties.forEach(k => add(k, false, false));
+    if (d?.properties) { d.properties.forEach(k => add(k, false, false)); }
+    if (d?.events) { d.events.forEach(k => add(k, true, false)); }
+    if (d?.actions) { d.actions.forEach(k => add(k, false, true)); }
   });
 
   d3.addEventListener('click', evt => {
@@ -107,11 +115,11 @@
     if (ua == 'action') {
       DialogFormClass.openModalForm('action', {
         srcId: d3.getAttribute('_id'),
-        srcAction: tar.getAttribute('_action'),
-      }, function (data) {
+        srcEvent: tar.getAttribute('_action'),
+      }, function(data) {
         // result of action dialog 
-        const srcAction = tar.getAttribute('_action');
-        var fld = d3.querySelector('input[name="' + srcAction + '"]');
+        const srcEvent = tar.getAttribute('_action');
+        var fld = d3.querySelector('input[name="' + srcEvent + '"]');
         fld.value = data.target + '?' + data.event + "=" + data.value;
       });
     }
@@ -125,10 +133,7 @@
     if (uSub && oForm) {
       const ua = uSub.getAttribute('u-action');
       if (ua === 'done') {
-        const data = new FormData(oForm);
-        const ret = Object.fromEntries(data.entries());
-        debugger;
-        changeConfig(d3.getAttribute('_id'), ret);
+        changeConfig(d3.getAttribute('_id'), oForm.getJsonData());
       }
     }
 
@@ -138,16 +143,54 @@
   let d4 = document.querySelector('dialog#action');
   d4.addEventListener('open', evt => {
     const form = evt.detail.form;
+    const data = evt.detail.data;
 
-    // populate target dropdown with existing type/id elements
     const oTarget = form.querySelector('SELECT[name=target]');
+    const oSrcEvent = form.querySelector('SELECT[name=srcEvent]');
     oTarget.innerHTML = '';
-    createHTMLElement(oTarget, 'option', { disabled: "disabled", selected: "selected", hidden: "hidden" }).textContent = 'Please select target...';
-    for (t in uElements.config) {
-      for (i in uElements.config[t]) {
-        const id = t + '/' + i;
-        createHTMLElement(oTarget, 'option', { value: id }).textContent = id;
+
+    function listEvents() {
+      const def = getDefs(data.srcId).actions;
+      if (def) {
+        def.forEach(a => { createHTMLElement(oSrcEvent, 'option', { value: a }).textContent = a; });
       }
+    }
+
+    function listActions() {
+      const oEvent = form.querySelector('SELECT[name=action]');
+      oEvent.innerHTML = '';
+      oEvent.value = '';
+      oEvent.disabled = false;
+      createHTMLElement(oEvent, 'option', { disabled: true, selected: "selected", hidden: "hidden", value: '' }).textContent = 'Please select event...';
+
+      const def = getDefs(data.tarId).events;
+      if (def) {
+        def.forEach(a => { createHTMLElement(oEvent, 'option', { value: a }).textContent = a; });
+      }
+    }
+
+    if (data.srcEvent) {
+    } else {
+      listEvents();
+    }
+
+
+    if (data.tarId) {
+      createHTMLElement(oTarget, 'option', { value: data.tarId }).textContent = data.tarId;
+      oTarget.selected = 1;
+      listActions();
+
+      // TODO: add actions.
+    } else {
+      // populate target dropdown with existing type/id elements
+      createHTMLElement(oTarget, 'option', { disabled: "disabled", selected: "selected", hidden: "hidden" }).textContent = 'Please select target...';
+      for (t in uElements.config) {
+        for (i in uElements.config[t]) {
+          const id = t + '/' + i;
+          createHTMLElement(oTarget, 'option', { value: id }).textContent = id;
+        }
+      }
+      oTarget.disabled = false;
     }
 
     oTarget.addEventListener('change', (evt) => {
@@ -157,6 +200,7 @@
       oEvent.innerHTML = '';
       createHTMLElement(oEvent, 'option', { disabled: "disabled", selected: "selected", hidden: "hidden" }).textContent = 'Please select event...';
 
+      data.tarId = oTarget.value;
       var el = oTarget.value.split('/');
       var def = uElements.defs[el[0]].events;
 

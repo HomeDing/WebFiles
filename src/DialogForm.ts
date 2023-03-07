@@ -15,7 +15,7 @@ class DialogFormClass extends MicroControlClass {
 
   private _defaultData = {};
   private _data = {};
-  private _form?: HTMLFormElement = undefined;
+  private _form?: FormJsonData;
   private _callback?: DialogCallback = undefined;
 
   /**
@@ -34,8 +34,8 @@ class DialogFormClass extends MicroControlClass {
 
     const f = this.querySelector('form');
     if (f) {
-      this._form = f;
-      this._defaultData = this._formData();
+      this._form = (f as FormJsonData);
+      this._defaultData = this._form.getJsonData();
     }
   }
 
@@ -67,17 +67,18 @@ class DialogFormClass extends MicroControlClass {
     });
 
     if (this._form) {
-      // populate form with current data
-      const fields = this._form.querySelectorAll('*[name]');
-      fields.forEach((f) => {
-        // populate values from data
-        if ((f.tagName == 'INPUT') || (f.tagName == 'SELECT')) {
-          const val = data[(<HTMLInputElement>f).name];
-          if (val) {
-            (<HTMLInputElement>f).value = val;
-          }
-        }
-      });
+      (this._form as FormJsonData).setJsonData(data);
+      // // populate form with current data
+      // const fields = this._form.querySelectorAll('*[name]');
+      // fields.forEach((f) => {
+      //   // populate values from data
+      //   if ((f.tagName == 'INPUT') || (f.tagName == 'SELECT')) {
+      //     const val = data[(<HTMLInputElement>f).name];
+      //     if (val) {
+      //       (<HTMLInputElement>f).value = val;
+      //     }
+      //   }
+      // });
     }
     // open Dialog in modal mode
     (<any>this).showModal();
@@ -100,7 +101,7 @@ class DialogFormClass extends MicroControlClass {
 
     if (uSub && this._form) {
       // get JSON data from form
-      const ret = this._formData();
+      const ret = this._form.getJsonData();
 
       const ua = uSub.getAttribute('u-action');
       if (ua?.startsWith('next:')) {
@@ -127,17 +128,5 @@ class DialogFormClass extends MicroControlClass {
   on_cancel(_evt: any) {
     (<any>this).returnValue = 'cancel';
   }
-
-
-  // get current data in from as JSON
-  private _formData() {
-    let ret = {};
-    if (this._form) {
-      const fd = new FormData(this._form);
-      ret = Object.fromEntries(fd.entries());
-    }
-    return (ret);
-  } // _formData()
-
 
 } // DialogFormClass
