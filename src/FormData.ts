@@ -3,26 +3,29 @@
 type FormDataRecord = { [index: string]: any };
 
 class FormJsonData extends HTMLFormElement {
-
-
   // private
   #analyzed = false;
   #emptyRecord: FormDataRecord = {};
   #booleanAttributes = new Set();
 
-  renderedCallback() {
-    console.log('forjson:', 'rendered');
-
+  // enable or disable all submit buttons
+  _validateForm() {
+    const v = this.checkValidity();
+    this.querySelectorAll<HTMLButtonElement>("button[type=Submit]").forEach(btn => {
+      btn.disabled = !v;
+    });
   }
-  // connectedCallback() {
-  //   ... is called when the html element is ready, but form elements may not be there at this time.
-  //   console.log('forjson:', 'connected');
-  //   document.addEventListener('DOMContentLoaded', this.analyze.bind(this));
-  // }
+
+  connectedCallback() {
+    // //   ... is called when the html element is ready, but form elements may not be there at this time.
+    this.addEventListener("change", this._validateForm);
+    this.addEventListener("keyup", this._validateForm);
+    // //   document.addEventListener('DOMContentLoaded', this.analyze.bind(this));
+  }
 
   // analyse all form element types that can be used as input to create an empty record
   // including all known form elements.
-  analyze() {
+  _analyze() {
     this.querySelectorAll<HTMLInputElement>('input[name]').forEach(e => this.#emptyRecord[e.name] = '');
     this.querySelectorAll<HTMLTextAreaElement>('textarea[name]').forEach(e => this.#emptyRecord[e.name] = '');
     this.querySelectorAll<HTMLSelectElement>('select[name]').forEach(e => this.#emptyRecord[e.name] = e.value || '');
@@ -32,15 +35,15 @@ class FormJsonData extends HTMLFormElement {
       this.#emptyRecord[e.name] = false;
       this.#booleanAttributes.add(e.name);
     });
+    this._validateForm();
     this.#analyzed = true;
-
-    console.log('forjson:', 'emptyRecord:', this.#emptyRecord);
     // not: output, meter
   }
 
+
   // return the formData as Object including empty values.
   getJsonData() {
-    if (!this.#analyzed) this.analyze();
+    if (!this.#analyzed) this._analyze();
     const formData = new FormData(this);
     let jData: FormDataRecord = Object.fromEntries(formData);
     jData = Object.assign({}, this.#emptyRecord, jData);
@@ -56,7 +59,7 @@ class FormJsonData extends HTMLFormElement {
   // set the value of the form elements according the name including form output elements
   setJsonData(jData: FormDataRecord) {
     let hasChanged = false;
-    if (!this.#analyzed) this.analyze();
+    if (!this.#analyzed) this._analyze();
     Object.entries(jData).forEach(([name, value]) => {
       this.querySelectorAll<HTMLInputElement>(`*[name=${name}]`).forEach(el => {
         if (el.type === 'radio') {

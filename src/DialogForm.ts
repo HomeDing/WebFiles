@@ -68,23 +68,13 @@ class DialogFormClass extends MicroControlClass {
 
     if (this._form) {
       (this._form as FormJsonData).setJsonData(data);
-      // // populate form with current data
-      // const fields = this._form.querySelectorAll('*[name]');
-      // fields.forEach((f) => {
-      //   // populate values from data
-      //   if ((f.tagName == 'INPUT') || (f.tagName == 'SELECT')) {
-      //     const val = data[(<HTMLInputElement>f).name];
-      //     if (val) {
-      //       (<HTMLInputElement>f).value = val;
-      //     }
-      //   }
-      // });
     }
     // open Dialog in modal mode
     (<any>this).showModal();
   } // openModalForm()
 
 
+  // any button event
   on_click(evt: PointerEvent) {
     const tar = evt.target as HTMLElement;
 
@@ -95,7 +85,7 @@ class DialogFormClass extends MicroControlClass {
     }
   }
 
-
+  // submit button event
   on_submit(evt: SubmitEvent) {
     const uSub = evt.submitter;
 

@@ -4,8 +4,8 @@
   <form is="form-json" method="dialog">
     <div class="form-grid">
       <label>Type:</label>
-      <select name="type" value="0">
-        <option disabled selected hidden value="0">Select Element...</option>
+      <select name="type" required>
+        <option disabled selected hidden value="">Select Element...</option>
       </select>
 
       <label>ID:</label>
@@ -26,21 +26,20 @@
 </dialog>
 
 <dialog id="action" u-is="dialogform">
-  <h2>Config <span u-text="srcId">/t/0</span>.<span u-text="srcEvent">onSome</span></h2>
+  <h2>Config Action...</h2>
   <div class="u-close" u-action="close"></div>
 
   <form method="dialog" is="form-json">
     <div class="form-grid">
-      <label>Source:</label><input name="srcId" />
-      <label>Event:</label><select name="srcEvent"></select>
-
-      <label>Target:</label><select name="target">
-        <option disabled selected hidden>Select target...</option>
-      </select>
-      <label>Action:</label><select name="action"></select>
-      <label>Value:</label><input name="value" value="$v" />
+      <h4 class="wide">triggered by:</h4>
+      <label>Source:</label><input name="srcId" required />
+      <label>Event:</label><select name="srcEvent" required></select>
+      <h4 class="wide">triggers:</h4>
+      <label>Target:</label><select name="target" required></select>
+      <label>Action:</label><select name="action" required></select>
+      <label>Value:</label><input name="value" value="$v" required />
     </div>
-    <div><button u-action="return" style="float:right">Save</button></div>
+    <div><button type="submit" u-action="return" style="float:right">Save</button></div>
   </form>
 </dialog>
 
@@ -116,11 +115,11 @@
       DialogFormClass.openModalForm('action', {
         srcId: d3.getAttribute('_id'),
         srcEvent: tar.getAttribute('_action'),
-      }, function(data) {
+      }, function(d) {
         // result of action dialog 
         const srcEvent = tar.getAttribute('_action');
         var fld = d3.querySelector('input[name="' + srcEvent + '"]');
-        fld.value = data.target + '?' + data.event + "=" + data.value;
+        fld.value = `${d.target}?${d.action}=${d.value}`;
       });
     }
   });
@@ -150,26 +149,42 @@
     oTarget.innerHTML = '';
 
     function listEvents() {
+      createHTMLElement(oSrcEvent, 'option', { disabled: true, selected: true, hidden: true, value: "" }).textContent = 'Select a event...';
       const def = getDefs(data.srcId).actions;
       if (def) {
         def.forEach(a => { createHTMLElement(oSrcEvent, 'option', { value: a }).textContent = a; });
       }
     }
 
+    function listTargets() {
+      // populate target dropdown with existing type/id elements
+      createHTMLElement(oTarget, 'option', { disabled: true, selected: true, hidden: true, value: "" }).textContent = 'Select a target...';
+      for (const t in uElements.config) {
+        for (const i in uElements.config[t]) {
+          const id = t + '/' + i;
+          createHTMLElement(oTarget, 'option', { value: id }).textContent = id;
+        }
+      }
+    } // listTargets()
+
+
+    // populate options for selecting a action for the target
     function listActions() {
       const oEvent = form.querySelector('SELECT[name=action]');
       oEvent.innerHTML = '';
       oEvent.value = '';
       oEvent.disabled = false;
-      createHTMLElement(oEvent, 'option', { disabled: true, selected: "selected", hidden: "hidden", value: '' }).textContent = 'Please select event...';
+      createHTMLElement(oEvent, 'option', { disabled: true, selected: true, hidden: true, value: "" }).textContent = 'Select an action...';
 
-      const def = getDefs(data.tarId).events;
+      const def = getDefs(oTarget.value).events;
       if (def) {
         def.forEach(a => { createHTMLElement(oEvent, 'option', { value: a }).textContent = a; });
       }
     }
 
     if (data.srcEvent) {
+      createHTMLElement(oSrcEvent, 'option', { value: data.srcEvent }).textContent = data.srcEvent;
+      // oSrcEvent
     } else {
       listEvents();
     }
@@ -180,36 +195,14 @@
       oTarget.selected = 1;
       listActions();
 
-      // TODO: add actions.
     } else {
-      // populate target dropdown with existing type/id elements
-      createHTMLElement(oTarget, 'option', { disabled: "disabled", selected: "selected", hidden: "hidden" }).textContent = 'Please select target...';
-      for (t in uElements.config) {
-        for (i in uElements.config[t]) {
-          const id = t + '/' + i;
-          createHTMLElement(oTarget, 'option', { value: id }).textContent = id;
-        }
-      }
-      oTarget.disabled = false;
+      listTargets();
     }
 
-    oTarget.addEventListener('change', (evt) => {
-      // populate event dropdown with existing events on selected target
-      const oEvent = form.querySelector('SELECT[name=event]');
-      oEvent.disabled = "";
-      oEvent.innerHTML = '';
-      createHTMLElement(oEvent, 'option', { disabled: "disabled", selected: "selected", hidden: "hidden" }).textContent = 'Please select event...';
-
-      data.tarId = oTarget.value;
-      var el = oTarget.value.split('/');
-      var def = uElements.defs[el[0]].events;
-
-      if (def) {
-        def.forEach(a => {
-          createHTMLElement(oEvent, 'option', { value: a }).textContent = a;
-        });
-      }
+    oTarget.addEventListener('change', evt => {
+      listActions();
     });
   });
+
 
 </script>

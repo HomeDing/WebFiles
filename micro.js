@@ -856,10 +856,17 @@ class FormJsonData extends HTMLFormElement {
     #analyzed = false;
     #emptyRecord = {};
     #booleanAttributes = new Set();
-    renderedCallback() {
-        console.log('forjson:', 'rendered');
+    _validateForm() {
+        const v = this.checkValidity();
+        this.querySelectorAll("button[type=Submit]").forEach(btn => {
+            btn.disabled = !v;
+        });
     }
-    analyze() {
+    connectedCallback() {
+        this.addEventListener("change", this._validateForm);
+        this.addEventListener("keyup", this._validateForm);
+    }
+    _analyze() {
         this.querySelectorAll('input[name]').forEach(e => this.#emptyRecord[e.name] = '');
         this.querySelectorAll('textarea[name]').forEach(e => this.#emptyRecord[e.name] = '');
         this.querySelectorAll('select[name]').forEach(e => this.#emptyRecord[e.name] = e.value || '');
@@ -869,12 +876,12 @@ class FormJsonData extends HTMLFormElement {
             this.#emptyRecord[e.name] = false;
             this.#booleanAttributes.add(e.name);
         });
+        this._validateForm();
         this.#analyzed = true;
-        console.log('forjson:', 'emptyRecord:', this.#emptyRecord);
     }
     getJsonData() {
         if (!this.#analyzed)
-            this.analyze();
+            this._analyze();
         const formData = new FormData(this);
         let jData = Object.fromEntries(formData);
         jData = Object.assign({}, this.#emptyRecord, jData);
@@ -888,7 +895,7 @@ class FormJsonData extends HTMLFormElement {
     setJsonData(jData) {
         let hasChanged = false;
         if (!this.#analyzed)
-            this.analyze();
+            this._analyze();
         Object.entries(jData).forEach(([name, value]) => {
             this.querySelectorAll(`*[name=${name}]`).forEach(el => {
                 if (el.type === 'radio') {
