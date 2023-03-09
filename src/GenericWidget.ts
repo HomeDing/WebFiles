@@ -171,7 +171,7 @@ class GenericWidgetClass extends MicroControlClass {
 
       } else if (p.classList.contains('setconfig')) {
         const ti = this.microid.split('/');
-        DialogFormClass.openModalForm('configElement', { ...this.data, type: ti[1], id: ti[2] });
+        DialogClass.openModalForm('configElement', { ...this.data, type: ti[1], id: ti[2] });
 
       } else if (p.classList.contains('setactive')) {
         this.dispatchAction(toBool(this.data.active) ? 'stop' : 'start', '1');

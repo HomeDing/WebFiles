@@ -1,8 +1,8 @@
-// DialogFormClass.ts: Behavior implementation for native dialogs with forms.
+// DialogClass.ts: Behavior implementation for native dialogs with forms.
 // This file is part of the Widget implementation for the HomeDing Library.
 
 // Dialogs are implemented as HTML <dialog> elements containing a <from> element.
-// Dialogs can be opened using DialogFormClass.openModalForm(id, data)
+// Dialogs can be opened using DialogClass.openModalForm(id, data)
 
 /// <reference path="micro.ts" />
 /// <reference path="microControls.ts" />
@@ -10,23 +10,24 @@
 
 type DialogCallback = ((data: any) => void);
 
-@MicroControl('dialogform')
-class DialogFormClass extends MicroControlClass {
+@MicroControl('dialog')
+class DialogClass extends MicroControlClass {
 
   private _defaultData = {};
   private _data = {};
-  private _form?: FormJsonData;
+  private _form?: FormJson;
   private _callback?: DialogCallback = undefined;
 
   /**
    * Static helper to open a new dialog on top of existing ones.
-   * @param tmplName Name of template
+   * @param id id of the dialog
    * @param data optional data to pass
+   * @param cb optional Dialog CallBack function
    */
   static openModalForm(id: string, data: any = {}, cb?: DialogCallback) {
     const dlg = document.querySelector('dialog#' + id);
     if (dlg)
-      (<DialogFormClass>dlg).openModalForm(data, cb);
+      (<DialogClass>dlg).openModalForm(data, cb);
   } // open
 
   override connectedCallback() {
@@ -34,7 +35,7 @@ class DialogFormClass extends MicroControlClass {
 
     const f = this.querySelector('form');
     if (f) {
-      this._form = (f as FormJsonData);
+      this._form = (f as FormJson);
       this._defaultData = this._form.getJsonData();
     }
   }
@@ -67,7 +68,7 @@ class DialogFormClass extends MicroControlClass {
     });
 
     if (this._form) {
-      (this._form as FormJsonData).setJsonData(data);
+      (this._form as FormJson).setJsonData(data);
     }
     // open Dialog in modal mode
     (<any>this).showModal();
@@ -97,7 +98,7 @@ class DialogFormClass extends MicroControlClass {
       if (ua?.startsWith('next:')) {
         (<any>this).returnValue = 'ok';
         const nextID = ua.substring(5); // without 'next:'
-        DialogFormClass.openModalForm(nextID, ret);
+        DialogClass.openModalForm(nextID, ret);
 
       } else if (ua === 'return') {
         // these buttons are used return dialog data by callback
@@ -119,4 +120,4 @@ class DialogFormClass extends MicroControlClass {
     (<any>this).returnValue = 'cancel';
   }
 
-} // DialogFormClass
+} // DialogClass

@@ -365,7 +365,7 @@ let GenericWidgetClass = GenericWidgetClass_1 = class GenericWidgetClass extends
             }
             else if (p.classList.contains('setconfig')) {
                 const ti = this.microid.split('/');
-                DialogFormClass.openModalForm('configElement', { ...this.data, type: ti[1], id: ti[2] });
+                DialogClass.openModalForm('configElement', { ...this.data, type: ti[1], id: ti[2] });
             }
             else if (p.classList.contains('setactive')) {
                 this.dispatchAction(toBool(this.data.active) ? 'stop' : 'start', '1');
@@ -610,8 +610,8 @@ let DSTimeWidgetClass = class DSTimeWidgetClass extends GenericWidgetClass {
 DSTimeWidgetClass = __decorate([
     MicroControl('dstime')
 ], DSTimeWidgetClass);
-var DialogFormClass_1;
-let DialogFormClass = DialogFormClass_1 = class DialogFormClass extends MicroControlClass {
+var DialogClass_1;
+let DialogClass = DialogClass_1 = class DialogClass extends MicroControlClass {
     _defaultData = {};
     _data = {};
     _form;
@@ -670,7 +670,7 @@ let DialogFormClass = DialogFormClass_1 = class DialogFormClass extends MicroCon
             if (ua?.startsWith('next:')) {
                 this.returnValue = 'ok';
                 const nextID = ua.substring(5);
-                DialogFormClass_1.openModalForm(nextID, ret);
+                DialogClass_1.openModalForm(nextID, ret);
             }
             else if (ua === 'return') {
                 if (this._callback) {
@@ -689,9 +689,9 @@ let DialogFormClass = DialogFormClass_1 = class DialogFormClass extends MicroCon
         this.returnValue = 'cancel';
     }
 };
-DialogFormClass = DialogFormClass_1 = __decorate([
-    MicroControl('dialogform')
-], DialogFormClass);
+DialogClass = DialogClass_1 = __decorate([
+    MicroControl('dialog')
+], DialogClass);
 class DisplayItemWidgetClass extends GenericWidgetClass {
     _dispElem;
     _grid;
@@ -852,7 +852,7 @@ let DisplayWidgetClass = class DisplayWidgetClass extends GenericWidgetClass {
 DisplayWidgetClass = __decorate([
     MicroControl('display')
 ], DisplayWidgetClass);
-class FormJsonData extends HTMLFormElement {
+class FormJson extends HTMLFormElement {
     #analyzed = false;
     #emptyRecord = {};
     #booleanAttributes = new Set();
@@ -927,7 +927,7 @@ class FormJsonData extends HTMLFormElement {
         }
     }
 }
-customElements.define('form-json', FormJsonData, { extends: 'form' });
+customElements.define('form-json', FormJson, { extends: 'form' });
 let IncludeWidgetClass = class IncludeWidgetClass extends MicroControlClass {
     ref;
     connectedCallback() {

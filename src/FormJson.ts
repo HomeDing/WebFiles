@@ -1,8 +1,8 @@
-// FormJsonData.js
+// FormJson.js
 
 type FormDataRecord = { [index: string]: any };
 
-class FormJsonData extends HTMLFormElement {
+class FormJson extends HTMLFormElement {
   // private
   #analyzed = false;
   #emptyRecord: FormDataRecord = {};
@@ -93,4 +93,4 @@ class FormJsonData extends HTMLFormElement {
 
 } // class
 
-customElements.define('form-json', FormJsonData, { extends: 'form' });
+customElements.define('form-json', FormJson, { extends: 'form' });

@@ -1,4 +1,4 @@
-<dialog id="addElement" u-is="dialogform">
+<dialog id="addElement" u-is="dialog">
   <h2>Add a new Element</h2>
   <div class="u-close" u-action="close"></div>
   <form is="form-json" method="dialog">
@@ -15,7 +15,7 @@
   </form>
 </dialog>
 
-<dialog id="configElement" u-is="dialogform">
+<dialog id="configElement" u-is="dialog">
   <h2>Config <span u-text="type"></span>/<span u-text="id"></span></h2>
   <div class="u-close" u-action="close"></div>
 
@@ -25,7 +25,7 @@
   </form>
 </dialog>
 
-<dialog id="action" u-is="dialogform">
+<dialog id="action" u-is="dialog">
   <h2>Config Action...</h2>
   <div class="u-close" u-action="close"></div>
 
@@ -95,7 +95,7 @@
       let a = createHTMLElement(createHTMLElement(g, 'label'), 'img', { src: (isAction ? '/i/start.svg' : '/i/no.svg') });
       if (isAction) {
         a.setAttribute('u-action', 'action');
-        a.setAttribute('_action', k);
+        a.setAttribute('_event', k);
       }
     } // add()
 
@@ -112,12 +112,12 @@
     const tar = evt.target;
     var ua = tar.getAttribute('u-action');
     if (ua == 'action') {
-      DialogFormClass.openModalForm('action', {
+      DialogClass.openModalForm('action', {
         srcId: d3.getAttribute('_id'),
-        srcEvent: tar.getAttribute('_action'),
+        srcEvent: tar.getAttribute('_event'),
       }, function(d) {
         // result of action dialog 
-        const srcEvent = tar.getAttribute('_action');
+        const srcEvent = tar.getAttribute('_event');
         var fld = d3.querySelector('input[name="' + srcEvent + '"]');
         fld.value = `${d.target}?${d.action}=${d.value}`;
       });

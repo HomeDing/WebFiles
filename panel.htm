@@ -227,7 +227,7 @@
     document.getElementById('addButton').addEventListener("click", async evt => {
       // load dialogs on demand.
       await loadPlugins();
-      DialogFormClass.openModalForm('addElement', {});
+      DialogClass.openModalForm('addElement', {});
     });
 
 
@@ -468,7 +468,7 @@
             while (t && !t.classList.contains('node')) t = t.parentElement;
             const d = t.getAttribute('data');
             const id = t.getAttribute('id').split('/');
-            DialogFormClass.openModalForm('configElement', { ...JSON.parse(d), type: id[0], id: id[1] });
+            DialogClass.openModalForm('configElement', { ...JSON.parse(d), type: id[0], id: id[1] });
           });
         }
 
@@ -629,7 +629,7 @@
 
           // Start the action connect dialog
           if (node !== DragNode) {
-            DialogFormClass.openModalForm('action',
+            DialogClass.openModalForm('action',
               { srcId: DragNode.id, tarId: node.id },
               d => {
                 if ((d.srcEvent) && (d.target) && (d.action) && (d.value)) {
