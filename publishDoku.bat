@@ -13,5 +13,6 @@ copy microsvg.js %tar%
 
 copy icons.svg %tar%
 copy iotstyle.css %tar%
+copy css\*.scss %tar%\css
 
 :end

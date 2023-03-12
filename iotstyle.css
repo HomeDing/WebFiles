@@ -70,7 +70,7 @@ code,
 h2,
 h3,
 h4 {
-  margin: 0 0 0.5rem 0;
+  margin: 0;
   min-height: 1rem;
 }
 p > img,
@@ -101,6 +101,44 @@ h3 > svg:first-child,
 h4 > img:first-child,
 h4 > svg:first-child {
   margin-right: 0.2em;
+}
+p + p,
+p + pre,
+p + code,
+p + h2,
+p + h3,
+p + h4,
+pre + p,
+pre + pre,
+pre + code,
+pre + h2,
+pre + h3,
+pre + h4,
+code + p,
+code + pre,
+code + code,
+code + h2,
+code + h3,
+code + h4,
+h2 + p,
+h2 + pre,
+h2 + code,
+h2 + h2,
+h2 + h3,
+h2 + h4,
+h3 + p,
+h3 + pre,
+h3 + code,
+h3 + h2,
+h3 + h3,
+h3 + h4,
+h4 + p,
+h4 + pre,
+h4 + code,
+h4 + h2,
+h4 + h3,
+h4 + h4 {
+  margin-top: 0.5rem;
 }
 
 a,

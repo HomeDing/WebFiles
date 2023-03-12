@@ -55,6 +55,10 @@ table {
   max-width: 100%;
   background-color: var(--card-back);
   page-break-inside: avoid;
+
+  > h3 {
+    margin-top: 0;
+  }
 }
 
 // card with text only
@@ -65,7 +69,7 @@ table {
 
 // cards with icon
 .iconcard {
-  padding: $u-gutter2 $u-gutter2 $u-gutter2 calc(4rem + 2 * $u-gutter2);
+  padding: $u-white-space $u-gutter $u-gutter calc(4rem + 2 * $u-gutter);
   min-height: 5.4rem;
 
   svg {
