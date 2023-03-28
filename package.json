@@ -42,7 +42,7 @@
     "stylelint-scss": "^4.4.0",
     "svgstore": "^3.0.1",
     "terser": "^5.16.0",
-    "typescript": "^4.9.4"
+    "typescript": "^5.0.2"
   },
   "scripts": {
     "build": "npm run build:ts && npm run build:css && npm run build:server",
