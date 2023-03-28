@@ -228,6 +228,11 @@
     "actions": ["ontemperature", "onpressure"]
   },  
 
+  "bh1750": {
+    "properties": ["address", "mode", "factor", "readtime", "warmuptime", "resendtime", "restart"],
+    "actions": ["onvalue"]
+  },  
+
   "scd4x": {
     "icon": "dht",
     "properties": ["address", "readtime", "warmuptime", "resendtime", "restart"],
