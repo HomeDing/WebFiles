@@ -54,49 +54,9 @@
       "value": ".."
     }
   },
-  "map": {
-    "m": {
-      "loglevel": 2,
-      "description": "classify incomming values using a map",
-      "y": 8,
-      "value": [
-        1,
-        "B2",
-        3
-      ]
-    }
-  },
-  "webbutton": {
-    "flow": {
-      "description": "All lights off",
-      "onClick": "neo/d2?mode=flow,timer/done?start=1"
-    }
-  },
   "time": {
     "clock": {
       "onminute": "displaytext/time?value=$v"
-    }
-  },
-
-  "switch": {
-    "a": {
-      "description": "Switch A",
-      "value": 0,
-      "onValue": "and/a?value01=$v"
-    },
-    "b": {
-      "description": "Switch B",
-      "value": 0,
-      "onValue": "and/a?value02=$v"
-    }
-  },
-  "and": {
-    "a": {
-      "description": "Logical AND",
-      "invert": "false",
-      "value01": "true",
-      "value02": "false",
-      "onvalue": "device/0?log=LOG:$v"
     }
   }
 }
