@@ -82,7 +82,7 @@ class GenericWidgetClass extends MicroControlClass {
     });
 
     // u-value: value of input and select fields
-    ['input', 'select'].forEach(elType => {
+    ['input', 'output', 'select'].forEach(elType => {
       this.querySelectorAll(`${elType}[u-value='${key}']`)
         .forEach(elem => {
           if ((elem as HTMLInputElement).type === 'radio') {
@@ -150,7 +150,8 @@ class GenericWidgetClass extends MicroControlClass {
   // send changed value of property as an action to the board
   on_change(e: Event) {
     const src = e.target as HTMLInputElement;
-    this.dispatchAction(src.getAttribute('u-value'), src.value);
+    const units = src.getAttribute('u-units');
+    this.dispatchAction(src.getAttribute('u-value'), src.value + (units ? units : ''));
   }
 
   // send an action to the board

@@ -6,6 +6,15 @@
     "actions": ["onSysStart", "onStart"]
   },
 
+  "sdmmc": {
+    "sys": "true",
+    "properties": ["mmcD0", "mmcD1", "mmcD2", "mmcD3", "mmcCLK", "mmcCMD"]
+  },
+
+  "sd": {
+    "sys": "true"
+  },
+
   "element": {
     "properties": ["loglevel", "title", "description"],
     "events": ["start", "stop"]
@@ -270,9 +279,14 @@
     "events": ["value", "enable", "brightness"]
   },
 
+  "apa102": {
+    "properties": ["datapin", "clockpin", "count"],
+    "events": ["value", "enable", "brightness", "duration", "effectlength"]
+  },
+
   "neo": {
-    "properties": ["pin", "duration", "count"],
-    "events": ["value", "enable", "mode", "brightness"]
+    "properties": ["datapin", "count"],
+    "events": ["value", "enable", "mode", "brightness", "duration", "effectlength"]
   },
 
   "alarm": {

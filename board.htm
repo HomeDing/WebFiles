@@ -176,7 +176,7 @@
         <label>brightness:</label>
         <div><input type="range" max="100" name="brightness"><output name="brightness"></output></div>
         <label>duration:</label>
-        <div><input type="range" max="120000" name="duration"><output name="duration"></output></div>
+        <div><input type="range" max="12000" step="100" name="duration"><output name="duration"></output></div>
       </div>
       <div class="block footer form-actions">
         <button u-action="mode" value="fade">fade</button>
@@ -185,10 +185,15 @@
         <button u-action="mode" value="wheel">wheel</button>
       </div>
     </div>
-    <div class="card" u-control="neo" id="${id}" u-is="color" microID="${id}">
+
+    <div class="card" u-control="stripe" id="${id}" u-is="generic" microID="${id}">
       <div u-is="include" ref=".cHead"></div>
       <div class="block form-grid">
-        <label>color:</label><input type="color" name="color">
+        <label>mode:</label><output u-text="mode"></output>
+        <label>duration:</label>
+        <div><input type="range" max="20000" step="100" u-value="duration" u-units="ms"><output u-value="duration"></output></div>
+        <label>Effect Length:</label>
+        <div><input type="range" max="255" u-value="effectlength"><output u-value="effectlength"></output></div>
       </div>
       <div class="block footer form-actions">
         <button u-action="mode" value="flow">flow</button>
@@ -301,7 +306,7 @@
       state: {}
     };
 
-    (function () { // allows variable names to be packed by minifier
+    (function() { // allows variable names to be packed by minifier
       const REFRESH_INTERVAL = 4000;
       var panelObj = document.querySelector('.panel');
       var addObj = document.getElementById('addButton');
@@ -316,7 +321,8 @@
         "digitalin": "digitalout",
         "displayssd1306": "display", "displaysh1106": "display",
         "displayst7735": "display", "displayst7789": "display",
-        "neo": "color", "my9291": "light",
+        "neo": "stripe", "apa102": "stripe",
+        "my9291": "light",
         "and": "logic", "or": "logic",
         "ina219": "ina2xx", "ina226": "ina2xx"
       };
@@ -335,16 +341,16 @@
         return (ret);
       } // loadPlugins()
 
-      window.addEventListener('hashchange', function () {
+      window.addEventListener('hashchange', function() {
         window.location.reload();
       });
 
-      sysObj.addEventListener('click', function (evt) {
+      sysObj.addEventListener('click', function(evt) {
         params.sys = !toBool(params.sys);
         window.location.hash = 'sys=' + params.sys;
       });
 
-      addObj.addEventListener('click', async function (evt) {
+      addObj.addEventListener('click', async function(evt) {
         // load dialogs on demand.
         await loadPlugins();
         DialogClass.openModalForm('addElement', {});
@@ -362,7 +368,7 @@
 
       // will be called after activity
       // defer update after all activities and actions are sent.
-      window.updateState = function () {
+      window.updateState = function() {
         window.clearTimeout(timer);
         timer = window.setTimeout(updateStateNow, 200);
       };
@@ -387,7 +393,7 @@
         var p0 = micro.loadFile('/board-templates.htm');
 
         // create new card
-        hub.subscribe('/*/*', function (path, key, value) {
+        hub.subscribe('/*/*', function(path, key, value) {
           if (path) {
             path = path.toLowerCase();
             var hElem = document.querySelector("[microID='" + path + "']");
@@ -414,12 +420,12 @@
           } // if
         }); // create new card
 
-        hub.subscribe('/device/*?name', function (path, key, value) {
+        hub.subscribe('/device/*?name', function(path, key, value) {
           document.title = value;
           document.querySelector("meta[name=application-name]").content = value;
         });
 
-        Promise.allSettled([p0, p2, p3, p4]).then(function () {
+        Promise.allSettled([p0, p2, p3, p4]).then(function() {
           if (uElements.env) {
             hub.write('env', JSON.stringify(uElements.env));
             hub.publishObj(uElements.env);

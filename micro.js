@@ -286,7 +286,7 @@ let GenericWidgetClass = GenericWidgetClass_1 = class GenericWidgetClass extends
                 elem.textContent = value;
             }
         });
-        ['input', 'select'].forEach(elType => {
+        ['input', 'output', 'select'].forEach(elType => {
             this.querySelectorAll(`${elType}[u-value='${key}']`)
                 .forEach(elem => {
                 if (elem.type === 'radio') {
@@ -346,7 +346,8 @@ let GenericWidgetClass = GenericWidgetClass_1 = class GenericWidgetClass extends
     }
     on_change(e) {
         const src = e.target;
-        this.dispatchAction(src.getAttribute('u-value'), src.value);
+        const units = src.getAttribute('u-units');
+        this.dispatchAction(src.getAttribute('u-value'), src.value + (units ? units : ''));
     }
     on_click(event) {
         const chain = [];
