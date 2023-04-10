@@ -88,7 +88,7 @@ body {
   background-color: var(--back);
 }
 
-@media (min-width: 801px) {
+@media (width > 800px) {
   body {
     padding: $u-white-space;
   }

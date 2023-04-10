@@ -132,18 +132,18 @@ $u-card-wide-width: calc(4 * $u-grid-width + 3 * $u-gutter);
     min-width: $u-card-wide-width;
   }
 
-  @media (min-width: 0) {
+  @media (width >= 0) {
     /* 1 col */
     max-width: $u-card-width;
     margin-left: auto;
     margin-right: auto;
   }
 
-  @media (min-width: 2 * $u-card-width + $u-gutter) {
+  @media (width >= 2 * $u-card-width + $u-gutter) {
     max-width: 2 * $u-card-width + $u-gutter;
   }
 
-  @media (min-width: 3 * $u-card-width + 2 * $u-gutter) {
+  @media (width >= 3 * $u-card-width + 2 * $u-gutter) {
     max-width: 3 * $u-card-width + 2 * $u-gutter;
   }
 }
