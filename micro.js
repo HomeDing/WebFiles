@@ -1379,6 +1379,13 @@ let TimerWidgetClass = class TimerWidgetClass extends GenericWidgetClass {
     pt = 0;
     ct = 0;
     time = 0;
+    connectedCallback() {
+        super.connectedCallback();
+        this.wt = 0;
+        this.pt = 0;
+        this.ct = 0;
+        this.time = 0;
+    }
     newData(path, key, value) {
         super.newData(path, key, value);
         if (key === 'waittime') {

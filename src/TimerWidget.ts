@@ -16,6 +16,14 @@ class TimerWidgetClass extends GenericWidgetClass {
   ct = 0;
   time = 0;
 
+  override connectedCallback() {
+    super.connectedCallback();
+    this.wt = 0;
+    this.pt = 0;
+    this.ct = 0;
+    this.time = 0;
+  }
+
   override newData(path: string, key: string, value: string) {
     super.newData(path, key, value);
     if (key === 'waittime') {

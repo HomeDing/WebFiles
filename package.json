@@ -46,7 +46,7 @@
   },
   "scripts": {
     "build": "npm run build:ts && npm run build:css && npm run build:server",
-    "test": "npm outdated && npm run test:ts && npm run test:server && npm run test:css",
+    "test": "npm audit && npm run test:ts && npm run test:server && npm run test:css",
     "pack": "npm run pack:icons && npm run pack:dist && npm run pack:minimal && npm run pack:embed",
     "publish": "npm run publish:doku && npm run publish:webfiles",
     "clean": "shx rm -rf dist && shx rm -rf dist-mini",
