@@ -30,7 +30,7 @@
       if (state == 0) {
         // start sysinfo
         state = 1;
-        fetch('/$sysinfo')
+        fetch('/api/sysinfo')
           .then(function (result) {
             return (result.text());
           }).then(function (t) {
@@ -46,7 +46,7 @@
       } else if (state == 2) {
         // start scan 
         state = 3;
-        fetch('/$scan')
+        fetch('/api/scan')
           .then(function (result) {
             return (result.text());
           }).then(function (t) {
@@ -81,7 +81,7 @@
 
     // connect using network name and password
     d.getElementById('b').addEventListener('click', function () {
-      fetch('/$connect?n=' + oSel.value + '&p=' + d.getElementById('pass').value);
+      fetch('/api/connect?n=' + oSel.value + '&p=' + d.getElementById('pass').value);
     });
     timer = window.setInterval(check, 800);
   </script>

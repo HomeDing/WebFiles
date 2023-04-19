@@ -19,6 +19,14 @@ class ButtonWidgetClass extends GenericWidgetClass {
 
   override connectedCallback() {
     super.connectedCallback();
+    const panelObj = document.querySelector('.panel') as HTMLElement;
+    let btnPanel = panelObj.querySelector('.btnPanel') as HTMLElement;
+    if (!btnPanel) {
+      btnPanel = createHTMLElement(panelObj, 'div', { class: 'card btnPanel' }, panelObj.firstElementChild as HTMLElement);
+    }
+    if (btnPanel) {
+      btnPanel.appendChild(this);
+    }
     this._objButton = this.querySelector('button') as HTMLButtonElement;
   }
 

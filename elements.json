@@ -103,8 +103,7 @@
 
   "remote": {
     "sys": "true",
-    "properties": ["host", "remoteid"],
-    "events": ["..."]
+    "properties": ["host"]
   },
 
   "rfcodes": {
@@ -259,7 +258,7 @@
   },
 
   "color": {
-    "properties": ["loglevel", "title", "description"],
+    "properties": [],
     "events": ["config", "value", "mode", "duration", "brightness"],
     "actions": ["onvalue", "onbrightness"]
   },
@@ -316,7 +315,7 @@
 
   "time": {
     "sys": "true",
-    "properties": ["loglevel", "title", "description"],
+    "properties": [],
     "actions": ["onminute", "ontimestamp", "ontime", "ondate"]
   },
 
@@ -327,7 +326,7 @@
   },
 
   "serialcmd": {
-    "properties": ["description"],
+    "properties": [],
     "actions": ["preset0", "preset1", "preset2", "preset3"]
   },
 

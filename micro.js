@@ -413,6 +413,14 @@ let ButtonWidgetClass = class ButtonWidgetClass extends GenericWidgetClass {
     _objButton;
     connectedCallback() {
         super.connectedCallback();
+        const panelObj = document.querySelector('.panel');
+        let btnPanel = panelObj.querySelector('.btnPanel');
+        if (!btnPanel) {
+            btnPanel = createHTMLElement(panelObj, 'div', { class: 'card btnPanel' }, panelObj.firstElementChild);
+        }
+        if (btnPanel) {
+            btnPanel.appendChild(this);
+        }
         this._objButton = this.querySelector('button');
     }
     newData(path, key, value) {
