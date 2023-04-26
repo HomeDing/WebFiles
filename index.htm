@@ -148,7 +148,7 @@
 
     window.addEventListener('load', function () {
       memAPI = memObj.getSVGDocument().api;
-      fetch('/$sysinfo')
+      fetch('/api/sysinfo')
         .then(function (result) {
           return result.json();
         })
@@ -190,7 +190,7 @@
 
         });
 
-      fetch('/$elements')
+      fetch('/api/elements')
         .then(function (result) {
           return result.json();
         })

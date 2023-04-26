@@ -144,7 +144,7 @@ This command will create a `dist` folder with all files required for upload into
 In this packing job is implemented using a nodejs implementation that you can find in `packdist.js`. It knows the required files and will copy them (no minifying etc) into the `dist` folder.
 
 In addition a list.txt file is formed that will also name all the files that can be updated by the built-in `boot.htm` implementation
-that can be started using <http://[devname]/$boot.htm> even on devices that only have a sketch uploaded and still an empty filesystem.
+that can be started using <http://[devname]/$upload.htm> even on devices that only have a sketch uploaded and still an empty filesystem.
 
 
 ### Packing for minimal distributions
@@ -161,8 +161,8 @@ This command will create a `dist-mini` folder with all files required for upload
 In this packing job is implemented using a nodejs implementation that you can find in `packminimal.js`.
 It knows the required files and will transfer them  into the `dist-mini` folder. Some files will be minified (HTML, CSS) or uglified (JS) to save space on the filesystem.
 
-In addition a list.txt file is formed that will also name all the files that can be updated by the built-in `boot.htm` implementation
-that can be started using <http://[devname]/$boot.htm> even on devices that only have a sketch uploaded and still an empty filesystem. 
+In addition a list.txt file is formed that will also name all the files that can be updated by the built-in `upload.htm` implementation
+that can be started using <http://[devname]/$upload.htm> even on devices that only have a sketch uploaded and still an empty filesystem. 
 
 You an specify the download version with a parameter ???
 

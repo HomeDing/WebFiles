@@ -378,7 +378,7 @@
       async function fetchJSON(url, options) {
         var p = fetch(url, options)
           .then(raw => raw.json());
-        return (p)
+        return (p);
       }
 
       // load templates from other file.
@@ -445,7 +445,7 @@
           timer = window.setTimeout(updateStateNow, REFRESH_INTERVAL);
 
           // defer metadata and dialogs
-          fetchJSON('/$elements')
+          fetchJSON('/api/elements')
             .then(json => uElements.impl = json);
           loadPlugins();
         });

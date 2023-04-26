@@ -34,27 +34,21 @@ export class ProxyElement extends VirtualBaseElement {
     this.eventBus = _bus;
     this.config = Object.assign({}, _default, config);
 
-    // 'http:(0)//host(2)/$board/type(4)/id(5)'
-    const url: string[] = config.url.split('/');
-    const baseurl = url.slice(0, 3).join('/');
-    this.host = url[2];
-
-    if (url[3] == '$board') {
-      this.type = url[4];
-      this.id = url[5];
-    } else if (url[3] == 'api') {
-      this.type = url[5];
-      this.id = url[6];
+    if (config.element) {
+      const p = config.element.match(/^(?<host>\S*):(?<type>\S*)\/(?<id>\S*)/);
+      this.host = p.groups.host;
+      this.type = p.groups.type;
+      this.id = p.groups.id;
     }
 
-    this.url = `${baseurl}/$board/${this.type}/${this.id}`;
+    this.url = `http://${this.host}/api/state/${this.type}/${this.id}`;
 
     // create a unique id to be used on the board.
     this.typeId = `${this.type}/${this.host}-${this.id}`;
 
     // extract config for element state
     this.state = Object.assign(this.state, {
-      url: baseurl
+      url: `http://${this.host}`
     });
   } // setConfig()
 

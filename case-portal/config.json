@@ -1,19 +1,19 @@
 {
   "webproxy": {
     "0": {
-      "url": "http://esp01/$board/dht/0"
+      "element": "bulb04:switch/en"
     },
     "1": {
-      "url": "http://airding/$board/pms/pm25"
+      "element": "airding:pms/pm25"
     },
     "2": {
-      "url": "http://switch1/$board/switch/relais"
+      "element": "switch1:switch/relais"
     },
     "3": {
-      "url": "http://plug03/$board/switch/relay"
+      "element": "plug08:switch/relay"
     },
     "4": {
-      "url": "http://plug02/$board/switch/relais"
+      "element": "plug02:switch/relais"
     }
   }
 }
