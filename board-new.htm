@@ -7,7 +7,6 @@
       <select name="type" required>
         <option disabled selected hidden value="">Select Element...</option>
       </select>
-
       <label>ID:</label>
       <input name="id" required pattern="[0-9a-z]+" placeholder="enter a name ...">
     </div>
@@ -79,6 +78,8 @@
   // Element config dialog
   let d3 = document.querySelector('dialog#configElement');
   d3.addEventListener('open', evt => {
+    let l;
+    const ic = '<svg class="icon"><use href="./icons.svg#$"></use></svg>';
     const data = lowerKeys(evt.detail.data);
     const fg = d3.querySelector('.form-grid');
     fg.innerHTML = '';
@@ -87,15 +88,16 @@
       createHTMLElement(fg, 'label').textContent = k + ':';
       const g = createHTMLElement(fg, 'div', { class: 'form-inline' });
 
-      createHTMLElement(createHTMLElement(g, 'label'), 'img', { src: (isEvent ? '/i/start.svg' : '/i/no.svg') });
+      l = createHTMLElement(g, 'label').innerHTML = ic.replace('$', (isEvent ? 'start' : 'no'));
       const o = createHTMLElement(g, 'input', { name: k, style: 'width:18ch' });
       if (data[k.toLowerCase()])
         o.value = data[k.toLowerCase()];
 
-      let a = createHTMLElement(createHTMLElement(g, 'label'), 'img', { src: (isAction ? '/i/start.svg' : '/i/no.svg') });
+      (l = createHTMLElement(g, 'label', { 'u-action': 'action' }))
+          .innerHTML = ic.replace('$', (isAction ? 'start' : 'no'));
       if (isAction) {
-        a.setAttribute('u-action', 'action');
-        a.setAttribute('_event', k);
+        // l.setAttribute('u-action', 'action');
+        l.setAttribute('_event', k);
       }
     } // add()
 
@@ -109,16 +111,20 @@
   });
 
   d3.addEventListener('click', evt => {
-    const tar = evt.target;
-    var ua = tar.getAttribute('u-action');
+    let tar = evt.target;
+    let ua;
+    while (tar && tar !== this) {
+      ua = tar.getAttribute('u-action');
+      if (ua) break;
+      tar = tar.parentElement;
+    }
     if (ua == 'action') {
       DialogClass.openModalForm('action', {
         srcId: d3.getAttribute('_id'),
         srcEvent: tar.getAttribute('_event'),
       }, function(d) {
         // result of action dialog 
-        const srcEvent = tar.getAttribute('_event');
-        var fld = d3.querySelector('input[name="' + srcEvent + '"]');
+        var fld = d3.querySelector('input[name="' + tar.getAttribute('_event') + '"]');
         fld.value = `${d.target}?${d.action}=${d.value}`;
       });
     }

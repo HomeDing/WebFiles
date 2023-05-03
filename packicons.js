@@ -34,21 +34,24 @@ console.log('writing icons.svg...');
 fs.writeFileSync('./icons.svg', svgText);
 console.log('');
 
-console.log('Packing mini icons...');
+if (false) {
+  // mini-icons not needed any more in dist-mini
+  console.log('Packing mini icons...');
 
-icons = svgstore();
+  icons = svgstore();
 
-['default.svg', 'ide.svg', 'minus.svg', 'plus.svg', 'start.svg', 'stop.svg']
-  .forEach(n => {
-    // console.log(file);
-    icons.add(n.split('.')[0], fs.readFileSync('./i/' + n, 'utf8'));
-  });
+  ['ide.svg']
+    .forEach(n => {
+      // console.log(file);
+      icons.add(n.split('.')[0], fs.readFileSync('./i/' + n, 'utf8'));
+    });
 
-svgText = icons.toString();
-svgText = svgText.replace(/\s+/g, ' ');
-svgText = svgText.replace(/> </g, '><');
+  svgText = icons.toString();
+  svgText = svgText.replace(/\s+/g, ' ');
+  svgText = svgText.replace(/> </g, '><');
 
-console.log('writing icons-mini.svg...');
-fs.writeFileSync('./icons-mini.svg', svgText);
+  console.log('writing icons-mini.svg...');
+  fs.writeFileSync('./icons-mini.svg', svgText);
+}
 
 console.log('done.');

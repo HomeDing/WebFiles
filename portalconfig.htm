@@ -65,11 +65,16 @@
     }
 
     .card {
+      height: 2rem;
+      margin-bottom: 0.2rem;
+    }
+    .card .block {
       height: 6rem;
+vertical-align:  top;
     }
     .card .block .icon {
-      height: 2rem;
-      width: 2rem;
+      height: 1.6rem;
+      width: 1.6rem;
     }
   </style>
 </head>
@@ -133,7 +138,7 @@
             return result.json();
           })
           .then(function (data) {
-            var url = 'http://' + devData[deviceName].host + '/$board/';
+            var url = 'http://' + devData[deviceName].host + '/api/state/';
             for (t in data) {
               for (i in data[t]) {
                 if ((uElements[t]) && (!uElements[t].sys)) {

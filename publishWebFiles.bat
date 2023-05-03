@@ -1,13 +1,14 @@
 @echo off
 echo.
-echo *** HomeDing Update of WebFiles tool. ***
-echo *** This utility copies the dist files to the documentation project. ***
-echo.
-echo *** create the distribution files using `npm run build` and `npm run pack`
-echo.
+@REM *** HomeDing Update of WebFiles tool. ***
+@REM 
+@REM This utility copies the dist files to 
+@REM - the documentation project for the .
+@REM - the samples folders standard and minimal.
+@REM 
+@REM Create the distribution files using `npm run build` and `npm run pack`
 
-echo.
-echo Updating public released files on homeding.github.io...
+echo *** Updating public released files on homeding.github.io...
 
 if [%1]==[] (
   echo missing version parameter
@@ -16,7 +17,7 @@ if [%1]==[] (
 )
 
 set version=%1
-set tar=C:\Users\Matthias\OneDrive\Dokumente\homeding
+set tar=%USERPROFILE%\OneDrive\Dokumente\homeding
 set rcflags=/XO /FFT /NJH /NS /NC /NFL /NDL /NJS
 
 robocopy dist %tar%\%version% /S /PURGE %rcflags%
@@ -26,14 +27,14 @@ robocopy dist-mini %tar%\%version%m /S /PURGE %rcflags%
 echo copied: Minimal WebUI
 
 echo.
-echo Updating data folders in examples
+echo *** Updating data folders in examples
 
-set tar=C:\Users\Matthias\Projects\Arduino\Sketches\Libraries\HomeDing
+set tar=%USERPROFILE%\Projects\Arduino\Sketches\Libraries\HomeDing
 
-robocopy dist %tar%\examples\standard\data /S /PURGE %rcflags% 
+robocopy dist %tar%\examples\standard\data /S /PURGE %rcflags% /XF list.txt
 echo copied: standard example
 
-robocopy dist-mini %tar%\examples\minimal\data /S /PURGE %rcflags% 
+robocopy dist-mini %tar%\examples\minimal\data /S /PURGE %rcflags% /XF list.txt
 echo copied: minimal example
 
 copy upload.h %tar%\src 

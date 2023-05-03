@@ -45,6 +45,7 @@
     "typescript": "^5.0.2"
   },
   "scripts": {
+    "all": "npm run build && npm run test && npm run pack && npm run publish",
     "build": "npm run build:ts && npm run build:css && npm run build:server",
     "test": "npm audit && npm run test:ts && npm run test:server && npm run test:css",
     "pack": "npm run pack:icons && npm run pack:dist && npm run pack:minimal && npm run pack:embed",
