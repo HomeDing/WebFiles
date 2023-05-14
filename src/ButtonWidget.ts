@@ -9,9 +9,6 @@
 
 @MicroControl('button')
 class ButtonWidgetClass extends GenericWidgetClass {
-  _onclick: string | undefined;
-  _ondoubleclick: string | undefined;
-  _onpress: string | undefined;
   _timer: number | undefined;
   _start!: number;
   _duration!: number;
@@ -30,31 +27,18 @@ class ButtonWidgetClass extends GenericWidgetClass {
     this._objButton = this.querySelector('button') as HTMLButtonElement;
   }
 
-  override newData(path: string, key: string, value: string) {
-    super.newData(path, key, value);
-    if (key === 'onclick') {
-      this._onclick = value;
-    } else if (key === 'ondoubleclick') {
-      this._ondoubleclick = value;
-    } else if (key === 'onpress') {
-      this._onpress = value;
-    } // if
-  } // newData()
-
   override on_click(evt: MouseEvent) {
     super.on_click(evt);
     if (evt.target === this._objButton) {
       if (this._duration > 800) {
         // press event
-        if (this._onpress) {
-          this.dispatchAction(this._onpress, '1');
-        }
+        this.dispatchAction("action=press", '1');
 
       } else {
         // single short click
         if (this._timer) { window.clearTimeout(this._timer); }
         this._timer = window.setTimeout(() => {
-          this.dispatchAction(this._onclick, '1');
+          this.dispatchAction("action=click", '1');
         }, 250);
       }
     }
@@ -63,7 +47,7 @@ class ButtonWidgetClass extends GenericWidgetClass {
   on_dblclick(evt: MouseEvent) {
     if (evt.target === this._objButton) {
       if (this._timer) { window.clearTimeout(this._timer); }
-      this.dispatchAction(this._ondoubleclick, '1');
+      this.dispatchAction("action=doubleclick", '1');
     }
   } // on_dblclick
 

@@ -404,9 +404,6 @@ BL0937WidgetClass = __decorate([
     MicroControl('bl0937')
 ], BL0937WidgetClass);
 let ButtonWidgetClass = class ButtonWidgetClass extends GenericWidgetClass {
-    _onclick;
-    _ondoubleclick;
-    _onpress;
     _timer;
     _start;
     _duration;
@@ -423,32 +420,18 @@ let ButtonWidgetClass = class ButtonWidgetClass extends GenericWidgetClass {
         }
         this._objButton = this.querySelector('button');
     }
-    newData(path, key, value) {
-        super.newData(path, key, value);
-        if (key === 'onclick') {
-            this._onclick = value;
-        }
-        else if (key === 'ondoubleclick') {
-            this._ondoubleclick = value;
-        }
-        else if (key === 'onpress') {
-            this._onpress = value;
-        }
-    }
     on_click(evt) {
         super.on_click(evt);
         if (evt.target === this._objButton) {
             if (this._duration > 800) {
-                if (this._onpress) {
-                    this.dispatchAction(this._onpress, '1');
-                }
+                this.dispatchAction("action=press", '1');
             }
             else {
                 if (this._timer) {
                     window.clearTimeout(this._timer);
                 }
                 this._timer = window.setTimeout(() => {
-                    this.dispatchAction(this._onclick, '1');
+                    this.dispatchAction("action=click", '1');
                 }, 250);
             }
         }
@@ -458,7 +441,7 @@ let ButtonWidgetClass = class ButtonWidgetClass extends GenericWidgetClass {
             if (this._timer) {
                 window.clearTimeout(this._timer);
             }
-            this.dispatchAction(this._ondoubleclick, '1');
+            this.dispatchAction("action=doubleclick", '1');
         }
     }
     on_pointerdown(evt) {
