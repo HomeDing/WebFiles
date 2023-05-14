@@ -406,7 +406,7 @@
               };
 
               var def = uElements.defs[t];
-              if (toBool(params.sys) || !def || toBool(def.sys) == false) {
+              if (toBool(params.sys) || (def && toBool(def.sys) == false)) {
                 if ((def) && (def.icon)) {
                   p.icon = def.icon;
                 }

@@ -240,9 +240,9 @@
         } else {
           statImg.src = 'i/config.svg';
           const controller = new AbortController();
-          window.setTimeout(function () { controller.abort() }, param.FETCHTIMEOUT);
+          window.setTimeout(function () { controller.abort(); }, param.FETCHTIMEOUT);
 
-          fetch('http://' + host + '/$sysinfo', { signal: controller.signal })
+          fetch('http://' + host + '/api/sysinfo', { signal: controller.signal })
             .then(function (response) {
               if (response.status === 200) {
                 return response.json();
@@ -251,7 +251,7 @@
             .then(function (si) {
               statImg.src = 'i/start.svg';
               obj.querySelector('.memory').textContent = si.freeHeap;
-              obj.querySelector('.core').textContent = (si.coreBuild || '').replace('.ino', '') + ' ' + (si.coreVersion || '');
+              obj.querySelector('.core').textContent = (si.coreVersion || '').replace('.ino', '') + ' ' + (si.coreBuild || '');
               obj.querySelector('.date').textContent = new Date(si.build).toISOString().split(/[T\.]/)[0];
               obj.querySelector('.uptime').textContent = fmtDuration(si.upTime);
               obj.querySelector('.flash').textContent = si.flashSize;

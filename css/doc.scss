@@ -50,7 +50,7 @@ table {
 .imgcard,
 .iconcard {
   position: relative;
-  margin: 0 $u-gutter $u-gutter 0;
+  margin: $u-gutter $u-gutter $u-gutter 0;
   width: 100%;
   max-width: 100%;
   background-color: var(--card-back);
@@ -69,13 +69,13 @@ table {
 
 // cards with icon
 .iconcard {
-  padding: $u-white-space $u-gutter $u-gutter calc(4rem + 2 * $u-gutter);
+  padding: $u-gutter $u-gutter $u-gutter calc(4rem + 2 * $u-gutter);
   min-height: 5.4rem;
 
   svg {
     position: absolute;
-    top: $u-gutter2;
-    left: $u-gutter2;
+    top: $u-gutter;
+    left: $u-gutter;
     height: 4rem;
     width: 4rem;
   }

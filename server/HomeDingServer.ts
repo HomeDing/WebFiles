@@ -187,85 +187,79 @@ export class HomeDingServer {
     this.eventBus.startup(this._allConfig);
 
 
-    async function handleList(req: express.Request, res: express.Response) {
-      let p = '';
-      if (req.query.path) {
-        p = req.query.path as string;
-      }
-      p = p.replaceAll('..', '.');
-      if (!p.startsWith('/')) { p = '/' + p; }
-      if (!p.endsWith('/')) { p = p + '/'; }
-
-      const fl = [];
-      const files = await fs.promises.readdir('.' + p);
-      for (const i in files) {
-        const aFile = await fs.promises.stat('.' + p + files[i]);
-        if (aFile.isFile()) {
-          fl.push({
-            name: p + files[i],
-            size: aFile.size
-          });
-        } else if (aFile.isDirectory()) {
-          fl.push({
-            name: p + files[i],
-            type: "dir"
-          });
-
+    this._app.get(/^\/api\/list$/, this.expressNoCache,
+      async (req: express.Request, res: express.Response) => {
+        let p = '';
+        if (req.query.path) {
+          p = req.query.path as string;
         }
-      }
-      res.json(fl);
-    } // handleList
+        p = p.replaceAll('..', '.');
+        if (!p.startsWith('/')) { p = '/' + p; }
+        if (!p.endsWith('/')) { p = p + '/'; }
 
-    this._app.get(/^\/api\/list$/, this.expressNoCache, handleList);
-    this._app.get(/^\/\$list$/, this.expressNoCache, handleList);
+        const fl = [];
+        const files = await fs.promises.readdir('.' + p);
+        for (const i in files) {
+          const aFile = await fs.promises.stat('.' + p + files[i]);
+          if (aFile.isFile()) {
+            fl.push({
+              name: p + files[i],
+              size: aFile.size
+            });
+          } else if (aFile.isDirectory()) {
+            fl.push({
+              name: p + files[i],
+              type: "dir"
+            });
+
+          }
+        }
+        res.json(fl);
+      }); // handleList
 
 
-    function handleSysInfo(_req: express.Request, res: express.Response) {
-      const fl = {
-        devicename: 'nodejsding',
-        build: 'Dec  1 2018',
-        freeHeap: 31168,
-        flashSize: 4194304,
-        // 'flash-real-size':4194304,
-        fsTotalBytes: 957314,
-        fsUsedBytes: 218872,
-        ssid: 'devnet'
-        // 'bssid':'74:DA:11:22:33:44'
-      };
-      res.json(fl);
-    } // handleSysInfo
-
-    this._app.get(/^\/api\/sysinfo/, this.expressNoCache, handleSysInfo);
-    this._app.get(/^\/\$sysinfo$/, this.expressNoCache, handleSysInfo);
+    this._app.get(/^\/api\/sysinfo/, this.expressNoCache,
+      (_req: express.Request, res: express.Response) => {
+        const fl = {
+          devicename: 'hd-portal',
+          build: 'Dec  1 2022',
+          freeHeap: 31168,
+          flashSize: 4194304,
+          // 'flash-real-size':4194304,
+          fsTotalBytes: 957314,
+          fsUsedBytes: 218872,
+          ssid: 'devnet'
+          // 'bssid':'74:DA:11:22:33:44'
+        };
+        res.json(fl);
+      }); // handleSysInfo
 
 
     // ===== handling status requests
 
-    const handleElementState = async (req: express.Request, res: express.Response) => {
-      if (!this._boardState) {
-        this._boardState = {};
-        if (this._caseFolder) {
-          // get current state from case-folder
-          this._boardState = JSON.parse(await fs.promises.readFile(this._boardFileName, 'utf8'));
+    this._app.get('/\\api/state/:type/:id', this.expressNoCache,
+      async (req: express.Request, res: express.Response) => {
+        if (!this._boardState) {
+          this._boardState = {};
+          if (this._caseFolder) {
+            // get current state from case-folder
+            this._boardState = JSON.parse(await fs.promises.readFile(this._boardFileName, 'utf8'));
+          }
         }
-      }
 
-      const id = req.params.type + '/' + req.params.id;
-      if (Object.keys(req.query).length > 0) {
-        // incoming action
-        res.send();
+        const id = req.params.type + '/' + req.params.id;
+        if (Object.keys(req.query).length > 0) {
+          // incoming action
+          res.send();
         /* no await */ this.eventBus.dispatch(id, req.query);
-        this.eventBus.executeEvents();
-      } else {
-        // Update and return status of a single element
-        this._boardState[id] = Object.assign(this._boardState[id], this.eventBus.state(id));
-        res.json(this._boardState[id]);
-      }
-      // next();
-    }; // handleElementState
-
-    this._app.get('/\\api/state/:type/:id', this.expressNoCache, handleElementState);
-    this._app.get('/\\$board/:type/:id', this.expressNoCache, handleElementState);
+          this.eventBus.executeEvents();
+        } else {
+          // Update and return status of a single element
+          this._boardState[id] = Object.assign(this._boardState[id], this.eventBus.state(id));
+          res.json(this._boardState[id]);
+        }
+        // next();
+      }); // handleElementState
 
 
     const handleElements = async (_req: express.Request, res: express.Response) => {
@@ -301,12 +295,6 @@ export class HomeDingServer {
 
 
     this._app.get(/^\/api\/state$/, this.expressNoCache, handleState);
-    this._app.get(/^\/\$board$/, this.expressNoCache,
-      async (req, res) => {
-        console.error('depricated call to /$board');
-        handleState(req, res);
-      }
-    );
 
 
     this._app.get(/^\/\$flush$/, this.expressNoCache, async (_req, res) => {
