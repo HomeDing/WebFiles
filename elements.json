@@ -141,7 +141,7 @@
   },
 
   "select": {
-    "properties": ["options"],
+    "properties": ["cycle", "options"],
     "events": ["key", "index", "next", "prev"],
     "actions": ["onkey", "onvalue"]
   },

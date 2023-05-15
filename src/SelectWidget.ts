@@ -38,6 +38,8 @@ class SelectWidgetClass extends GenericWidgetClass {
       } else if (key === 'value') {
         opt.value = value;
       }
+    } else if (key === 'key') {
+      this._objSelect.value = value;
     } // if
   } // newData()
 

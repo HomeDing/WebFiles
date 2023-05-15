@@ -1246,6 +1246,9 @@ let SelectWidgetClass = class SelectWidgetClass extends GenericWidgetClass {
                 opt.value = value;
             }
         }
+        else if (key === 'key') {
+            this._objSelect.value = value;
+        }
     }
     on_change(evt) {
         super.on_change(evt);

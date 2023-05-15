@@ -116,7 +116,7 @@ const assets = [
   { m: 'xml', src: 'browserconfig.xml' },
   { m: 'json', src: 'site.min.webmanifest', tar: 'site.webmanifest'},
   { m: 'xml', src: 'favicon.svg' },
-  { m: 'xml', src: 'icons-mini.svg', tar:'icons.svg'},
+  // { m: 'xml', src: 'icons-mini.svg', tar:'icons.svg'},
   { m: 'css', src: 'iotstyle.scss', tar: 'iotstyle.css' },
   { m: 'js', src: 'micro.js' },
   { m: 'm', src: 'ding.htm' },
