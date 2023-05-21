@@ -47,9 +47,11 @@
       stroke-width: 0;
     }
 
+    /* connector pins */
     .node circle {
-      fill: #505050;
-      stroke-width: 0;
+      fill: #404040;
+      stroke-width: 2;
+      stroke: #d4dced;
     }
 
     .node text {
@@ -95,8 +97,8 @@
             <use class="icon" x="16" y="8" width="32" height="32" color="#203050" href="" />
             <use class="config" x="48" y="4" width="12" height="12" color="#203050" href="/icons.svg#config" />
             <text class="id" x="32" y="56" text-anchor="middle">subtitle</text>
-            <circle pin="in" cx="8" cy="40" r="5"></circle>
-            <circle pin="out" draggable="true" cx="56" cy="40" r="5"></circle>
+            <circle pin="in" cx="3" cy="40" r="5"></circle>
+            <circle pin="out" draggable="true" cx="61" cy="40" r="5"></circle>
           </g>
         </g>
         <g id="viewport">
@@ -133,7 +135,7 @@
       addNode(id, t, s) {
         var n = this.nodes[id] ?? (this.nodes[id] = {});
         n.id = id;
-        n.icon = t;
+        n.icon = uElements.defs[t].icon || t;
         n.conf = s;
         n._x = 0;
         n._y = 0;

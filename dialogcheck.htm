@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dialog Check</title>
+  <link rel="icon" type="image/png" href="/favicon48.png" sizes="48x48">
+  <meta name="application-name" content="Ding" />
+  <meta name="msapplication-config" content="/browserconfig.xml" />
+  <meta name="msapplication-TileColor" content="#2b5797" />
+  <meta name="msapplication-TileImage" content="/favicon144.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon180.png" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <link rel="manifest" href="/site.webmanifest" />
+  <meta name="theme-color" content="#ffffff" />
+
+  <link Content-Type="text/css" href="/iotstyle.css" rel="stylesheet" defer />
+  <script src="/micro.js" defer></script>
+
+  <style>
+    svg.setconfig {
+      position: absolute;
+      top: 0.5rem;
+      right: 0.5rem;
+      height: 1.4rem;
+      width: 1.4rem;
+      background-size: 1.4rem;
+    }
+
+    svg.fullscreen {
+      position: absolute;
+      top: 0.5rem;
+      right: 2.5rem;
+      height: 1.4rem;
+      width: 1.4rem;
+      background-size: 1.4rem;
+    }
+
+    img,
+    .panel {
+      user-select: none;
+    }
+
+    select:invalid,
+    input:invalid {
+      border-color: red;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="u-header">
+    <h1>Testing Dialogs...</h1>
+  </div>
+  <div class="u-navbar">
+    <a href="/">Home</a>
+  </div>
+
+  <main>
+    <button id="b1">Open Action</button>
+  </main>
+
+  <dialog id="action" u-is="dialog">
+    <h2>Config...</h2>
+    <div class="u-close" u-action="close"></div>
+
+    <form method="dialog">
+      <div class="form-grid">
+        <label>Target:</label><select name="target">
+          <option disabled selected hidden>Select target...</option>
+          <option value="switch/0">switch/0</option>
+          <option value="timer/0">timer/0</option>
+        </select>
+        <label>Action:</label>
+        <select name="event">
+          <option value="in">in</option>
+          <option value="out">out</option>
+        </select>
+        <label>Sound:</label><input name="sound"/>
+        <label>Volume:</label><input name="volume" type="range" min="0" max="15" />
+      </div>
+      <div><button u-action="return" style="float:right">OK</button></div>
+    </form>
+  </dialog>
+
+  <script>
+    var dlgActionObj = document.getElementById('b1');
+
+    dlgActionObj.addEventListener('click', evt => {
+      DialogClass.openModalForm('action', {
+        target: "switch/0",
+        sound: "bell"
+      }, function (data) {
+        // result of action dialog 
+        alert("Dialog result=\n"
+        + JSON.stringify(data, undefined, 2));
+      });
+    });
+  </script>
+</body>
+
+</html>

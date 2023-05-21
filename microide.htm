@@ -263,11 +263,11 @@
         entry.innerText = entry.title = f.name;
       } else {
         entry.innerText = entry.title = f.name + ' (' + f.size + ')';
-        const delx = createHTMLElement(row, 'div', {
+        const de = createHTMLElement(row, 'div', {
           class: 'col file-delete',
         });
-        delx.innerText = '[X]';
-        delx.addEventListener('click', handleDeleteFile);
+        de.innerText = '[X]';
+        de.addEventListener('click', handleDeleteFile);
       }
     } // addFileEntry()
 
@@ -380,12 +380,15 @@
         // missing comma in '"value","nextkey"' when there is \n
         t = t.replace(/"\s*\n\s*"/g, '","');
         // comma before close brackets
-        t = t.replace(/,\s*([\}\]])/g, '$1');
+        t = t.replace(/,\s*([}\]])/g, '$1');
 
         try {
           o = JSON.parse(t);
           if (o && typeof o === 'object') {
-            contentObj.innerText = JSON.stringify(o, null, 2);
+            t = JSON.stringify(o, null, 2);
+            t = t.replace(/\[\s+"([^,[\]]*)"\s+\]/g, '[ "$1" ]');
+            t = t.replace(/\{\s+"([^,{}}]*)"\s+\}/g, '{ "$1" }');
+            contentObj.innerText = t;
           }
         } finally {
           // do not report an error
