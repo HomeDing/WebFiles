@@ -2,19 +2,8 @@
 // document layout rules
 // This is part of the micro css implementation.
 
-// <nav> is a vertical menu that can slide in and out by using some scripting.
-// <nav> is used together with <main> for content
-// `inpage` class: nav is beside main content, not overlap
-// open class: nav is visible, maybe main needs to shift
-
 h2 {
   clear: both;
-}
-
-.s-md {
-  min-height: 4em;
-  padding: 0.4em;
-  max-width: 800px;
 }
 
 // Tables
