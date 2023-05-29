@@ -59,12 +59,11 @@
 </form>
 
 
-
 <div class="card" u-control="button" microID="${id}" u-is="button">
   <div class="block"><button u-text="title"></button></div>
 </div>
 
-<div class="card" u-control="digitalout" microID="${id}" u-is="generic">
+<div class="card" u-control="digitalvalue" microID="${id}" u-is="generic">
   <div u-is="include" ref=".cHead"></div>
   <div class="block Element">
     <span class="u-bool ux-value" u-active="value" style="position: absolute;top:0.5rem;right:0.5rem"></span>
@@ -112,6 +111,9 @@
 
 <div class="card" u-control="display" u-is="display" microID="${id}">
   <div class="block" style="display: flex;align-items: center;">
+    <svg class="setconfig">
+      <use href="./icons.svg#config" />
+    </svg>
     <svg class="icon" u-action="addpage" value="-1" style="margin:0;width:2rem">
       <use href="./icons.svg#minus"></use>
     </svg>

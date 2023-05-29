@@ -55,9 +55,8 @@ class DisplayWidgetClass extends GenericWidgetClass {
       this._rotation = parseInt(value);
       this._resize();
 
-    } else if (key === 'back') {
+    } else if (key === 'background') {
       this._dialogElem.style.backgroundColor = value.replace(/^x/, '#');
-      this._resize();
 
     } else if (key === 'page') {
       if (value !== this._page) {

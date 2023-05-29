@@ -713,6 +713,9 @@ class DisplayItemWidgetClass extends GenericWidgetClass {
         else if (key === 'color') {
             sty.color = value.replace(/^x/, '#');
         }
+        else if (key === 'background') {
+            sty.backgroundColor = value.replace(/^x/, '#');
+        }
     }
 }
 let DisplayDotWidgetClass = class DisplayDotWidgetClass extends DisplayItemWidgetClass {
@@ -826,9 +829,8 @@ let DisplayWidgetClass = class DisplayWidgetClass extends GenericWidgetClass {
             this._rotation = parseInt(value);
             this._resize();
         }
-        else if (key === 'back') {
+        else if (key === 'background') {
             this._dialogElem.style.backgroundColor = value.replace(/^x/, '#');
-            this._resize();
         }
         else if (key === 'page') {
             if (value !== this._page) {

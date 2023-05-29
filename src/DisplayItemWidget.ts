@@ -38,6 +38,9 @@ class DisplayItemWidgetClass extends GenericWidgetClass {
 
     } else if (key === 'color') {
       sty.color = value.replace(/^x/, '#');
+
+    } else if (key === 'background') {
+      sty.backgroundColor = value.replace(/^x/, '#');
     }
   }
 }

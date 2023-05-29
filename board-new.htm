@@ -94,7 +94,7 @@
         o.value = data[k.toLowerCase()];
 
       (l = createHTMLElement(g, 'label', { 'u-action': 'action' }))
-          .innerHTML = ic.replace('$', (isAction ? 'start' : 'no'));
+        .innerHTML = ic.replace('$', (isAction ? 'start' : 'no'));
       if (isAction) {
         // l.setAttribute('u-action', 'action');
         l.setAttribute('_event', k);
@@ -105,6 +105,14 @@
     d3.setAttribute('_id', data.type + '/' + data.id);
     var d = getDefs(data.type);
     getDefs("element").properties.forEach(k => add(k, false, false));
+
+    if (d.extends) {
+      const bd = getDefs(d.extends);
+      if (bd?.properties) { bd.properties.forEach(k => add(k, false, false)); }
+      if (bd?.events) { bd.events.forEach(k => add(k, true, false)); }
+      if (bd?.actions) { bd.actions.forEach(k => add(k, false, true)); }
+    }
+
     if (d?.properties) { d.properties.forEach(k => add(k, false, false)); }
     if (d?.events) { d.events.forEach(k => add(k, true, false)); }
     if (d?.actions) { d.actions.forEach(k => add(k, false, true)); }
@@ -182,10 +190,11 @@
       oEvent.disabled = false;
       createHTMLElement(oEvent, 'option', { disabled: true, selected: true, hidden: true, value: "" }).textContent = 'Select an action...';
 
-      const def = getDefs(oTarget.value).events;
-      if (def) {
-        def.forEach(a => { createHTMLElement(oEvent, 'option', { value: a }).textContent = a; });
-      }
+      const d = getDefs(oTarget.value);
+      const actionList = [].concat(
+        (d.extends ? getDefs(d.extends).events : []),
+        (d.extends.events ? d.extends.events : []));
+      actionList.forEach(a => { createHTMLElement(oEvent, 'option', { value: a }).textContent = a; });
     }
 
     if (data.srcEvent) {
