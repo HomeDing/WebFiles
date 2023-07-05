@@ -228,7 +228,8 @@ function MicroControl(isSelector) {
     };
 }
 var GenericWidgetClass_1;
-let GenericWidgetClass = GenericWidgetClass_1 = class GenericWidgetClass extends MicroControlClass {
+let GenericWidgetClass = class GenericWidgetClass extends MicroControlClass {
+    static { GenericWidgetClass_1 = this; }
     microid;
     data;
     actions;
@@ -1250,7 +1251,8 @@ PWMOutWidgetClass = __decorate([
     MicroControl('pwmout')
 ], PWMOutWidgetClass);
 var SceneWidgetClass_1;
-let SceneWidgetClass = SceneWidgetClass_1 = class SceneWidgetClass extends GenericWidgetClass {
+let SceneWidgetClass = class SceneWidgetClass extends GenericWidgetClass {
+    static { SceneWidgetClass_1 = this; }
     static _sceneCard;
     _buttonObj;
     connectedCallback() {
