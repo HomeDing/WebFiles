@@ -118,7 +118,7 @@ const assets = [
   { m: 'xml', src: 'favicon.svg' },
   // { m: 'xml', src: 'icons-mini.svg', tar:'icons.svg'},
   { m: 'css', src: 'iotstyle.scss', tar: 'iotstyle.css' },
-  { m: 'js', src: 'micro.js' },
+  { m: 'js', src: 'micro-mini.js', tar: 'micro.js' },
   { m: 'm', src: 'ding.htm' },
   { m: 'm', src: 'microide.htm' },
   { m: 'm', src: 'updateicons.min.htm', tar: 'updateicons.htm' }

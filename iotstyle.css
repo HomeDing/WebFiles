@@ -771,8 +771,17 @@ input.switch[type=range] {
 .display > span.dot.active {
   background-color: green;
 }
-.display > span.line {
-  border-top: 1px solid black;
+.display > button {
+  box-sizing: border-box;
+  display: inline-block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 10px;
+  overflow: hidden;
+  background-color: pink;
+  color: #111111;
+  border-radius: 0.4em;
 }
 
 .displayinc {

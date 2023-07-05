@@ -27,8 +27,8 @@ export class ProxyElement extends VirtualBaseElement {
   private nextTry = 0;
   private configs = ConfigCache.getInstance();
 
-  private TIMEOUT = 3000; // timeout for getting resaults from a device.
-  private NEXT_TRY = 8 * 1000; // duration for next data from device
+  private TIMEOUT_MS = 3 * 1000; // timeout for getting resaults from a device.
+  private NEXT_TRY_MS = 8 * 1000; // duration for next data from device
 
   setConfig(_bus: EventBusClass, config: any, _default = {}) {
     this.eventBus = _bus;
@@ -57,7 +57,7 @@ export class ProxyElement extends VirtualBaseElement {
     if (!this.requested && (Date.now() > this.nextTry)) {
       // fetch configuration
       this.requested = true;
-      this.nextTry = Date.now() + (this.NEXT_TRY * 1000);
+      this.nextTry = Date.now() + (this.NEXT_TRY_MS);
 
       if (!this.configJson) {
         try {
@@ -68,18 +68,22 @@ export class ProxyElement extends VirtualBaseElement {
           }
         } catch (e) {
           log.error('getConfig', e);
+          this.state.active = false;
         }
       }
 
       // fetch state
-      if (this.configJson) {
+      if (!this.configJson) {
+        this.state.active = false;
+      } else {
         try {
-          const r = await fetch(this.url, { signal: timeoutSignal(this.TIMEOUT) });
+          const r = await fetch(this.url, { signal: timeoutSignal(this.TIMEOUT_MS) });
           const j = await r.json() as any;
           const rs = j[`${this.type}/${this.id}`];
           this.state = Object.assign(this.state, rs);
         } catch (e) {
           log.error('getState', e);
+          this.state.active = false;
         }
       }
       this.requested = false;
@@ -91,7 +95,7 @@ export class ProxyElement extends VirtualBaseElement {
   // pass action to real element
   async doAction(action: any) {
     for (const a in action) {
-      await fetch(this.url + '?' + a + '=' + action[a], { signal: timeoutSignal(this.TIMEOUT) });
+      await fetch(this.url + '?' + a + '=' + action[a], { signal: timeoutSignal(this.TIMEOUT_MS) });
       this.nextTry = 0; // asap.
     }
   }

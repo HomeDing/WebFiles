@@ -46,7 +46,7 @@
   },
   "scripts": {
     "all": "npm run build && npm run test && npm run pack && npm run publish",
-    "build": "npm run build:ts && npm run build:css && npm run build:server",
+    "build": "npm run build:ts && npm run build:ts-mini && npm run build:css && npm run build:server",
     "test": "npm audit && npm run test:ts && npm run test:server && npm run test:css",
     "pack": "npm run pack:icons && npm run pack:dist && npm run pack:minimal && npm run pack:embed",
     "publish": "npm run publish:doku && npm run publish:webfiles",
@@ -56,6 +56,7 @@
     "build:css-watch": "npm run build:css -- -w",
     "build:server": "tsc -p server",
     "build:ts": "tsc -p src",
+    "build:ts-mini": "tsc -p src --project src\\tsconfig.mini.json",
     "build:ts-watch": "npm run build:ts -- -w",
     "test:server": "eslint ./server/*.ts",
     "test:css": "stylelint *.scss css/*.scss",

@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "display": "client-side",
+  "extends": "./tsconfig.json",
+  
+  "compilerOptions": {
+    "target": "ES2022",
+    "strict": true,
+    "outFile": "../micro-mini.js",
+
+    // "allowJs": false,
+    // "experimentalDecorators": true,
+    // "lib": [
+    //   "es2015",
+    //   "es6",
+    //   "dom",
+    //   "dom.iterable"
+    // ],
+    // "skipLibCheck": true,
+    // "forceConsistentCasingInFileNames": true,
+    // "allowUnusedLabels": false,
+    // "allowUnreachableCode": false,
+
+    // "noUnusedLocals": true,
+    // "noUnusedParameters": true,
+    // "noFallthroughCasesInSwitch": true,
+    // "noImplicitOverride": true,
+    // "noImplicitReturns": true,
+    // "noPropertyAccessFromIndexSignature": true,
+    // "noUncheckedIndexedAccess": true,
+
+    "sourceMap": true,
+    "newLine": "LF",
+    "removeComments": true,
+    "downlevelIteration": true
+  },
+  "include": [
+    "./*.ts"
+  ],
+  "exclude": [
+    "./Display*.ts",
+    "./LogWidget.ts"
+  ]
+
+}
