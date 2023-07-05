@@ -2,15 +2,6 @@
   "time": {
     "clock": { "onminute": "displaytext/time?value=$v" }
   },
-  "xdisplayline": {
-    "h1": {
-      "color": "black",
-      "x": 30,
-      "y": 40,
-      "x1": 290,
-      "y1": 40
-    }
-  },
   "displayline": {
     "v1": {
       "color": "black",
@@ -66,7 +57,7 @@
       "text": "Red",
       "x":  10, "y": 90,
       "w":  200, "h":  52,
-      "color": "xff4444", "background": "x440000",
+      "color": "white", "background": "x880000",
       "onclick": "color/l?value=red"
     },
     "green": {

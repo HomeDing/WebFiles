@@ -42,7 +42,10 @@
     "hub": "readonly",
     "jsonFind": "readonly",
     "updateState": "readonly",
-    "jsonLocate": "readonly"
+    "jsonLocate": "readonly",
+    "getHashParams": "readonly",
+    "DialogClass": "readonly"
+
 
   }
 }
