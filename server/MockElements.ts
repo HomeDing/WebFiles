@@ -243,6 +243,8 @@ export function register(registry: RegistryClass) {
   registry.registerType('color', MockStandard);
   registry.registerType('my9291', MockStandard);
   registry.registerType('p9813', MockStandard);
+  registry.registerType('scene', MockStandard);
+  registry.registerType('select', MockStandard);
 
   registry.registerType('bl0937', MockBL0937);
 }

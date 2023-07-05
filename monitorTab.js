@@ -28,6 +28,8 @@ class TableSortable extends HTMLTableElement {
 
 
   compareDate(a, b) {
+    if (!a.key) { return -1; }
+    if (!b.key) { return 1; }
     var aDate = new Date(a.key);
     var bDate = new Date(b.key);
     if (aDate < bDate) { return -1; }

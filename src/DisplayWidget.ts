@@ -11,7 +11,7 @@
 class DisplayWidgetClass extends GenericWidgetClass {
   _page!: string;
   _dialogElem!: HTMLElement;
-  _bk!: HTMLElement;
+  _svg!: SVGElement;
   _height = 64;
   _width = 64;
   _rotation = 0;
@@ -36,7 +36,7 @@ class DisplayWidgetClass extends GenericWidgetClass {
     super.connectedCallback();
     this._page = '';
     this._dialogElem = this.querySelector('.display') as HTMLElement;
-    this._bk = this.querySelector('.bk') as HTMLElement;
+    this._svg = this.querySelector('svg') as SVGElement;
   }
 
   // new value is set in the element.

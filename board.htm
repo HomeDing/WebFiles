@@ -313,11 +313,6 @@
       var params = { sys: false };
       var timer;
 
-      // Element type reuse
-      var alias = {
-        "my9291": "light"
-      };
-
       async function loadPlugins() {
         var ret;
         if (!document.querySelector('dialog#addElement')) {
@@ -403,7 +398,7 @@
                 }
                 var e = micro.insertTemplate(panelObj, t, p);
                 if (!e) {
-                  t = def.ui || alias[t] || 'generic';
+                  t = def?.ui || 'generic';
                   e = micro.insertTemplate(panelObj, t, p);
                 }
               } // if

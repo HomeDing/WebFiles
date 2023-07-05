@@ -1,0 +1,85 @@
+{
+  "device/0": {
+    "active": "true",
+    "name": "panel480",
+    "title": "Panel480",
+    "description": "Panel with 480 px",
+    "safemode": "0",
+    "sd": "1",
+    "nextboot": "4294966720"
+  },
+  "ota/0": {
+    "active": "true"
+  },
+  "ntptime/on": {
+    "active": "true",
+    "now": "2023-07-03 14:19:06"
+  },
+  "diag/0": {
+    "active": "true"
+  },
+  "light/l": {
+    "active": "true",
+    "value": "#004466aa",
+    "enable": "1",
+    "brightness": "20"
+  },
+  "color/l": {
+    "active": "true",
+    "mode": "0",
+    "value": "x004466aa",
+    "duration": "4000",
+    "brightness": "20"
+  },
+  "analog/ldr": {
+    "active": "true",
+    "value": "0",
+    "reference": "0"
+  },
+  "displayst7796/0": {
+    "active": "true",
+    "brightness": "80",
+    "page": "1"
+  },
+  "displaytouchgt911/0": {
+    "active": "true"
+  },
+  "time/clock": {
+    "active": "true"
+  },
+  "displayline/v1": {
+    "active": "true"
+  },
+  "displayline/v2": {
+    "active": "true"
+  },
+  "displayline/h1": {
+    "active": "true"
+  },
+  "displayline/h2": {
+    "active": "true"
+  },
+  "displaytext/time": {
+    "active": "true",
+    "value": "14:19"
+  },
+  "displaytext/push": {
+    "active": "true",
+    "value": "push"
+  },
+  "displaybutton/red": {
+    "active": "true"
+  },
+  "displaybutton/green": {
+    "active": "true"
+  },
+  "displaybutton/blue": {
+    "active": "true"
+  },
+  "displaybutton/start": {
+    "active": "true"
+  },
+  "displaybutton/stop": {
+    "active": "true"
+  }
+}

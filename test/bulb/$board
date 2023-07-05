@@ -11,11 +11,11 @@
   "ota/0": {
     "active": "true"
   },
-  "switch/en": {
+  "switch/0": {
     "active": "true",
     "value": "0"
   },
-  "color/l": {
+  "color/0": {
     "active": "true",
     "mode": "0",
     "value": "x2000070f",
@@ -23,7 +23,7 @@
     "saturation": "255",
     "lightness": "127"
   },
-  "my9291/l": {
+  "my9291/0": {
     "active": "true",
     "value": "x2000070f",
     "enable": "0",

@@ -1,25 +1,81 @@
 {
+  "select": {
+    "scenes": {
+      "cycle": "true",
+      "options": [
+        { "key": "warm" },
+        { "key": "TV" },
+        { "key": "Dinner" },
+        { "key": "Bright" },
+        { "key": "Off" }
+      ],
+      "onkey": "scene/$v?start=1,bulb02:scene/$v?start=1,bulb04:scene/$v?start=1",
+      "title": "select/scenes"
+    }
+  },
+  "scene": {
+    "warm": {
+      "title": "warm",
+      "steps": [
+        "color/0?value=x02100200",
+        "color/0?brightness=40",
+        "switch/0?value=1"
+      ]
+    },
+    "tv": {
+      "title": "tv",
+      "steps": [
+        "color/0?value=x02146da3",
+        "color/0?brightness=20",
+        "switch/0?value=1"
+      ]
+    },
+    "dinner": {
+      "title": "Dinner",
+      "steps": [
+        "color/0?value=x04200200",
+        "color/0?brightness=80",
+        "switch/0?value=1"
+      ]
+    },
+    "bright": {
+      "title": "Bright",
+      "steps": [
+        "color/0?value=white",
+        "color/0?brightness=100",
+        "switch/0?value=1"
+      ]
+    },
+    "off": {
+      "title": "Off",
+      "steps": [
+        "switch/0?value=0"
+      ]
+    }
+  },
   "switch": {
-    "en": {
+    "0": {
       "title": "bulb01",
       "description": "switch on/off",
-      "onvalue": "my9291/l?enable=$v",
+      "onvalue": "my9291/0?enable=$v",
       "value": "0"
     }
   },
   "color": {
-    "l": {
+    "0": {
       "title": "color-control",
       "config": "WRGB",
-      "mode": "fix",
-      "duration": "2",
-      "brightness": "123",
+      "mode": "fade",
+      "duration": "4",
+      "brightness": "40",
       "value": "x2000070F",
-      "onvalue": "my9291/l?value=$v"
+      "connect": [
+        "my9291/0"
+      ]
     }
   },
   "my9291": {
-    "l": {
+    "0": {
       "title": "bulb01",
       "datapin": "4",
       "clockpin": "5",
