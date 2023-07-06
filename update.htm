@@ -1,4 +1,7 @@
-<!-- This is the source file for the built-in update dialog in HomeDing devices. -->
+<!--
+  This is the source file for the built-in update dialog in HomeDing devices. 
+  like http://plug02/$update
+-->
 
 <!doctype html>
 <html lang="en">
@@ -12,17 +15,18 @@
 <body style="width:300px">
   <h1>Web Update</h1>
   <div style="display:grid">
-    <progress value=0 max=1></progress>
+    <progress value=0 max=20></progress>
     <span id='l'></span>
   </div>
   <div style="text-align: right;"><button>Start</button></div>
 
   <hr>
-  <p style="text-align: right;"><a href="/updateicons.htm" title="next step" style="text-decoration: none;">&gt;&gt;&gt;</a></p>
+  <p style="text-align: right;"><a href="/updateicons.htm" title="next step"
+      style="text-decoration: none;">&gt;&gt;&gt;</a></p>
   <script>
     var s = 0;
-    // s == 0 => not started yet
-    // s == 1 => fetching list
+    // s == 0 => fetching list
+    // s == 1 => fetching sysinfo
     // s == 2 => cleanweb
     // s == 3 => copy file 
     // s == 4 => wait for file finished 
@@ -30,18 +34,16 @@
     var repo = 'https://homeding.github.io/';
     var d = document;
     var eBar = d.querySelector('progress');
-    var done = 0;
-    var work = null;
-    var timer = 0;
+    var x = 0; // done
+    var a = 0; // active
+    var w; ///< working list
+    var si; // sysinfo
+    var t = 0; // timer
     var seed = "?" + new Date().valueOf();
 
     function log(t) {
       d.querySelector('#l').innerText = t;
     } // log
-
-    function next() {
-      s = 3;
-    } // next
 
     if (location.hash) {
       repo += location.hash.substring(1) + '/';
@@ -50,73 +52,84 @@
     }
     log('loading from:\n' + repo);
 
-    /** fetch list of files */
-    function doS() {
-      fetch(repo + 'list.txt' + seed)
-        .then(function (result) {
-          return result.text();
-        })
-        .then(function (t) {
-          work = t.replace(/\r?\n/g, ';').replace(/;$/, '').split(';');
-          eBar.max = work.length;
-        });
-    } // doS()
-
 
     // grab next file
     function doF() {
-      s = 3; // wait
-      var theItem = work.shift();
+      var theItem = w.shift();
 
       // set progress
-      eBar.value = ++done;
+      eBar.value = ++x;
       log(theItem);
 
       if (theItem[0] === '-') {
-        next();
+        a = 0;
+
       } else {
         fetch(repo + theItem + seed)
-          .catch(next)
-          .then(function (result) {
-            return result.arrayBuffer();
-          })
-          .then(function (buf) {
+          .then(result => result.arrayBuffer())
+          .then(function(buf) {
             var formData = new FormData();
             formData.append('file', new Blob([buf]), '/' + theItem);
-            fetch('/', { method: 'POST', body: formData }).then(next);
+            fetch('/', { method: 'POST', body: formData })
+              .then(() => { a = 0; });
           });
       }
     } // doF()
 
 
-    d.querySelector('button').addEventListener('click', function () {
-      timer = window.setInterval(function () {
-        if (s == 0) { // not yet started
-          // fetch file list;
-          log('get...');
-          s++;
-          doS();
+    d.querySelector('button').addEventListener('click', function() {
+      t = window.setInterval(function() {
+        if (a) {
+          // wait
+        } else {
+          a = 1;
+          if (s == 0) { // not yet started
+            // fetch file list;
+            log('sysinfo...');
+            fetch('/api/sysinfo' + seed)
+              .then(result => result.text())
+              .then(t => {
+                si = t;
+                eBar.value = ++x;
+                a = 0;
+              });
+            s++;
 
-        } else if ((s == 1) && (work)) {
-          // clean files in filesystem first
-          log('clean...');
-          s++;
-          fetch('/api/cleanweb')
-            .then(function (result) {
-              s++;
-            });
+          } else if (s == 1) {
+            log('list...');
+            si = JSON.parse(si);
+            if (si.fsTotalBytes < 200000) {
+              repo = repo.replace(/(v\d+)\/$/, "$1m/");
+            }
 
-          // } else if (s == 2)  { nothing... }
+            fetch(repo + 'list.txt' + seed)
+              .then(result => result.text())
+              .then(t => {
+                w = t.replace(/\r?\n/g, ';').replace(/;$/, '').split(';');
+                eBar.max = w.length + 3;
+                a = 0;
+              });
+            s++;
 
-        } else if (s == 3) {
-          if (work.length > 0) {
-            doF();
-          } else {
-            window.clearInterval(timer);
-            log('done');
+          } else if (s == 2) {
+            // clean files in filesystem first
+            log('clean...');
+            fetch('/api/cleanweb')
+              .then(() => {
+                eBar.value = ++x;
+                s++;
+                a = 0;
+              });
+
+          } else if (s == 3) {
+            if (w.length > 0) {
+              doF();
+            } else {
+              window.clearInterval(t);
+              eBar.value = ++x;
+              log('done');
+            }
           }
-
-          // } else if (s == 4)  { nothing... }
         }
       }, 100);
     });

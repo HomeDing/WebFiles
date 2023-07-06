@@ -6,38 +6,16 @@
   "compilerOptions": {
     "target": "ES2022",
     "strict": true,
-    "outFile": "../micro-mini.js",
-
-    // "allowJs": false,
-    // "experimentalDecorators": true,
-    // "lib": [
-    //   "es2015",
-    //   "es6",
-    //   "dom",
-    //   "dom.iterable"
-    // ],
-    // "skipLibCheck": true,
-    // "forceConsistentCasingInFileNames": true,
-    // "allowUnusedLabels": false,
-    // "allowUnreachableCode": false,
-
-    // "noUnusedLocals": true,
-    // "noUnusedParameters": true,
-    // "noFallthroughCasesInSwitch": true,
-    // "noImplicitOverride": true,
-    // "noImplicitReturns": true,
-    // "noPropertyAccessFromIndexSignature": true,
-    // "noUncheckedIndexedAccess": true,
-
-    "sourceMap": true,
-    "newLine": "LF",
-    "removeComments": true,
-    "downlevelIteration": true
+    "outFile": "../micro-mini.js"
   },
+
   "include": [
     "./*.ts"
   ],
+
   "exclude": [
+    "./FormJson.ts",
+    "./Dialog.ts",
     "./Display*.ts",
     "./LogWidget.ts"
   ]
