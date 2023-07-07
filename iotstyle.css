@@ -462,7 +462,7 @@ main {
 }
 .card > .block.header h3,
 .card > .block.header h4 {
-  margin-bottom: 0;
+  margin: 0;
 }
 .card > .block.footer {
   padding: 0.5rem 1rem;
