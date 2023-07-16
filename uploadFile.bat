@@ -1,4 +1,5 @@
 @echo off
+@echo "use uploadFile <devicename> <file1> <file2>"
 
 if [%1]==[] (
   echo missing device name as parameter
@@ -13,6 +14,7 @@ if [%2]==[] (
 set devicename=%1
 set curlopts=--retry 3
 
+:next
 echo upload file %2 to device %devicename%.
 
 curl --form "fileupload=@%2;filename=/%2" http://%devicename%/ %curlopts%
@@ -22,6 +24,11 @@ if %ERRORLEVEL% EQU 0 (
 ) else (
   echo Upload failed, reason %errorlevel%
   exit /b %errorlevel%
+)
+
+if not [%3]==[] (
+  shift /2
+  goto :next
 )
 
 :end
