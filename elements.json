@@ -1,7 +1,7 @@
 {
   "device": {
     "sys": "true",
-    "properties": ["room", "name", "led", "button", "i2c-sda", "i2c-scl", "safemode", "sd", "reboottime", "logfile", "onstart", "onsysstart", "cache"],
+    "properties": ["room", "name", "i2c-sda", "i2c-scl", "safemode", "sd", "reboottime", "logfile", "cache"],
     "actions": ["log"],
     "events": ["onSysStart", "onStart"]
   },
@@ -53,7 +53,7 @@
 
   "button": {
     "properties": [],
-    "events": ["value"],
+    "actions": ["value"],
     "events": ["onclick", "ondoubleclick", "onpress"]
   },
 
