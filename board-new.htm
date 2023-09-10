@@ -32,7 +32,7 @@
     <div class="form-grid">
       <h4 class="wide">on Event:</h4>
       <label>Source:</label><input name="srcId" required />
-      <label>Event:</label><select name="srcEvent" required></select>
+      <label>Event:</label><select name="event" required></select>
       <h4 class="wide">send Action:</h4>
       <label>Target:</label><select name="target" required></select>
       <label>Action:</label><select name="action" required></select>
@@ -157,22 +157,26 @@
     const form = evt.detail.form;
     const data = evt.detail.data;
 
+    const oAction = form.querySelector('SELECT[name=action]');
     const oTarget = form.querySelector('SELECT[name=target]');
-    const oSrcEvent = form.querySelector('SELECT[name=srcEvent]');
-debugger;
+    const oEvent = form.querySelector('SELECT[name=event]');
     oTarget.innerHTML = '';
 
     function listEvents() {
-      createHTMLElement(oSrcEvent, 'option', { disabled: true, selected: true, hidden: true, value: "" }).textContent = 'Select a event...';
-      const def = getDefs(data.srcId).actions;
-      if (def) {
-        def.forEach(a => { createHTMLElement(oSrcEvent, 'option', { value: a }).textContent = a; });
+      oEvent.innerHTML = '';
+      oEvent.value = '';
+      oEvent.disabled = false;
+      createHTMLElement(oEvent, 'option', { disabled: true, selected: true, hidden: true, value: "" }).textContent = 'Select event...';
+      const eventList = getDefs(data.srcId).events || [];
+      eventList.forEach(a => { createHTMLElement(oEvent, 'option', { value: a }).textContent = a; });
+      if (eventList.length === 1) {
+        oEvent.selectedIndex = 1;
       }
     }
 
     function listTargets() {
       // populate target dropdown with existing type/id elements
-      createHTMLElement(oTarget, 'option', { disabled: true, selected: true, hidden: true, value: "" }).textContent = 'Select a target...';
+      createHTMLElement(oTarget, 'option', { disabled: true, selected: true, hidden: true, value: "" }).textContent = 'Select target...';
       for (const t in uElements.config) {
         for (const i in uElements.config[t]) {
           const id = t + '/' + i;
@@ -184,24 +188,23 @@ debugger;
 
     // populate options for selecting a action for the target
     function listActions() {
-      const oEvent = form.querySelector('SELECT[name=action]');
-      oEvent.innerHTML = '';
-      oEvent.value = '';
-      oEvent.disabled = false;
-      createHTMLElement(oEvent, 'option', { disabled: true, selected: true, hidden: true, value: "" }).textContent = 'Select an action...';
+      oAction.innerHTML = '';
+      oAction.value = '';
+      oAction.disabled = false;
+      createHTMLElement(oAction, 'option', { disabled: true, selected: true, hidden: true, value: "" }).textContent = 'Select action...';
 
       const d = getDefs(oTarget.value);
       const actionList = [].concat(
         (d.extends ? getDefs(d.extends).actions : []),
         (d.actions ? d.actions : []));
-      actionList.forEach(a => { createHTMLElement(oEvent, 'option', { value: a }).textContent = a; });
+      actionList.forEach(a => { createHTMLElement(oAction, 'option', { value: a }).textContent = a; });
       if (actionList.length === 1) {
-        oEvent.selectedIndex = 1;
+        oAction.selectedIndex = 1;
       }
     }
 
     if (data.srcEvent) {
-      createHTMLElement(oSrcEvent, 'option', { value: data.srcEvent }).textContent = data.srcEvent;
+      createHTMLElement(oEvent, 'option', { value: data.srcEvent }).textContent = data.srcEvent;
       // oSrcEvent
     } else {
       listEvents();

@@ -409,10 +409,6 @@
         node._x = constrain(node._x + node._fx * 0.1, 0, PANEL_WIDTH - 1);
         node._y = constrain(node._y + node._fy * 0.1, 1, PANEL_HEIGHT - 1);
       }
-      // console.log(node._y);
-      // if (node._y > PANEL_HEIGHT)
-      //   debugger;
-      // node._y = constrain(node._y + node._fy * 0.1, 1, PANEL_HEIGHT);
     }
 
     function moveNodes() {
@@ -453,13 +449,10 @@
           obj = e.obj = document.querySelector('#templates .node').cloneNode(true);
           nodesObj.appendChild(obj);
           obj.id = nodeId;
-          // disable outgoing pin ?
+
+          // ingoing pin is always visible. disable outgoing pin ?
           if (ed) {
-            if ((!ed.events) || (ed.events.length == 0)) {
-              const pin = obj.querySelector('[pin="in"]');
-              if (pin) pin.style.display = "none";
-            }
-            if ((!ed.actions) || (ed.actions.length == 0)) {
+            if ((!ed.events) || (ed.actions.length == 0)) {
               const pin = obj.querySelector('[pin="out"]');
               if (pin) pin.style.display = "none";
             }
