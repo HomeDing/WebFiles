@@ -8,14 +8,14 @@
         <option disabled selected hidden value="">Select Element...</option>
       </select>
       <label>ID:</label>
-      <input name="id" required pattern="[0-9a-z]+" placeholder="enter a name ...">
+      <input name="id" required pattern="[0-9a-z]+" placeholder="enter a name ..." maxlength="12">
     </div>
     <div><button u-action="next:configElement" type="submit" style="float:right">Next</button></div>
   </form>
 </dialog>
 
 <dialog id="configElement" u-is="dialog">
-  <h2>Config <span u-text="type"></span>/<span u-text="id"></span></h2>
+  <h2><span u-text="type"></span>/<span u-text="id"></span> Configuration</h2>
   <div class="u-close" u-action="close"></div>
 
   <form is="form-json" method="dialog">
@@ -25,15 +25,15 @@
 </dialog>
 
 <dialog id="action" u-is="dialog">
-  <h2>Config Action...</h2>
+  <h2>Event Configuration</h2>
   <div class="u-close" u-action="close"></div>
 
   <form method="dialog" is="form-json">
     <div class="form-grid">
-      <h4 class="wide">triggered by:</h4>
+      <h4 class="wide">on Event:</h4>
       <label>Source:</label><input name="srcId" required />
       <label>Event:</label><select name="srcEvent" required></select>
-      <h4 class="wide">triggers:</h4>
+      <h4 class="wide">send Action:</h4>
       <label>Target:</label><select name="target" required></select>
       <label>Action:</label><select name="action" required></select>
       <label>Value:</label><input name="value" value="$v" required />
@@ -88,15 +88,14 @@
       createHTMLElement(fg, 'label').textContent = k + ':';
       const g = createHTMLElement(fg, 'div', { class: 'form-inline' });
 
-      l = createHTMLElement(g, 'label').innerHTML = ic.replace('$', (isEvent ? 'start' : 'no'));
+      l = createHTMLElement(g, 'label').innerHTML = ic.replace('$', (isAction ? 'start' : 'no'));
       const o = createHTMLElement(g, 'input', { name: k, style: 'width:18ch' });
       if (data[k.toLowerCase()])
         o.value = data[k.toLowerCase()];
 
       (l = createHTMLElement(g, 'label', { 'u-action': 'action' }))
-        .innerHTML = ic.replace('$', (isAction ? 'start' : 'no'));
-      if (isAction) {
-        // l.setAttribute('u-action', 'action');
+        .innerHTML = ic.replace('$', (isEvent ? 'start' : 'no'));
+      if (isEvent) {
         l.setAttribute('_event', k);
       }
     } // add()
@@ -160,6 +159,7 @@
 
     const oTarget = form.querySelector('SELECT[name=target]');
     const oSrcEvent = form.querySelector('SELECT[name=srcEvent]');
+debugger;
     oTarget.innerHTML = '';
 
     function listEvents() {
@@ -192,9 +192,12 @@
 
       const d = getDefs(oTarget.value);
       const actionList = [].concat(
-        (d.extends ? getDefs(d.extends).events : []),
-        (d.extends.events ? d.extends.events : []));
+        (d.extends ? getDefs(d.extends).actions : []),
+        (d.actions ? d.actions : []));
       actionList.forEach(a => { createHTMLElement(oEvent, 'option', { value: a }).textContent = a; });
+      if (actionList.length === 1) {
+        oEvent.selectedIndex = 1;
+      }
     }
 
     if (data.srcEvent) {

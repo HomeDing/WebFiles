@@ -6,6 +6,12 @@
     "events": ["onSysStart", "onStart"]
   },
 
+  "state": {
+    "sys": "true",
+    "properties": ["savedelay"],
+    "events": ["clear"]
+  },
+
   "sdmmc": {
     "sys": "true",
     "properties": ["mmcD0", "mmcD1", "mmcD2", "mmcD3", "mmcCLK", "mmcCMD"]

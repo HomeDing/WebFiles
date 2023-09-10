@@ -12,7 +12,7 @@ echo *** Updating public released files on homeding.github.io...
 
 if [%1]==[] (
   echo missing version parameter
-  echo use updateWebFiles.bat v04
+  echo use updateWebFiles.bat v10
   goto :end
 )
 
