@@ -182,18 +182,12 @@
     "events": ["onpage"]
   },
 
-  "displaysh1106???": {
-    "ui": "display",
-    "properties": ["address", "readtime", "resetpin", "height", "brightness"],
-    "actions": ["page", "addpage", "clear"],
-    "events": ["onpage"]
-  },
-
-  "displayssd1306":{ "ui": "display", "extends": "display"},
-
+  "displayssd1306":{ "extends": "display", "ui": "display" },
+  "displaysh1106": { "extends": "display", "ui": "display" },
   "displayst7735": { "extends": "display", "ui": "display" },
   "displayst7789": { "extends": "display", "ui": "display" },
   "displayst7796": { "extends": "display", "ui": "display" },
+  "displaytouchgt911": { "icon": "default" },
   "displaypanel": { "extends": "display", "ui": "display" },
 
   "tm1637": {

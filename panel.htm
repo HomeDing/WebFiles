@@ -135,7 +135,7 @@
       addNode(id, t, s) {
         var n = this.nodes[id] ?? (this.nodes[id] = {});
         n.id = id;
-        n.icon = uElements.defs[t].icon || t;
+        n.icon = uElements.defs[t]?.icon || t;
         n.conf = s;
         n._x = 0;
         n._y = 0;
@@ -452,7 +452,7 @@
 
           // ingoing pin is always visible. disable outgoing pin ?
           if (ed) {
-            if ((!ed.events) || (ed.actions.length == 0)) {
+            if ((!ed.events) || (ed.events.length == 0)) {
               const pin = obj.querySelector('[pin="out"]');
               if (pin) pin.style.display = "none";
             }
