@@ -44,18 +44,20 @@ class DisplayLineWidgetClass extends DisplayItemWidgetClass {
   override newData(path: string, key: string, value: string) {
     const e: SVGLineElement = this._elem as any as SVGLineElement;
 
-    if (key === 'x') {
-      e.x1.baseVal.value = Number(value);
-    } else if (key === 'y') {
-      e.y1.baseVal.value = Number(value);
-    }
-    else if (key === 'x1') { e.x2.baseVal.value = Number(value); }
-    else if (key === 'y1') { e.y2.baseVal.value = Number(value); }
-    else if (key === 'color') {
-      e.style.stroke = value;
-    }
-    else {
-      super.newData(path, key, value);
+    if (e) {
+      if (key === 'x') {
+        e.x1.baseVal.value = Number(value);
+      } else if (key === 'y') {
+        e.y1.baseVal.value = Number(value);
+      }
+      else if (key === 'x1') { e.x2.baseVal.value = Number(value); }
+      else if (key === 'y1') { e.y2.baseVal.value = Number(value); }
+      else if (key === 'color') {
+        e.style.stroke = value;
+      }
+      else {
+        super.newData(path, key, value);
+      }
     }
   } // newData
 

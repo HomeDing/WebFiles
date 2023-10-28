@@ -1,6 +1,5 @@
 // Proxy remote elements to local virtual elements
 
-import fetch from 'node-fetch';
 import timeoutSignal from 'timeout-signal';
 
 import { EventBusClass } from './EventBus.js';

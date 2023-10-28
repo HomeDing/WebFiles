@@ -701,21 +701,23 @@ class DisplayItemWidgetClass extends GenericWidgetClass {
     }
     newData(path, key, value) {
         super.newData(path, key, value);
-        const sty = this._elem.style;
-        if (key === 'x') {
-            sty.left = value + (this._grid > 1 ? 'ch' : 'px');
-        }
-        else if (key === 'y') {
-            sty.top = value + (this._grid > 1 ? 'em' : 'px');
-        }
-        else if (key === 'page') {
-            this._elem.setAttribute('displayPage', value);
-        }
-        else if (key === 'color') {
-            sty.color = value.replace(/^x/, '#');
-        }
-        else if (key === 'background') {
-            sty.backgroundColor = value.replace(/^x/, '#');
+        if (this._elem) {
+            const sty = this._elem.style;
+            if (key === 'x') {
+                sty.left = value + (this._grid > 1 ? 'ch' : 'px');
+            }
+            else if (key === 'y') {
+                sty.top = value + (this._grid > 1 ? 'em' : 'px');
+            }
+            else if (key === 'page') {
+                this._elem.setAttribute('displayPage', value);
+            }
+            else if (key === 'color') {
+                sty.color = value.replace(/^x/, '#');
+            }
+            else if (key === 'background') {
+                sty.backgroundColor = value.replace(/^x/, '#');
+            }
         }
     }
 }
@@ -801,23 +803,25 @@ let DisplayLineWidgetClass = class DisplayLineWidgetClass extends DisplayItemWid
     }
     newData(path, key, value) {
         const e = this._elem;
-        if (key === 'x') {
-            e.x1.baseVal.value = Number(value);
-        }
-        else if (key === 'y') {
-            e.y1.baseVal.value = Number(value);
-        }
-        else if (key === 'x1') {
-            e.x2.baseVal.value = Number(value);
-        }
-        else if (key === 'y1') {
-            e.y2.baseVal.value = Number(value);
-        }
-        else if (key === 'color') {
-            e.style.stroke = value;
-        }
-        else {
-            super.newData(path, key, value);
+        if (e) {
+            if (key === 'x') {
+                e.x1.baseVal.value = Number(value);
+            }
+            else if (key === 'y') {
+                e.y1.baseVal.value = Number(value);
+            }
+            else if (key === 'x1') {
+                e.x2.baseVal.value = Number(value);
+            }
+            else if (key === 'y1') {
+                e.y2.baseVal.value = Number(value);
+            }
+            else if (key === 'color') {
+                e.style.stroke = value;
+            }
+            else {
+                super.newData(path, key, value);
+            }
         }
     }
 };
