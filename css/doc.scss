@@ -102,6 +102,21 @@ img[title='w600'] {
   border-radius: 0.4rem;
 }
 
+
+// mark links to external sites
+
+a[href^='http']::after {
+  content: '';
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  vertical-align: text-bottom;
+  margin-left: 0.25em;
+  background-size: 1em;
+  background-image: url("data:image/svg+xml, %3Csvg viewBox='0 0 48 48' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M22.689 4v4.918h13.114l-17.049 17.05 3.279 3.606 17.377-17.05v12.787H44V4z' /%3E%3Cpath d='M33 22.99V40H8V15h17v-4l-21 .001V44h33V22.952z' /%3E%3C/svg%3E");
+}
+
+
 // formatted code blocks
 
 @media print {

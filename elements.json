@@ -1,7 +1,9 @@
 {
   "device": {
     "sys": "true",
-    "properties": ["room", "name", "i2c-sda", "i2c-scl", "safemode", "sd", "reboottime", "logfile", "cache"],
+    "properties": ["room", "name", "safemode", "sd", "reboottime", "logfile", "cache",
+    "i2c-scl", "i2c-sda",
+    "spi-scl", "spi-miso", "spi-mosi"], 
     "actions": ["log"],
     "events": ["onSysStart", "onStart"]
   },
@@ -187,8 +189,16 @@
   "displayst7735": { "extends": "display", "ui": "display" },
   "displayst7789": { "extends": "display", "ui": "display" },
   "displayst7796": { "extends": "display", "ui": "display" },
-  "displaytouchgt911": { "icon": "default" },
-  "displaypanel": { "extends": "display", "ui": "display" },
+
+  "displaytouchgt911": { "icon": "default",
+    "properties": ["address", "width", "height", "rotation", "interruptpin", "resetpin"]
+  },
+
+  "displaytouchft6336": { "icon": "default",
+    "properties": ["width", "height", "rotation", "interruptpin", "resetpin"]
+  },
+
+  "displayesp32panel": { "extends": "display", "ui": "display" },
 
   "tm1637": {
     "properties": ["datapin", "clockpin"],
