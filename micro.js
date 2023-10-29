@@ -1436,11 +1436,13 @@ function createHTMLElement(parentNode, tag, attr, beforeNode = null) {
             o.setAttribute(a, attr[a]);
         }
     }
-    if (beforeNode) {
-        parentNode.insertBefore(o, beforeNode);
-    }
-    else {
-        parentNode.appendChild(o);
+    if (parentNode) {
+        if (beforeNode) {
+            parentNode.insertBefore(o, beforeNode);
+        }
+        else {
+            parentNode.appendChild(o);
+        }
     }
     return (o);
 }
