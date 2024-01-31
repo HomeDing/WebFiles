@@ -35,9 +35,9 @@
     "sass": "^1.56.1",
     "shelljs": "^0.8.5",
     "shx": "^0.3.4",
-    "stylelint": "^15.10.1",
-    "stylelint-config-standard-scss": "^11.0.0",
-    "stylelint-scss": "^5.0.0",
+    "stylelint": "^16.2.0",
+    "stylelint-config-standard-scss": "^13.0.0",
+    "stylelint-scss": "^6.1.0",
     "svgstore": "^3.0.1",
     "terser": "^5.16.0",
     "typescript": "^5.0.2"
