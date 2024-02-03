@@ -152,6 +152,7 @@ a:hover {
 h2,
 h3,
 h4 {
+  text-wrap: balance;
   font-family: arial, ui-sans-serif, sans-serif;
   font-weight: bold;
 }

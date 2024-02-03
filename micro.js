@@ -878,7 +878,10 @@ let DisplayWidgetClass = class DisplayWidgetClass extends GenericWidgetClass {
         }
         sty.width = w + 'px';
         sty.height = h + 'px';
-        if (w > 260) {
+        if (w <= 128) {
+            sty.setProperty('zoom', '2');
+        }
+        else if (w > 260) {
             this.classList.add('wide');
         }
     }

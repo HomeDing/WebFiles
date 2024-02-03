@@ -28,8 +28,12 @@
     "actions": ["start", "stop"]
   },
 
-  "analog": {
-    "properties": ["readtimems", "hysteresis", "pin", "reference", "mapinmin", "mapinmax", "mapoutmin", "mapoutmax"],
+  "sensor": {
+    "properties": ["warmuptime", "readtime", "resendtime", "restart"]
+  },
+
+  "analog": { "extends": "sensor",
+    "properties": ["pin", "hysteresis", "reference", "mapinmin", "mapinmax", "mapoutmin", "mapoutmax"],
     "events": ["onvalue", "onreference", "onhigh", "onlow"]
   },
 
@@ -179,7 +183,7 @@
 
   "display":{
     "ui": "display",
-    "properties": ["color", "background", "address", "spimosi", "spimiso", "spiclk", "spics", "spidc", "invert", "resetpin", "lightpin", "width", "height", "rotation"],
+    "properties": ["width", "height", "rotation", "busmode", "address", "spimosi", "spimiso", "spiclk", "cspin", "dcpin", "color", "background", "border", "invert", "resetpin", "lightpin"],
     "actions" : ["brightness", "page", "addpage", "clear"],
     "events": ["onpage"]
   },
@@ -189,9 +193,16 @@
   "displayst7735": { "extends": "display", "ui": "display" },
   "displayst7789": { "extends": "display", "ui": "display" },
   "displayst7796": { "extends": "display", "ui": "display" },
+  "displaygc9a01": { "extends": "display", "ui": "display" },
+
+  "displaytouchcst816": { "icon": "default", "sys": "true",
+    "properties": ["address", "width", "height", "rotation", "interruptpin", "resetpin"],
+    "events": ["ontouch"]
+  },
 
   "displaytouchgt911": { "icon": "default",
-    "properties": ["address", "width", "height", "rotation", "interruptpin", "resetpin"]
+    "properties": ["address", "width", "height", "rotation", "interruptpin", "resetpin"],
+    "events": ["ontouch"]
   },
 
   "displaytouchft6336": { "icon": "default",
@@ -215,74 +226,63 @@
     "events": ["onvoltage", "oncurrent", "onpower"]
   },  
 
-  "ina219": {
-    "ui": "ina2xx",
-    "properties": ["address", "readtime", "warmuptime", "resendtime", "restart",
-    "gain", "mode", "samples", "range"],
+  "ina219": { "extends": "sensor", "ui": "ina2xx",
+    "properties": ["address", "gain", "mode", "samples", "range"],
     "events": ["onvoltage", "oncurrent", "onpower"]
   },  
 
-  "ina226": {
-    "ui": "ina2xx",
-    "properties": ["address", "readtime", "warmuptime", "resendtime", "restart",
-    "gain", "mode", "samples", "range"],
+  "ina226": { "extends": "sensor", "ui": "ina2xx",
+    "properties": ["address", "gain", "mode", "samples", "range"],
     "events": ["onvoltage", "oncurrent", "onpower"]
   },  
 
-  "dht": {
-    "ui": "air",
-    "properties": ["pin", "readtime", "warmuptime", "resendtime", "restart"],
+  "dht": { "extends": "sensor", "ui": "air",
+    "properties": ["pin"],
     "events": ["ontemperature", "onhumidity"]
   },
 
-  "aht20": {
-    "icon": "dht", "ui": "air",
-    "properties": ["address", "readtime", "warmuptime", "resendtime", "restart"],
+  "aht20": { "extends": "sensor", "icon": "dht", "ui": "air",
+    "properties": ["address"],
     "events": ["ontemperature", "onhumidity"]
   },
 
-  "am2320": {
-    "icon": "dht", "ui": "air",
-    "properties": ["address", "readtime", "warmuptime", "resendtime", "restart"],
+  "am2320": { "extends": "sensor", "icon": "dht", "ui": "air",
+    "properties": ["address"],
     "events": ["ontemperature", "onhumidity"]
   },
 
-  "sht20": {
-    "icon": "dht", "ui": "air",
-    "properties": ["address", "readtime", "warmuptime", "resendtime", "restart"],
+  "sht20": { "extends": "sensor", "icon": "dht", "ui": "air",
+    "properties": ["address"],
     "events": ["ontemperature", "onhumidity"]
   },
 
-  "dallas": {
-    "properties": ["pin", "readtime", "warmuptime", "resendtime", "restart"],
+  "dallas": { "extends": "sensor", 
+    "properties": ["pin"],
     "events": ["ontemperature"]
   },
 
-  "bme680": {
-    "icon": "dht", "ui": "air",
-    "properties": ["address", "readtime", "warmuptime", "resendtime", "restart"],
+  "bme680": { "extends": "sensor", "icon": "dht", "ui": "air",
+    "properties": ["address"],
     "events": ["ontemperature", "onhumidity", "onpressure", "ongas"]
   },  
 
-  "bmp280": {
-    "icon": "dht", "ui": "air",
-    "properties": ["address", "readtime", "warmuptime", "resendtime", "restart"],
+  "bmp280": { "extends": "sensor", "icon": "dht", "ui": "air",
+    "properties": ["address"],
     "events": ["ontemperature", "onpressure"]
   },  
 
-  "scd4x": {
-    "icon": "dht", "ui": "air",
-    "properties": ["address", "readtime", "warmuptime", "resendtime", "restart"],
+  "scd4x": { "extends": "sensor", "icon": "dht", "ui": "air",
+    "properties": ["address"],
     "events": ["ontemperature", "onhumidity", "onco2"]
   },
   
-  "bh1750": {
-    "properties": ["address", "mode", "factor", "readtime", "warmuptime", "resendtime", "restart"],
+  "bh1750": { "extends": "sensor", 
+    "properties": ["address", "mode", "factor"],
     "events": ["onvalue"]
   },  
 
-  "pms": {
-    "properties": ["pinrx", "pintx", "readtime", "warmuptime", "resendtime", "restart"],
+  "pms": { "extends": "sensor", 
+    "properties": ["pinrx", "pintx"],
     "events": ["onvalue"]
   },
 
@@ -359,8 +359,8 @@
   },
 
   "timer": {
-    "properties": ["type", "waittime", "pulsetime", "cycletime"],
-    "actions": ["next"],
+    "properties": ["mode", "waittime", "pulsetime", "cycletime", "restart"],
+    "actions": ["start", "stop", "next"],
     "events": ["onon", "onoff", "onvalue"]
   },
 
