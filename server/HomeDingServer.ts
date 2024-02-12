@@ -269,6 +269,14 @@ export class HomeDingServer {
 
     this._app.get(/^\/api\/elements/, this.expressNoCache, handleElements);
 
+    const handleScan = async (_req: express.Request, res: express.Response) => {
+      const elems = [{"id": "net01"}, {"id": "net02"}, {"id": "net03"}];
+      res.json(elems);
+    }; // handleScan
+  
+    this._app.get(/^\/api\/scan/, this.expressNoCache, handleScan);
+
+
     const handleState = async (req: express.Request, res: express.Response) => {
       if (!this._boardState) {
         this._boardState = {};

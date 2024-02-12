@@ -10,54 +10,49 @@
 <body style="width:300px">
   <h1>Setup WiFi</h1>
   <div style="display:grid;grid-template-columns: 10ch auto;grid-gap:1ch;">
-    <label>Devicename:</label><span id="d">xyz</span>
+    <label>Devicename:</label><span id="d">.</span>
     <label>Network:</label><span><select id="n" style="width:12em">
         <option selected disabled>scanning...</option>
       </select></span>
     <label>Passphrase:</label><input id="pass" type="password" style="width:12em"></input>
+    <label>format:</label><span><input id="fmt" type="checkbox"></input></span>
   </div>
   <div style="text-align: right;"><button id="b">Connect</button></div>
-  <hr>
-  <p style="text-align: right;"><a id="nextLink" title="next step" href="/$update.htm" style="text-decoration: none;">&gt;&gt;&gt;</a></p>
 
   <script>
     var d = document;
-    var state = 0;  // 0: start, 1: get sysinfo, 2: sysinfo-done,  3: scan, 4, scan-done
+    var s = 0;  // state = 0: start, 1: get sysinfo, 2: sysinfo-done,  3: scan, 4: scan-done, 5: connect issued
     var timer;
     var oSel = d.getElementById('n');
+    var oBtn = d.getElementById('b');
+    var dn;
 
-    function check() {
-      if (state == 0) {
+    async function check() {
+      let r, t;
+      if (s == 0) {
         // start sysinfo
-        state = 1;
-        fetch('/api/sysinfo')
-          .then(function (result) {
-            return (result.text());
-          }).then(function (t) {
-            if (t.length > 0) {
-              var dn = JSON.parse(t).devicename;
-              d.getElementById('d').textContent = dn;
-              var a = d.getElementById('nextLink');
-              a.href = a.href.replace(/\/\/[^\/]+\//, '//' + dn + '/');
-              state = 2;
-            } // if
-          });
+        s = 1;
+        r = await fetch('/api/sysinfo');
+        t = await r.text();
+        if (t.length > 0) {
+          dn = JSON.parse(t).devicename;
+          d.getElementById('d').textContent = dn;
+          s = 2;
+        } // if
 
-      } else if (state == 2) {
+      } else if (s == 2) {
         // start scan 
-        state = 3;
-        fetch('/api/scan')
-          .then(function (result) {
-            return (result.text());
-          }).then(function (t) {
-            if (t.length == 0) {
-              state = 2;
-            } else {
-              state = 4;
-              scanned(JSON.parse(t));
-            }
-          });
-      } else if (state == 4) {
+        s = 3;
+        r = await fetch('/api/scan');
+        t = await r.text();
+        if (t.length == 0) {
+          s = 2;
+        } else {
+          scanned(JSON.parse(t));
+          s = 4;
+        }
+
+      } else if (s == 4) {
         window.clearInterval(timer);
         timer = 0;
       } // if
@@ -72,7 +67,7 @@
       o.disabled = true;
       oSel.options.add(o);
 
-      netList.forEach(function (n) {
+      netList.forEach(function(n) {
         var o = d.createElement('option');
         o.value = o.text = n.id;
         oSel.options.add(o);
@@ -80,9 +75,20 @@
     } // scanned()
 
     // connect using network name and password
-    d.getElementById('b').addEventListener('click', function () {
-      fetch('/api/connect?n=' + oSel.value + '&p=' + d.getElementById('pass').value);
+    oBtn.addEventListener('click', async () => {
+      if (s == 4) {
+        let url = `/api/connect?n=${oSel.value}&p=${d.getElementById('pass').value}`;
+        if (d.getElementById('fmt').checked) {
+          url += 'f=1';
+        }
+        try { await fetch(url); } catch (e) { }
+        s = 5;
+        oBtn.textContent = ">>>";
+
+      } else if (s == 5) {
+        location.href = `//${dn}/$update.htm`;
+      }
     });
-    timer = window.setInterval(check, 800);
+    timer = window.setInterval(check, 300);
   </script>
 </body>
