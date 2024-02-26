@@ -10,6 +10,8 @@
   <!-- no web site meta data here -->
   <link Content-Type="text/css" href="iotstyle.css" rel="stylesheet" />
   <script src="micro.js"></script>
+  <link Content-Type="text/css" href="/u-toast.css" rel="stylesheet" />
+  <script src="u-toast.js"></script>
   <style>
     #files {
       border: solid 1px black;
@@ -56,33 +58,6 @@
       overflow-y: scroll;
       height: 100%;
       width: 100%;
-    }
-
-    #dropzone {
-      color: black;
-      background-color: #dddd88;
-      padding: 0.6rem;
-      border: 1px dashed black;
-    }
-
-    #progress {
-      position: absolute;
-      top: 0.6rem;
-      right: 0.1rem;
-      width: 300px;
-      height: 1.4rem;
-      border: 0.1rem solid black;
-      opacity: 1;
-      pointer-events: none;
-      background-color: white;
-    }
-
-    #progress.fadeout {
-      transition-delay: 2s;
-      transition-property: opacity;
-      transition-duration: 1s;
-      transition-timing-function: linear;
-      opacity: 0;
     }
 
     #checker {
@@ -136,8 +111,6 @@
 
 <body style="margin: 0; padding: 0">
   <div class="grid-container" style="padding: 1rem">
-    <progress id="progress" class="fadeout" max="1" value="0"></progress>
-
     <div class="u-header">
       <svg class="icon">
         <use href="./icons.svg#ide" />
@@ -145,7 +118,6 @@
       <h1>HomeDing IDE</h1>
 
       <span style="flex-grow: 1"></span>
-      <div id="dropzone">Drop here.</div>
     </div>
 
     <div class="u-navbar">
@@ -183,11 +155,12 @@
     <pre style="grid-column: 2" class="code" contenteditable id="content" autocomplete="off" autocorrect="off"
       autocapitalize="off" spellcheck="false"></pre>
   </div>
+  <u-toast></u-toast>
 
   <script>
     const filesObj = document.getElementById('files');
     const contentObj = document.getElementById('content');
-    const progressObj = document.getElementById('progress');
+    const toastObj = document.querySelector('u-toast');
 
     const activeFileObj = document.getElementById('activeFile');
     const checkerObj = document.getElementById('checker');
@@ -325,41 +298,20 @@
 
     // start uploading file content
     function startUpload(filename, contentType, content) {
-      progressObj.classList.remove('fadeout');
-
+      toastObj.info(`Uploading ${filename}`);
       const formData = new FormData();
       const blob = new Blob([content], {
         type: contentType,
       });
       formData.append(filename, blob, filename);
 
-      const objHTTP = new XMLHttpRequest();
-      objHTTP.open('POST', '/');
-
-      if (objHTTP.upload) {
-        objHTTP.upload.addEventListener('progress', function(e) {
-          progressObj.max = e.total;
-          progressObj.value = e.loaded;
-        });
-      } // if
-
-      objHTTP.addEventListener('readystatechange', function(p) {
-        if (
-          objHTTP.readyState === 4 &&
-          objHTTP.status >= 200 &&
-          objHTTP.status < 300
-        ) {
-          window.setTimeout(handleReloadFS, 200);
-          progressObj.classList.add('fadeout');
-        } // if
+      fetch('/', { method: 'POST', body: formData }).then(function() {
+        toastObj.info(`done.`);
       });
-      objHTTP.send(formData);
     }
 
     // save file from editor back to server.
     function handleSave() {
-      progressObj.value = 0;
-      progressObj.max = 1;
       thisFile = window.prompt('Upload File:', thisFile);
       if (thisFile !== undefined)
         startUpload(thisFile, 'text/html', contentObj.innerText);
@@ -398,46 +350,25 @@
 
     // files was dropped on dropzone
     function drop(e) {
-      progressObj.classList.remove('fadeout');
-      progressObj.value = 0;
-      progressObj.max = 1;
       e.stopPropagation();
       e.preventDefault();
 
       const dtFiles = e.dataTransfer.files;
+      toastObj.info(`Uploading ${dtFiles.length} files...`);
 
       const formData = new FormData();
       const path = getPath();
       for (let i = 0; i < dtFiles.length; i++) {
         formData.append('file', dtFiles[i], path + dtFiles[i].name);
       }
-
-      const xmlHttp = new XMLHttpRequest();
-
-      xmlHttp.upload.addEventListener('progress', function(e) {
-        progressObj.max = e.total;
-        progressObj.value = e.loaded;
+      fetch('/', { method: 'POST', body: formData }).then(function() {
+        toastObj.info(`done.`);
       });
-
-      xmlHttp.addEventListener('readystatechange', function(p) {
-        if (
-          xmlHttp.readyState === 4 &&
-          xmlHttp.status >= 200 &&
-          xmlHttp.status < 300
-        ) {
-          window.setTimeout(handleReloadFS, 100);
-          progressObj.classList.add('fadeout');
-          // fade progress
-        } // if
-      });
-      xmlHttp.open('POST', '/');
-      xmlHttp.send(formData);
     }
 
-    const box = document.getElementById('dropzone');
-    box.addEventListener('dragenter', dragHelper, false);
-    box.addEventListener('dragover', dragHelper, false);
-    box.addEventListener('drop', drop, false);
+    filesObj.addEventListener('dragenter', dragHelper, false);
+    filesObj.addEventListener('dragover', dragHelper, false);
+    filesObj.addEventListener('drop', drop, false);
 
     window.addEventListener('DOMContentLoaded', handleReloadFS);
     window.addEventListener('hashchange', handleReloadFS);
@@ -484,12 +415,12 @@
       // eslint-disable-next-line @typescript-eslint/no-this-alias
       var scope = this;
       this.disabled = true;
-      DelayPromise(90) // give some time to display progress stuff
+      DelayPromise(20) // give some time to display progress stuff
         .then(function() {
           return fetch('/api/reboot');
         })
         .then(function() {
-          return DelayPromise(90);
+          return DelayPromise(20);
         })
         .finally(function(result) {
           scope.disabled = false;
