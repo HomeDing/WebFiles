@@ -9,7 +9,7 @@
 import yargs from 'yargs';
 import debug from 'debug';
 
-import sass from 'sass';
+import * as sass from 'sass';
 import * as HTMLMinifier from 'html-minifier-terser';
 import * as JSMinifier from 'terser';
 
