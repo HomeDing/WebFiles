@@ -296,8 +296,7 @@ input.switch[type='range'] {
 .form-actions {
   display: flex;
   flex-flow: row wrap;
-  column-gap: $u-gutter2;
-  row-gap: $u-gutter2;
+  gap: $u-gutter2;
 }
 
 

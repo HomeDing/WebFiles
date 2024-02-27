@@ -26,6 +26,7 @@ class DisplayItemWidgetClass extends GenericWidgetClass {
 
   override newData(path: string, key: string, value: string) {
     super.newData(path, key, value);
+    if (this._elem) {
     const sty = this._elem.style;
     if (key === 'x') {
       sty.left = value + (this._grid > 1 ? 'ch' : 'px');
@@ -41,6 +42,7 @@ class DisplayItemWidgetClass extends GenericWidgetClass {
 
     } else if (key === 'background') {
       sty.backgroundColor = value.replace(/^x/, '#');
+    }
     }
   }
 }

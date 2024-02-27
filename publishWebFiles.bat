@@ -29,7 +29,7 @@ echo copied: Minimal WebUI
 echo.
 echo *** Updating data folders in examples
 
-set tar=%USERPROFILE%\Projects\Arduino\Sketches\Libraries\HomeDing
+set tar=%USERPROFILE%\Documents\Arduino\libraries\HomeDing
 
 robocopy dist %tar%\examples\standard\data /S /PURGE %rcflags% /XF list.txt
 echo copied: standard example

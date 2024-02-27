@@ -16,14 +16,11 @@
   <h1>Web Update</h1>
   <div style="display:grid">
     <progress value=0 max=20></progress>
-    <span id='l'></span>
+    <span id='l' style="height:2rem"></span>
   </div>
   <div style="text-align: right;"><button>Start</button></div>
-
-  <hr>
-  <p style="text-align: right;"><a href="/updateicons.htm" title="next step"
-      style="text-decoration: none;">&gt;&gt;&gt;</a></p>
   <script>
+    var d = document;
     var s = 0;
     // s == 0 => fetching list
     // s == 1 => fetching sysinfo
@@ -32,13 +29,14 @@
     // s == 4 => wait for file finished 
 
     var repo = 'https://homeding.github.io/';
-    var d = document;
     var eBar = d.querySelector('progress');
+    var oBtn = d.querySelector('button');
     var x = 0; // done
     var a = 0; // active
     var w; ///< working list
     var si; // sysinfo
     var t = 0; // timer
+    var r; // for fetch
     var seed = "?" + new Date().valueOf();
 
     function log(t) {
@@ -54,84 +52,78 @@
 
 
     // grab next file
-    function doF() {
+    async function doF() {
       var theItem = w.shift();
 
       // set progress
-      eBar.value = ++x;
       log(theItem);
 
-      if (theItem[0] === '-') {
-        a = 0;
-
-      } else {
-        fetch(repo + theItem + seed)
-          .then(result => result.arrayBuffer())
-          .then(function(buf) {
-            var formData = new FormData();
-            formData.append('file', new Blob([buf]), '/' + theItem);
-            fetch('/', { method: 'POST', body: formData })
-              .then(() => { a = 0; });
-          });
+      if (theItem[0] !== '-') {
+        r = await fetch(repo + theItem + seed);
+        r = await r.arrayBuffer();
+        var formData = new FormData();
+        formData.append('file', new Blob([r]), '/' + theItem);
+        await fetch('/', { method: 'POST', body: formData });
       }
     } // doF()
 
 
-    d.querySelector('button').addEventListener('click', function() {
-      t = window.setInterval(function() {
-        if (a) {
-          // wait
-        } else {
-          a = 1;
-          if (s == 0) { // not yet started
-            // fetch file list;
-            log('sysinfo...');
-            fetch('/api/sysinfo' + seed)
-              .then(result => result.text())
-              .then(t => {
-                si = t;
-                eBar.value = ++x;
-                a = 0;
-              });
-            s++;
+    d.querySelector('button').addEventListener('click', () => {
+      if (s === 0) {
+        oBtn.textContent = '-';
+        t = window.setInterval(async function() {
+          if (a) {
+            // wait
 
-          } else if (s == 1) {
-            log('list...');
-            si = JSON.parse(si);
-            if (si.fsTotalBytes < 200000) {
-              repo = repo.replace(/(v\d+)\/$/, "$1m/");
-            }
+          } else {
+            a = 1;
+            if (s == 0) { // not yet started
+              // fetch file list;
+              log('sysinfo...');
+              r = await fetch('/api/sysinfo' + seed);
+              si = await r.text();
 
-            fetch(repo + 'list.txt' + seed)
-              .then(result => result.text())
-              .then(t => {
-                w = t.replace(/\r?\n/g, ';').replace(/;$/, '').split(';');
-                eBar.max = w.length + 3;
-                a = 0;
-              });
-            s++;
+            } else if (s == 1) {
+              log('list...');
+              si = JSON.parse(si);
+              if (si.fsTotalBytes < 200000) {
+                repo = repo.replace(/(v\d+)\/$/, "$1m/");
+              }
 
-          } else if (s == 2) {
-            // clean files in filesystem first
-            log('clean...');
-            fetch('/api/cleanweb')
-              .then(() => {
-                eBar.value = ++x;
-                s++;
-                a = 0;
-              });
+              r = await fetch(repo + 'list.txt' + seed);
+              r = await r.text();
 
-          } else if (s == 3) {
-            if (w.length > 0) {
-              doF();
-            } else {
+              w = r.replace(/\r?\n/g, ';').replace(/;$/, '').split(';');
+              eBar.max = w.length + 3;
+
+            } else if (s == 2) {
+              // clean files in filesystem first
+              log('clean...');
+              await fetch('/api/cleanweb');
+
+            } else if (s == 3) {
+              if (w.length > 0) {
+                await doF();
+                s--;
+              }
+
+            } else if (s == 4) {
               window.clearInterval(t);
-              eBar.value = ++x;
               log('done');
+              oBtn.textContent = ">>>";
+
             }
+            eBar.value = ++x;
+            s++;
+            a = 0;
           }
-        }
-      }, 100);
+        }, 100);
+
+      } else if (s === 5) {
+        location.href = '/updateicons.htm';
+
+      }
+
     });
   </script>
 </body>

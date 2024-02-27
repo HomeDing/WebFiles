@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Log output</title>
   <link Content-Type="text/css" href="/iotstyle.css" rel="stylesheet" />
-
+  
   <link rel="icon" type="image/png" href="/favicon48.png" sizes="48x48">
   <meta name="application-name" content="Ding" />
   <meta name="msapplication-config" content="/browserconfig.xml" />
@@ -16,16 +16,13 @@
   <meta name="mobile-web-app-capable" content="yes" />
   <link rel="manifest" href="/site.webmanifest" />
   <meta name="theme-color" content="#ffffff" />
-
+  
   <script src="micro.js"></script>
-  <style>
-    .flex-container {
-      display: flex;
-      flex-direction: column;
-      height: 100vh;
-      padding: 1rem;
-    }
 
+  <link Content-Type="text/css" href="/u-toast.css" rel="stylesheet" />
+  <script src="u-toast.js"></script>
+
+  <style>
     pre.code {
       padding: 0.2em;
       font-size: 0.75rem;
@@ -36,30 +33,31 @@
       overflow-x: hidden;
       overflow-y: scroll;
     }
+
   </style>
+
 </head>
 
 <body style="margin:0;padding:0">
-  <div class="flex-container">
-    <div class="u-header">
-      <svg class="icon">
-        <use href="./icons.svg#log" />
-      </svg>
-      <h1>Log output</h1>
-    </div>
-
-    <div class="u-navbar">
-      <a href="/">Home</a>
-      <a href="/board.htm">Board</a>
-      <a href="/microide.htm">IDE</a>
-      <a href="/log.htm">Log</a>
-    </div>
-
-    <pre class="code" style="flex-grow:1" id="logtext"></pre>
+  <div class="u-header">
+    <h1>Log output</h1>
   </div>
+  <div class="u-navbar">
+    <a href="/">Home</a>
+    <a href="/board.htm">Board</a>
+    <a href="/microide.htm">IDE</a>
+    <a href="/log.htm">Log</a>
+    <span class="gap"></span>
+    <button id="clearButton">clear</button>
+  </div>
+  <pre class="code" id="logtext"></pre>
+  <u-toast></u-toast>
 
   <script>
+    var clearObj = document.getElementById('clearButton');
     var logTextObj = document.getElementById('logtext');
+    var toastObj = document.querySelector('u-toast');
+
     var lastText = "";
 
     function appendLog(logtext) {
@@ -76,27 +74,36 @@
     }
 
     fetch('/log_old.txt')
-      .then(function (result) {
+      .then(function(result) {
         return (result.text());
-      }).then(function (txt) {
+      }).then(function(txt) {
         appendLog(txt);
         return (fetch('/log.txt'));
-      }).then(function (result) {
+      }).then(function(result) {
         return (result.text());
-      }).then(function (txt) {
+      }).then(function(txt) {
         appendLog(txt);
       });
 
     function updateLog() {
       fetch('/log.txt')
-        .then(function (result) {
-          return (result.text())
-        }).then(function (txt) {
+        .then(function(result) {
+          return (result.text());
+        }).then(function(txt) {
           appendLog(txt);
         });
     }
 
     window.setInterval(updateLog, 1000);
+
+    clearObj.addEventListener('click', async () => {
+      toastObj.info('deleting log files...');
+      await fetch("/log_2.txt", { method: 'DELETE' });
+      await fetch("/log_1.txt", { method: 'DELETE' });
+      toastObj.info('log files deleted.');
+
+    });
+
   </script>
 
 </body>

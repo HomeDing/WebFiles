@@ -9,7 +9,7 @@
 import yargs from 'yargs';
 import debug from 'debug';
 
-import sass from 'sass';
+import * as sass from 'sass';
 import * as HTMLMinifier from 'html-minifier-terser';
 import * as JSMinifier from 'terser';
 
@@ -128,6 +128,9 @@ const assets = [
   // { m: 'xml', src: 'i/default.svg' },
   // { m: 'xml', src: 'i/no.svg' },
   { m: 'css', src: 'iotstyle.scss', tar: 'iotstyle.css' },
+
+  { m: 'm', src: 'u-toast.css', tar: 'u-toast.css' },
+  { m: 'js', src: 'u-toast.js' },
 
   { m: 'xml', src: 'chartline.svg' },
   { m: 'js', src: 'chartline.js' },

@@ -129,21 +129,19 @@ function getHashParams(defaults: object) {
 } // getHashParams()
 
 
-function createHTMLElement(
-  parentNode: HTMLElement,
-  tag: string,
-  attr: { [id: string]: string },
-  beforeNode: (HTMLElement | null) = null): HTMLElement {
+function createHTMLElement(parentNode: HTMLElement, tag: string, attr: { [id: string]: string }, beforeNode: (HTMLElement | null) = null): HTMLElement {
   const o = document.createElement(tag);
   if (attr) {
     for (const a in attr) {
       o.setAttribute(a, attr[a]);
     }
   }
-  if (beforeNode) {
-    parentNode.insertBefore(o, beforeNode);
-  } else {
-    parentNode.appendChild(o);
+  if (parentNode) {
+    if (beforeNode) {
+      parentNode.insertBefore(o, beforeNode);
+    } else {
+      parentNode.appendChild(o);
+    }
   }
   return (o);
 } // createHTMLElement()
