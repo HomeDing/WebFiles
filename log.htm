@@ -98,8 +98,8 @@
 
     clearObj.addEventListener('click', async () => {
       toastObj.info('deleting log files...');
-      await fetch("/log_2.txt", { method: 'DELETE' });
-      await fetch("/log_1.txt", { method: 'DELETE' });
+      await fetch("/log_old.txt", { method: 'DELETE' });
+      await fetch("/log.txt", { method: 'DELETE' });
       toastObj.info('log files deleted.');
 
     });
