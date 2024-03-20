@@ -29,7 +29,7 @@ $u-off: red;
 
 
 $u-padding-text: 4px;
-$u-padding-block: calc(2 * $u-padding - text);
+$u-padding-block: calc(2 * $u-padding-text);
 
 $u-border-size: 1px;
 $u-border: $u-border-size solid $u-border-color;
