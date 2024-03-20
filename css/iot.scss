@@ -77,7 +77,7 @@ $u-card-wide-width: calc(4 * $u-grid-width + 3 * $u-gutter);
   >.block {
     position: relative;
     flex: 1 1 auto;
-    padding: $u-gutter $u-white-space;
+    padding: $u-padding-block;
     min-height: 2rem;
 
     &.header {
@@ -94,7 +94,6 @@ $u-card-wide-width: calc(4 * $u-grid-width + 3 * $u-gutter);
     }
 
     &.footer {
-      padding: $u-gutter $u-white-space;
       border-top: 1px solid rgb(0 0 0 / 12.5%);
     }
   }
@@ -164,7 +163,7 @@ button,
   min-width: 6.5ch;
 
   // height: 1.4em;
-  padding: 0.1em 0.2em;
+  padding: calc($u-padding-text/2) $u-padding-text;
   border-radius: $u-btn-radius;
   border-color: $u-primary;
   background-color: $u-primary;
@@ -191,11 +190,6 @@ button,
     background-color: #777777;
     border-color: #777777;
   }
-
-  // + button,
-  // + .button {
-  //   margin-left: $u-gutter;
-  // }
 }
 
 // standard input elements

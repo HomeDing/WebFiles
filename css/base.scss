@@ -27,28 +27,33 @@ $u-connect: #00cc00; // connectivity / net
 $u-on: color.adjust(green, $lightness: 10%);
 $u-off: red;
 
-$u-border: 0.1em solid $u-border-color;
-$u-border-none: 0.1em solid transparent;
-$u-border-active: 0.1em solid $u-border-color-active;
+
+$u-padding-text: 4px;
+$u-padding-block: calc(2*$u-padding-text);
+
+$u-border-size: 1px;
+$u-border: $u-border-size solid $u-border-color;
+$u-border-none: $u-border-size solid transparent;
+$u-border-active: $u-border-size solid $u-border-color-active;
 
 $u-navbar: $u-primary;
 $u-navbar-text: white;
 
 
-// ===== Sizes =====
+// ===== Content Box Sizes =====
 
 $u-white-space: 1rem;
 $u-gutter: calc($u-white-space / 2);
 $u-gutter2: calc($u-white-space / 4);
 
-$u-btn-radius: 0.2em;
+$u-btn-radius: calc($u-padding-block/2);
 $u-output-border: $u-border-none;
 
 
 // ===== global Layout =====
 
 $u-card-border: none;
-$u-card-radius: 0.4rem;
+$u-card-radius: $u-padding-block;
 
 
 // ===== font =====
@@ -90,7 +95,7 @@ body {
 
 @media (width > 800px) {
   body {
-    padding: $u-white-space;
+    padding: 2* $u-padding-text;
   }
 }
 
@@ -214,14 +219,14 @@ pre>code {
 }
 
 p>code {
-  padding-left: 0.1em;
-  padding-right: 0.1em;
+  padding-left: 2*$u-padding-text;
+  padding-right: $u-padding-text;
 }
 
 pre>code {
   display: block;
   border-radius: $u-card-radius;
-  padding: 0.1em;
+  padding: $u-padding-text;
 }
 
 // form elements
@@ -400,7 +405,7 @@ main {
   display: flex;
   flex-flow: row nowrap;
   margin-bottom: $u-gutter;
-  padding: $u-gutter $u-white-space;
+  padding: 2*$u-padding-text 4*$u-padding-text;
   background-color: $u-navbar;
   color: $u-navbar-text;
 
