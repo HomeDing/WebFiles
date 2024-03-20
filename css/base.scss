@@ -29,7 +29,7 @@ $u-off: red;
 
 
 $u-padding-text: 4px;
-$u-padding-block: calc(2*$u-padding-text);
+$u-padding-block: calc(2 * $u-padding - text);
 
 $u-border-size: 1px;
 $u-border: $u-border-size solid $u-border-color;
@@ -46,7 +46,7 @@ $u-white-space: 1rem;
 $u-gutter: calc($u-white-space / 2);
 $u-gutter2: calc($u-white-space / 4);
 
-$u-btn-radius: calc($u-padding-block/2);
+$u-btn-radius: calc($u-padding-block / 2);
 $u-output-border: $u-border-none;
 
 
@@ -95,7 +95,7 @@ body {
 
 @media (width > 800px) {
   body {
-    padding: 2* $u-padding-text;
+    padding: 2 * $u-padding-text;
   }
 }
 
@@ -219,7 +219,7 @@ pre>code {
 }
 
 p>code {
-  padding-left: 2*$u-padding-text;
+  padding-left: 2 * $u-padding-text;
   padding-right: $u-padding-text;
 }
 
@@ -405,7 +405,7 @@ main {
   display: flex;
   flex-flow: row nowrap;
   margin-bottom: $u-gutter;
-  padding: 2*$u-padding-text 4*$u-padding-text;
+  padding: 2 * $u-padding-text 4 * $u-padding-text;
   background-color: $u-navbar;
   color: $u-navbar-text;
 
