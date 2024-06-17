@@ -21,7 +21,7 @@ const log = {
 export class ProxyElement extends VirtualBaseElement {
   private url!: string;
   private host!: string;
-  private configJson: any = null;
+  private configJson: unknown = null;
   private requested = false; // set true when a state request is on the way.
   private nextTry = 0;
   private configs = ConfigCache.getInstance();
@@ -29,7 +29,7 @@ export class ProxyElement extends VirtualBaseElement {
   private TIMEOUT_MS = 3 * 1000; // timeout for getting resaults from a device.
   private NEXT_TRY_MS = 8 * 1000; // duration for next data from device
 
-  setConfig(_bus: EventBusClass, config: any, _default = {}) {
+  setConfig(_bus: EventBusClass, config: unknown, _default = {}) {
     this.eventBus = _bus;
     this.config = Object.assign({}, _default, config);
 
@@ -52,7 +52,7 @@ export class ProxyElement extends VirtualBaseElement {
   } // setConfig()
 
 
-  async getState(): Promise<any> {
+  async getState(): Promise<unknown> {
     if (!this.requested && (Date.now() > this.nextTry)) {
       // fetch configuration
       this.requested = true;
@@ -77,7 +77,7 @@ export class ProxyElement extends VirtualBaseElement {
       } else {
         try {
           const r = await fetch(this.url, { signal: timeoutSignal(this.TIMEOUT_MS) });
-          const j = await r.json() as any;
+          const j = await r.json() as unknown;
           const rs = j[`${this.type}/${this.id}`];
           this.state = Object.assign(this.state, rs);
         } catch (e) {
@@ -92,7 +92,7 @@ export class ProxyElement extends VirtualBaseElement {
 
 
   // pass action to real element
-  async doAction(action: any) {
+  async doAction(action: unknown) {
     for (const a in action) {
       await fetch(this.url + '?' + a + '=' + action[a], { signal: timeoutSignal(this.TIMEOUT_MS) });
       this.nextTry = 0; // asap.

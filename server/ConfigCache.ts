@@ -13,16 +13,16 @@ export class ConfigCache {
 
   public router = express.Router();
 
-  private defaultOptions: any = { timeout: 4000 };
-  private options: any = {};
+  private defaultOptions: unknown = { timeout: 4000 };
+  private options: unknown = {};
 
   private dService = DeviceDiscovery.getInstance();
 
   // cache for device configurations
-  private netConfigs: { [hostname: string]: any } = {};
+  private netConfigs: { [hostname: string]: unknown } = {};
 
 
-  constructor(options: any = {}) {
+  constructor(options: unknown = {}) {
     this.options = Object.assign({}, this.defaultOptions, options);
 
     // express function: list all found devices.
@@ -42,7 +42,7 @@ export class ConfigCache {
 
   // create a instance of the DeviceDiscovery service.
   // This method should nly be called once.
-  public static createInstance(options: any = {}): ConfigCache {
+  public static createInstance(options: unknown = {}): ConfigCache {
     ConfigCache._instance = new ConfigCache(options);
     return (ConfigCache._instance);
   }
@@ -61,7 +61,7 @@ export class ConfigCache {
       Logger.error(`not online: ${host}`); // , err
     } else if (!this.netConfigs[host]) {
       try {
-        let eObj: any = {}, cObj: any = {};
+        let eObj: unknown = {}, cObj: unknown = {};
 
         const eReq = await fetch(`http://${hostname}/env.json`, { signal: timeoutSignal(this.options.timeout) });
         if (eReq.status === 200) {

@@ -17,8 +17,8 @@ export class VirtualBaseElement {
 
   protected eventBus!: EventBusClass;
 
-  config: any;
-  state: any = { active: true };
+  config: unknown;
+  state: unknown = { active: true };
 
   constructor(type: string, id: string) {
     this.type = type;
@@ -26,14 +26,14 @@ export class VirtualBaseElement {
     this.typeId = `${type}/${id}`;
   }
 
-  setConfig(_bus: EventBusClass, config: any, _default = {}) {
+  setConfig(_bus: EventBusClass, config: unknown, _default = {}) {
     this.eventBus = _bus;
     this.config = Object.assign({}, _default, config);
   }
 
   /** return the actual state from the element */
-  async getState(): Promise<any> { return (this.state); }
-  async doAction(_query: any) {
+  async getState(): Promise<unknown> { return (this.state); }
+  async doAction( _query: unknown) {
     // empty
   }
 

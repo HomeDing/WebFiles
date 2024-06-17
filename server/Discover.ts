@@ -15,8 +15,8 @@ export class DeviceDiscovery {
   // expose the router to be used in express
   public router = express.Router();
 
-  private defaultOptions: any = { refresh: 1 * 60 };
-  private options: any = {};
+  private defaultOptions: unknown = { refresh: 1 * 60 };
+  private options: unknown = {};
 
   private mdns: mDNS.MulticastDNS;
 
@@ -31,7 +31,7 @@ export class DeviceDiscovery {
     };
   } = {};
 
-  constructor(options: any = {}) {
+  constructor(options: unknown = {}) {
     this.options = Object.assign({}, this.defaultOptions, options);
 
     this.mdns = mDNS();
@@ -51,7 +51,7 @@ export class DeviceDiscovery {
 
   // create a instance of the DeviceDiscovery service.
   // This method should nly be called once.
-  public static createInstance(options: any = {}): DeviceDiscovery {
+  public static createInstance(options: unknown = {}): DeviceDiscovery {
     DeviceDiscovery._instance = new DeviceDiscovery(options);
     return DeviceDiscovery._instance;
   }
@@ -130,7 +130,7 @@ export class DeviceDiscovery {
             .split(',')
             .forEach(e => {
               const p = e.split('=');
-              (<any>hdd)[p[0]] = p[1];
+              (<unknown>hdd)[p[0]] = p[1];
             });
         });
 

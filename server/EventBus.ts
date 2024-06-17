@@ -16,7 +16,7 @@ export class EventBusClass {
     this._registry = registry;
   }
 
-  addElement(typeName: string, id: string, conf: any) {
+  addElement(typeName: string, id: string, conf: unknown) {
     Logger.trace(`add ${typeName}/${id}: ${conf}`);
     const elem = this._registry?.newElement(typeName, id);
     if (elem) {
@@ -26,13 +26,13 @@ export class EventBusClass {
   } // addElement()
 
   /** Activate virtual elements for all configured elements. */
-  startup(allConfig: any) {
+  startup(allConfig: unknown) {
     Object.entries(allConfig).forEach(([typeName, elements]) => {
-      Object.entries(elements as any).forEach(([id, conf]) => {
+      Object.entries(elements as unknown).forEach(([id, conf]) => {
         this.addElement(typeName, id, conf);
       });
     });
-    Object.entries(this.activeVirtuals).forEach(([id, v]) => {
+    Object.entries(this.activeVirtuals).forEach(([_id, _v]) => {
       v.doAction({});
     });
   } // startup()
@@ -55,7 +55,7 @@ export class EventBusClass {
         const e = this.activeVirtuals[typeId];
         Logger.trace("execute:", e, args);
         if (e) {
-          const actions = {} as any;
+          const actions = {} as unknown;
           args.split('&').forEach(a => {
             const [key, val] = a.split('=');
             actions[key] = val;
@@ -68,13 +68,13 @@ export class EventBusClass {
 
   // give compute time to all elements by calling the loop function
   loop() {
-    Object.entries(this.activeVirtuals).forEach(([id, v]) => {
+    Object.entries(this.activeVirtuals).forEach(([_id, v]) => {
       v.loop();
     });
   }
   
   /** Process an action for a given element. */
-  dispatch(typeId: string, cmd: any) {
+  dispatch(typeId: string, cmd: unknown) {
     Logger.trace("dispatch", typeId, cmd);
     const e: VirtualBaseElement = this.activeVirtuals[typeId];
     e?.doAction(cmd);
@@ -92,7 +92,7 @@ export class EventBusClass {
 
   /** return the state of all virtual elements */
   async allState() {
-    const all: any = {};
+    const all: unknown = {};
 
     for (const eId in this.activeVirtuals) {
       all[eId] = await this.activeVirtuals[eId].getState();

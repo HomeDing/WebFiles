@@ -43,12 +43,12 @@ export class HomeDingServer {
   };
 
   // file based settings
-  private _settings = {} as any;
+  private _settings = {} as unknown;
   private _boardFileName = '';
 
   /** The current config & state for mocked elements. */
-  private _allConfig: { [e: string]: any; } = {};
-  private _boardState: any = null;
+  private _allConfig: { [e: string]: unknown; } = {};
+  private _boardState: unknown = null;
 
   private _caseFolder?: string;
 
