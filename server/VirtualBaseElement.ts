@@ -17,8 +17,8 @@ export class VirtualBaseElement {
 
   protected eventBus!: EventBusClass;
 
-  config: unknown;
-  state: unknown = { active: true };
+  config: { [key: string]: any } = {};
+  state: { [key: string]: any } = { active: true };
 
   constructor(type: string, id: string) {
     this.type = type;
@@ -26,7 +26,7 @@ export class VirtualBaseElement {
     this.typeId = `${type}/${id}`;
   }
 
-  setConfig(_bus: EventBusClass, config: unknown, _default = {}) {
+  setConfig(_bus: EventBusClass, config: { [key: string]: any }, _default = {}) {
     this.eventBus = _bus;
     this.config = Object.assign({}, _default, config);
   }

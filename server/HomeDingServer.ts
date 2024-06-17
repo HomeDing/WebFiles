@@ -43,12 +43,12 @@ export class HomeDingServer {
   };
 
   // file based settings
-  private _settings = {} as unknown;
+  private _settings: { [key: string]: any } = {};
   private _boardFileName = '';
 
   /** The current config & state for mocked elements. */
-  private _allConfig: { [e: string]: unknown; } = {};
-  private _boardState: unknown = null;
+  private _allConfig: { [key: string]: any; } = {};
+  private _boardState: { [key: string]: any } | undefined = undefined;
 
   private _caseFolder?: string;
 
@@ -165,11 +165,11 @@ export class HomeDingServer {
         JSON.parse(fs.readFileSync(this._caseFolder + 'env.json', 'utf8')),
         JSON.parse(fs.readFileSync(this._caseFolder + 'config.json', 'utf8'))
       );
-      this._boardState = null;
+      this._boardState = undefined;
 
       // ===== watch for changes of $board
       fs.watch(this._boardFileName, (_eventName, _filename) => {
-        this._boardState = null;
+        this._boardState = undefined;
       });
       mock.register(this.registry);
 
@@ -253,7 +253,7 @@ export class HomeDingServer {
           res.send();
         /* no await */ this.eventBus.dispatch(id, req.query);
           this.eventBus.executeEvents();
-        } else {
+        } else if (this._boardState) {
           // Update and return status of a single element
           this._boardState[id] = Object.assign(this._boardState[id], this.eventBus.state(id));
           res.json(this._boardState[id]);
@@ -270,10 +270,10 @@ export class HomeDingServer {
     this._app.get(/^\/api\/elements/, this.expressNoCache, handleElements);
 
     const handleScan = async (_req: express.Request, res: express.Response) => {
-      const elems = [{"id": "net01"}, {"id": "net02"}, {"id": "net03"}];
+      const elems = [{ "id": "net01" }, { "id": "net02" }, { "id": "net03" }];
       res.json(elems);
     }; // handleScan
-  
+
     this._app.get(/^\/api\/scan/, this.expressNoCache, handleScan);
 
 
@@ -292,13 +292,15 @@ export class HomeDingServer {
         }
       }
 
-      // Update status of all elements
-      const vState = await this.eventBus.allState();
-      this._boardState = Object.assign(this._boardState, vState);
+      if (this._boardState) {
+        // Update status of all elements
+        const vState = await this.eventBus.allState();
+        this._boardState = Object.assign(this._boardState, vState);
 
-      // debugSend('send:' , boardStatus);
-      res.type('application/json');
-      res.send(JSON.stringify(this._boardState, null, 2));
+        // debugSend('send:' , boardStatus);
+        res.type('application/json');
+        res.send(JSON.stringify(this._boardState, null, 2));
+      }
     }; // handleState
 
 

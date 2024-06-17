@@ -29,7 +29,7 @@ export class ProxyElement extends VirtualBaseElement {
   private TIMEOUT_MS = 3 * 1000; // timeout for getting resaults from a device.
   private NEXT_TRY_MS = 8 * 1000; // duration for next data from device
 
-  setConfig(_bus: EventBusClass, config: unknown, _default = {}) {
+  setConfig(_bus: EventBusClass, config: { [key: string]: any }, _default = {}) {
     this.eventBus = _bus;
     this.config = Object.assign({}, _default, config);
 
@@ -77,7 +77,7 @@ export class ProxyElement extends VirtualBaseElement {
       } else {
         try {
           const r = await fetch(this.url, { signal: timeoutSignal(this.TIMEOUT_MS) });
-          const j = await r.json() as unknown;
+          const j = await r.json() as { [key: string]: any };
           const rs = j[`${this.type}/${this.id}`];
           this.state = Object.assign(this.state, rs);
         } catch (e) {
@@ -92,7 +92,7 @@ export class ProxyElement extends VirtualBaseElement {
 
 
   // pass action to real element
-  async doAction(action: unknown) {
+  async doAction(action: { [key: string]: any }) {
     for (const a in action) {
       await fetch(this.url + '?' + a + '=' + action[a], { signal: timeoutSignal(this.TIMEOUT_MS) });
       this.nextTry = 0; // asap.

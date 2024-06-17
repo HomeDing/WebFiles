@@ -6,7 +6,7 @@ import { RegistryClass } from './Registry.js';
 import { VirtualBaseElement } from './VirtualBaseElement.js';
 
 export class MockSwitch extends VirtualBaseElement {
-  async doAction(action: unknown) {
+  async doAction(action: { [key: string]: any }) {
     if (action.value != null) { this.state.value = action.value; }
     if (action.toggle != null) { this.state.value = (this.state.value ? 0 : 1); }
     super.doAction(action);
@@ -17,7 +17,7 @@ export class MockSwitch extends VirtualBaseElement {
 export class MockReference extends VirtualBaseElement {
   private _lastState = { reference: undefined, invalue: undefined, value: 0 };
 
-  async doAction(action: unknown) {
+  async doAction(action: { [key: string]: any }) {
     if (action.value != null) { this.state.invalue = Number(action.value); }
     if (action.reference != null) { this.state.reference = Number(action.reference); }
     super.doAction(action);
@@ -41,7 +41,7 @@ export class MockDHT extends VirtualBaseElement {
   private _defaultConfig = { readtime: 60 };
   private _lastState = { temperature: undefined, humidity: undefined };
 
-  setConfig(bus: EventBusClass, config: unknown) {
+  setConfig(bus: EventBusClass, config: { [key: string]: any }) {
     super.setConfig(bus, config, this._defaultConfig);
     // this.state = Object.assign(this.state, {
     //   temperature: this.config.temperature,
@@ -83,14 +83,14 @@ export class MockDHT extends VirtualBaseElement {
 export class MockValue extends VirtualBaseElement {
   private _defaultConfig = { step: 1, value: 0 };
 
-  setConfig(bus: EventBusClass, config: unknown) {
+  setConfig(bus: EventBusClass, config: { [key: string]: any }) {
     super.setConfig(bus, config, this._defaultConfig);
     this.state = Object.assign(this.state, {
       value: this.config.value
     });
   }
 
-  async doAction(action: unknown) {
+  async doAction(action: { [key: string]: any }) {
     const step = this.config.step;
     const v = this.state.value;
     if (action.value != null) { this.state.value = action.value; }
@@ -114,7 +114,7 @@ export class MockDevice extends VirtualBaseElement {
     return (this.state);
   }
 
-  async doAction(action: unknown) {
+  async doAction(action: { [key: string]: any }) {
     if (action.log !== null) { Logger.info('>>', action.log); }
     super.doAction(action);
   }
@@ -122,7 +122,7 @@ export class MockDevice extends VirtualBaseElement {
 
 
 export class MockTime extends VirtualBaseElement {
-  async getState(): Promise<unknown> {
+  async getState(): Promise<{ [key: string]: any }> {
     const now = new Date().toISOString();
     this.state.now =
       this.state.value = now.substring(0, 19).replace(/T/, ' ');
@@ -133,7 +133,7 @@ export class MockTime extends VirtualBaseElement {
 export class MockBL0937 extends VirtualBaseElement {
   private _defaultConfig = { step: 1, value: 0 };
 
-  setConfig(bus: EventBusClass, config: unknown) {
+  setConfig(bus: EventBusClass, config: { [key: string]: any }) {
     super.setConfig(bus, config, this._defaultConfig);
   }
 
@@ -152,7 +152,7 @@ export class MockBL0937 extends VirtualBaseElement {
     return (this.state);
   }
 
-  async doAction(action: unknown) {
+  async doAction(action: { [key: string]: any }) {
     if ((action.mode === 'current') || (action.mode === 'voltage')) {
       this.state.mode = action.mode;
     }
@@ -168,12 +168,12 @@ export class MockStandard extends VirtualBaseElement {
     super(typeName, id);
   }
 
-  setConfig(bus: EventBusClass, config: unknown) {
+  setConfig(bus: EventBusClass, config: { [key: string]: any }) {
     super.setConfig(bus, config);
     this.state.value = config.value || 0;
   }
 
-  async doAction(action: unknown) {
+  async doAction(action: { [key: string]: any }) {
     super.doAction(action);
     if (action.value != null) { this.state.value = action.value; }
     if (action.mode != null) { this.state.mode = action.mode; }
@@ -187,14 +187,14 @@ export class MockTimer extends VirtualBaseElement {
   restart = false;
   startTime = Date.now();
 
-  setConfig(bus: EventBusClass, config: unknown) {
+  setConfig(bus: EventBusClass, config: { [key: string]: any }) {
     super.setConfig(bus, config);
     this.restart = Boolean(config.restart);
     this.state.value = config.value || 0;
     this.state.mode = config.mode || 'timer';
   }
 
-  async doAction(action: unknown) {
+  async doAction(action: { [key: string]: any }) {
     super.doAction(action);
     if (action.mode != null) { this.state.mode = action.mode; }
     if (action.start != null) {
@@ -203,7 +203,7 @@ export class MockTimer extends VirtualBaseElement {
     }
   }
 
-  async getState(): Promise<unknown> {
+  async getState(): Promise<{ [key: string]: any }> {
     if (this.state.mode === 'on') {
       this.state.value = 1;
     } else if (this.state.mode === 'off') {

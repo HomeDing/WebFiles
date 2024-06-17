@@ -16,7 +16,7 @@ export class EventBusClass {
     this._registry = registry;
   }
 
-  addElement(typeName: string, id: string, conf: unknown) {
+  addElement(typeName: string, id: string, conf: { [key: string]: any }) {
     Logger.trace(`add ${typeName}/${id}: ${conf}`);
     const elem = this._registry?.newElement(typeName, id);
     if (elem) {
@@ -26,13 +26,13 @@ export class EventBusClass {
   } // addElement()
 
   /** Activate virtual elements for all configured elements. */
-  startup(allConfig: unknown) {
+  startup(allConfig: { [key: string]: any }) {
     Object.entries(allConfig).forEach(([typeName, elements]) => {
-      Object.entries(elements as unknown).forEach(([id, conf]) => {
-        this.addElement(typeName, id, conf);
+      Object.entries(elements as any).forEach(([id, conf]) => {
+        this.addElement(typeName, id, conf as { [key: string]: any });
       });
     });
-    Object.entries(this.activeVirtuals).forEach(([_id, _v]) => {
+    Object.entries(this.activeVirtuals).forEach(([_id, v]) => {
       v.doAction({});
     });
   } // startup()
@@ -55,7 +55,7 @@ export class EventBusClass {
         const e = this.activeVirtuals[typeId];
         Logger.trace("execute:", e, args);
         if (e) {
-          const actions = {} as unknown;
+          const actions:{ [key: string]: any } = {};
           args.split('&').forEach(a => {
             const [key, val] = a.split('=');
             actions[key] = val;
@@ -92,7 +92,7 @@ export class EventBusClass {
 
   /** return the state of all virtual elements */
   async allState() {
-    const all: unknown = {};
+    const all: { [key: string]: any } = {};
 
     for (const eId in this.activeVirtuals) {
       all[eId] = await this.activeVirtuals[eId].getState();

@@ -16,7 +16,7 @@ export class DeviceDiscovery {
   public router = express.Router();
 
   private defaultOptions: unknown = { refresh: 1 * 60 };
-  private options: unknown = {};
+  private options: { [key: string]: any } = {};
 
   private mdns: mDNS.MulticastDNS;
 
@@ -96,7 +96,7 @@ export class DeviceDiscovery {
       Logger.trace('Device:', response);
       // Logger.trace('Device:', JSON.stringify(response));
 
-      const hdd = {
+      const hdd : { [key: string]: any } = {
         host: '',
         target: '',
         room: '',
@@ -130,7 +130,7 @@ export class DeviceDiscovery {
             .split(',')
             .forEach(e => {
               const p = e.split('=');
-              (<unknown>hdd)[p[0]] = p[1];
+              hdd[p[0]] = p[1];
             });
         });
 
