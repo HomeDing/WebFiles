@@ -22,7 +22,6 @@ class BL0937WidgetClass extends GenericWidgetClass {
     if (key === 'mode') {
       ['current', 'voltage'].forEach(m => {
         const td = this.querySelector(`[u-text="${m}"]`);
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         td!.parentElement!.style.display = (m === value ? '' : 'none');
       });
     }

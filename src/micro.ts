@@ -4,7 +4,6 @@
 //  <reference path="JsonParse.ts" />
 //  <reference path="utils.ts" />
 
-// eslint-disable-next-line no-unused-vars
 enum MicroState {
   PREP = 1,
   INIT = 2,

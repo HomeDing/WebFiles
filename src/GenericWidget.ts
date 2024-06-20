@@ -172,7 +172,6 @@ class GenericWidgetClass extends MicroControlClass {
 
       } else if (p.classList.contains('setconfig')) {
         const ti = this.microid.split('/');
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         DialogClass.openModalForm('configElement', { ...this.data, type: ti[1], id: ti[2] });
 

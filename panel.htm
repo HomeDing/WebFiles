@@ -233,9 +233,8 @@
     });
 
 
-    var params = getHashParams({
-      sys: false
-    });
+    var params = getHashParams({ sys: false });
+
     window.addEventListener("hashchange", function() {
       window.location.reload();
     });

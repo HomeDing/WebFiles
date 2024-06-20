@@ -4,6 +4,8 @@ import tseslint from "typescript-eslint";
 
 
 export default [
+  pluginJs.configs.recommended,
+  ...tseslint.configs.recommended,
   {
     plugins: {
     },
@@ -38,17 +40,16 @@ export default [
       "space-before-function-paren": 0,
       "padded-blocks": 0,
       "no-empty": 0,
-      "no-unused-expressions": 0,
-      "@typescript-eslint/triple-slash-reference": 0,
-      "@typescript-eslint/no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
-      "@typescript-eslint/no-explicit-any": ["error", { "fixToUnknown": true }],
+      "no-unused-expressions": "off" ,
+      "@typescript-eslint/triple-slash-reference": 0,      
+      "@typescript-eslint/no-unused-vars": "off",
+      "@typescript-eslint/no-unused-expressions": "off",
+      "@typescript-eslint/no-explicit-any": "off",
       "@typescript-eslint/ban-ts-comment": 0,
       "@typescript-eslint/no-unsafe-declaration-merging": 0,
     },
 
   },
 
-  pluginJs.configs.recommended,
-  ...tseslint.configs.recommended,
 
 ];
