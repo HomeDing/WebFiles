@@ -496,12 +496,12 @@ body {
   margin-right: auto;
   width: calc(2 * var(--grid-width) + var(--grid-gap));
 }
-@container (width >=84ch) {
+@container (width >= 84ch) {
   .panel {
     width: calc(4 * var(--grid-width) + 3 * var(--grid-gap));
   }
 }
-@container (width >=126ch) {
+@container (width >= 126ch) {
   .panel {
     width: calc(6 * var(--grid-width) + 5 * var(--grid-gap));
   }
@@ -806,5 +806,3 @@ input.band.hue {
 input.band.white, input.band.lightness, input.band.saturation {
   background: linear-gradient(to right, black 0%, white 100%);
 }
-
-/*# sourceMappingURL=iotstyle.css.map */
