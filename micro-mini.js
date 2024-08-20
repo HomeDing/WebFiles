@@ -325,6 +325,7 @@ let GenericWidgetClass = class GenericWidgetClass extends MicroControlClass {
         }
     }
     dispatchAction(prop, val) {
+        let action = undefined;
         if (prop && val) {
             if (prop.includes('/')) {
                 prop = prop.replace('${v}', encodeURI(val));
@@ -332,11 +333,17 @@ let GenericWidgetClass = class GenericWidgetClass extends MicroControlClass {
                     if (!a.startsWith('/')) {
                         a = '/' + a;
                     }
-                    this.actions.push('/api/state' + a);
+                    action = '/api/state' + a;
                 });
             }
             else {
-                this.actions.push(`/api/state${this.microid}?${prop}=${encodeURI(val)}`);
+                action = `/api/state${this.microid}?${prop}=${encodeURI(val)}`;
+            }
+            if (action) {
+                if ((this.actions.length == 0) || (action !== this.actions[this.actions.length - 1])) {
+                    this.actions.push(action);
+                }
+                ;
             }
             debounce(this.dispatchNext.bind(this))();
         }
@@ -963,6 +970,16 @@ function createHTMLElement(parentNode, tag, attr, beforeNode = null) {
         }
     }
     return (o);
+}
+async function fetchJSON(url, options) {
+    const p = fetch(url, options)
+        .then(raw => raw.json());
+    return (p);
+}
+async function fetchText(url, options) {
+    const p = fetch(url, options)
+        .then(raw => raw.text());
+    return (p);
 }
 let TimerWidgetClass = class TimerWidgetClass extends GenericWidgetClass {
     wt = 0;

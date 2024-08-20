@@ -325,6 +325,7 @@ let GenericWidgetClass = class GenericWidgetClass extends MicroControlClass {
         }
     }
     dispatchAction(prop, val) {
+        let action = undefined;
         if (prop && val) {
             if (prop.includes('/')) {
                 prop = prop.replace('${v}', encodeURI(val));
@@ -332,11 +333,17 @@ let GenericWidgetClass = class GenericWidgetClass extends MicroControlClass {
                     if (!a.startsWith('/')) {
                         a = '/' + a;
                     }
-                    this.actions.push('/api/state' + a);
+                    action = '/api/state' + a;
                 });
             }
             else {
-                this.actions.push(`/api/state${this.microid}?${prop}=${encodeURI(val)}`);
+                action = `/api/state${this.microid}?${prop}=${encodeURI(val)}`;
+            }
+            if (action) {
+                if ((this.actions.length == 0) || (action !== this.actions[this.actions.length - 1])) {
+                    this.actions.push(action);
+                }
+                ;
             }
             debounce(this.dispatchNext.bind(this))();
         }
@@ -722,24 +729,14 @@ class DisplayItemWidgetClass extends GenericWidgetClass {
     }
 }
 let DisplayButtonWidgetClass = class DisplayButtonWidgetClass extends DisplayItemWidgetClass {
-    _svgElem;
-    createSVGNode(parentNode, tagName, attr, txt) {
-        const n = document.createElementNS("http://www.w3.org/2000/svg", tagName);
-        if (attr) {
-            Object.getOwnPropertyNames(attr).forEach(function (p) {
-                n.setAttribute(p, attr[p]);
-            });
-        }
-        if (txt) {
-            n.textContent = txt;
-        }
-        parentNode.appendChild(n);
-        return (n);
-    }
     connectedCallback() {
         super.connectedCallback();
         if (this._dispElem) {
             this._elem = createHTMLElement(this._dispElem, 'button', { class: 'but', style: 'top:0;left:0' });
+            this._elem.addEventListener('click', (evt) => {
+                console.log('evt', evt);
+                this.dispatchAction("action=click", '1');
+            });
         }
     }
     newData(path, key, value) {
@@ -759,6 +756,10 @@ let DisplayButtonWidgetClass = class DisplayButtonWidgetClass extends DisplayIte
         else if (key === 'color') {
             sty.borderColor = value.replace(/^x/, '#');
         }
+    }
+    on_click(evt) {
+        super.on_click(evt);
+        console.log(evt);
     }
 };
 DisplayButtonWidgetClass = __decorate([
@@ -1448,6 +1449,16 @@ function createHTMLElement(parentNode, tag, attr, beforeNode = null) {
         }
     }
     return (o);
+}
+async function fetchJSON(url, options) {
+    const p = fetch(url, options)
+        .then(raw => raw.json());
+    return (p);
+}
+async function fetchText(url, options) {
+    const p = fetch(url, options)
+        .then(raw => raw.text());
+    return (p);
 }
 let TimerWidgetClass = class TimerWidgetClass extends GenericWidgetClass {
     wt = 0;

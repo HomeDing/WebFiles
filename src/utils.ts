@@ -146,4 +146,18 @@ function createHTMLElement(parentNode: HTMLElement, tag: string, attr: { [id: st
   return (o);
 } // createHTMLElement()
 
+// initiate a fetch with JSON result expected.
+async function fetchJSON(url:string, options: object) {
+  const p = fetch(url, options)
+    .then(raw => raw.json());
+  return (p);
+}
+
+// initiate a fetch with Text result expected.
+async function fetchText(url:string, options: object) {
+  const p = fetch(url, options)
+    .then(raw => raw.text());
+  return (p);
+}
+
 // End

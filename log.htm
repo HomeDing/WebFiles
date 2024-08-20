@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Log output</title>
   <link Content-Type="text/css" href="/iotstyle.css" rel="stylesheet" />
-  
+
   <link rel="icon" type="image/png" href="/favicon48.png" sizes="48x48">
   <meta name="application-name" content="Ding" />
   <meta name="msapplication-config" content="/browserconfig.xml" />
@@ -16,7 +16,7 @@
   <meta name="mobile-web-app-capable" content="yes" />
   <link rel="manifest" href="/site.webmanifest" />
   <meta name="theme-color" content="#ffffff" />
-  
+
   <script src="micro.js"></script>
 
   <link Content-Type="text/css" href="/u-toast.css" rel="stylesheet" />
@@ -33,7 +33,6 @@
       overflow-x: hidden;
       overflow-y: scroll;
     }
-
   </style>
 
 </head>
@@ -73,36 +72,29 @@
       logTextObj.scrollTop = logTextObj.scrollHeight;
     }
 
-    fetch('/log_old.txt')
-      .then(function(result) {
-        return (result.text());
-      }).then(function(txt) {
-        appendLog(txt);
-        return (fetch('/log.txt'));
-      }).then(function(result) {
-        return (result.text());
-      }).then(function(txt) {
-        appendLog(txt);
-      });
-
-    function updateLog() {
-      fetch('/log.txt')
-        .then(function(result) {
-          return (result.text());
-        }).then(function(txt) {
+    async function updateLog() {
+      fetchText('/log.txt')
+        .then(function(txt) {
           appendLog(txt);
         });
     }
 
-    window.setInterval(updateLog, 1000);
+    window.addEventListener('load', async function() {
+      await fetchText('/log_old.txt')
+        .then(function(txt) {
+          appendLog(txt);
+        });
+      await updateLog();
+      window.setInterval(updateLog, 1000);
 
-    clearObj.addEventListener('click', async () => {
-      toastObj.info('deleting log files...');
-      await fetch("/log_old.txt", { method: 'DELETE' });
-      await fetch("/log.txt", { method: 'DELETE' });
-      toastObj.info('log files deleted.');
-
+      clearObj.addEventListener('click', async () => {
+        toastObj.info('deleting log files...');
+        await fetch("/log_old.txt", { method: 'DELETE' });
+        await fetch("/log.txt", { method: 'DELETE' });
+        toastObj.info('log files deleted.');
+      });
     });
+
 
   </script>
 

@@ -125,17 +125,24 @@ class GenericWidgetClass extends MicroControlClass {
 
   // send an action to the board and dispatch to the element
   dispatchAction(prop?: string | null, val?: string | null) {
+    let action: string | undefined = undefined;
+
     if (prop && val) {
       if (prop.includes('/')) {
         // list of actions with optional value placeholder
         prop = prop.replace('${v}', encodeURI(val));
         prop.split(',').forEach((a) => {
           if (!a.startsWith('/')) { a = '/' + a; }
-          this.actions.push('/api/state' + a);
+          action = '/api/state' + a;
         });
       } else {
         // simple set one property to this element
-        this.actions.push(`/api/state${this.microid}?${prop}=${encodeURI(val)}`);
+        action = `/api/state${this.microid}?${prop}=${encodeURI(val)}`;
+      }
+      if (action) {
+        if ((this.actions.length == 0) || (action !== this.actions[this.actions.length - 1])) {
+          this.actions.push(action);
+        };
       }
       debounce(this.dispatchNext.bind(this))();
     }

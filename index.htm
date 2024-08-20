@@ -156,10 +156,7 @@
 
     window.addEventListener('load', function () {
       memAPI = memObj.getSVGDocument().api;
-      fetch('/api/sysinfo')
-        .then(function (result) {
-          return result.json();
-        })
+      fetchJSON('/api/sysinfo')
         .then(function (d) {
           var o = document.getElementById('sysinfo');
           o.innerText = JSON.stringify(d, null, 1)
@@ -185,10 +182,7 @@
           ]);
         });
 
-      fetch('/api/state')
-        .then(function (result) {
-          return result.json();
-        })
+      fetchJSON('/api/state')
         .then(function (d) {
           var o = document.querySelector('#stateInfo');
           o.innerText = JSON.stringify(d, null, 1)
@@ -198,10 +192,7 @@
 
         });
 
-      fetch('/api/elements')
-        .then(function (result) {
-          return result.json();
-        })
+      fetchJSON('/api/elements')
         .then(function (d) {
           var o = document.querySelector('#elementsInfo');
           o.innerText = d.join(', ');

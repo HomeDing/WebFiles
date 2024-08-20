@@ -19,7 +19,7 @@
     "selector-max-compound-selectors": 4,
     "selector-no-qualifying-type": [true, { "ignore": ["class", "attribute"]  } ],
     "selector-class-pattern": "[a-zA-Z]*",
-    "at-rule-allowed-list": ["use", "media", "import"],
+    "at-rule-allowed-list": ["use", "media", "import", "container"],
     "at-rule-no-unknown": null,
     "custom-property-empty-line-before": null,
     "no-descending-specificity": null,

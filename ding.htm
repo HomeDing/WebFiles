@@ -193,13 +193,6 @@
         state: {}
       }
 
-      // initiate a fetch with JSON res expected.
-      async function fetchJSON(url, options) {
-        var p = fetch(url, options)
-          .then(raw => raw.json());
-        return (p)
-      }
-
       function updateState() {
         fetchJSON('/api/state')
           .then(json => hub.publishObj(json))
@@ -207,15 +200,14 @@
       } // updateState()
       window.updateState = updateState;
 
-      // fetch element definitions from env.json and config.json asap
-      var p3 = fetchJSON('/env.json').then(json => uElements.env = json);
-      var p4 = fetchJSON('/config.json').then(json => uElements.config = json);
-      var pState = fetchJSON('/api/state').then(json => uElements.state = json);
-
       function loaded() {
+        // fetch element definitions from env.json and config.json asap
+        var p3 = fetchJSON('/env.json').then(json => uElements.env = json);
+        var p4 = fetchJSON('/config.json').then(json => uElements.config = json);
+        var pState = fetchJSON('/api/state').then(json => uElements.state = json);
 
         // create new card
-        hub.subscribe('/*/*', function (path) {
+        hub.subscribe('/*/*', function(path) {
           // console.log("ev:", path);
           if (path) {
             path = path.toLowerCase();
@@ -244,12 +236,12 @@
           document.querySelector("h1").textContent = _title;
         }
 
-        hub.subscribe('/device/*?name', function (path, key, value) {
+        hub.subscribe('/device/*?name', function(path, key, value) {
           _name = value;
           setTitle();
         });
 
-        hub.subscribe('/device/*?title', function (path, key, value) {
+        hub.subscribe('/device/*?title', function(path, key, value) {
           _title = value;
           setTitle();
         });

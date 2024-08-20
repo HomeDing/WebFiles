@@ -323,8 +323,7 @@
         var ret;
         if (!document.querySelector('dialog#addElement')) {
           // lazy load dialogs.
-          ret = fetch("./board-new.htm")
-            .then(res => res.text())
+          ret = fetchText("./board-new.htm")
             .then(txt => {
               document.body.appendChild(document.createRange().createContextualFragment(txt));
               document.querySelectorAll('[u-is]').forEach(el => micro.attach(el));
@@ -365,22 +364,13 @@
         timer = window.setTimeout(updateStateNow, 200);
       };
 
-
-      // initiate a fetch with JSON res expected.
-      async function fetchJSON(url, options) {
-        var p = fetch(url, options)
-          .then(raw => raw.json());
-        return (p);
-      }
-
-      // load templates from other file.
-      var p2 = fetchJSON('/elements.json').then(json => uElements.defs = json);
-      var p3 = fetchJSON('/env.json').then(json => uElements.env = json);
-      var p4 = fetchJSON('/config.json').then(json => uElements.config = json);
-      var pState = fetchJSON('/api/state').then(json => uElements.state = json);
-
-
       function loaded() {
+        // load templates from other file.
+        var p2 = fetchJSON('/elements.json').then(json => uElements.defs = json);
+        var p3 = fetchJSON('/env.json').then(json => uElements.env = json);
+        var p4 = fetchJSON('/config.json').then(json => uElements.config = json);
+        var pState = fetchJSON('/api/state').then(json => uElements.state = json);
+
         params = getHashParams({ sys: false });
         var p0 = micro.loadFile('/board-templates.htm');
 

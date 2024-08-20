@@ -1,4 +1,3 @@
-20:18:10 ntptime/on:e:got time: 1543436290
 00:00:27 sys:e:sketch setup done.
 00:00:27 sys:e:Registered Libraries: ssdp ota device time remote ntptime serialcmd my value button timer schedule digitalout pwmout displaytext displaydot displayLCD displayS
 00:00:00 sys:e:sketch setup done.

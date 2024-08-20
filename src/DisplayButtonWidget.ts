@@ -10,35 +10,15 @@
 
 @MicroControl('displaybutton')
 class DisplayButtonWidgetClass extends DisplayItemWidgetClass {
-  _svgElem!: SVGElement;
-
-  /**
- * Create a SVG element
- * @param {SVGAElement} parentNode container node for the new element
- * @param {string} tagName tagName of the new element
- * @param {Object | undefined} attr attributes of the new element passed as Object 
- * @param {string | undefined} txt inner text content.   
- */
-  createSVGNode(parentNode: Element, tagName: string, attr?: any, txt?: string) {
-    const n = document.createElementNS("http://www.w3.org/2000/svg", tagName);
-    if (attr) {
-      Object.getOwnPropertyNames(attr).forEach(function(p) {
-        n.setAttribute(p, attr[p]);
-      });
-    }
-    if (txt) { n.textContent = txt; }
-    parentNode.appendChild(n);
-    return (n);
-  } // createSVGNode()
-
 
   override connectedCallback() {
     super.connectedCallback();
     if (this._dispElem) {
-      //   this._elem = createHTMLElement(this._dispElem, 'span', { class: 'line' });
-      // this._svgElem = this._dispElem.querySelector('svg') as SVGElement;
-      // this._elem = this.createSVGNode(this._svgElem, 'line', { strokeWidth: 1 }) as any as HTMLElement;
       this._elem = createHTMLElement(this._dispElem, 'button', { class: 'but', style: 'top:0;left:0' });
+      this._elem.addEventListener('click', (evt) => {
+        console.log('evt', evt);
+        this.dispatchAction("action=click", '1');
+      });
     }
   } // connectedCallback
 
@@ -52,11 +32,29 @@ class DisplayButtonWidgetClass extends DisplayItemWidgetClass {
       sty.width = value + (this._grid > 1 ? 'ch' : 'px');
     } else if (key === 'h') {
       sty.height = value + (this._grid > 1 ? 'em' : 'px');
-      sty.fontSize = (Number(value)*0.7) + (this._grid > 1 ? 'em' : 'px');
+      sty.fontSize = (Number(value) * 0.7) + (this._grid > 1 ? 'em' : 'px');
     } else if (key === 'color') {
       sty.borderColor = value.replace(/^x/, '#');
     }
   } // newData
+
+  override on_click(evt: MouseEvent) {
+    super.on_click(evt);
+    console.log(evt);
+    // if (evt.target === this._objButton) {
+    //   if (this._duration > 800) {
+    //     // press event
+    //     this.dispatchAction("action=press", '1');
+
+    //   } else {
+    //     // single short click
+    //     if (this._timer) { window.clearTimeout(this._timer); }
+    //     this._timer = window.setTimeout(() => {
+    //       this.dispatchAction("action=click", '1');
+    //     }, 250);
+    //   }
+    // }
+  } // on_click
 
 } // class DisplayLineWidgetClass
 

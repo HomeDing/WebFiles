@@ -248,21 +248,13 @@
       var ret;
       if (!document.querySelector('dialog#addElement')) {
         // lazy load dialogs.
-        ret = fetch("./board-new.htm")
-          .then(res => res.text())
+        ret = fetchText("./board-new.htm")
           .then(txt => {
             document.body.appendChild(document.createRange().createContextualFragment(txt));
           });
       }
       return (ret);
     } // loadPlugins()
-
-    // initiate a fetch with JSON res expected.
-    async function fetchJSON(url, options) {
-      var p = fetch(url, options)
-        .then(raw => raw.json());
-      return (p);
-    }
 
     // Element definitions and config+state of running elements
     const uElements = {
@@ -522,27 +514,29 @@
       }
     } // drawEdges()
 
-    // get configuration data
-    var p2 = fetchJSON('/elements.json').then(json => uElements.defs = json);
-    var p3 = fetchJSON('/env.json').then(json => uElements.env = json);
-    var p4 = fetchJSON('/config.json').then(json => uElements.config = json);
-    var p5 = fetchJSON('/api/elements').then(json => uElements.impl = json);
+    window.addEventListener('load', async function() {
+      // get configuration data
+      var p2 = fetchJSON('/elements.json').then(json => uElements.defs = json);
+      var p3 = fetchJSON('/env.json').then(json => uElements.env = json);
+      var p4 = fetchJSON('/config.json').then(json => uElements.config = json);
+      var p5 = fetchJSON('/api/elements').then(json => uElements.impl = json);
 
-    // start when all data is available
-    Promise.all([p2, p3, p4, p5]).then(function() {
-      hub.write('env', JSON.stringify(uElements.env));
-      hub.write('config', JSON.stringify(uElements.config));
-      createNodes(uElements.env);
-      createNodes(uElements.config);
+      // start when all data is available
+      Promise.all([p2, p3, p4, p5]).then(function() {
+        hub.write('env', JSON.stringify(uElements.env));
+        hub.write('config', JSON.stringify(uElements.config));
+        createNodes(uElements.env);
+        createNodes(uElements.config);
 
-      nodes = layout.nodes;
-      edges = layout.edges;
+        nodes = layout.nodes;
+        edges = layout.edges;
 
-      placeNodes();
-      for (let n = 0; n < ITERATE; n++) moveNodes();
-      drawNodes();
-      drawEdges();
-      loadPlugins();
+        placeNodes();
+        for (let n = 0; n < ITERATE; n++) moveNodes();
+        drawNodes();
+        drawEdges();
+        loadPlugins();
+      });
     });
 
     // === drag & drop

@@ -148,9 +148,7 @@
     </div>
 
     <!-- <div class="row" style="margin-bottom:0;overflow:hidden"> -->
-    <div id="files" style="grid-column: 1; flex: 1 1 auto; overflow: scroll">
-      ...
-    </div>
+    <div id="files" style="grid-column: 1; flex: 1 1 auto; overflow: scroll" title="drag and drop files here."></div>
 
     <pre style="grid-column: 2" class="code" contenteditable id="content" autocomplete="off" autocorrect="off"
       autocapitalize="off" spellcheck="false"></pre>
@@ -190,10 +188,7 @@
 
       } else {
         // load file
-        fetch(name)
-          .then(function(result) {
-            return result.text();
-          })
+        fetchText(name)
           .then(function(txt) {
             contentObj.innerText = txt;
             activeFileObj.innerText = thisFile = name;
@@ -209,14 +204,14 @@
     }
 
     // delete file on the server
-    function handleDeleteFile(e) {
+    async function handleDeleteFile(e) {
       e.stopPropagation();
       e.preventDefault();
       let s = e.target.parentElement.firstElementChild.innerText;
       s = s.split(' ')[0];
       const yn = window.confirm('Delete ' + s + ' ?');
       if (yn) {
-        fetch(s, { method: 'DELETE' });
+        await fetch(s, { method: 'DELETE' });
         window.setTimeout(handleReloadFS, 100);
       } // if
     } // handleDeleteFile()
@@ -233,9 +228,9 @@
         class: 'col stretch file-entry',
       });
       if (f.type === 'dir') {
-        entry.innerText = entry.title = f.name;
+        entry.innerText = f.name;
       } else {
-        entry.innerText = entry.title = f.name + ' (' + f.size + ')';
+        entry.innerText = f.name + ' (' + f.size + ')';
         const de = createHTMLElement(row, 'div', {
           class: 'col file-delete',
         });
@@ -254,10 +249,7 @@
 
     function handleReloadFS() {
       const path = getPath();
-      fetch(`/api/list?path=${path}`)
-        .then(function(result) {
-          return result.json();
-        })
+      fetchJSON(`/api/list?path=${path}`)
         .then(function(x) {
           x.sort(function(a, b) {
             if (a.type && !b.type) return -1;
@@ -305,14 +297,15 @@
       });
       formData.append(filename, blob, filename);
 
-      fetch('/', { method: 'POST', body: formData }).then(function() {
-        toastObj.info(`done.`);
+      fetch('/', { method: 'POST', body: formData }).then(() => {
+        handleReloadFS();
+        toastObj.info('done.');
       });
     }
 
     // save file from editor back to server.
     function handleSave() {
-      thisFile = window.prompt('Upload File:', thisFile);
+      thisFile = window.prompt('Save File:', thisFile);
       if (thisFile !== undefined)
         startUpload(thisFile, 'text/html', contentObj.innerText);
     } // handleSave()
@@ -362,7 +355,8 @@
         formData.append('file', dtFiles[i], path + dtFiles[i].name);
       }
       fetch('/', { method: 'POST', body: formData }).then(function() {
-        toastObj.info(`done.`);
+        handleReloadFS();
+        toastObj.info('done.');
       });
     }
 

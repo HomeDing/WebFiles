@@ -1,4 +1,3 @@
-00:00:00 button/in:i:cannot set unknown property xtype
 00:00:00 sys:e:devicename=lcddevice
 08:37:01 ntptime/on:e:got time: 1543394221
 00:00:00 sys:e:sketch setup done.
@@ -31,6 +30,78 @@
 00:00:00 sys:e:devicename=lcddevice
 19:21:33 ntptime/on:e:got time: 1543432893
 00:00:27 sys:e:sketch setup done.
+00:00:27 sys:e:Registered Libraries: ssdp ota device time remote ntptime serialcmd my value button timer schedule digitalout pwmout displaytext displaydot displayLCD displayS
+00:00:28 sys:e:devicename=lcddevice
+00:00:00 sys:e:sketch setup done.
+00:00:00 sys:e:Registered Libraries: ssdp ota device time remote ntptime serialcmd my value button timer schedule digitalout pwmout displaytext displaydot displayLCD displayS
+00:00:00 sys:e:devicename=lcddevice
+19:26:48 ntptime/on:e:got time: 1543433208
+20:05:15 button/in:i:cannot set unknown property value
+00:00:27 sys:e:sketch setup done.
+00:00:27 sys:e:Registered Libraries: ssdp ota device time remote ntptime serialcmd my value button timer schedule digitalout pwmout displaytext displaydot displayLCD displayS
+00:00:28 sys:e:devicename=lcddevice
+00:00:00 sys:e:sketch setup done.
+00:00:00 sys:e:Registered Libraries: ssdp ota device time remote ntptime serialcmd my value button timer schedule digitalout pwmout displaytext displaydot displayLCD displayS
+00:00:00 sys:e:devicename=lcddevice
+20:07:09 ntptime/on:e:got time: 1543435629
+20:12:52 button/in:i:cannot set property null:
+00:00:27 sys:e:sketch setup done.
+00:00:27 sys:e:Registered Libraries: ssdp ota device time remote ntptime serialcmd my value button timer schedule digitalout pwmout displaytext displaydot displayLCD displayS
+00:00:28 sys:e:devicename=lcddevice
+00:00:27 sys:e:Registered Libraries: ssdp ota device time remote ntptime serialcmd my value button timer schedule digitalout pwmout displaytext displaydot displayLCD displayS
+00:00:28 sys:e:devicename=lcddevice
+00:00:00 sys:e:sketch setup done.
+00:00:00 sys:e:Registered Libraries: ssdp ota device time remote ntptime serialcmd my value button timer schedule digitalout pwmout displaytext displaydot displayLCD displayS
+00:00:00 sys:e:devicename=lcddevice
+19:26:48 ntptime/on:e:got time: 1543433208
+20:05:15 button/in:i:cannot set unknown property value
+00:00:27 sys:e:sketch setup done.
+00:00:27 sys:e:Registered Libraries: ssdp ota device time remote ntptime serialcmd my value button timer schedule digitalout pwmout displaytext displaydot displayLCD displayS
+00:00:28 sys:e:devicename=lcddevice
+00:00:00 sys:e:sketch setup done.
+00:00:00 sys:e:Registered Libraries: ssdp ota device time remote ntptime serialcmd my value button timer schedule digitalout pwmout displaytext displaydot displayLCD displayS
+00:00:00 sys:e:devicename=lcddevice
+20:07:09 ntptime/on:e:got time: 1543435629
+20:12:52 button/in:i:cannot set property null:
+00:00:27 sys:e:sketch setup done.
+00:00:27 sys:e:Registered Libraries: ssdp ota device time remote ntptime serialcmd my value button timer schedule digitalout pwmout displaytext displaydot displayLCD displayS
+00:00:28 sys:e:devicename=lcddevice
+00:00:27 sys:e:Registered Libraries: ssdp ota device time remote ntptime serialcmd my value button timer schedule digitalout pwmout displaytext displaydot displayLCD displayS
+00:00:28 sys:e:devicename=lcddevice
+00:00:00 sys:e:sketch setup done.
+00:00:00 sys:e:Registered Libraries: ssdp ota device time remote ntptime serialcmd my value button timer schedule digitalout pwmout displaytext displaydot displayLCD displayS
+00:00:00 sys:e:devicename=lcddevice
+19:26:48 ntptime/on:e:got time: 1543433208
+20:05:15 button/in:i:cannot set unknown property value
+00:00:27 sys:e:sketch setup done.
+00:00:27 sys:e:Registered Libraries: ssdp ota device time remote ntptime serialcmd my value button timer schedule digitalout pwmout displaytext displaydot displayLCD displayS
+00:00:28 sys:e:devicename=lcddevice
+00:00:00 sys:e:sketch setup done.
+00:00:00 sys:e:Registered Libraries: ssdp ota device time remote ntptime serialcmd my value button timer schedule digitalout pwmout displaytext displaydot displayLCD displayS
+00:00:00 sys:e:devicename=lcddevice
+20:07:09 ntptime/on:e:got time: 1543435629
+20:12:52 button/in:i:cannot set property null:
+00:00:27 sys:e:sketch setup done.
+00:00:27 sys:e:Registered Libraries: ssdp ota device time remote ntptime serialcmd my value button timer schedule digitalout pwmout displaytext displaydot displayLCD displayS
+00:00:28 sys:e:devicename=lcddevice
+00:00:27 sys:e:Registered Libraries: ssdp ota device time remote ntptime serialcmd my value button timer schedule digitalout pwmout displaytext displaydot displayLCD displayS
+00:00:28 sys:e:devicename=lcddevice
+00:00:00 sys:e:sketch setup done.
+00:00:00 sys:e:Registered Libraries: ssdp ota device time remote ntptime serialcmd my value button timer schedule digitalout pwmout displaytext displaydot displayLCD displayS
+00:00:00 sys:e:devicename=lcddevice
+19:26:48 ntptime/on:e:got time: 1543433208
+20:05:15 button/in:i:cannot set unknown property value
+00:00:27 sys:e:sketch setup done.
+00:00:27 sys:e:Registered Libraries: ssdp ota device time remote ntptime serialcmd my value button timer schedule digitalout pwmout displaytext displaydot displayLCD displayS
+00:00:28 sys:e:devicename=lcddevice
+00:00:00 sys:e:sketch setup done.
+00:00:00 sys:e:Registered Libraries: ssdp ota device time remote ntptime serialcmd my value button timer schedule digitalout pwmout displaytext displaydot displayLCD displayS
+00:00:00 sys:e:devicename=lcddevice
+20:07:09 ntptime/on:e:got time: 1543435629
+20:12:52 button/in:i:cannot set property null:
+00:00:27 sys:e:sketch setup done.
+00:00:27 sys:e:Registered Libraries: ssdp ota device time remote ntptime serialcmd my value button timer schedule digitalout pwmout displaytext displaydot displayLCD displayS
+00:00:28 sys:e:devicename=lcddevice
 00:00:27 sys:e:Registered Libraries: ssdp ota device time remote ntptime serialcmd my value button timer schedule digitalout pwmout displaytext displaydot displayLCD displayS
 00:00:28 sys:e:devicename=lcddevice
 00:00:00 sys:e:sketch setup done.
