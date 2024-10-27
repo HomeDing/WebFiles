@@ -11,7 +11,7 @@
   :root {
     --color: #eeeeee;
     --back: #111111;
-    --card-back: #373737;
+    --card-back: rgb(55.25, 55.25, 55.25);
     --card-head: hsl(220, 20%, 30%);
     --card-head-active: hsl(220, 80%, 30%);
   }
@@ -806,3 +806,5 @@ input.band.hue {
 input.band.white, input.band.lightness, input.band.saturation {
   background: linear-gradient(to right, black 0%, white 100%);
 }
+
+/*# sourceMappingURL=iotstyle.css.map */
