@@ -20,6 +20,7 @@
   <link Content-Type="text/css" href="/iotstyle.css" rel="stylesheet" />
 
   <script src="/micro.js"></script>
+  <script src="/sfc/loader.js"></script>
   <style>
     svg.setconfig {
       position: absolute;
@@ -62,7 +63,10 @@
     }
   </style>
 
-  </style>
+  <script>
+    window.loadComponent('u-colorpick', '/sfc');
+  </script>
+
 </head>
 
 <body>
@@ -90,6 +94,16 @@
     <h3>Topic headings &lt;h3&gt;</h3>
     <h4>Subtitles &lt;h4&gt;</h4>
     <p>Normal floating text with <a href="#">links</a>.</p>
+    <h4>Colors:</h4>
+    <p style="background-color: var(--code);">
+      text: <u-colorpick cssvar="color"></u-colorpick>
+      background: <u-colorpick cssvar="back"></u-colorpick>
+      card-back: <u-colorpick cssvar="card-back"></u-colorpick> 
+      card-head: <u-colorpick cssvar="card-head"></u-colorpick> 
+      card-head-active: <u-colorpick cssvar="card-head-active"></u-colorpick> 
+      code: <u-colorpick cssvar="code"></u-colorpick> 
+      focus: <u-colorpick cssvar="focus"></u-colorpick>
+    </p>
     <!-- <p>Use <code>class="hidden-xs"</code> and <span class="code">class="hidden-xs"</span> to hide text elements.</p> -->
     <h4>Code blocks:</h4>
     <pre><code class="hljs">{
@@ -736,7 +750,7 @@
 
   <div class="panel">
 
-  <a href="https://colors.artyclick.com/color-names-dictionary/color-names/mariner-color/">Mariner Color</a>
+    <a href="https://colors.artyclick.com/color-names-dictionary/color-names/mariner-color/">Mariner Color</a>
   </div>
 
   <script>

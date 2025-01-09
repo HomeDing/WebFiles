@@ -70,6 +70,7 @@ $u-font-sans-serif: arial, ui-sans-serif, sans-serif;
   --card-head: #{hsl($u-hue, 20%, 85%)};
   --card-head-active: #{hsl($u-hue, 80%, 70%)};
   --focus: #{hsl($u-hue, 50%, 50%)};
+  --code: rgb(255 255 185);
 
   color-scheme: dark light;
 
@@ -208,7 +209,7 @@ code,
 .code,
 code.hljs,
 pre>code {
-  background-color: rgb(255 255 185);
+  background-color: var(--code);
   color: $u-text;
   font-size: 1rem;
   font-family: 'Courier New', Courier, monospace;

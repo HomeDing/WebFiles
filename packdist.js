@@ -13,7 +13,7 @@ import * as sass from 'sass';
 import * as HTMLMinifier from 'html-minifier-terser';
 import * as JSMinifier from 'terser';
 
-import shell from 'shelljs'
+import shell from 'shelljs';
 
 const distFolder = "dist";
 
@@ -132,6 +132,9 @@ const assets = [
   { m: 'm', src: 'u-toast.css', tar: 'u-toast.css' },
   { m: 'js', src: 'u-toast.js' },
 
+  { m: 'js', src: 'sfc/loader.js' },
+  { m: 'm', src: 'sfc/u-colorpick.vue' },
+
   { m: 'xml', src: 'chartline.svg' },
   { m: 'js', src: 'chartline.js' },
   { m: 'xml', src: 'chartpie.svg' },
@@ -157,7 +160,7 @@ const assets = [
 // create fresh dist folders
 shell.rm('-rf', distFolder);
 shell.mkdir(distFolder);
-shell.mkdir(distFolder + '/i');
+shell.mkdir(distFolder + '/sfc');
 
 packAssets(assets).then(() => {
   logInfo(`Files created.`);

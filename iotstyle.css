@@ -5,6 +5,7 @@
   --card-head: hsl(220, 20%, 85%);
   --card-head-active: hsl(220, 80%, 70%);
   --focus: hsl(220, 50%, 50%);
+  --code: rgb(255 255 185);
   color-scheme: dark light;
 }
 @media (prefers-color-scheme: dark) {
@@ -176,7 +177,7 @@ code,
 .code,
 code.hljs,
 pre > code {
-  background-color: rgb(255, 255, 185);
+  background-color: var(--code);
   color: #111111;
   font-size: 1rem;
   font-family: "Courier New", Courier, monospace;
