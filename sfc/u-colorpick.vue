@@ -4,7 +4,7 @@ Implementation of a web component for color picking with advanced integration fu
 The component will display the hex color value and show a circle with the color.
 The color value and a standard change event is implemented to mimic the behavior of a standard HTML input[type=color] element. 
 
-<my-colorpick value="#000088" cssvar="color"></my-colorpick>
+<u-colorpick value="#000088" cssvar="color"></u-colorpick>
 
 ## HTML Attributes
 
@@ -60,7 +60,7 @@ label {
 </style>
 
 <script>
-export default class ColorPick extends UComponent {
+export default class UColorPick extends UComponent {
   static observedAttributes = ["value"];
   value = 'black';
   cssvar = '';

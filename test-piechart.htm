@@ -21,11 +21,16 @@
       background-color: rgb(255, 255, 240);
     }
   </style>
+  <script src="/sfc/loader.js"></script>
+  <script>
+    var allSFCLoaded = window.loadComponent('u-piechart', '/sfc');
+  </script>
 </head>
 
 <body>
   <div class="container">
     <h1>Pie Chart Test Page</h1>
+
     <p> <button id="doClear">clear</button> <button id="doDraw1">draw1</button> <button id="doDraw2">draw2</button>
       <button id="doDraw3">draw3</button> <button id="doDraw4">draw4</button>
     </p>
@@ -34,10 +39,13 @@
       <input type="checkbox" id="showValue" checked>showValue&nbsp;
       <input type="checkbox" id="showPercentage">showPercentage&nbsp;
     </p>
-    <p>API Documentation available at <a href="https://homeding.github.io/#page=microchart-pie.md">https://homeding.github.io/#page=microchart-pie.md</a></p>
+    <p>API Documentation available at <a
+        href="https://homeding.github.io/#page=microchart-pie.md">https://homeding.github.io/#page=microchart-pie.md</a>
+    </p>
+
 
     <h3>Pie Chart</h3>
-    <object id="chartpie" data="chartpie.svg" type="image/svg+xml" style="width:300px;height:300px;"></object>
+    <u-piechart id="mypie"></u-piechart>
 
     <h3>Pie Chart Data</h3>
     <p>The data passed to the draw function:</p>
@@ -49,54 +57,54 @@
   </div>
 
   <script>
-    var chartObj = document.getElementById('chartpie');
-    var chartAPI;
+    var chartElement = document.querySelector('#mypie');
 
     function pieClear() {
-      chartAPI.clear();
+      chartElement.clear();
       document.querySelector('#theOptions').textContent = '';
       document.querySelector('#theData').textContent = '';
 
     }
 
-    function pieOptions(colors) {
+    function setPieOptions(colors = null, w = 0.3) {
       var opts = {
+        strokeWidth: w,
         showTitle: document.querySelector('#showTitle').checked,
         showValue: document.querySelector('#showValue').checked,
         showPercentage: document.querySelector('#showPercentage').checked
       };
       if (colors) opts.colors = colors;
-      chartAPI.setOptions(opts);
+      chartElement.setOptions(opts);
       document.querySelector('#theOptions').textContent = JSON.stringify(opts, null, 2);
     }
 
     // draw pie with colors at values
     function pieDraw1() {
-      pieOptions();
+      setPieOptions();
       var data = [
         { title: 'used', value: 800000, color: 'rgb(0,0,128)' },
         { title: 'reserved', value: 200000, color: 'hsl(180,50%,50%)' },
         { title: 'available', value: 1200000, color: 'silver' }
       ];
-      chartAPI.draw(data);
+      chartElement.draw(data);
       document.querySelector('#theData').textContent = JSON.stringify(data, null, 2);
     }
 
     // draw pie with colors in options
     function pieDraw2() {
-      pieOptions("red,blue,yellow,green");
+      setPieOptions("red,blue,yellow,green", 0);
       var data = [
         { title: "Used", value: 60 },
         { title: "reserved", value: 30 },
         { title: "Available", value: 12 },
         { title: "alert", value: 8 }];
-      chartAPI.draw(data);
+      chartElement.draw(data);
       document.querySelector('#theData').textContent = JSON.stringify(data, null, 2);
     }
 
     // draw pie with default colors
     function pieDraw3() {
-      pieOptions("");
+      setPieOptions("");
       var data = [
         { title: "Text", value: 8 },
         { title: "Images", value: 16 },
@@ -104,31 +112,29 @@
         { title: "Binaries", value: 4 },
         { title: "Audio", value: 4 },
         { title: "Movies", value: 3 }];
-      chartAPI.draw(data);
+      chartElement.draw(data);
       document.querySelector('#theData').textContent = JSON.stringify(data, null, 2);
     }
 
     // draw pie with colors in various formats
     function pieDraw4() {
-      pieOptions(["black", "hsl(220,50%,10%)", "#111"]);
+      setPieOptions(["black", "hsl(220,50%,10%)", "#111"]);
       var data = [
         { title: "dogs", value: 8 },
         { title: "cats", value: 16 },
         { title: "birds", value: 2 }];
-      chartAPI.draw(data);
+      chartElement.draw(data);
       document.querySelector('#theData').textContent = JSON.stringify(data, null, 2);
     }
 
-    window.addEventListener('load', function () {
-      chartAPI = chartObj.getSVGDocument().api;
-      pieDraw1();
-
+    window.addEventListener('DOMContentLoaded', async function() {
       document.getElementById('doClear').addEventListener('click', pieClear);
       document.getElementById('doDraw1').addEventListener('click', pieDraw1);
       document.getElementById('doDraw2').addEventListener('click', pieDraw2);
       document.getElementById('doDraw3').addEventListener('click', pieDraw3);
       document.getElementById('doDraw4').addEventListener('click', pieDraw4);
-
+      await allSFCLoaded;
+      pieDraw1();
     });
   </script>
 </body>

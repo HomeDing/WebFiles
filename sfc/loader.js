@@ -7,6 +7,7 @@
 // The UComponent class acts as a intermediate class between user defined SFC and the generic HTMLElement class.
 // It implements the generation of the shadow dom and css according to the style and template.
 class UComponent extends HTMLElement {
+
   constructor() {
     super();
 
@@ -96,46 +97,40 @@ class UComponent extends HTMLElement {
 window.loadComponent = (function() {
 
   async function fetchSFC(tagName, folder = '') {
-    const sfc = { tagName, template: undefined, style: undefined, def: undefined };
+    let def; 
 
     if (folder === undefined) folder = '';
     if (folder.length > 0 && (!folder.endsWith('/'))) folder += '/';
     const url = folder + tagName + '.vue';
-    console.log(url);
+    console.debug('SFC', `registerComponent(${tagName}, ${url})`);
 
     // get DOM from sfc-file
     const dom = await fetch(url)
       .then(response => response.text())
       .then(html => (new DOMParser()).parseFromString(html, 'text/html'));
 
-    // save template and css for later
-    sfc.template = dom.querySelector('template');
-    sfc.style = dom.querySelector('style');
-
     // create class from script
     const scriptObj = dom.querySelector('script');
-    const jsFile = new Blob([scriptObj.textContent], { type: 'application/javascript' });
-    const module = await import(URL.createObjectURL(jsFile));
+    if (scriptObj && scriptObj.textContent) {
+      const jsFile = new Blob([scriptObj.textContent], { type: 'application/javascript' });
+      const module = await import(URL.createObjectURL(jsFile));
+      def = module.default;
+    } else {
+      console.error('SFC', `No class defined in ${url}`);
+      def = UComponent;
+    }
 
-    sfc.def = module.default;
-
-    return (sfc);
+    // make template and style available to object constructor()
+    def.uTemplate = dom.querySelector('template');
+    def.uStyle = dom.querySelector('style');
+    customElements.define(tagName, def);
+    console.debug('SFC', `${tagName} defined.`);
   }; // fetchSFC()
 
 
-  function registerComponent({ tagName, template, style, def }) {
-    console.debug('SFC', `registerComponent(${tagName})`);
-
-    // make template and style available to object constructor()
-    def.uTemplate = template;
-    def.uStyle = style;
-    customElements.define(tagName, def);
-    console.debug('SFC', `${tagName} defined.`);
-  } // registerComponent();
-
-  function loadComponent(urlList, folder) {
-    const urls = urlList.split(',');
-    return (Promise.all(urls.map((u) => fetchSFC(u, folder).then(registerComponent))));
+  function loadComponent(tags, folder) {
+    if (typeof tags === 'string') tags = tags.split(',');
+    return (Promise.all(tags.map((tag) => fetchSFC(tag, folder))));
   }
 
   return loadComponent;
