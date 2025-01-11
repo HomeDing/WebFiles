@@ -5,7 +5,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <title>Gauge Charts</title>
+  <title>Gauge Chart Test</title>
 
   <link Content-Type="text/css" href="/iotstyle.css" rel="stylesheet" />
   <style>
@@ -21,6 +21,10 @@
       background-color: rgb(255, 255, 240);
     }
   </style>
+  <script src="/sfc/loader.js"></script>
+  <script>
+    var allSFCLoaded = window.loadComponent('u-gaugechart', '/sfc');
+  </script>
 </head>
 
 <body>
@@ -34,13 +38,13 @@
       <button id="doCase3">Height</button>
     </p>
     <p>
-      <button onclick="chartAPI.clear();">clear</button>
-      <button onclick="chartAPI.draw('x');">NaN</button>
-      <button onclick="chartAPI.draw(0);">0</button>
-      <button onclick="chartAPI.draw(1);">1</button>
-      <button onclick="chartAPI.draw(10);">10</button>
-      <button onclick="chartAPI.draw(35);">35</button>
-      <button onclick="chartAPI.draw(100);">100</button>
+      <button onclick="gaugeObj.clear();">clear</button>
+      <button onclick="gaugeObj.draw('x');">NaN</button>
+      <button onclick="gaugeObj.draw(0);">0</button>
+      <button onclick="gaugeObj.draw(1);">1</button>
+      <button onclick="gaugeObj.draw(10);">10</button>
+      <button onclick="gaugeObj.draw(35);">35</button>
+      <button onclick="gaugeObj.draw(100);">100</button>
     </p>
 
     <p>API Documentation available at <a
@@ -48,8 +52,7 @@
     </p>
 
     <h3>Gauge Chart</h3>
-    <object id="testChart" data="chartgauge.svg" type="image/svg+xml"
-      style="width:300px;height:300px;background-color:#cccccc"></object>
+    <u-gaugechart id="mygauge" style="background-color: aqua;"></u-gaugechart>
 
     <h3>Pie Chart Data</h3>
     <p>The data passed to the draw function:</p>
@@ -62,10 +65,10 @@
 
   <script>
     var chartObj = document.getElementById('testChart');
-    var chartAPI;
+    var gaugeObj = document.querySelector('#mygauge');
 
     function chartClear() {
-      chartAPI.clear();
+      gaugeObj.clear();
       document.querySelector('#theOptions').textContent = '';
       document.querySelector('#theData').textContent = '';
     }
@@ -73,6 +76,8 @@
     function case1a() {
       var opts = {
         title: "Room Temperature",
+        strokeWidth:0.4,
+        fontSize: '8px',
         units: "°C",
         minimum: 5,
         maximum: 45,
@@ -84,14 +89,16 @@
       };
       var data = 26.7;
 
-      chartAPI.setOptions(opts);
-      chartAPI.draw(data);
+      gaugeObj.setOptions(opts);
+      gaugeObj.draw(data);
       document.querySelector('#theOptions').textContent = JSON.stringify(opts, null, 2);
       document.querySelector('#theData').textContent = JSON.stringify(data, null, 2);
+
     }
 
     function case1b() {
       var opts = {
+        strokeWidth:0,
         title: "Outside Temperature",
         units: "°C",
         minimum: -20,
@@ -105,8 +112,8 @@
       };
       var data = 2.5;
 
-      chartAPI.setOptions(opts);
-      chartAPI.draw(data);
+      gaugeObj.setOptions(opts);
+      gaugeObj.draw(data);
       document.querySelector('#theOptions').textContent = JSON.stringify(opts, null, 2);
       document.querySelector('#theData').textContent = JSON.stringify(data, null, 2);
     }
@@ -129,8 +136,8 @@
       };
       var data = 44.2;
 
-      chartAPI.setOptions(opts);
-      chartAPI.draw(data);
+      gaugeObj.setOptions(opts);
+      gaugeObj.draw(data);
       document.querySelector('#theOptions').textContent = JSON.stringify(opts, null, 2);
       document.querySelector('#theData').textContent = JSON.stringify(data, null, 2);
     }
@@ -144,14 +151,14 @@
       };
       var data = 640;
 
-      chartAPI.setOptions(opts);
-      chartAPI.draw(data);
+      gaugeObj.setOptions(opts);
+      gaugeObj.draw(data);
       document.querySelector('#theOptions').textContent = JSON.stringify(opts, null, 2);
       document.querySelector('#theData').textContent = JSON.stringify(data, null, 2);
     }
 
-    window.addEventListener('load', function () {
-      chartAPI = chartObj.getSVGDocument().api;
+    window.addEventListener('load', async function () {
+      await allSFCLoaded;
       case1a();
 
       document.getElementById('doClear').addEventListener('click', chartClear);
