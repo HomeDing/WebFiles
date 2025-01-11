@@ -135,6 +135,7 @@ const assets = [
   { m: 'js', src: 'sfc/loader.js' },
   { m: 'm', src: 'sfc/u-colorpick.vue' },
   { m: 'm', src: 'sfc/u-piechart.vue' },
+  { m: 'm', src: 'sfc/u-gaugechart.vue' },
 
   { m: 'xml', src: 'chartline.svg' },
   { m: 'js', src: 'chartline.js' },

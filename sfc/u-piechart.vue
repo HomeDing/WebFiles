@@ -1,5 +1,6 @@
 <!--
-Implementation of a web component for displaying a pie chart based on data.
+Implementation of a web component for displaying a pie chart
+based on configuration options and data.
 
 The component displays ...
 
@@ -7,12 +8,23 @@ The component displays ...
 
 ## HTML Attributes
 
-* **value** -- The initial value attribute can be given by a html tag attribute
-* **nnn** -- The nnn attribute ...
-
-## JavaScript accessible attributes
+The style of the web component can be changed.
 
 ## JavaScript accessible methods
+
+* setOptions(opts) -- Set chart options.
+* draw(data) -- Draw the pie chart based on the data.
+
+## Options
+
+The options are used to configure the chart and are passed using the setOptions function.
+
+* **fontSize** -- The size of the values shown as text. Default is '3px'.
+* **strokeWidth** -- The with of the stroke drawing a border around a segment. Default is 0.2.
+* **showTitle** -- : false,
+* **showValue** -- : false,
+* ** showPercentage** -- : false,
+* ** colors** -- : []
 
 -->
 
@@ -28,8 +40,8 @@ The component displays ...
   display: inline-block;
   width: 300px;
   aspect-ratio: 1;
-  --fontSize : 3px;
-  --strokeWidth : .2;
+  --fontSize: 3px;
+  --strokeWidth: .2;
 }
 
 svg {
@@ -42,6 +54,7 @@ svg {
 }
 
 .text {
+  fill: black;
   stroke: 0;
   font-size: var(--fontSize);
   text-anchor: middle;
@@ -52,9 +65,9 @@ svg {
 <script>
 export default class UPieChart extends UComponent {
   // constants
-  RAD_OUT = 22;
+  #RAD_OUT = 22;
 
-  DEFAULTOPTIONS = {
+  #DEFAULTOPTIONS = {
     fontSize: '3px',
     strokeWidth: 0.2,
     showTitle: false,
@@ -63,8 +76,8 @@ export default class UPieChart extends UComponent {
     colors: []
   };
 
+  #options = this.#DEFAULTOPTIONS;
   data = [];
-  options = {};
 
   /**
   * Calculate a point on the circle, usable for svg paths
@@ -72,9 +85,9 @@ export default class UPieChart extends UComponent {
   * @param {number} r radius of circle
   * @returns string with <x>,<y>.
   */
-  _piePoint(alpha, r) {
+  #cPoint(alpha, r) {
     return (String(Math.sin(alpha) * r) + ',' + String(-Math.cos(alpha) * r));
-  } // _piePoint()
+  } // #cPoint()
 
 
   /**
@@ -84,7 +97,7 @@ export default class UPieChart extends UComponent {
    * @param {Object | undefined} attr attributes of the new element passed as Object 
    * @param {string | undefined} txt inner text content.   
    */
-  createSVGNode(parentNode, tagName, attr, txt) {
+  #createSVGNode(parentNode, tagName, attr, txt) {
     var n = document.createElementNS("http://www.w3.org/2000/svg", tagName);
     if (attr) {
       Object.getOwnPropertyNames(attr).forEach(function(p) {
@@ -97,11 +110,11 @@ export default class UPieChart extends UComponent {
   } // createSVGNode()
 
 
-  _clearChildNodes(p) {
+  #clearChildNodes(p) {
     Array.from(p.childNodes).forEach(function(c) {
       c.remove();
     });
-  } // _clearChildNodes()
+  } // #clearChildNodes()
 
 
   /**
@@ -115,21 +128,21 @@ export default class UPieChart extends UComponent {
   _addSlice(start, size, color, value, title) {
     var alpha = 2 * Math.PI * start;
     var beta = 2 * Math.PI * (start + size);
-    var opts = this.options;
+    var opts = this.#options;
 
     // create pie slice path
     let p =
-      "M" + this._piePoint(alpha, this.RAD_OUT)
-      + "A" + this.RAD_OUT + "," + this.RAD_OUT;
+      "M" + this.#cPoint(alpha, this.#RAD_OUT)
+      + "A" + this.#RAD_OUT + "," + this.#RAD_OUT;
 
     if (size < 0.5) {
       p += " 0 0 1 ";
     } else {
       p += " 0 1 1 ";
     }
-    p += this._piePoint(beta, this.RAD_OUT);
+    p += this.#cPoint(beta, this.#RAD_OUT);
     p += "L0,0Z";
-    var pNode = this.createSVGNode(this.shadowRoot.querySelector('#panel'), "path", {
+    var pNode = this.#createSVGNode(this.shadowRoot.querySelector('#panel'), "path", {
       class: "segment",
       style: "fill:" + color,
       d: p
@@ -150,8 +163,8 @@ export default class UPieChart extends UComponent {
 
 
       // create text element on top of pie slice
-      var tPoint = this._piePoint((alpha + beta) / 2, this.RAD_OUT * 0.7).split(',');
-      this.createSVGNode(this.shadowRoot.querySelector('#values'), "text", {
+      var tPoint = this.#cPoint((alpha + beta) / 2, this.#RAD_OUT * 0.7).split(',');
+      this.#createSVGNode(this.shadowRoot.querySelector('#values'), "text", {
         class: "text",
         style: "fill:" + ((lum > 127) ? "black" : "white"),
         x: tPoint[0], y: tPoint[1]
@@ -160,35 +173,34 @@ export default class UPieChart extends UComponent {
   } // _addSlice()
 
 
-  init() {
-    super.init();
-    this.options = this.DEFAULTOPTIONS;
-  }
+  // init() {
+  //   super.init();
+  // }
 
 
   /// Clear the pie chart. 
   /// Remove all visible elements.
   clear() {
     const dom = this.shadowRoot;
-    this._clearChildNodes(dom.querySelector('#panel'));
-    this._clearChildNodes(dom.querySelector('#values'));
+    this.#clearChildNodes(dom.querySelector('#panel'));
+    this.#clearChildNodes(dom.querySelector('#values'));
   } // clear()
 
 
   /// Set chart options.
   /// @param opts: Options to control the look of the chart. 
   setOptions(opts) {
-    this.options = Object.assign({}, this.DEFAULTOPTIONS, opts);
+    this.#options = Object.assign({}, this.#options, opts);
     if (opts.colors) {
       var cols = opts.colors;
       if (typeof cols == "string")
-        this.options.colors = cols.split(',');
+        this.#options.colors = cols.split(',');
       else if (Array.isArray(cols))
-        this.options.colors = [...cols];
+        this.#options.colors = [...cols];
     }
     // this.shadowRoot.style.setProperty('--fontSize', );
-    this.style.setProperty('--fontSize', this.options.fontSize);
-    this.style.setProperty('--strokeWidth', this.options.strokeWidth);
+    this.style.setProperty('--fontSize', this.#options.fontSize);
+    this.style.setProperty('--strokeWidth', this.#options.strokeWidth);
   } // setOptions()
 
 
@@ -197,8 +209,8 @@ export default class UPieChart extends UComponent {
   draw(data) {
     this.clear();
 
-    var cl = this.options.colors;
-    var cll = this.options.colors.length
+    var cl = this.#options.colors;
+    var cll = this.#options.colors.length
 
     if (data) {
       // calculate sum of all parts:
