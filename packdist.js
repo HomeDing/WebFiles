@@ -136,9 +136,8 @@ const assets = [
   { m: 'm', src: 'sfc/u-colorpick.vue' },
   { m: 'm', src: 'sfc/u-piechart.vue' },
   { m: 'm', src: 'sfc/u-gaugechart.vue' },
+  { m: 'm', src: 'sfc/u-linechart.vue' },
 
-  { m: 'xml', src: 'chartline.svg' },
-  { m: 'js', src: 'chartline.js' },
   { m: 'js', src: 'microsvg.js' },
 
   { m: 'm', src: 'index.htm' },
