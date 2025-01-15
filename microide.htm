@@ -10,8 +10,10 @@
   <!-- no web site meta data here -->
   <link Content-Type="text/css" href="iotstyle.css" rel="stylesheet" />
   <script src="micro.js"></script>
-  <link Content-Type="text/css" href="/u-toast.css" rel="stylesheet" />
-  <script src="u-toast.js"></script>
+  <script src="/sfc/loader.js"></script>
+  <script>
+    var allSFCLoaded = window.loadComponent('u-toast', '/sfc');
+  </script>
   <style>
     #files {
       border: solid 1px black;
@@ -110,6 +112,7 @@
 </head>
 
 <body style="margin: 0; padding: 0">
+  <u-toast></u-toast>
   <div class="grid-container" style="padding: 1rem">
     <div class="u-header">
       <svg class="icon">
@@ -153,7 +156,6 @@
     <pre style="grid-column: 2" class="code" contenteditable id="content" autocomplete="off" autocorrect="off"
       autocapitalize="off" spellcheck="false"></pre>
   </div>
-  <u-toast></u-toast>
 
   <script>
     const filesObj = document.getElementById('files');

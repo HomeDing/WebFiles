@@ -19,8 +19,10 @@
 
   <script src="micro.js"></script>
 
-  <link Content-Type="text/css" href="/u-toast.css" rel="stylesheet" />
-  <script src="u-toast.js"></script>
+  <script src="/sfc/loader.js"></script>
+  <script>
+    var allSFCLoaded = window.loadComponent('u-toast', '/sfc');
+  </script>
 
   <style>
     pre.code {
@@ -38,6 +40,7 @@
 </head>
 
 <body style="margin:0;padding:0">
+  <u-toast></u-toast>
   <div class="u-header">
     <h1>Log output</h1>
   </div>
@@ -50,7 +53,6 @@
     <button id="clearButton">clear</button>
   </div>
   <pre class="code" id="logtext"></pre>
-  <u-toast></u-toast>
 
   <script>
     var clearObj = document.getElementById('clearButton');

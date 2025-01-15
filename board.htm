@@ -17,10 +17,10 @@
 
   <link Content-Type="text/css" href="/iotstyle.css" rel="stylesheet" defer />
   <script src="/micro.js" defer></script>
-
-  <link Content-Type="text/css" href="/u-toast.css" rel="stylesheet" />
-  <script src="u-toast.js"></script>
-
+  <script src="/sfc/loader.js"></script>
+  <script>
+    var allSFCLoaded = window.loadComponent('u-toast', '/sfc');
+  </script>
   <style>
     svg.setconfig {
       position: absolute;
@@ -55,6 +55,7 @@
 </head>
 
 <body>
+  <u-toast></u-toast>
   <div class="u-header">
     <h1>Board</h1>
   </div>
@@ -69,7 +70,6 @@
   </div>
 
   <main class="panel"></main>
-  <u-toast></u-toast>
 
   <div id="u-templates" style="display:none">
 

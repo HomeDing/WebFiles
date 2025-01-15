@@ -123,20 +123,14 @@ const assets = [
   // { m: 'c', src: 'favicon270.png' },
   // { m: 'c', src: 'favicon512.png' },
   { m: 'xml', src: 'icons.svg' },
-  // { m: 'xml', src: 'i/start.svg' },
-  // { m: 'xml', src: 'i/stop.svg' },
-  // { m: 'xml', src: 'i/default.svg' },
-  // { m: 'xml', src: 'i/no.svg' },
   { m: 'css', src: 'iotstyle.scss', tar: 'iotstyle.css' },
-
-  { m: 'm', src: 'u-toast.css', tar: 'u-toast.css' },
-  { m: 'js', src: 'u-toast.js' },
 
   { m: 'js', src: 'sfc/loader.js' },
   { m: 'm', src: 'sfc/u-colorpick.vue' },
   { m: 'm', src: 'sfc/u-piechart.vue' },
   { m: 'm', src: 'sfc/u-gaugechart.vue' },
   { m: 'm', src: 'sfc/u-linechart.vue' },
+  { m: 'm', src: 'sfc/u-toast.vue' },
 
   { m: 'js', src: 'microsvg.js' },
 
