@@ -1,0 +1,25 @@
+{
+  "webproxy": {
+    "00": { "element": "imkelight:scene/flow" },
+    "01": { "element": "imkelight:scene/red" },
+    "02": { "element": "imkelight:scene/green" },
+    "03": { "element": "imkelight:scene/ok" },
+
+    "1a": { "element": "rfbridge2:scene/dinner" },
+    "1b": { "element": "rfbridge2:scene/tv" },
+    "1c": { "element": "rfbridge2:scene/bright" },
+    "1d": { "element": "rfbridge2:scene/off" },
+
+    "1e": { "element": "rfbridge2:button/dampf" },
+    
+    "20": { "element": "plug06:switch/relay" },
+    "21": { "element": "switch1:switch/relay" },
+
+    "30": { "element": "plug02:switch/relay" },
+    "3a": { "element": "bulb04:switch/en" },
+    "3b": { "element": "bulb04:color/l" },
+
+    "50": { "element": "airding:pms/pm25" },
+    "51": { "element": "airding:bme680/bd" }
+  }
+}

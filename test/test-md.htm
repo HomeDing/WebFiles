@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en-US" prefix="og: https://ogp.me/ns#">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MD</title>
+  <link rel="icon" type="image/png" href="/favicon48.png" sizes="48x48">
+
+  <meta property="og:title" content="The Rock" />
+  <meta property="og:type" content="video.movie" />
+  <meta property="og:url" content="https://www.imdb.com/title/tt0117500/" />
+  <meta property="og:image" content="https://ia.media-imdb.com/images/rock.jpg" />
+  <!-- <link rel='stylesheet' href='/docstyle.css' media='all' /> -->
+  <link Content-Type="text/css" href="/iotstyle.css" rel="stylesheet" />
+
+  <style>
+    :root {
+      --backs: #FFDDDD;
+    }
+
+    body {
+      padding: 1em
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 12.6ch auto;
+      grid-gap: 0.5em;
+      margin-bottom: 0.5rem;
+
+      >* {
+        grid-column-end: -1;
+      }
+
+      >label {
+        grid-column: 1;
+        text-align: right;
+      }
+
+      >.wide {
+        grid-column: 1/-1;
+      }
+    }
+
+    .input {
+      padding: 0.2em
+    }
+  </style>
+  <script src="/sfc/loader.js"></script>
+</head>
+
+<body>
+
+  <h2>MD</h2>
+
+  <button id="load1">load</button>
+  <button id="text1">text</button>
+  <hr />
+  <u-markdown src="./test-md1.md" style="  background-color: azure; "></u-markdown>
+
+  <script>
+    loadComponent('u-markdown', '/sfc/').then(() => {
+      console.log('Page', "all components loaded.");
+    });
+
+    document.querySelector('#load1').addEventListener('click', (e) => {
+      document.querySelector('u-markdown').setAttribute('src', "./test-md2.md");
+    });
+
+    document.querySelector('#text1').addEventListener('click', (e) => {
+      document.querySelector('u-markdown').setAttribute('textContent', "# Hello World\n\nHello to the World !!");
+    });
+  </script>
+</body>
+
+</html>

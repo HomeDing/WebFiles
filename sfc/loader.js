@@ -71,7 +71,7 @@ class UComponent extends HTMLElement {
   }
 
   adoptedCallback() {
-    // this.info("adoptedCallback", evt);
+    // this.info("adoptedCallback");
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
@@ -94,7 +94,9 @@ class UComponent extends HTMLElement {
 } // class UComponent
 
 
+
 window.loadComponent = (function() {
+  console.debug('LOADER', `loadComponent...`);
 
   async function fetchSFC(tagName, folder = '') {
     let def; 

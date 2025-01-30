@@ -31,6 +31,8 @@ export interface HomeDingServerOptions {
 
 export class HomeDingServer {
 
+  CASE_FOLDER = './case/';
+
   // ===== private
   private _app: Application = express();
   private _api: Router = express.Router();
@@ -142,10 +144,10 @@ export class HomeDingServer {
     // #region ===== Setup mocking and proxy elements =====
 
     if (options.case) {
-      Logger.info(`Starting test case:; ${options.case}...`);
+      Logger.info(`Starting test case <${options.case}>...`);
 
-      if (fs.existsSync(`./test/${options.case}/`)) {
-        this._caseFolder = `./test/${options.case}/`;
+      if (fs.existsSync(`${this.CASE_FOLDER}${options.case}/`)) {
+        this._caseFolder = `${this.CASE_FOLDER}${options.case}/`;
       } else if (fs.existsSync(`./case-${options.case}/`)) {
         this._caseFolder = `case-${options.case}/`;
       } else {
