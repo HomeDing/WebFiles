@@ -96,15 +96,24 @@ class UComponent extends HTMLElement {
 
 
 window.loadComponent = (function() {
-  console.debug('LOADER', `loadComponent...`);
+  // plain script includes can read document.currentScript.src
+  // modules can use meta
+  const loaderURL = new URL(document.currentScript.src);
 
-  async function fetchSFC(tagName, folder = '') {
-    let def; 
+  console.debug('SFC', `loadComponent...`);
 
-    if (folder === undefined) folder = '';
-    if (folder.length > 0 && (!folder.endsWith('/'))) folder += '/';
-    const url = folder + tagName + '.vue';
-    console.debug('SFC', `registerComponent(${tagName}, ${url})`);
+  async function fetchSFC(tagName, folder = undefined) {
+    let def;
+
+    const sfcImpl = tagName + '.vue';
+    let baseUrl = loaderURL;
+
+    if (folder) {
+      baseUrl = new URL(folder, document.location.href);
+    }
+
+    const url = new URL(sfcImpl, baseUrl);
+    console.debug('SFC', `loading module ${tagName} from ${url.href}...`);
 
     // get DOM from sfc-file
     const dom = await fetch(url)

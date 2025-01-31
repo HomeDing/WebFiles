@@ -23,14 +23,12 @@ the markdown-it.js is required to be loaded. Ir can be found in https://markdown
 
 Open Topics:
 
-The foldername /sfc/ is still hardcoded. It should be replaced by a variable / placeholder.
+The foldername /sfc/ is hardcoded. It should be replaced by a variable / placeholder.
 
 References: 
 * https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_custom_elements
 * https://zerodevx.github.io/zero-md/
 * requestIdleCallback, SetTimeout VS RequestAnimationFrame
-
-
 
 -->
 
