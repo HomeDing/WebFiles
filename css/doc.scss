@@ -2,6 +2,8 @@
 // document layout rules
 // This is part of the micro css implementation.
 
+@use "base";
+
 h2 {
   clear: both;
 }
@@ -39,7 +41,7 @@ table {
 .imgcard,
 .iconcard {
   position: relative;
-  margin: $u-gutter $u-gutter $u-gutter 0;
+  margin: base.$u-gutter base.$u-gutter base.$u-gutter 0;
   width: 100%;
   max-width: 100%;
   background-color: var(--card-back);
@@ -52,19 +54,19 @@ table {
 
 // card with text only
 .plaincard {
-  padding: $u-gutter2;
+  padding: base.$u-gutter2;
   min-height: 6rem;
 }
 
 // cards with icon
 .iconcard {
-  padding: $u-gutter $u-gutter $u-gutter calc(4rem + 2 * $u-gutter);
+  padding: base.$u-gutter base.$u-gutter base.$u-gutter calc(4rem + 2 * base.$u-gutter);
   min-height: 5.4rem;
 
   svg {
     position: absolute;
-    top: $u-gutter;
-    left: $u-gutter;
+    top: base.$u-gutter;
+    left: base.$u-gutter;
     height: 4rem;
     width: 4rem;
   }
@@ -72,7 +74,7 @@ table {
 
 // picture with 4:3 ratio + text
 .imgcard {
-  padding: $u-gutter2 $u-gutter2 0 calc(9.6rem + $u-gutter2);
+  padding: base.$u-gutter2 base.$u-gutter2 0 calc(9.6rem + base.$u-gutter2);
   min-height: 7.2rem;
 
   img {
