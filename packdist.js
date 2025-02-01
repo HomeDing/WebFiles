@@ -123,7 +123,7 @@ const assets = [
   // { m: 'c', src: 'favicon270.png' },
   // { m: 'c', src: 'favicon512.png' },
   { m: 'xml', src: 'icons.svg' },
-  { m: 'css', src: 'iotstyle.scss', tar: 'iotstyle.css' },
+  { m: 'css', src: 'css/iot.scss', tar: 'iotstyle.css' },
 
   { m: 'js', src: 'sfc/loader.js' },
   { m: 'm', src: 'sfc/u-colorpick.vue' },

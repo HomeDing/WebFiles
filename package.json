@@ -53,7 +53,7 @@
     "build:ts": "tsc -p src",
     "build:ts-mini": "tsc -p src --project src/tsconfig.mini.json",
     "build:ts-watch": "npm run build:ts -- -w",
-    "test:css": "stylelint *.scss css/*.scss",
+    "test:css": "stylelint css/*.scss",
     "test:server": "eslint ./server/*.ts",
     "test:ts": "eslint ./src/*.ts",
     "pack:dist": "node packdist.js",

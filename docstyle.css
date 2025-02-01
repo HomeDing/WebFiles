@@ -6,6 +6,11 @@
   --card-head-active: hsl(220, 80%, 70%);
   --focus: hsl(220, 50%, 50%);
   --code: rgb(255 255 185);
+  --sidebar-width: 200px;
+  --content-width: 800px;
+  --layout-gap: 0.5em;
+  --doc-body-width: calc(var(--content-width) + var(--sidebar-width) + 2 * var(--layout-gap));
+  --content-back: #f8f8f8;
   color-scheme: dark light;
 }
 @media (prefers-color-scheme: dark) {
@@ -27,6 +32,88 @@ body {
   font-size: 1em;
   color: var(--color);
   background-color: var(--back);
+}
+html.sitelayout,
+body.sitelayout {
+  display: grid;
+  grid-template-columns: auto;
+  grid-template-areas: "header" "main" "sidebar" "footer";
+  gap: var(--layout-gap);
+  max-width: var(--doc-body-width);
+  margin: 0 auto;
+}
+html.sitelayout:has(aside),
+body.sitelayout:has(aside) {
+  grid-template-columns: auto var(--sidebar-width);
+  grid-template-areas: "header header" "main sidebar" "footer footer";
+}
+@media (width <= 1000px) {
+  html.sitelayout:has(aside),
+  body.sitelayout:has(aside) {
+    grid-template-areas: "header" "main" "sidebar" "footer";
+  }
+}
+html header,
+body header {
+  grid-area: header;
+  /* background-color: #f0f0f0; */
+  display: flex;
+}
+@media print {
+  html header,
+  body header {
+    display: none !important;
+  }
+}
+html header > *,
+body header > * {
+  align-self: flex-end;
+  display: inline-block;
+}
+html header > *:not(:first-child),
+body header > *:not(:first-child) {
+  margin-left: var(--layout-gap);
+}
+html header > .logo,
+body header > .logo {
+  font-size: 160%;
+  font-weight: bold;
+}
+html header a,
+body header a {
+  text-decoration: none;
+  width: 12ch;
+  text-align: center;
+  padding: 0.2ch 1ch;
+  transition: box-shadow 0.3s ease-in-out;
+}
+html header a:hover,
+body header a:hover {
+  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.3);
+}
+html aside,
+body aside {
+  grid-area: sidebar;
+  background-color: lime;
+  padding: var(--layout-gap);
+}
+@media print {
+  html aside,
+  body aside {
+    display: none !important;
+  }
+}
+html main,
+body main {
+  grid-area: main;
+  background-color: var(--content-back);
+  padding: var(--layout-gap);
+}
+html footer,
+body footer {
+  grid-area: footer;
+  background-color: lightblue;
+  padding: var(--layout-gap);
 }
 
 @media (width > 800px) {
@@ -405,6 +492,12 @@ main {
   border: 2px solid #00cc00 !important;
   background-color: #ccffcc !important;
   color: #111111;
+}
+
+@media print {
+  .noprint {
+    display: none !important;
+  }
 }
 
 h2 {

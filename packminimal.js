@@ -117,7 +117,7 @@ const assets = [
   { m: 'json', src: 'site.min.webmanifest', tar: 'site.webmanifest'},
   { m: 'xml', src: 'favicon.svg' },
   // { m: 'xml', src: 'icons-mini.svg', tar:'icons.svg'},
-  { m: 'css', src: 'iotstyle.scss', tar: 'iotstyle.css' },
+  { m: 'css', src: 'css/iot.scss', tar: 'iotstyle.css' },
   { m: 'js', src: 'micro-mini.js', tar: 'micro.js' },
   { m: 'm', src: 'ding.htm' },
   { m: 'm', src: 'microide.htm' },
