@@ -17,7 +17,8 @@ if [%1]==[] (
 )
 
 set version=%1
-set tar=%USERPROFILE%\OneDrive\Dokumente\homeding
+set tar=%USERPROFILE%\Projects\homeding-docu
+
 set rcflags=/XO /FFT /NJH /NS /NC /NFL /NDL /NJS
 
 robocopy dist %tar%\%version% /S /PURGE %rcflags%

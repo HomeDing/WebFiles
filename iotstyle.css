@@ -33,7 +33,7 @@ body {
   color: var(--color);
   background-color: var(--back);
 }
-html.sitelayout,
+
 body.sitelayout {
   display: grid;
   grid-template-columns: auto;
@@ -42,44 +42,36 @@ body.sitelayout {
   max-width: var(--doc-body-width);
   margin: 0 auto;
 }
-html.sitelayout:has(aside),
 body.sitelayout:has(aside) {
   grid-template-columns: auto var(--sidebar-width);
   grid-template-areas: "header header" "main sidebar" "footer footer";
 }
 @media (width <= 1000px) {
-  html.sitelayout:has(aside),
   body.sitelayout:has(aside) {
     grid-template-areas: "header" "main" "sidebar" "footer";
   }
 }
-html header,
 body header {
   grid-area: header;
   /* background-color: #f0f0f0; */
   display: flex;
 }
 @media print {
-  html header,
   body header {
     display: none !important;
   }
 }
-html header > *,
 body header > * {
   align-self: flex-end;
   display: inline-block;
 }
-html header > *:not(:first-child),
 body header > *:not(:first-child) {
   margin-left: var(--layout-gap);
 }
-html header > .logo,
 body header > .logo {
   font-size: 160%;
   font-weight: bold;
 }
-html header a,
 body header a {
   text-decoration: none;
   width: 12ch;
@@ -87,29 +79,24 @@ body header a {
   padding: 0.2ch 1ch;
   transition: box-shadow 0.3s ease-in-out;
 }
-html header a:hover,
 body header a:hover {
   box-shadow: 0 5px 12px rgba(0, 0, 0, 0.3);
 }
-html aside,
 body aside {
   grid-area: sidebar;
   background-color: lime;
   padding: var(--layout-gap);
 }
 @media print {
-  html aside,
   body aside {
     display: none !important;
   }
 }
-html main,
 body main {
   grid-area: main;
   background-color: var(--content-back);
   padding: var(--layout-gap);
 }
-html footer,
 body footer {
   grid-area: footer;
   background-color: lightblue;
