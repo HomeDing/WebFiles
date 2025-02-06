@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en-US" prefix="og: https://ogp.me/ns#">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Card-container</title>
+
+  <meta property="og:title" content="The Rock" />
+  <meta property="og:type" content="video.movie" />
+  <meta property="og:url" content="https://www.imdb.com/title/tt0117500/" />
+  <meta property="og:image" content="https://ia.media-imdb.com/images/rock.jpg" />
+  <link rel='stylesheet' href='/docstyle.css' media='all' />
+
+  <style>
+  </style>
+</head>
+
+<body class="sitelayout">
+
+  <h1>Card-container</h1>
+  <main style="background-color: lightgreen;">
+    <div class="card-container horizontal" style="width:900px;margin: 0 auto;--card-image-size:200px;--card-radius: 1em">
+      <div class="card"> <img src="/i/github.svg" class="left" alt="github cat">
+        <div class="body">
+          <h3>What to say...</h3>
+          <p>Lorem ipsum</p>
+        </div>
+      </div>
+      <div class="card"> <img src="/i/github.svg" alt="github cat" >
+        <div class="body">Some thoughts...</div>
+      </div>
+      <div class="card">
+        <img src="/i/no.svg" alt="github cat">
+        <div class="body">Some plain thoughts...</div>
+      </div>
+    </div>
+
+    &nbsp;
+    <div class="card-container col280">
+      <div class="card">
+        <img src="/i/analog.svg" alt="analog input" style="color:blue">
+        <div class="body">
+          <h3>GitHub</h3>
+          <a href="https://github.com/matthias-hertel_dbk">matthias-hertel_dbk</a>
+          <img src="/i/no.svg" alt="no meaning" style="height: 1lh;">
+        </div>
+      </div>
+      <div class="card wide autolink">
+        <img src="/i/socket.svg" alt="British">
+        <div class="body">
+          <h3>Autolink included</h3>
+          <a href="https://ishadeed.com/article/css-container-query-guide/">container queries</a>
+          <p>here</p>
+          <a href="https://getbootstrap.com/docs/4.1/components/card/">cards</a>
+        </div>
+      </div>
+
+      <div class="card autolink">
+        <img src="/i/bulb.svg" alt="no meaning">
+        <div class="body">
+          <h3>Lorem ipsum</h3>
+          <p>Lorem ipsum, <a href="https://developer.mozilla.org/">dolor sit</a> amet consectetur adipisicing elit.
+            Similique eveniet quaerat eum voluptatibus
+            dolore laborum praesentium</p>
+          <p>id eaque, unde harum. Ea temporibus ipsam beatae adipisci repellat distinctio
+            consequuntur a quo!</p>
+        </div>
+        <div class="actions"><button>Start</button> <button>Stop</button></div>
+      </div>
+
+      <div class="card autolink">
+        <div class="body">
+          <h3>Plain Lorem ipsum</h3>
+          <p>Lorem ipsum, <a href="https://developer.mozilla.org/">dolor sit</a> amet consectetur adipisicing elit.
+            Similique eveniet quaerat eum voluptatibus
+            dolore laborum praesentium</p>
+          <p>id eaque, unde harum. Ea temporibus ipsam beatae adipisci repellat distinctio
+            consequuntur a quo!</p>
+        </div>
+        <div class="actions"><button>Start</button> <button>Stop</button></div>
+      </div>
+
+      <div class="card small">x</div>
+      <div class="card small">x</div>
+      <div class="card ">x</div>
+      <div class="card ">x</div>
+    </div>
+
+    <h2>Card Tricks</h2>
+    <pre>
+Often cards are used to show the into to a longer article or application and a click on the card will then navigate to the
+target.
+
+Here is a css trick to make the whole card a link to the first link found in the card. Effecting any click on the card will trigger the link.
+
+This is done by adding a ::before pseudo element to the first link that covers the card completely on z-index: 1:
+
+```css
+.card.autolink a:first-of-type::before {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  content: "";
+}
+
+in case you have further functions on the card like action buttons these must be shiftet to z-index > 1 to make sure that they 
+
+```
+
+Links for whole cards
+
+[ .footer.action ] <= all additiona actions and links in the footer 
+[    1           ] <= pseudo element of the first link found 
+[    auto layer  ] <= all elements of the card, except .card > .footer.action
+
+
+    </pre>
+
+    <main>
+
+</body>
+
+</html>

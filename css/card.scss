@@ -1,0 +1,228 @@
+// @use "sass:color";
+@use "base";
+
+// CSS for HTML cards and card design without any dependencies.
+
+// ===== card Layout settings =====
+// 365 px
+
+$u-card-width: 280px;
+$u-card-gap: 16px;
+$u-card-height: 320px;
+$u-card-padding: 1em;
+$u-card-radius: 1em;
+
+$u-card-border: none;
+
+// ===== card style settings =====
+
+// $u-card-shadow: 0.2em 0.2em 0.4em rgba(0, 0, 0, 0.2);
+
+:root {
+  // When cards must be positioned using multiple columns
+  // the cards width and gap width must be constant. This is true as we need the width in the container queries.
+  // CSS variables cannot be used there.
+
+  /* pixel units are preferred to create exact card sizes. */
+  --card-width: #{$u-card-width};
+  --card-gap: #{$u-card-gap};
+
+  /* cards can have fixed or variable height specified by the --card-height variable. */
+  --card-height: #{$u-card-height};
+
+  /* horizontal cards have fixed height and are stretched to the total width of the card-container. See below */
+
+  /* Design of cards, colors borders, paddings,  */
+  --card-head: hsl(220deg 20% 85%);
+  --card-head-active: hsl(220deg 80% 70%);
+  --card-back: #f2f2f2;
+  --card-padding: 0.5em;
+  --card-image-size: 120px;
+  --card-radius: 0;
+}
+
+// ===== card container =====
+
+// The card-container will contain and position all cards according to the given rules.
+// By using some flags based on supplement class names
+// Also it acts as a variable holder for card implementations that can overwrite the default values.
+.card-container {
+  container-name: card;
+  container-type: inline-size;
+  display: flex;
+  flex-wrap: wrap;
+
+  // same as .col1
+  width: 100%;
+  gap: $u-card-gap;
+
+  /* container marked with class='horizontal' for horizontal oriented cards
+      stretching on the whole with with image on the left */
+
+  /* https://getbootstrap.com/docs/4.3/components/card/#horizontal */
+
+  /* https://codingyaar.com/bootstrap-4-card-image-left-responsive/ */
+  &.horizontal>.card {
+    --card-width: 100%;
+    --card-height: 7.2rem;
+
+    flex-direction: row;
+    align-items: stretch;
+
+    >img:first-of-type {
+      display: block;
+      float: left;
+      margin-right: var(--card-padding);
+      width: var(--card-image-size);
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+
+  // Cards with a defined, fixed width can be placed multiple times on one row when the with is giving enough space.
+  // For these cases the card-container implements the layout allowing centering the card collection in the center of the main content.
+  // Marking the card-container with class='col280' to provide multiple columns with width 280px.
+  // As css variables cannot be used in the css selectors they are hard-calculated here (with the help of sass if you like)
+
+
+  &.col280 {
+    // N columns of 280px cards with 16px gap
+    // 280*N + 16*(N-1)) = 280, 576, 872,  1168, ... in reverse with container queries
+
+    // center in container by default
+    margin: 0 auto;
+
+    // 4 columns maximum
+    width: calc($u-card-width * 4 + $u-card-gap * 3);
+
+    // @container main (width < #{$u-card-4col}) {
+    @container main (width < #{$u-card-width * 4 + $u-card-gap * 3}) {
+      width: calc($u-card-width * 3 + $u-card-gap * 2);
+    }
+
+    @container main (width < #{$u-card-width * 3 + $u-card-gap * 2}) {
+      width: calc($u-card-width * 2 + $u-card-gap);
+    }
+
+    @container main (width < #{$u-card-width * 2}) {
+      width: $u-card-width;
+    }
+
+  }
+
+  /* One column only. */
+  &.col1 {
+    width: 100%;
+  }
+
+}
+
+/* The cards are sized according to the given variables from :root or from the card-container)  */
+.card {
+  position: relative;
+  display: inline-block;
+  width: var(--card-width);
+  height: var(--card-height);
+  margin: 0;
+  padding: 0;
+  border-radius: var(--card-radius);
+  page-break-inside: avoid;
+  overflow: hidden;
+  background-color: var(--card-back);
+
+  /* cards can be marked with class='wide' covering 2 columns  */
+  &.wide {
+    width: calc(var(--card-width) * 2 + var(--card-gap));
+  }
+
+  /* cards can be marked with class='wide' covering 2 columns  */
+  &.small {
+    width: calc((var(--card-width) - var(--card-gap)) / 2);
+    height: calc((var(--card-height) - var(--card-gap)) / 2);
+  }
+
+  >img:first-of-type {
+    display: block;
+    width: 100%;
+    height: var(--card-image-size);
+    object-fit: cover;
+  }
+
+  .body {
+    /* background-color: lime; */
+    padding: var(--card-padding);
+  }
+
+  .actions {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: auto;
+    width: 100%;
+    padding: var(--card-padding);
+    border-top: 1px solid black;
+    background-color: inherit;
+  }
+
+  &.autolink a:first-of-type::before {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    content: "";
+  }
+}
+
+
+// simple content cards with image + text
+.plaincard,
+.imgcard,
+.iconcard {
+  position: relative;
+  margin: base.$u-gutter base.$u-gutter base.$u-gutter 0;
+  width: 100%;
+  max-width: 100%;
+  background-color: var(--card-back);
+  page-break-inside: avoid;
+
+  >h3 {
+    margin-top: 0;
+  }
+}
+
+// card with text only
+.plaincard {
+  padding: base.$u-gutter2;
+  min-height: 6rem;
+}
+
+// cards with icon
+.iconcard {
+  padding: base.$u-gutter base.$u-gutter base.$u-gutter calc(4rem + 2 * base.$u-gutter);
+  min-height: 5.4rem;
+
+  svg {
+    position: absolute;
+    top: base.$u-gutter;
+    left: base.$u-gutter;
+    height: 4rem;
+    width: 4rem;
+  }
+}
+
+// picture with 4:3 ratio + text
+.imgcard {
+  padding: base.$u-gutter2 base.$u-gutter2 0 calc(9.6rem + base.$u-gutter2);
+  min-height: 7.2rem;
+
+  img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: auto;
+    width: 9.6rem;
+    max-height: 7.2rem;
+  }
+}

@@ -48,7 +48,7 @@
     "clean": "shx rm -rf dist && shx rm -rf dist-mini",
     "xprebuild": "npm run test",
     "build:css": "sass css/iot.scss iotstyle.css && sass css/doc.scss docstyle.css",
-    "build:css-watch": "npm run build:css -- -w",
+    "build:css-watch": "sass css/doc.scss docstyle.css -w",
     "build:server": "tsc -p server",
     "build:ts": "tsc -p src",
     "build:ts-mini": "tsc -p src --project src/tsconfig.mini.json",

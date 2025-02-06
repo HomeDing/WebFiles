@@ -46,6 +46,9 @@ $u-white-space: 1rem;
 $u-gutter: calc($u-white-space / 2);
 $u-gutter2: calc($u-white-space / 4);
 
+// distance between paragraphs and other textual blocks
+$u-text-spacing: calc($u-white-space / 2);
+
 $u-btn-radius: calc($u-padding-block / 2);
 $u-output-border: $u-border-none;
 
@@ -73,11 +76,12 @@ $u-font-sans-serif: arial, ui-sans-serif, sans-serif;
   --code: rgb(255 255 185);
 
   --sidebar-width: 200px;
-  --content-width: 800px;
-  --layout-gap: 0.5em;
+  --content-width: 1168px;
+  --layout-gap: 16px;
   --doc-body-width: calc(var(--content-width) + var(--sidebar-width) + 2 * var(--layout-gap));
   --content-back: #f8f8f8;
 
+  --text-spacing: #{$u-text-spacing};
 
   color-scheme: dark light;
 
@@ -153,7 +157,8 @@ pre,
 code,
 h2,
 h3,
-h4 {
+h4,
+.text {
   margin: 0;
   min-height: 1rem;
 
@@ -168,15 +173,9 @@ h4 {
     }
   }
 
-  +p,
-  +pre,
-  +code,
-  +h2,
-  +h3,
-  +h4 {
-    margin-top: $u-gutter;
+  &:not(:first-child) {
+    margin-top: var(--text-spacing);
   }
-
 }
 
 a,

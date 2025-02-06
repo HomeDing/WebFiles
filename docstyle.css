@@ -7,10 +7,11 @@
   --focus: hsl(220, 50%, 50%);
   --code: rgb(255 255 185);
   --sidebar-width: 200px;
-  --content-width: 800px;
-  --layout-gap: 0.5em;
+  --content-width: 1168px;
+  --layout-gap: 16px;
   --doc-body-width: calc(var(--content-width) + var(--sidebar-width) + 2 * var(--layout-gap));
   --content-back: #f8f8f8;
+  --text-spacing: 0.5rem;
   color-scheme: dark light;
 }
 @media (prefers-color-scheme: dark) {
@@ -32,75 +33,6 @@ body {
   font-size: 1em;
   color: var(--color);
   background-color: var(--back);
-}
-
-body.sitelayout {
-  display: grid;
-  grid-template-columns: auto;
-  grid-template-areas: "header" "main" "sidebar" "footer";
-  gap: var(--layout-gap);
-  max-width: var(--doc-body-width);
-  margin: 0 auto;
-}
-body.sitelayout:has(aside) {
-  grid-template-columns: auto var(--sidebar-width);
-  grid-template-areas: "header header" "main sidebar" "footer footer";
-}
-@media (width <= 1000px) {
-  body.sitelayout:has(aside) {
-    grid-template-areas: "header" "main" "sidebar" "footer";
-  }
-}
-body header {
-  grid-area: header;
-  /* background-color: #f0f0f0; */
-  display: flex;
-}
-@media print {
-  body header {
-    display: none !important;
-  }
-}
-body header > * {
-  align-self: flex-end;
-  display: inline-block;
-}
-body header > *:not(:first-child) {
-  margin-left: var(--layout-gap);
-}
-body header > .logo {
-  font-size: 160%;
-  font-weight: bold;
-}
-body header a {
-  text-decoration: none;
-  width: 12ch;
-  text-align: center;
-  padding: 0.2ch 1ch;
-  transition: box-shadow 0.3s ease-in-out;
-}
-body header a:hover {
-  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.3);
-}
-body aside {
-  grid-area: sidebar;
-  background-color: lime;
-  padding: var(--layout-gap);
-}
-@media print {
-  body aside {
-    display: none !important;
-  }
-}
-body main {
-  grid-area: main;
-  background-color: var(--content-back);
-  padding: var(--layout-gap);
-}
-body footer {
-  grid-area: footer;
-  background-color: lightblue;
-  padding: var(--layout-gap);
 }
 
 @media (width > 800px) {
@@ -176,44 +108,6 @@ h3 > svg:first-child,
 h4 > img:first-child,
 h4 > svg:first-child {
   margin-right: 0.2em;
-}
-p + p,
-p + pre,
-p + code,
-p + h2,
-p + h3,
-p + h4,
-pre + p,
-pre + pre,
-pre + code,
-pre + h2,
-pre + h3,
-pre + h4,
-code + p,
-code + pre,
-code + code,
-code + h2,
-code + h3,
-code + h4,
-h2 + p,
-h2 + pre,
-h2 + code,
-h2 + h2,
-h2 + h3,
-h2 + h4,
-h3 + p,
-h3 + pre,
-h3 + code,
-h3 + h2,
-h3 + h3,
-h3 + h4,
-h4 + p,
-h4 + pre,
-h4 + code,
-h4 + h2,
-h4 + h3,
-h4 + h4 {
-  margin-top: 0.5rem;
 }
 
 a,
@@ -487,100 +381,125 @@ main {
   }
 }
 
-body.sitelayout {
-  display: grid;
-  grid-template-columns: auto;
-  grid-template-areas: "header" "main" "sidebar" "footer";
-  gap: var(--layout-gap);
-  max-width: var(--doc-body-width);
-  margin: 0 auto;
+:root {
+  /* pixel units are preferred to create exact card sizes. */
+  --card-width: 280px;
+  --card-gap: 16px;
+  /* cards can have fixed or variable height specified by the --card-height variable. */
+  --card-height: 320px;
+  /* horizontal cards have fixed height and are stretched to the total width of the card-container. See below */
+  /* Design of cards, colors borders, paddings,  */
+  --card-head: hsl(220deg 20% 85%);
+  --card-head-active: hsl(220deg 80% 70%);
+  --card-back: #f2f2f2;
+  --card-padding: 0.5em;
+  --card-image-size: 120px;
+  --card-radius: 0;
 }
-body.sitelayout:has(aside) {
-  grid-template-columns: auto var(--sidebar-width);
-  grid-template-areas: "header header" "main sidebar" "footer footer";
-}
-@media (width <= 1000px) {
-  body.sitelayout:has(aside) {
-    grid-template-areas: "header" "main" "sidebar" "footer";
-  }
-}
-body header {
-  grid-area: header;
-  /* background-color: #f0f0f0; */
+
+.card-container {
+  container-name: card;
+  container-type: inline-size;
   display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  gap: 16px;
+  /* container marked with class='horizontal' for horizontal oriented cards
+      stretching on the whole with with image on the left */
+  /* https://getbootstrap.com/docs/4.3/components/card/#horizontal */
+  /* https://codingyaar.com/bootstrap-4-card-image-left-responsive/ */
+  /* Cards with a defined, fixed width can be placed multiple times on one row when the with is giving enough space. */
+  /* For these cases the card-container implements the layout allowing centering the card collection in the center of the main content. */
+  /* Marking the card-container with class='col280' to provide multiple columns with width 280px. */
+  /* As css variables cannot be used in the css selectors they are hard-calculated here (with the help of sass if you like) */
+  /* One column only. */
 }
-@media print {
-  body header {
-    display: none !important;
+.card-container.horizontal > .card {
+  --card-width: 100%;
+  --card-height: 7.2rem;
+  flex-direction: row;
+  align-items: stretch;
+}
+.card-container.horizontal > .card > img:first-of-type {
+  display: block;
+  float: left;
+  margin-right: var(--card-padding);
+  width: var(--card-image-size);
+  height: 100%;
+  object-fit: cover;
+}
+.card-container.col280 {
+  margin: 0 auto;
+  width: 1168px;
+}
+@container main (width < 1168px) {
+  .card-container.col280 {
+    width: 872px;
   }
 }
-body header > * {
-  align-self: flex-end;
+@container main (width < 872px) {
+  .card-container.col280 {
+    width: 576px;
+  }
+}
+@container main (width < 560px) {
+  .card-container.col280 {
+    width: 280px;
+  }
+}
+.card-container.col1 {
+  width: 100%;
+}
+
+/* The cards are sized according to the given variables from :root or from the card-container)  */
+.card {
+  position: relative;
   display: inline-block;
+  width: var(--card-width);
+  height: var(--card-height);
+  margin: 0;
+  padding: 0;
+  border-radius: var(--card-radius);
+  page-break-inside: avoid;
+  overflow: hidden;
+  background-color: var(--card-back);
+  /* cards can be marked with class='wide' covering 2 columns  */
+  /* cards can be marked with class='wide' covering 2 columns  */
 }
-body header > *:not(:first-child) {
-  margin-left: var(--layout-gap);
+.card.wide {
+  width: calc(var(--card-width) * 2 + var(--card-gap));
 }
-body header > .logo {
-  font-size: 160%;
-  font-weight: bold;
+.card.small {
+  width: calc((var(--card-width) - var(--card-gap)) / 2);
+  height: calc((var(--card-height) - var(--card-gap)) / 2);
 }
-body header a {
-  text-decoration: none;
-  width: 12ch;
-  text-align: center;
-  padding: 0.2ch 1ch;
-  transition: box-shadow 0.3s ease-in-out;
+.card > img:first-of-type {
+  display: block;
+  width: 100%;
+  height: var(--card-image-size);
+  object-fit: cover;
 }
-body header a:hover {
-  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.3);
+.card .body {
+  /* background-color: lime; */
+  padding: var(--card-padding);
 }
-body aside {
-  grid-area: sidebar;
-  background-color: lime;
-  padding: var(--layout-gap);
+.card .actions {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: auto;
+  width: 100%;
+  padding: var(--card-padding);
+  border-top: 1px solid black;
+  background-color: inherit;
 }
-@media print {
-  body aside {
-    display: none !important;
-  }
-}
-body main {
-  grid-area: main;
-  background-color: var(--content-back);
-  padding: var(--layout-gap);
-}
-body footer {
-  grid-area: footer;
-  background-color: lightblue;
-  padding: var(--layout-gap);
-}
-
-h2 {
-  clear: both;
-}
-
-table {
-  empty-cells: show;
-  border-collapse: collapse;
-  border-left: solid 1px #203050;
-  border-right: solid 1px #203050;
-  margin-top: 0.4em;
-  margin-bottom: 0.4em;
-}
-table thead tr {
-  background-color: #203050;
-}
-table thead tr th {
-  vertical-align: top;
-  padding: 0.2em 0.6em;
-  color: white;
-  font-weight: bold;
-}
-table td {
-  vertical-align: top;
-  padding: 0.2em 0.6em;
-  border-bottom: 1px solid #203050;
+.card.autolink a:first-of-type::before {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  content: "";
 }
 
 .plaincard,
@@ -627,6 +546,104 @@ table td {
   height: auto;
   width: 9.6rem;
   max-height: 7.2rem;
+}
+
+body.sitelayout {
+  display: grid;
+  grid-template-columns: auto;
+  grid-template-areas: "header" "main" "sidebar" "footer";
+  gap: var(--layout-gap);
+  max-width: var(--doc-body-width);
+  margin: 0 auto;
+}
+body.sitelayout:has(aside) {
+  grid-template-columns: auto var(--sidebar-width);
+  grid-template-areas: "header header" "main sidebar" "footer footer";
+}
+@media (width <= 1000px) {
+  body.sitelayout:has(aside) {
+    grid-template-areas: "header" "main" "sidebar" "footer";
+  }
+}
+body.sitelayout header {
+  grid-area: header;
+  /* background-color: #f0f0f0; */
+  display: flex;
+}
+@media print {
+  body.sitelayout header {
+    display: none !important;
+  }
+}
+body.sitelayout header > * {
+  align-self: flex-end;
+  display: inline-block;
+}
+body.sitelayout header > *:not(:first-child) {
+  margin-left: var(--layout-gap);
+}
+body.sitelayout header > .logo {
+  font-size: 160%;
+  font-weight: bold;
+}
+body.sitelayout header a {
+  text-decoration: none;
+  width: 12ch;
+  text-align: center;
+  padding: 0.2ch 1ch;
+  transition: box-shadow 0.3s ease-in-out;
+}
+body.sitelayout header a:hover {
+  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.3);
+}
+body.sitelayout aside {
+  grid-area: sidebar;
+  background-color: lime;
+  padding: var(--layout-gap);
+}
+@media print {
+  body.sitelayout aside {
+    display: none !important;
+  }
+}
+body.sitelayout main {
+  grid-area: main;
+  container-name: main;
+  container-type: inline-size;
+  background-color: var(--content-back);
+  padding: var(--layout-gap);
+}
+body.sitelayout footer {
+  grid-area: footer;
+  background-color: lightblue;
+  padding: var(--layout-gap);
+}
+
+h2 {
+  clear: both;
+}
+
+table {
+  empty-cells: show;
+  border-collapse: collapse;
+  border-left: solid 1px #203050;
+  border-right: solid 1px #203050;
+  margin-top: 0.4em;
+  margin-bottom: 0.4em;
+}
+table thead tr {
+  background-color: #203050;
+}
+table thead tr th {
+  vertical-align: top;
+  padding: 0.2em 0.6em;
+  color: white;
+  font-weight: bold;
+}
+table td {
+  vertical-align: top;
+  padding: 0.2em 0.6em;
+  border-bottom: 1px solid #203050;
 }
 
 img[title=w200] {

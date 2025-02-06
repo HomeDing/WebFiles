@@ -7,10 +7,11 @@
   --focus: hsl(220, 50%, 50%);
   --code: rgb(255 255 185);
   --sidebar-width: 200px;
-  --content-width: 800px;
-  --layout-gap: 0.5em;
+  --content-width: 1168px;
+  --layout-gap: 16px;
   --doc-body-width: calc(var(--content-width) + var(--sidebar-width) + 2 * var(--layout-gap));
   --content-back: #f8f8f8;
+  --text-spacing: 0.5rem;
   color-scheme: dark light;
 }
 @media (prefers-color-scheme: dark) {
@@ -32,75 +33,6 @@ body {
   font-size: 1em;
   color: var(--color);
   background-color: var(--back);
-}
-
-body.sitelayout {
-  display: grid;
-  grid-template-columns: auto;
-  grid-template-areas: "header" "main" "sidebar" "footer";
-  gap: var(--layout-gap);
-  max-width: var(--doc-body-width);
-  margin: 0 auto;
-}
-body.sitelayout:has(aside) {
-  grid-template-columns: auto var(--sidebar-width);
-  grid-template-areas: "header header" "main sidebar" "footer footer";
-}
-@media (width <= 1000px) {
-  body.sitelayout:has(aside) {
-    grid-template-areas: "header" "main" "sidebar" "footer";
-  }
-}
-body header {
-  grid-area: header;
-  /* background-color: #f0f0f0; */
-  display: flex;
-}
-@media print {
-  body header {
-    display: none !important;
-  }
-}
-body header > * {
-  align-self: flex-end;
-  display: inline-block;
-}
-body header > *:not(:first-child) {
-  margin-left: var(--layout-gap);
-}
-body header > .logo {
-  font-size: 160%;
-  font-weight: bold;
-}
-body header a {
-  text-decoration: none;
-  width: 12ch;
-  text-align: center;
-  padding: 0.2ch 1ch;
-  transition: box-shadow 0.3s ease-in-out;
-}
-body header a:hover {
-  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.3);
-}
-body aside {
-  grid-area: sidebar;
-  background-color: lime;
-  padding: var(--layout-gap);
-}
-@media print {
-  body aside {
-    display: none !important;
-  }
-}
-body main {
-  grid-area: main;
-  background-color: var(--content-back);
-  padding: var(--layout-gap);
-}
-body footer {
-  grid-area: footer;
-  background-color: lightblue;
-  padding: var(--layout-gap);
 }
 
 @media (width > 800px) {
@@ -144,7 +76,8 @@ pre,
 code,
 h2,
 h3,
-h4 {
+h4,
+.text {
   margin: 0;
   min-height: 1rem;
 }
@@ -159,7 +92,9 @@ h2 > svg,
 h3 > img,
 h3 > svg,
 h4 > img,
-h4 > svg {
+h4 > svg,
+.text > img,
+.text > svg {
   height: 1em;
   height: auto;
 }
@@ -174,46 +109,19 @@ h2 > svg:first-child,
 h3 > img:first-child,
 h3 > svg:first-child,
 h4 > img:first-child,
-h4 > svg:first-child {
+h4 > svg:first-child,
+.text > img:first-child,
+.text > svg:first-child {
   margin-right: 0.2em;
 }
-p + p,
-p + pre,
-p + code,
-p + h2,
-p + h3,
-p + h4,
-pre + p,
-pre + pre,
-pre + code,
-pre + h2,
-pre + h3,
-pre + h4,
-code + p,
-code + pre,
-code + code,
-code + h2,
-code + h3,
-code + h4,
-h2 + p,
-h2 + pre,
-h2 + code,
-h2 + h2,
-h2 + h3,
-h2 + h4,
-h3 + p,
-h3 + pre,
-h3 + code,
-h3 + h2,
-h3 + h3,
-h3 + h4,
-h4 + p,
-h4 + pre,
-h4 + code,
-h4 + h2,
-h4 + h3,
-h4 + h4 {
-  margin-top: 0.5rem;
+p:not(:first-child),
+pre:not(:first-child),
+code:not(:first-child),
+h2:not(:first-child),
+h3:not(:first-child),
+h4:not(:first-child),
+.text:not(:first-child) {
+  margin-top: var(--text-spacing);
 }
 
 a,
