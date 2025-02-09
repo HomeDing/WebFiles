@@ -69,6 +69,7 @@ $u-card-border: none;
     flex-direction: row;
     align-items: stretch;
 
+    >svg:first-of-type,
     >img:first-of-type {
       display: block;
       float: left;

@@ -76,7 +76,8 @@ pre,
 code,
 h2,
 h3,
-h4 {
+h4,
+.text {
   margin: 0;
   min-height: 1rem;
 }
@@ -91,7 +92,9 @@ h2 > svg,
 h3 > img,
 h3 > svg,
 h4 > img,
-h4 > svg {
+h4 > svg,
+.text > img,
+.text > svg {
   height: 1em;
   height: auto;
 }
@@ -106,8 +109,19 @@ h2 > svg:first-child,
 h3 > img:first-child,
 h3 > svg:first-child,
 h4 > img:first-child,
-h4 > svg:first-child {
+h4 > svg:first-child,
+.text > img:first-child,
+.text > svg:first-child {
   margin-right: 0.2em;
+}
+p:not(:first-child),
+pre:not(:first-child),
+code:not(:first-child),
+h2:not(:first-child),
+h3:not(:first-child),
+h4:not(:first-child),
+.text:not(:first-child) {
+  margin-top: var(--text-spacing);
 }
 
 a,
@@ -408,10 +422,6 @@ main {
       stretching on the whole with with image on the left */
   /* https://getbootstrap.com/docs/4.3/components/card/#horizontal */
   /* https://codingyaar.com/bootstrap-4-card-image-left-responsive/ */
-  /* Cards with a defined, fixed width can be placed multiple times on one row when the with is giving enough space. */
-  /* For these cases the card-container implements the layout allowing centering the card collection in the center of the main content. */
-  /* Marking the card-container with class='col280' to provide multiple columns with width 280px. */
-  /* As css variables cannot be used in the css selectors they are hard-calculated here (with the help of sass if you like) */
   /* One column only. */
 }
 .card-container.horizontal > .card {
@@ -420,6 +430,7 @@ main {
   flex-direction: row;
   align-items: stretch;
 }
+.card-container.horizontal > .card > svg:first-of-type,
 .card-container.horizontal > .card > img:first-of-type {
   display: block;
   float: left;
