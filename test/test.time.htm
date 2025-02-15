@@ -13,24 +13,25 @@
       background-color: lightgoldenrodyellow;
       padding: 0 0.2em;
     }
-
   </style>
   <script src="/sfc/loader.js"></script>
 </head>
 
-<body>
+<body class="sitelayout">
+  <header>
+    <h1>Date and Time</h1>
+  </header>
 
-  <h1>Date and Time</h1>
-
-  <div style="background-color: azure;padding:0.2em">
+  <main>
     values: <button id="b1">noon</button> <button id="b2">now</button>
     formatting: <button id="fd">date</button> <button id="ft">time</button> <button id="f1">short</button> <button
       id="f4">full</button>
-  </div>
-  <hr>
-  <p>The time is: <time id="t1" is="u-time" datetime="2025-01-28 14:02" datestyle="long" timestyle="short"></time> </p>
-  <p>The time is: <time is="u-time" datetime="2025-01-28" datestyle="short" timestyle="none">2025-01-28</time></p>
-  <p>The time is: <time datetime="2025-01-28" datestyle="short" timestyle="none">2025-01-28</time></p>
+    <hr>
+    <p>The time is: <time id="t1" is="u-time" datetime="2025-01-28 14:02" datestyle="long" timestyle="short"></time>
+    </p>
+    <p>The time is: <time is="u-time" datetime="2025-01-28" datestyle="short" timestyle="none">2025-01-28</time></p>
+    <p>The time is: <time datetime="2025-01-28" datestyle="short" timestyle="none">2025-01-28</time></p>
+  </main>
 
   <script>
     const tObj = document.querySelector('#t1');

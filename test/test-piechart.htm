@@ -27,9 +27,12 @@
   </script>
 </head>
 
-<body>
-  <div class="container">
+<body class="sitelayout">
+  <header>
     <h1>Pie Chart Test Page</h1>
+  </header>
+
+  <main>
 
     <p> <button id="doClear">clear</button> <button id="doDraw1">draw1</button> <button id="doDraw2">draw2</button>
       <button id="doDraw3">draw3</button> <button id="doDraw4">draw4</button>
@@ -54,7 +57,7 @@
     <h3>Pie Chart Options</h3>
     <p>The current options:</p>
     <pre id="theOptions" class="code"></pre>
-  </div>
+  </main>
 
   <script>
     var chartElement = document.querySelector('#mypie');

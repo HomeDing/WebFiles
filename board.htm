@@ -41,7 +41,7 @@
     }
 
     img,
-    .panel {
+    #panl {
       user-select: none;
     }
 
@@ -54,12 +54,12 @@
   <script src="u-toast.js"></script>
 </head>
 
-<body>
+<body class="sitelayout" style="max-width:100%;--layout-gap: 0;--content-back:none">
   <u-toast></u-toast>
-  <div class="u-header">
+  <header>
     <h1>Board</h1>
-  </div>
-  <div class="u-navbar">
+  </header>
+  <div class="navbar">
     <a href="/">Home</a>
     <a href="/board.htm">Board</a>
     <a href="/microide.htm">IDE</a>
@@ -69,7 +69,10 @@
     <button id="addButton">+</button>
   </div>
 
-  <main class="panel"></main>
+  <main >
+    <div id="panl" class="card-container col365" style="--card-height: auto;">
+    </div>
+  </main>
 
   <div id="u-templates" style="display:none">
 
@@ -78,7 +81,7 @@
       <div class="modalFrame" class="modal-object"></div>
     </div>
 
-    <div class="cHead block header">
+    <div class="cHead header">
       <svg class="icon">
         <use href="./icons.svg#${type}" />
       </svg>
@@ -91,7 +94,7 @@
 
     <div class="card" u-control="generic" u-is="generic" microID="${id}">
       <div u-is="include" ref=".cHead"></div>
-      <div class="block">
+      <div class="main">
         <div class="form-grid"><label>Value:</label><output u-text="value"></output></div>
       </div>
     </div>
@@ -105,7 +108,7 @@
         <label><input name="mode" u-value="mode" type="radio" value="on">On</label>
         <label><input name="mode" u-value="mode" type="radio" value="timer">Timer</label>
       </fieldset>
-      <div class="block">
+      <div class="main">
         <div class="form-grid">
           <label>Start:</label><output u-text="ontime"></output>
           <label>End:</label><output u-text="offtime"></output>
@@ -115,13 +118,13 @@
 
     <div class="card" u-control="dstime" id="${id}" u-is="dstime" microID="${id}">
       <div u-is="include" ref=".cHead"></div>
-      <div class="block">
+      <div class="main">
         <div class="form-grid">
           <label>ReadTime:</label><input u-value="readtime" type="time" step="1" />
           <label>Now:</label><output u-text="now"></output>
           <label>set Time:</label><output class="now"></output>
         </div>
-        <div class="block footer">
+        <div class="footer">
           <button style="float:right">set</button>
         </div>
       </div>
@@ -129,7 +132,7 @@
 
     <div class="card" u-control="switch" id="${id}" u-is="generic" microID="${id}">
       <div u-is="include" ref=".cHead"></div>
-      <div class="block">
+      <div class="main">
         <span class="u-bool ux-value border" u-active="value"></span>
         <div u-is="input">
           <span class="down">off</span>
@@ -150,7 +153,7 @@
 
     <div class="card" u-control="logic" id="${id}" u-is="generic" microID="${id}">
       <div u-is="include" ref=".cHead"></div>
-      <div class="block">
+      <div class="main">
         <span class="u-bool ux-value" u-active="value"></span>
         <div class="form-grid"><label>value:</label><output u-text="value"></output></div>
       </div>
@@ -158,14 +161,14 @@
 
     <div class="card" u-control="select" id="${id}" u-is="select" microID="${id}">
       <div u-is="include" ref=".cHead"></div>
-      <div class="block">
+      <div class="main">
         <select></select>
       </div>
     </div>
 
     <div class="card" u-control="rfcodes" microID="${id}" u-is="generic">
       <div u-is="include" ref=".cHead"></div>
-      <div class="block Element">
+      <div class="main">
         <div><label>Last Code:</label></div>
         <pre>[<span u-text="value" style="user-select: text;"></span>]</pre>
       </div>
@@ -183,7 +186,7 @@
         <label>duration:</label>
         <div><input type="range" max="12000" step="100" name="duration"><output name="duration"></output></div>
       </div>
-      <div class="block footer form-actions">
+      <div class="footer form-actions">
         <button u-action="mode" value="fade">fade</button>
         <button u-action="mode" value="fix">fix</button>
         <button u-action="mode" value="pulse">pulse</button>
@@ -200,14 +203,14 @@
         <label>Effect Length:</label>
         <div><input type="range" max="255" u-value="effectlength"><output u-value="effectlength"></output></div>
       </div>
-      <div class="block footer form-actions">
+      <div class="footer form-actions">
         <button u-action="mode" value="flow">flow</button>
       </div>
     </div>
 
     <div class="card" u-control="light" id="${id}" u-is="generic" microID="${id}">
       <div u-is="include" ref=".cHead"></div>
-      <div class="block">
+      <div class="main">
         <span u-color="value" class="border" style="width:4rem;height:4rem;float:right;border-radius:50%;"></span>
         <div class="form-grid"><label>value:</label><output u-text="value"></output>
           <label>brightness:</label><output u-text="brightness"></output>
@@ -217,7 +220,7 @@
 
     <div class="card" u-control="tm1637" id="${id}" u-is="generic" microID="${id}">
       <div u-is="include" ref=".cHead"></div>
-      <div class="block">
+      <div class="main">
         <div style="text-align: center;"><span u-text="value" style="font-size:4rem;font-style: italic;"></span></div>
         <div class="form-grid"><label>brightness:</label><output u-text="brightness"></output></div>
       </div>
@@ -234,7 +237,7 @@
 
     <div class="card" u-control="bl0937" id="${id}" u-is="bl0937" microID="${id}">
       <div u-is="include" ref=".cHead"></div>
-      <div class="block">
+      <div class="main">
         <table style="width:100%;font-size:2rem">
           <tr>
             <td>
@@ -269,7 +272,7 @@
         <label>SNR:</label><output u-text="snr"></output>
         <label>station:</label><output u-text="stationname"></output>
       </div>
-      <div class="block footer form-actions">
+      <div class="footer form-actions">
         <button u-action="frequency" value="9440">hr1</button>
         <button u-action="frequency" value="8930">hr3</button>
         <button u-action="frequency" value="10300">AB</button>
@@ -279,7 +282,7 @@
     </div>
 
     <div class="card" u-control="scene" microID="${id}" u-is="scene">
-      <div class="cHead block header">
+      <div class="cHead header">
         <h3>Scenes</h3>
       </div>
       <div class="block form-actions"></div>
@@ -313,7 +316,7 @@
 
     (function() { // allows variable names to be packed by minifier
       const REFRESH_INTERVAL = 4000;
-      var panelObj = document.querySelector('.panel');
+      var panelObj = document.querySelector('#panl');
       var addObj = document.getElementById('addButton');
       var sysObj = document.getElementById('sysButton');
       var params = { sys: false };

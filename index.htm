@@ -25,185 +25,188 @@
   </script>
 </head>
 
-<body>
-  <div class="u-header">
+<body class="sitelayout" style="max-width:100%;--layout-gap: 0;--content-back:none">
+  <header>
     <img class="icon" src="/favicon.svg" />
     <h1>Device</h1>
-  </div>
+  </header>
 
-  <div class="u-navbar">
+  <div class="navbar">
     <a href="/">Home</a>
     <a href="/board.htm">Board</a>
     <a href="/microide.htm">IDE</a>
     <a href="/log.htm">Log</a>
   </div>
 
-  <div class="panel">
-    <div class="card">
-      <div class="block header">
-        <h3>Build-in Setup Pages</h3>
+  <main>
+    <div class="card-container col365" style="--card-height: auto;">
+
+      <div class="card">
+        <div class="header">
+          <h3>Build-in Setup Pages</h3>
+        </div>
+        <div class="main">
+          <p><a href="$setup.htm">WiFi Setup</a></p>
+          <p><a href="$update.htm">Web Update</a></p>
+          <p><a href="$upload.htm">File Upload</a></p>
+          <p><a href="updateicons.htm">Update FavIcons</a></p>
+          <p><a href="/panel.htm">Panel</a></p>
+        </div>
       </div>
-      <div class="block">
-        <p><a href="$setup.htm">WiFi Setup</a></p>
-        <p><a href="$update.htm">Web Update</a></p>
-        <p><a href="$upload.htm">File Upload</a></p>
-        <p><a href="updateicons.htm">Update FavIcons</a></p>
-        <p><a href="/panel.htm">Panel</a></p>
+
+      <div class="card">
+        <div class="header">
+          <h3>Insights</h3>
+        </div>
+
+        <div class="main">
+          <p><a href="/env.json">Env file</a></p>
+          <p><a href="/config.json">Config file</a></p>
+
+          <p><a href="/api/state">State of elements</a></p>
+          <p><a href="/api/list">current files</a></p>
+          <p><a href="/ssdp.xml">SSDP description</a></p>
+          <p><a href="/api/reboot">reboot</a></p>
+        </div>
       </div>
+
+      <div class="card">
+        <div class="header">
+          <h3>File System Memory</h3>
+        </div>
+
+        <div class="main">
+          <u-piechart id="meminfo" style="float:left;width:220px;margin-right: 1rem;"></u-piechart>
+
+          <p><span id="memTotal"></span> bytes available.</p>
+          <p><span id="memUsed"></span> bytes in use</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="header">
+          <h3>SysInfo</h3>
+        </div>
+        <div class="main">
+          <pre id="sysinfo"></pre>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="header">
+          <h3>State</h3>
+        </div>
+        <div class="main">
+          <pre id="stateInfo"></pre>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="header">
+          <h3>Available Elements</h3>
+        </div>
+        <div class="main">
+          <p id="elementsInfo"></p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="main">
+          <h3>Dev-Links</h3>
+          <p><a href="portal.htm">portal.htm</a></p>
+          <p><a href="portalconfig.htm">portalConfig.htm</a></p>
+          <p><a href="monitor.htm">monitor.htm</a></p>
+          <p><a href="test-iotstyle.htm">test-iotstyle</a></p>
+          <p><a href="test-piechart.htm">test-piechart</a></p>
+          <p><a href="test-gaugechart.htm">test-gaugechart</a></p>
+          <p><a href="test-linechart.htm">test-linecharttest</a></p>
+
+          <p><a href="elementcheck.htm">elementcheck</a></p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="main">
+          <h3>Diag</h3>
+          <p><a href="/diag">diag</a></p>
+          <p><a href="/chipinfo">chipinfo</a></p>
+          <p><a href="/profile">profile</a></p>
+        </div>
+      </div>
+
     </div>
+  </main>
 
-    <div class="card">
-      <div class="block header">
-        <h3>Insights</h3>
-      </div>
+    <script>
+      window.onerror = function(msg, url, lineNo, columnNo, error) {
+        var string = msg.toLowerCase();
+        var substring = 'script error';
+        if (string.indexOf(substring) > -1) {
+          alert('Script Error: See Browser Console for Detail');
+        } else {
+          var message = [
+            'Message: ' + msg,
+            'URL: ' + url,
+            'Line: ' + lineNo,
+            'Column: ' + columnNo,
+            'Error object: ' + JSON.stringify(error)
+          ].join(' - ');
 
-      <div class="block">
-        <p><a href="/env.json">Env file</a></p>
-        <p><a href="/config.json">Config file</a></p>
+          alert(message);
+        }
 
-        <p><a href="/api/state">State of elements</a></p>
-        <p><a href="/api/list">current files</a></p>
-        <p><a href="/ssdp.xml">SSDP description</a></p>
-        <p><a href="/api/reboot">reboot</a></p>
-      </div>
-    </div>
+        return false;
+      };
+    </script>
 
-    <div class="card">
-      <div class="block header">
-        <h3>File System Memory</h3>
-      </div>
+    <script>
+      var memObj = document.querySelector('#meminfo');
+      window.addEventListener('load', function() {
+        fetchJSON('/api/sysinfo')
+          .then(async (d) => {
+            var o = document.getElementById('sysinfo');
+            o.innerText = JSON.stringify(d, null, 1)
+              .replace('{\n', '')
+              .replace('\n}', '')
+              .replace(/^\s*/gm, '');
 
-      <div class="block">
-        <u-piechart id="meminfo" style="float:left;width:220px;margin-right: 1rem;"></u-piechart>
+            document.getElementById('memTotal').textContent = d.fsTotalBytes;
+            document.getElementById('memUsed').textContent = d.fsUsedBytes;
 
-        <p><span id="memTotal"></span> bytes available.</p>
-        <p><span id="memUsed"></span> bytes in use</p>
-      </div>
-    </div>
+            await allComponentsLoaded;
 
-    <div class="card">
-      <div class="block header">
-        <h3>SysInfo</h3>
-      </div>
-      <div class="block">
-        <pre id="sysinfo"></pre>
-      </div>
-    </div>
+            memObj.setOptions({ showPercentage: true });
+            memObj.draw([
+              {
+                color: '#223355',
+                title: "Used",
+                value: Number(d['fsUsedBytes'])
+              },
+              {
+                color: 'silver',
+                title: "Available",
+                value: Number(d.fsTotalBytes) - Number(d.fsUsedBytes)
+              }
+            ]);
+          });
 
-    <div class="card">
-      <div class="block header">
-        <h3>State</h3>
-      </div>
-      <div class="block">
-        <pre id="stateInfo"></pre>
-      </div>
-    </div>
+        fetchJSON('/api/state')
+          .then(function(d) {
+            var o = document.querySelector('#stateInfo');
+            o.innerText = JSON.stringify(d, null, 1)
+              .replace('{\n', '')
+              .replace('\n}', '')
+              .replace(/^\s*/gm, '');
 
-    <div class="card">
-      <div class="block header">
-        <h3>Available Elements</h3>
-      </div>
-      <div class="block">
-        <p id="elementsInfo"></p>
-      </div>
-    </div>
+          });
 
-    <div class="card">
-      <div class="block">
-        <h3>Dev-Links</h3>
-        <p><a href="portal.htm">portal.htm</a></p>
-        <p><a href="portalconfig.htm">portalConfig.htm</a></p>
-        <p><a href="monitor.htm">monitor.htm</a></p>
-        <p><a href="test-iotstyle.htm">test-iotstyle</a></p>
-        <p><a href="test-piechart.htm">test-piechart</a></p>
-        <p><a href="test-gaugechart.htm">test-gaugechart</a></p>
-        <p><a href="test-linechart.htm">test-linecharttest</a></p>
-
-        <p><a href="elementcheck.htm">elementcheck</a></p>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="block">
-        <h3>Diag</h3>
-        <p><a href="/diag">diag</a></p>
-        <p><a href="/chipinfo">chipinfo</a></p>
-        <p><a href="/profile">profile</a></p>
-      </div>
-    </div>
-
-  </div>
-
-  <script>
-    window.onerror = function(msg, url, lineNo, columnNo, error) {
-      var string = msg.toLowerCase();
-      var substring = 'script error';
-      if (string.indexOf(substring) > -1) {
-        alert('Script Error: See Browser Console for Detail');
-      } else {
-        var message = [
-          'Message: ' + msg,
-          'URL: ' + url,
-          'Line: ' + lineNo,
-          'Column: ' + columnNo,
-          'Error object: ' + JSON.stringify(error)
-        ].join(' - ');
-
-        alert(message);
-      }
-
-      return false;
-    };
-  </script>
-
-  <script>
-    var memObj = document.querySelector('#meminfo');
-    window.addEventListener('load', function() {
-      fetchJSON('/api/sysinfo')
-        .then(async (d) =>  {
-          var o = document.getElementById('sysinfo');
-          o.innerText = JSON.stringify(d, null, 1)
-            .replace('{\n', '')
-            .replace('\n}', '')
-            .replace(/^\s*/gm, '');
-
-          document.getElementById('memTotal').textContent = d.fsTotalBytes;
-          document.getElementById('memUsed').textContent = d.fsUsedBytes;
-
-          await allComponentsLoaded;
-
-          memObj.setOptions({ showPercentage: true });
-          memObj.draw([
-            {
-              color: '#223355',
-              title: "Used",
-              value: Number(d['fsUsedBytes'])
-            },
-            {
-              color: 'silver',
-              title: "Available",
-              value: Number(d.fsTotalBytes) - Number(d.fsUsedBytes)
-            }
-          ]);
-        });
-
-      fetchJSON('/api/state')
-        .then(function(d) {
-          var o = document.querySelector('#stateInfo');
-          o.innerText = JSON.stringify(d, null, 1)
-            .replace('{\n', '')
-            .replace('\n}', '')
-            .replace(/^\s*/gm, '');
-
-        });
-
-      fetchJSON('/api/elements')
-        .then(function(d) {
-          var o = document.querySelector('#elementsInfo');
-          o.innerText = d.join(', ');
-        });
-    });
-  </script>
+        fetchJSON('/api/elements')
+          .then(function(d) {
+            var o = document.querySelector('#elementsInfo');
+            o.innerText = d.join(', ');
+          });
+      });
+    </script>
 </body>
 
 </html>

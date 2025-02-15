@@ -328,7 +328,7 @@ export class HomeDingServer {
       // serve case specific files preferred over general files. 
       this._app.use(express.static(process.cwd() + '/' + this._caseFolder, { index: false }));
     }
-    this._app.use(express.static(process.cwd(), { index: false }));
+    this._app.use(express.static(process.cwd(), { index: ['index.htm'] }));
 
 
     if (!options.secure) {

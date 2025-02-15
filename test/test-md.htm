@@ -50,15 +50,18 @@
   <script src="/sfc/loader.js"></script>
 </head>
 
-<body>
+<body class="sitelayout">
 
-  <h2>MD</h2>
+  <header>
+    <h1>MD</h1>
+  </header>
+  <main>
 
-  <button id="load1">load</button>
-  <button id="text1">text</button>
-  <hr />
-  <u-markdown src="./test-md1.md" style="  background-color: azure; "></u-markdown>
-
+    <button id="load1">load</button>
+    <button id="text1">text</button>
+    <hr />
+    <u-markdown src="./test-md1.md" style="  background-color: azure; "></u-markdown>
+  </main>
   <script>
     loadComponent('u-markdown').then(() => {
       console.log('Page', "all components loaded.");

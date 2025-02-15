@@ -19,11 +19,14 @@
   <script src="/micro.js" defer></script>
 </head>
 
-<body>
-  <main class="panel" style="user-select: none"></main>
+<body class="sitelayout" style="max-width:100%;--layout-gap: 0;--content-back:none">
+  <main>
+    <div id="panl" class="card-container col365" style="--card-height: auto;">
+    </div>
+  </main>
 
   <div id="u-templates" style="display:none">
-    <div class="cHead block header">
+    <div class="cHead header">
       <h3 u-text="title"></h3>
       <h4 u-text="description"></h4>
     </div>
@@ -35,14 +38,14 @@
 
     <div class="card" u-control="generic" u-is="generic" microID="${id}">
       <div u-is="include" ref=".cHead"></div>
-      <div class="block">
+      <div class="main">
         <div class="form-grid"><label>Value:</label><span u-text="value"></span></div>
       </div>
     </div>
 
     <div class="card" u-control="switch" id="${id}" u-is="generic" microID="${id}">
       <div u-is="include" ref=".cHead"></div>
-      <div class="block">
+      <div class="main">
         <span class="u-bool ux-value border" u-active="value"></span>
         <div u-is="input">
           <span class="down">off</span>
@@ -76,13 +79,13 @@
         <label><input name="mode" u-value="mode" type="radio" value="on">On</label>
         <label><input name="mode" u-value="mode" type="radio" value="timer">Timer</label>
       </fieldset>
-      <div class="block">
+      <div class="main">
         <div class="u-bar">
           <span class="pulse"></span>
           <span class="current"></span>
         </div>
       </div>
-      <div class="block">
+      <div class="main">
         <button u-action="start" value="1">Start</button>
         <button u-action="next" value="1">Next</button>
       </div>
@@ -101,7 +104,7 @@
 
     <div class="card" u-control="dht" microID="${id}" u-is="generic">
       <div u-is="include" ref=".cHead"></div>
-      <div class="block" style="display: grid; grid-template-columns: auto auto; grid-column-gap: 5px;">
+      <div class="main" style="display: grid; grid-template-columns: auto auto; grid-column-gap: 5px;">
         <span style="font-size:2em"><span u-text="temperature">__.__</span>&deg;C</span>
         <span style="font-size:2em"><span u-text="humidity">__.__</span>%</span>
         <span>Temperature</span><span>Humidity</span>
@@ -110,7 +113,7 @@
 
     <div class="card" u-control="and" id="${id}" u-is="generic" microID="${id}">
       <div u-is="include" ref=".cHead"></div>
-      <div class="block">
+      <div class="main">
         <span class="u-bool ux-value" u-active="value"></span>
         <div class="form-grid"><label>value:</label><output u-text="value"></output></div>
       </div>
@@ -118,7 +121,7 @@
 
     <div class="card" u-control="bl0937" id="${id}" u-is="bl0937" microID="${id}">
       <div u-is="include" ref=".cHead"></div>
-      <div class="block">
+      <div class="main">
         <table style="width:100%;font-size:2rem">
           <tr>
             <td>
@@ -150,17 +153,18 @@
         <label>brightness:</label>
         <div><input type="range" max="100" name="brightness"><output u-text="brightness"></output></div>
       </div>
-      <div class="block footer form-actions">
-        <button u-action="mode" value="fade">fade</button><button u-action="mode" value="fix">fix</button><button u-action="mode" value="pulse">pulse</button><button u-action="mode" value="wheel">wheel</button>
+      <div class="footer form-actions">
+        <button u-action="mode" value="fade">fade</button><button u-action="mode" value="fix">fix</button><button
+          u-action="mode" value="pulse">pulse</button><button u-action="mode" value="wheel">wheel</button>
       </div>
     </div>
 
     <div class="card small" u-control="webbutton" microID="${id}" u-is="button">
-      <div class="block"><button u-text="description">.</button></div>
+      <div class="main"><button u-text="description">.</button></div>
     </div>
 
     <div class="card" u-control="scene" microID="${id}" u-is="scene">
-      <div class="block header">
+      <div class="header">
         <h3>Scenes</h3>
       </div>
       <div class="block form-actions"></div>
@@ -171,9 +175,9 @@
   <a style="position:absolute;top:1em;right:1em" href="/microide.htm">IDE</a>
 
   <script>
-    (function () { // allows variable names to be packed by minifier
+    (function() { // allows variable names to be packed by minifier
       const REFRESH_INTERVAL = 4000;
-      var panelObj = document.querySelector('.panel');
+      var panelObj = document.querySelector('#panl');
       var timer;
       var _title = undefined;
       var _name = undefined;

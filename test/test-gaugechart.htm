@@ -27,9 +27,11 @@
   </script>
 </head>
 
-<body>
-  <div class="container">
+<body class="sitelayout">
+  <header>
     <h1>Gauge Chart Test Page</h1>
+  </header>
+  <main>
     <p>
       <button id="doClear">clear</button>
       <button id="doCase1a">Room</button>
@@ -61,7 +63,7 @@
     <h3>Pie Chart Options</h3>
     <p>The current options:</p>
     <pre id="theOptions" class="code"></pre>
-  </div>
+  </main>
 
   <script>
     var chartObj = document.getElementById('testChart');
@@ -76,7 +78,7 @@
     function case1a() {
       var opts = {
         title: "Room Temperature",
-        strokeWidth:0.4,
+        strokeWidth: 0.4,
         fontSize: '8px',
         units: "°C",
         minimum: 5,
@@ -98,7 +100,7 @@
 
     function case1b() {
       var opts = {
-        strokeWidth:0,
+        strokeWidth: 0,
         title: "Outside Temperature",
         units: "°C",
         minimum: -20,
@@ -143,7 +145,7 @@
     }
 
     function case3() {
-      var opts ={
+      var opts = {
         title: "Height",
         units: "mm",
         minimum: 0,
@@ -157,7 +159,7 @@
       document.querySelector('#theData').textContent = JSON.stringify(data, null, 2);
     }
 
-    window.addEventListener('load', async function () {
+    window.addEventListener('load', async function() {
       await allSFCLoaded;
       case1a();
 
