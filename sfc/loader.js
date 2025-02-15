@@ -109,6 +109,7 @@ window.loadComponent = (function() {
     let baseUrl = loaderURL;
 
     if (folder) {
+      if (! folder.endsWith('/')) folder += '/';
       baseUrl = new URL(folder, document.location.href);
     }
 
