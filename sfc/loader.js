@@ -63,7 +63,7 @@ class UComponent extends HTMLElement {
       }
     });
 
-    if (document.readyState == 'loading') {
+    if (document.readyState === 'loading') {
       window.addEventListener('DOMContentLoaded', this.init.bind(this));
     } else {
       window.requestAnimationFrame(this.init.bind(this));
@@ -134,8 +134,19 @@ window.loadComponent = (function() {
     // make template and style available to object constructor()
     def.uTemplate = dom.querySelector('template');
     def.uStyle = dom.querySelector('style');
-    customElements.define(tagName, def);
-    console.debug('SFC', `${tagName} defined.`);
+    def.for = scriptObj.getAttribute('for');
+
+    if (def.for) {
+      customElements.define(tagName, def, { extends: def.for });
+      if (def.uStyle) {
+        document.head.appendChild(def.uStyle.cloneNode(true));
+      }
+      console.debug('SFC', `${def.for}.${tagName} defined.`);
+
+    } else {
+      customElements.define(tagName, def);
+      console.debug('SFC', `${tagName} defined.`);
+    }
   }; // fetchSFC()
 
 
@@ -146,3 +157,5 @@ window.loadComponent = (function() {
 
   return loadComponent;
 }());
+
+// EOF
