@@ -612,7 +612,6 @@ body.sitelayout div.navbar > *:not(:first-child) {
 }
 body.sitelayout aside {
   grid-area: sidebar;
-  background-color: lime;
   padding: var(--layout-gap);
 }
 @media print {
@@ -624,12 +623,10 @@ body.sitelayout main {
   grid-area: main;
   container-name: main;
   container-type: inline-size;
-  background-color: var(--content-back);
   padding: var(--layout-gap);
 }
 body.sitelayout footer {
   grid-area: footer;
-  background-color: lightblue;
   padding: var(--layout-gap);
 }
 body.sitelayout nav {
@@ -641,7 +638,6 @@ body.sitelayout nav {
   left: -24ch;
   transition: all 0.2s;
   padding: 1rem 0.2rem 0.2rem;
-  background-color: yellowgreen;
 }
 body.sitelayout nav.open {
   left: 0;
@@ -685,44 +681,6 @@ body.sitelayout nav a:hover {
   width: 2.6rem;
   height: 2.6rem;
   vertical-align: top;
-}
-
-body {
-  container-type: size;
-}
-
-.panel {
-  display: grid;
-  gap: var(--grid-gap);
-  grid-template-columns: repeat(auto-fill, var(--grid-width));
-  grid-auto-rows: minmax(min-content, max-content);
-  grid-auto-flow: row;
-  margin-top: 0.5rem;
-  margin-left: auto;
-  margin-right: auto;
-  width: calc(2 * var(--grid-width) + var(--grid-gap));
-}
-@container (width >= 84ch) {
-  .panel {
-    width: calc(4 * var(--grid-width) + 3 * var(--grid-gap));
-  }
-}
-@container (width >= 126ch) {
-  .panel {
-    width: calc(6 * var(--grid-width) + 5 * var(--grid-gap));
-  }
-}
-.panel > .card {
-  grid-column: span 2;
-  width: 100%;
-  min-width: 100%;
-  align-self: start;
-}
-.panel > .card.small {
-  grid-column: span 1;
-}
-.panel > .card.wide {
-  grid-column: span 4;
 }
 
 button,

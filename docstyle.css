@@ -394,7 +394,6 @@ body.sitelayout div.navbar > *:not(:first-child) {
 }
 body.sitelayout aside {
   grid-area: sidebar;
-  background-color: lime;
   padding: var(--layout-gap);
 }
 @media print {
@@ -406,12 +405,10 @@ body.sitelayout main {
   grid-area: main;
   container-name: main;
   container-type: inline-size;
-  background-color: var(--content-back);
   padding: var(--layout-gap);
 }
 body.sitelayout footer {
   grid-area: footer;
-  background-color: lightblue;
   padding: var(--layout-gap);
 }
 body.sitelayout nav {
@@ -423,7 +420,6 @@ body.sitelayout nav {
   left: -24ch;
   transition: all 0.2s;
   padding: 1rem 0.2rem 0.2rem;
-  background-color: yellowgreen;
 }
 body.sitelayout nav.open {
   left: 0;

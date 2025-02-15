@@ -59,49 +59,6 @@
   }
 }
 
-// ===== Dashboard of cards =====
-
-
-body {
-  container-type: size;
-}
-
-.panel {
-  display: grid;
-  gap: var(--grid-gap);
-  grid-template-columns: repeat(auto-fill, var(--grid-width));
-  grid-auto-rows: minmax(min-content, max-content);
-  grid-auto-flow: row;
-  margin-top: 0.5rem;
-  margin-left: auto;
-  margin-right: auto;
-  width: calc(2 * var(--grid-width) + var(--grid-gap));
-
-  @container (width >= 84ch) {
-    width: calc(4 * var(--grid-width) + 3 * var(--grid-gap));
-  }
-
-  @container (width >= 126ch) {
-    width: calc(6 * var(--grid-width) + 5 * var(--grid-gap));
-  }
-
-  >.card {
-    grid-column: span 2;
-    width: 100%;
-    min-width: 100%;
-    align-self: start;
-  }
-
-  >.card.small {
-    grid-column: span 1;
-  }
-
-  >.card.wide {
-    grid-column: span 4;
-  }
-}
-
-
 
 // ===== forms / input / groups =====
 
