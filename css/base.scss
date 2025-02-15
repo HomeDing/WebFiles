@@ -2,31 +2,30 @@
 // colors, dark mode, sizes, page level layout
 // This is part of the micro css implementation.
 
-@use "sass:color";
-
 // ===== Colors =====
 // hue of 220 is signature of this style
 
-$u-hue: 220;
-$u-background: #c2c3c5;
+@use 'sass:color';
+
+// the u-hue value is the main color of the style
+$u-hue: 220deg;
+$u-background: #d4d6da;
 $u-background-darkmode: #111111;
 $u-text: #111111; // any text
 $u-text-darkmode: #eeeeee; // any text
 
-$u-primary: hsl(220deg 80% 30%); // active objects
+$u-primary: hsl($u-hue 80% 30%); // active objects
 $u-primary-text: white;
 
 $u-border-color: #555555;
-$u-border-color-active: hsl(220deg 100% 30%);
+$u-border-color-active: hsl($u-hue 100% 30%);
 
 $u-disabled: gray; // disabled objects
 $u-heading: $u-primary; // any headlines
 $u-connect: #00cc00; // connectivity / net
 
-// $u-on: lighten(green, 10%);
-$u-on: color.adjust(green, $lightness: 10%);
+$u-on: color.scale(green, $lightness: 10%);
 $u-off: red;
-
 
 $u-padding-text: 4px;
 $u-padding-block: calc(2 * $u-padding-text);
@@ -36,8 +35,6 @@ $u-border: $u-border-size solid $u-border-color;
 $u-border-none: $u-border-size solid transparent;
 $u-border-active: $u-border-size solid $u-border-color-active;
 
-$u-navbar: $u-primary;
-$u-navbar-text: white;
 
 
 // ===== Content Box Sizes =====
@@ -53,12 +50,6 @@ $u-btn-radius: calc($u-padding-block / 2);
 $u-output-border: $u-border-none;
 
 
-// ===== global Layout =====
-
-$u-card-border: none;
-$u-card-radius: $u-padding-block;
-
-
 // ===== font =====
 
 $u-font-sans-serif: arial, ui-sans-serif, sans-serif;
@@ -69,17 +60,8 @@ $u-font-sans-serif: arial, ui-sans-serif, sans-serif;
   --color: #{$u-text};
   --back: #{$u-background};
 
-  --card-back: white;
-  --card-head: #{hsl($u-hue, 20%, 85%)};
-  --card-head-active: #{hsl($u-hue, 80%, 70%)};
   --focus: #{hsl($u-hue, 50%, 50%)};
   --code: rgb(255 255 185);
-
-  --sidebar-width: 200px;
-  --content-width: 1168px;
-  --layout-gap: 16px;
-  --doc-body-width: calc(var(--content-width) + var(--sidebar-width) + 2 * var(--layout-gap));
-  --content-back: #f8f8f8;
 
   --text-spacing: #{$u-text-spacing};
 
@@ -88,9 +70,6 @@ $u-font-sans-serif: arial, ui-sans-serif, sans-serif;
   @media (prefers-color-scheme: dark) {
     --color: #{$u-text-darkmode};
     --back: #{$u-background-darkmode};
-    --card-back: #{color.adjust($u-background-darkmode, $lightness: 15%)};
-    --card-head: #{hsl($u-hue, 20%, 30%)};
-    --card-head-active: #{hsl($u-hue, 80%, 30%)};
   }
 }
 
@@ -113,7 +92,7 @@ body {
   }
 }
 
-/* apply a natural box layout model to all elements, but allowing components to change */
+// apply a natural box layout model to all elements, but allowing components to change
 *,
 *::before,
 *::after {
@@ -234,7 +213,7 @@ p>code {
 
 pre>code {
   display: block;
-  border-radius: $u-card-radius;
+  border-radius: 1em;
   padding: $u-padding-text;
 }
 
@@ -341,113 +320,6 @@ dialog {
     height: 2rem;
     z-index: -1;
     background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'><path d='M0 0h48v48h-16v-32h-32z' fill='red' /></svg>");
-  }
-}
-
-// ===== Page Layout =====
-
-nav {
-  position: fixed;
-  min-height: 100%;
-  width: 24ch;
-  z-index: 1;
-  left: -24ch;
-  transition: all 0.2s;
-  padding: 1rem 0.2rem 0.2rem;
-  background-color: var(--card-back);
-
-  &.inpage {
-    position: absolute;
-  }
-
-  &.open {
-    left: 0;
-  }
-
-  &.inpage.open+main {
-    margin-left: 24ch;
-
-    @media print {
-      margin-left: 0;
-    }
-  }
-
-  a,
-  a:hover {
-    text-decoration: none;
-  }
-
-  @media print {
-    display: none;
-  }
-}
-
-main {
-  transition: margin-left 0.2s;
-}
-
-// The header in the micro css is used to display the primary icon of the device and title.
-
-.u-header {
-  display: flex;
-  flex-flow: row nowrap;
-  margin-bottom: $u-gutter;
-
-  .icon {
-    margin-right: $u-gutter;
-    width: 2.6rem;
-    height: 2.6rem;
-    vertical-align: top;
-  }
-
-  h1 {
-    margin: 0;
-    font-size: 2.4rem;
-    font-family: $u-font-sans-serif;
-    font-weight: bold;
-  }
-}
-
-// u-navbar is a horizontal always visible menu just below the header.
-
-.u-navbar {
-  display: flex;
-  flex-flow: row nowrap;
-  margin-bottom: $u-gutter;
-  padding: 2 * $u-padding-text 4 * $u-padding-text;
-  background-color: $u-navbar;
-  color: $u-navbar-text;
-
-  >.gap {
-    flex-grow: 2;
-  }
-
-  >a {
-    text-decoration: none;
-    font-size: 1.25em;
-    min-width: 2em;
-    padding: 0 $u-gutter2;
-
-    &:hover {
-      border-color: var(--focus);
-      background-color: var(--focus);
-    }
-  }
-
-  >img,
-  >svg {
-    padding: 0;
-    min-width: 1.4em !important;
-    width: 1.4em !important;
-    height: 1.4em !important;
-  }
-
-  >*:not(:first-child) {
-    margin-left: $u-gutter2;
-  }
-
-  @media print {
-    display: none;
   }
 }
 

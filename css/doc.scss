@@ -3,88 +3,8 @@
 // This is part of the micro css implementation.
 
 @use "base";
+@use "page";
 @use "card";
-
-body.sitelayout {
-  display: grid;
-  grid-template-columns: auto;
-  grid-template-areas: "header" "main" "sidebar" "footer";
-  gap: var(--layout-gap);
-  max-width: var(--doc-body-width);
-  margin: 0 auto;
-
-  &:has(aside) {
-    grid-template-columns: auto var(--sidebar-width);
-    grid-template-areas: "header header" "main sidebar" "footer footer";
-
-    @media (width <=1000px) {
-      grid-template-areas: "header" "main" "sidebar" "footer";
-    }
-  }
-
-  header {
-    grid-area: header;
-
-    /* background-color: #f0f0f0; */
-    display: flex;
-
-    @media print {
-      display: none !important;
-    }
-
-    >* {
-      align-self: flex-end;
-      display: inline-block;
-    }
-
-    >*:not(:first-child) {
-      margin-left: var(--layout-gap);
-    }
-
-    >.logo {
-      font-size: 160%;
-      font-weight: bold;
-    }
-
-    a {
-      text-decoration: none;
-      width: 12ch;
-      text-align: center;
-      padding: 0.2ch 1ch;
-      transition: box-shadow 0.3s ease-in-out;
-
-      &:hover {
-        box-shadow: 0 5px 12px rgb(0 0 0 / 30%);
-      }
-    }
-  }
-
-  aside {
-    grid-area: sidebar;
-    background-color: lime;
-    padding: var(--layout-gap);
-
-    @media print {
-      display: none !important;
-    }
-  }
-
-  main {
-    grid-area: main;
-    container-name: main;
-    container-type: inline-size;
-    background-color: var(--content-back);
-    padding: var(--layout-gap);
-  }
-
-  footer {
-    grid-area: footer;
-    background-color: lightblue;
-    padding: var(--layout-gap);
-  }
-
-}
-
 
 h2 {
   clear: both;

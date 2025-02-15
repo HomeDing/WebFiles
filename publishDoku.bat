@@ -2,8 +2,9 @@
 echo.
 echo *** HomeDing Update of API documentation files. ***
 echo *** This utility copies some files to the HomeDing WebFiles to share API data and visualization. ***
-echo.
 
+echo.
+echo *** Copy to homeding-docu...
 set tar=%USERPROFILE%\Projects\homeding-docu
 
 copy elements.json %tar%
@@ -14,6 +15,11 @@ copy microsvg.js %tar%
 copy icons.svg %tar%
 copy css\*.scss %tar%\css
 copy iotstyle.css %tar%
-copy docstyle.css %USERPROFILE%\Projects\blog\src\docstyle.css
+
+
+echo.
+echo *** Copy to blog...
+set tar=%USERPROFILE%\Projects\blog\src
+copy docstyle.css %tar%
 
 :end

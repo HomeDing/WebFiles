@@ -1,4 +1,7 @@
+@use "sass:color";
 @use "base";
+@use "card";
+@use "page";
 
 // file: iot.scss
 // Element and card rules for iot dashboards
@@ -10,8 +13,6 @@
 // open class: nav is visible, maybe main needs to shift
 
 
-@use "sass:color";
-
 
 // ===== Cards layout =====
 
@@ -20,31 +21,8 @@
   --grid-gap: 1ch;
 }
 
+// iot specific card modifications
 .card {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  background-color: var(--card-back);
-  border: base.$u-card-border;
-  border-radius: base.$u-card-radius;
-
-  @media print {
-    border: 1px solid base.$u-text;
-  }
-
-  &.small {
-    // reduced width and text size
-    font-size: 0.8rem;
-
-    .form-grid {
-      grid-template-columns: auto;
-
-      >label {
-        text-align: left;
-      }
-    }
-  }
-
   &.active {
     .border {
       border-color: base.$u-border-color-active;
@@ -54,47 +32,15 @@
       border-color: base.$u-border-color-active transparent;
     }
 
-    >.block.header {
+    >.header {
       background-color: var(--card-head-active);
     }
-  }
-
-  .icon {
-    width: 2.75rem;
-    height: 2.75rem;
-    float: left;
-    margin-right: base.$u-gutter;
-    overflow: hidden;
   }
 
   img,
   svg {
     &.active {
       background-color: limegreen;
-    }
-  }
-
-  >.block {
-    position: relative;
-    flex: 1 1 auto;
-    padding: base.$u-padding-block;
-    min-height: 2rem;
-
-    &.header {
-      background-color: var(--card-head);
-      border-top-right-radius: base.$u-card-radius;
-      border-top-left-radius: base.$u-card-radius;
-      min-height: 2.75em; // with or without icon
-      max-height: 4rem;
-
-      h3,
-      h4 {
-        margin: 0;
-      }
-    }
-
-    &.footer {
-      border-top: 1px solid rgb(0 0 0 / 12.5%);
     }
   }
 
@@ -105,8 +51,13 @@
     margin: 0;
     padding: 0;
   }
-}
 
+  .icon {
+    width: 2.6rem;
+    height: 2.6rem;
+    vertical-align: top;
+  }
+}
 
 // ===== Dashboard of cards =====
 
@@ -274,6 +225,12 @@ input.switch[type='range'] {
   >.wide {
     grid-column: 1/-1;
   }
+
+  .icon {
+    width: 1.2em;
+    height: 1.2em;
+    margin: 0.2em;
+  }
 }
 
 .form-inline {
@@ -407,7 +364,7 @@ input.switch[type='range'] {
   border: base.$u-border;
 }
 
-/* === Display Element === */
+// ===== Display Element =====
 
 .display {
   position: relative;
@@ -472,7 +429,7 @@ input.switch[type='range'] {
   }
 }
 
-/* === Light input sliders === */
+// ===== Light input sliders =====
 
 input.band {
   width: 100%;
