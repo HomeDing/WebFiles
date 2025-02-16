@@ -57,12 +57,115 @@ $u-card-border: none;
   display: flex;
   flex-wrap: wrap;
 
-  // same as .col1
+  // one column only as default
   width: 100%;
   gap: var(--card-gap); // $u-card-gap;
 
-  // center in container by default
+  // center in main container by default
   margin: 0 auto;
+
+  >.card {
+    position: relative;
+    width: var(--card-width);
+    height: var(--card-height);
+
+    // used a card grid for normal cards (not horizonal)
+    display: grid;
+    grid-template-columns: auto;
+    grid-template-areas: "header" "main" "footer";
+    grid-template-rows: auto 1fr auto;
+    gap: 0;
+    margin: 0;
+    padding: 0;
+
+    page-break-inside: avoid;
+    overflow: hidden;
+    background-color: var(--card-back);
+    border: var(--card-border);
+    border-radius: var(--card-radius);
+
+    @media print {
+      border: 1px solid base.$u-text;
+    }
+
+    /* cards can be marked with class='wide' covering 2 columns  */
+    &.wide {
+      width: calc(var(--card-width) * 2 + var(--card-gap));
+    }
+
+    /* cards can be marked with class='wide' covering 2 columns  */
+    &.small {
+      width: calc((var(--card-width) - var(--card-gap)) / 2);
+      height: calc((var(--card-height) - var(--card-gap)) / 2);
+    }
+
+    // images as first element in card
+    >svg:first-child,
+    >img:first-child {
+      grid-area: header;
+      width: 100%;
+      height: var(--card-image-size);
+      object-fit: cover;
+
+      &.icon {
+        width: 2.75rem;
+        height: 2.75rem;
+      }
+    }
+
+    .header {
+      grid-area: header;
+      background-color: var(--card-head);
+      padding: var(--card-padding);
+      min-height: 2.75em; // with or without icon
+      max-height: 4rem;
+
+      h3,
+      h4 {
+        margin: 0;
+      }
+
+      // images in header
+      >svg:first-child,
+      >img:first-child {
+        // display: block;
+        float: left;
+        height: 2.75rem;
+        aspect-ratio: 1/1;
+        margin-right: var(--card-padding);
+      }
+
+    }
+
+    .main,
+    .body {
+      grid-area: main;
+      flex: 1;
+
+      /* background-color: lime; */
+      padding: var(--card-padding);
+    }
+
+    .footer,
+    .actions {
+      grid-area: footer;
+      height: auto;
+      width: 100%;
+      padding: var(--card-padding);
+      border-top: 1px solid rgb(0 0 0 / 12.5%);
+      background-color: inherit;
+    }
+
+    &.autolink a:first-of-type::before {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      content: "";
+    }
+  }
+
 
   // container marked with class='horizontal' for horizontal oriented cards
   // stretching on the whole with with image on the left */
@@ -71,19 +174,14 @@ $u-card-border: none;
     --card-height: 7.2rem;
 
     >.card {
-        // container-name: card;
-        // container-type: inline-size;
-      flex-direction: row;
-      align-items: stretch;
-
-      >svg:first-of-type,
-      >img:first-of-type {
-        display: block;
-        float: left;
-        margin-right: var(--card-padding);
+      grid-template-areas: "header main" "header footer";
+      grid-template-columns: max-content auto;
+      grid-template-rows: 1fr auto;
+  
+      >svg:first-child,
+      >img:first-child {
         width: var(--card-image-size);
         height: 100%;
-        object-fit: cover;
       }
     }
   }
@@ -128,7 +226,7 @@ $u-card-border: none;
     width: calc(365px * 4 + 10px * 3);
 
     // @container main (width < #{$u-card-4col}) {
-    @container main (width <= #{365px * 4 + 10px * 3}) {
+    @container main (width <=#{365px * 4 + 10px * 3}) {
       width: calc(365px * 3 + 10px * 2);
     }
 
@@ -139,109 +237,6 @@ $u-card-border: none;
     @container main (width < #{365px * 2}) {
       width: 365px;
     }
-  }
-
-
-  // One column only.
-  &.col1 {
-    width: 100%;
-  }
-
-}
-
-/* The cards are sized according to the given variables from :root or from the card-container)  */
-.card {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  width: var(--card-width);
-  height: var(--card-height);
-  margin: 0;
-  padding: 0;
-  page-break-inside: avoid;
-  overflow: hidden;
-  background-color: var(--card-back);
-  border: var(--card-border);
-  border-radius: var(--card-radius);
-
-  @media print {
-    border: 1px solid base.$u-text;
-  }
-
-  /* cards can be marked with class='wide' covering 2 columns  */
-  &.wide {
-    width: calc(var(--card-width) * 2 + var(--card-gap));
-  }
-
-  /* cards can be marked with class='wide' covering 2 columns  */
-  &.small {
-    width: calc((var(--card-width) - var(--card-gap)) / 2);
-    height: calc((var(--card-height) - var(--card-gap)) / 2);
-  }
-
-  // images as first element in card
-  >svg:first-of-type,
-  >img:first-of-type {
-    display: block;
-    width: 100%;
-    height: var(--card-image-size);
-    object-fit: cover;
-
-    &.icon {
-      width: 2.75rem;
-      height: 2.75rem;
-    }
-  }
-
-  .header {
-    background-color: var(--card-head);
-    padding: var(--card-padding);
-    min-height: 2.75em; // with or without icon
-    max-height: 4rem;
-
-    h3,
-    h4 {
-      margin: 0;
-    }
-
-    // images in header
-    >svg:first-of-type,
-    >img:first-of-type {
-      display: block;
-      float: left;
-      height: 2.75rem;
-      aspect-ratio: 1/1;
-      margin-right: var(--card-padding);
-    }
-
-  }
-
-  .main,
-  .body {
-    flex: 1;
-
-    /* background-color: lime; */
-    padding: var(--card-padding);
-  }
-
-  .footer,
-  .actions {
-    // position: absolute;
-    align-self: flex-end;
-    height: auto;
-    width: 100%;
-    padding: var(--card-padding);
-    border-top: 1px solid rgb(0 0 0 / 12.5%);
-    background-color: inherit;
-  }
-
-  &.autolink a:first-of-type::before {
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 100%;
-    content: "";
   }
 }
 
