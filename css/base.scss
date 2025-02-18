@@ -59,10 +59,7 @@ $u-font-sans-serif: arial, ui-sans-serif, sans-serif;
 :root {
   --color: #{$u-text};
   --back: #{$u-background};
-
   --focus: #{hsl($u-hue, 50%, 50%)};
-  --code: rgb(255 255 185);
-
   --text-spacing: #{$u-text-spacing};
 
   color-scheme: dark light;
@@ -133,7 +130,7 @@ svg {
 // ===== Text containers =====
 p,
 pre,
-code,
+h1,
 h2,
 h3,
 h4,
@@ -151,21 +148,29 @@ h4,
       margin-right: 0.2em;
     }
   }
+}
 
-  &:not(:first-child) {
-    margin-top: var(--text-spacing);
-  }
+p:not(:first-child),
+pre:not(:first-child),
+.text:not(:first-child) {
+  margin-top: var(--text-spacing);
+}
+
+h1:not(:first-child),
+h2:not(:first-child),
+h3:not(:first-child),
+h4:not(:first-child) {
+  margin-top: calc(var(--text-spacing) * 3);
 }
 
 a,
-a:visited,
-a:hover {
+a:any-link {
   color: inherit;
   text-decoration: underline;
   cursor: pointer;
 }
 
-// h1 Page title is always inside u-header
+h1,
 h2,
 h3,
 h4 {
@@ -192,30 +197,6 @@ h4 {
   min-height: 1em;
 }
 
-code,
-.code,
-code.hljs,
-pre>code {
-  background-color: var(--code);
-  color: $u-text;
-  font-size: 1rem;
-  font-family: 'Courier New', Courier, monospace;
-
-  @media print {
-    border: 1px solid $u-text;
-  }
-}
-
-p>code {
-  padding-left: 2 * $u-padding-text;
-  padding-right: $u-padding-text;
-}
-
-pre>code {
-  display: block;
-  border-radius: 1em;
-  padding: $u-padding-text;
-}
 
 // form elements
 

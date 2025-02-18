@@ -1,0 +1,66 @@
+// file: code.scss
+// styling of regions for code and code-terms
+// This is part of the micro css implementation.
+
+// valid code regions are: <pre><code> (block level) and <p><code> (inline)
+// re-using some variables from base.scss
+
+// * no need for specifying a ont on code tags as it is monospaced by default.
+// * minimal syntax coloring is added
+
+// ===== Colors =====
+
+// ===== main =====
+
+:root {
+  --code-back: rgb(245 245 230);
+  --code-text: black;
+  --code-border: 1px solid var(--code-text);
+  --code-radius: var(--text-spacing);
+}
+
+// ===== Text containers =====
+pre:has(>code) {
+  display: block;
+  padding: 0; // var(--text-spacing);
+  font-size: 1rem;
+  border: var(--code-border);
+  border-left: var(--code-radius) solid #4060A0;
+  border-radius: var(--code-radius);
+  background-color: var(--code-back);
+  background-image: linear-gradient(transparent 50%, rgb(0 0 0 / 6%) 50%);
+  background-size: auto 2.4em ;
+  background-origin: content-box;
+  background-attachment: local;
+
+  &:not(:first-child) {
+    margin-top: calc(var(--text-spacing) * 3);
+  }
+
+  code {
+    display: block;
+    color: var(--code-text);
+
+    // font-family: Consolas,Monaco,"Andale Mono","Ubuntu Mono",monospace;
+    font-size: 1rem;
+    line-height: 1.2;
+    padding-left:0.2em;
+
+    .comment,.block-comment { color: #7d8b99 }
+    .property,.tag,.boolean,.number,.function-name,.constant,.symbol { color: #c92c2c }
+    .selector,.attr-name,.string,.char,.function,.builtin { color: #2f9c0a }
+    .attr-value, .keyword, .class-name { color: #1990b8; }
+
+    @media print {
+      border: 1px solid var(--code-text);
+    }
+  }
+}
+
+
+p > code {
+  // font-family: Consolas,Monaco,"Andale Mono","Ubuntu Mono",monospace;
+  font-size: 1rem;
+  padding: 0 var(--text-spacing);
+  background-color: var(--code-back);
+}

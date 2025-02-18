@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Element Panel</title>
+  <title>Flow Workspace</title>
   <link href="/iotstyle.css" rel="stylesheet" type="text/css">
 
   <script src="micro.js"></script>
@@ -12,7 +12,15 @@
   <script src="panel.js"></script>
 
   <style>
+    /* body with streched main */
+    body.sitelayout {
+      width: 100vw;
+      height: 100vh;
+      grid-template-rows: header max-content navbar max-content main 1fr;
+    }
+
     #panel {
+      --con-color: #080808;
       fill: none;
       background-color: silver;
       background-image: linear-gradient(to top, rgba(0, 0, 0, .2) 1px, transparent 1px),
@@ -26,10 +34,14 @@
 
     #links>line,
     #links>path {
-      stroke: #080808;
+      stroke: var(--con-color);
       stroke-width: 3;
       stroke-linecap: round;
       marker-end: url(#arrow);
+    }
+
+    #links>marker path {
+      fill: var(--con-color);
     }
 
     .node {
@@ -40,6 +52,7 @@
       stroke: none;
       font-style: normal;
       font-weight: normal;
+      cursor: move;
     }
 
     .node rect {
@@ -49,71 +62,74 @@
 
     /* connector pins */
     .node circle {
-      fill: #404040;
+      fill: var(--con-color);
       stroke-width: 2;
       stroke: #d4dced;
-    }
+      r: 6;
 
-    .node text {
-      font-size: 10px;
-    }
+      &[draggable] {
+        cursor: crosshair;
+      }
 
-    #Grid {
-      fill: #e0e0e0;
-      stroke: none
-    }
+      .node .config {
+        cursor: pointer;
+      }
+
+      .dragCircle {
+        fill: none;
+        stroke: none;
+      }
+
+      #Grid {
+        fill: #e0e0e0;
+        stroke: none
+      }
   </style>
 </head>
 
-<body>
-  <div class="container">
-    <div class="row u-header">
-      <h1>Panel</h1>
-    </div>
-    <div class="row u-navbar">
-      <a class="button" href="/">Home</a>
-      <a class="button" href="/board.htm">Board</a>
-      <a class="button" href="/microide.htm">IDE</a>
-      <a class="button" href="/log.htm">Log</a>
-      <span class="gap"></span>
-      <button id="addButton">+</button>
-      <button id="unlock">unlock</button>
-      <button id="auto">auto</button>
-      <button id="sysButton">sys</button>
-    </div>
+<body class="sitelayout" style="max-width:100%;--layout-gap: 0;--content-back:none">
+  <header>
+    <h1>Flow Workspace</h1>
+  </header>
 
-    <div class="row" style="margin-top:0.5em;user-select: none;">
-      <svg id="panel">
-        <defs>
-          <marker id="arrow" markerWidth="6" markerHeight="6" refX="16" refY="8" orient="auto" viewBox="0 0 16 16">
-            <path d="M0,0 L0,16 L16,8 z" fill="currentColor" />
-          </marker>
-        </defs>
-        <rect height="100%" width="100%"></rect>
-        <g id="templates">
-          <g draggable="true" class="node">
-            <title></title>
-            <rect width="64" height="64" rx="8"></rect>
-            <use class="icon" x="16" y="8" width="32" height="32" color="#203050" href="" />
-            <use class="config" x="48" y="4" width="12" height="12" color="#203050" href="/icons.svg#config" />
-            <text class="id" x="32" y="56" text-anchor="middle">subtitle</text>
-            <circle pin="in" cx="3" cy="40" r="5"></circle>
-            <circle pin="out" draggable="true" cx="61" cy="40" r="5"></circle>
-          </g>
-        </g>
-        <g id="viewport">
-          <g id="nodes"></g>
-          <g id="links"></g>
-        </g>
-
-        <!-- <g id="connect" style="fill:lime">
-          <rect x=474 y=112 width="64" height="64" rx="8"></rect>
-        </g> -->
-
-      </svg>
-    </div>
+  <div class="navbar">
+    <a class="button" href="/">Home</a>
+    <a class="button" href="/board.htm">Board</a>
+    <a class="button" href="/microide.htm">IDE</a>
+    <a class="button" href="/log.htm">Log</a>
+    <span class="gap"></span>
+    <button id="addButton">+</button>
+    <button id="unlock">unlock</button>
+    <button id="auto">auto</button>
+    <button id="sysButton">sys</button>
   </div>
-  </div>
+
+  <main style="user-select: none;overflow:scroll">
+    <svg id="panel">
+      <defs>
+        <marker id="arrow" markerWidth="6" markerHeight="6" refX="14" refY="8" orient="auto" viewBox="0 0 16 16">
+          <path d="M0,0 L0,16 L16,8 z" style="fill:var(--con-color)" />
+        </marker>
+      </defs>
+      <rect height="100%" width="100%"></rect>
+      <g id="templates">
+        <g draggable="true" class="node">
+          <title></title>
+          <rect width="64" height="64" rx="8"></rect>
+          <use class="icon" x="16" y="8" width="32" height="32" color="#203050" href="" />
+          <use class="config" x="48" y="4" width="12" height="12" color="#203050" href="/icons.svg#config" />
+          <text class="id" x="32" y="56" text-anchor="middle">subtitle</text>
+          <circle pin="in" cx="3" cy="32"></circle>
+          <circle pin="out" draggable="true" cx="61" cy="32"></circle>
+        </g>
+      </g>
+      <g id="viewport">
+        <g id="nodes"></g>
+        <g id="links"></g>
+      </g>
+    </svg>
+
+  </main>
 
   <script>
     // GRID dimension and size
@@ -268,7 +284,6 @@
     var panelObj = document.getElementById('panel');
     var linksObj = document.getElementById('links');
     var viewObj = document.getElementById('viewport');
-    const connectObj = document.getElementById('panel');
 
     panelObj.style.width = PANEL_GRIDSIZE * PANEL_WIDTH + "px";
     panelObj.style.height = PANEL_GRIDSIZE * PANEL_HEIGHT + "px";
@@ -509,7 +524,7 @@
             obj = f.obj = linksObj.ownerDocument.createElementNS("http://www.w3.org/2000/svg", 'path');
             linksObj.appendChild(obj);
           } // if
-          obj.setAttribute("d", `M ${aPos.x},${aPos.y} C ${aPos.x + XPref},${aPos.y} ${ePos.x - XPref},${ePos.y} ${ePos.x - 12},${ePos.y} L ${ePos.x},${ePos.y}`);
+          obj.setAttribute("d", `M ${aPos.x + 6},${aPos.y} C ${aPos.x + XPref},${aPos.y} ${ePos.x - XPref},${ePos.y} ${ePos.x - 18},${ePos.y} L ${ePos.x - 6},${ePos.y}`);
         } // for
       }
     } // drawEdges()
@@ -565,10 +580,10 @@
           // create draggable circle
           DragOffset = getSVGPos(panelObj, evt);
           DragObj = createSVGNode(panelObj, 'circle', {
+            class: 'dragCircle',
             cx: DragOffset.x,
             cy: DragOffset.y,
-            r: 10,
-            style: 'fill:lime'
+            r: 6
           });
           _conPos = { x: DragOffset.x, y: DragOffset.y };
           _conObj = drawSingleEdge(undefined, _conPos, _conPos);
@@ -616,7 +631,7 @@
           );
 
           // Start the action connect dialog
-          if (node !== DragNode) {
+          if ((node) && (node !== DragNode)) {
             DialogClass.openModalForm('action',
               { srcId: DragNode.id, tarId: node.id },
               d => {
@@ -647,8 +662,8 @@
         drawNodes();
         drawEdges();
 
-        DragObj = null;
       } // if
+      DragObj = null;
     }); // mouseup
 
     if (window !== window.top) {

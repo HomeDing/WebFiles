@@ -60,7 +60,6 @@ $u-card-border: none;
   // one column only as default
   width: 100%;
   gap: var(--card-gap); // $u-card-gap;
-
   // center in main container by default
   margin: 0 auto;
 
@@ -71,13 +70,10 @@ $u-card-border: none;
 
     // used a card grid for normal cards (not horizonal)
     display: grid;
-    grid-template-columns: auto;
-    grid-template-areas: "header" "main" "footer";
-    grid-template-rows: auto 1fr auto;
+    grid-template: "header" auto "main" 1fr "footer" auto / auto;
     gap: 0;
     margin: 0;
     padding: 0;
-
     page-break-inside: avoid;
     overflow: hidden;
     background-color: var(--card-back);
@@ -97,6 +93,10 @@ $u-card-border: none;
     &.small {
       width: calc((var(--card-width) - var(--card-gap)) / 2);
       height: calc((var(--card-height) - var(--card-gap)) / 2);
+    }
+
+    &.shadow {
+      box-shadow: var(--dropshadow);
     }
 
     // images as first element in card
@@ -134,7 +134,6 @@ $u-card-border: none;
         aspect-ratio: 1/1;
         margin-right: var(--card-padding);
       }
-
     }
 
     .main,
@@ -156,7 +155,7 @@ $u-card-border: none;
       background-color: inherit;
     }
 
-    &.autolink a:first-of-type::before {
+    &.autolink h3>a::before {
       position: absolute;
       top: 0;
       left: 0;
@@ -166,7 +165,6 @@ $u-card-border: none;
     }
   }
 
-
   // container marked with class='horizontal' for horizontal oriented cards
   // stretching on the whole with with image on the left */
   &.horizontal {
@@ -174,10 +172,8 @@ $u-card-border: none;
     --card-height: 7.2rem;
 
     >.card {
-      grid-template-areas: "header main" "header footer";
-      grid-template-columns: max-content auto;
-      grid-template-rows: 1fr auto;
-  
+      grid-template: "header main" 1fr "header footer" auto / max-content auto;
+
       >svg:first-child,
       >img:first-child {
         width: var(--card-image-size);
@@ -185,7 +181,6 @@ $u-card-border: none;
       }
     }
   }
-
 
   // Cards with a defined, fixed width can be placed multiple times on one row when the with is giving enough space.
   // For these cases the card-container implements the layout allowing centering the card collection in the center of the main content.
@@ -196,7 +191,6 @@ $u-card-border: none;
   &.col280 {
     // N columns of 280px cards with 16px gap
     // 280*N + 16*(N-1)) = 280, 576, 872,  1168, ... in reverse with container queries
-
     // 4 columns maximum
     width: calc($u-card-width * 4 + $u-card-gap * 3);
 
@@ -212,7 +206,6 @@ $u-card-border: none;
     @container main (width < #{$u-card-width * 2}) {
       width: $u-card-width;
     }
-
   }
 
   &.col365 {
@@ -226,7 +219,7 @@ $u-card-border: none;
     width: calc(365px * 4 + 10px * 3);
 
     // @container main (width < #{$u-card-4col}) {
-    @container main (width <=#{365px * 4 + 10px * 3}) {
+    @container main (width <= #{365px * 4 + 10px * 3}) {
       width: calc(365px * 3 + 10px * 2);
     }
 

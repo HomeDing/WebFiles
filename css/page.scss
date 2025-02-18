@@ -14,6 +14,8 @@
   --navbar-back: #{base.$u-primary};
   --navbar-color: white;
   --navbar-spacing: 0.5em;
+
+  --dropshadow: rgb(0 0 0 / 40%) 4px 4px 12px 0;
 }
 
 body.sitelayout {
@@ -74,7 +76,7 @@ body.sitelayout {
       transition: box-shadow 0.3s ease-in-out;
 
       &:hover {
-        box-shadow: 0 5px 12px rgb(0 0 0 / 30%);
+        box-shadow: var(--dropshadow);
       }
     }
   }
@@ -148,6 +150,7 @@ body.sitelayout {
 
   nav {
     position: absolute;
+    background-color: var(--content-back);
     min-height: 100%;
     width: 24ch;
     z-index: 1;
