@@ -1,66 +1,140 @@
 // page level layout using areas header, navbar, main, aside*, footer
 // nav and aside is optional
 
+// <header> : header area with logo and top-level links
+// <.navbar> : navigation next to the header
+// <main> for content
+// <.sidebar> used for aside or additional links 
+// <footer> : legal, copyright, ...
+
+// <nav class='menu'> is a vertical menu that can slide in and out by using some scripting.
+// .open nav.menu is visible
+
 @use 'base';
 
+// The width of the page level elements must be known for the @media queries.
+$u-menu-width: 14em;
+$u-main-width: 42em;
+$u-sidebar-width: 14em;
+$u-menu-width: 14em;
+$u-layout-gap: 1em;
+
+// width <= $u-main-width : stacked layout
+// width >= $u-main-width && width <= $u-menu-width+ $u-sidebar-width: side by side main+sidebar, menu as fly-in
+// width >= $u-menu-width+ $u-sidebar-width + $u-main-width + $u-menu-width 
+
+// && width <= $u-menu-width+ $u-sidebar-width: side by side main+sidebar, menu as fly-in
+
+
 :root {
-  --sidebar-width: 200px;
-  --content-width: 1168px;
+  --sidebar-width: #{$u-sidebar-width};
 
-  --layout-gap: 16px;
+  --layout-gap: #{$u-layout-gap};
+  --layout-padding: 0.5em;
 
-  --content-back: #f8f8f8;
+  --header-back: var (--back);
+  --header-color: var (--color);
+
+  // --main-back: light-dark(white, black);
+  --main-back: light-dark(hsl(#{base.$u-hue} 0 90%), hsl(#{base.$u-hue} 0 10%));
+  --main-color: var(--color);
+  --main-width: #{$u-main-width};
 
   --navbar-back: #{base.$u-primary};
   --navbar-color: white;
-  --navbar-spacing: 0.5em;
+  --navbar-padding: var(--layout-padding);
+
+  --footer-back: var(--back);
+  --footer-color: var(--color);
+
+  // menu element
+  --menu-back: light-dark(white, black);
+  --menu-color: light-dark(black, white);
+  --menu-top: 0;
+  --menu-width: #{$u-menu-width};
+  --menu-padding: var(--layout-padding);
 
   --dropshadow: rgb(0 0 0 / 40%) 4px 4px 12px 0;
 }
 
 body.sitelayout {
   display: grid;
-  grid-template-columns: auto;
-  grid-template-areas: "header" "navbar" "main" "sidebar" "footer";
-  gap: var(--layout-gap);
-  max-width: calc(var(--content-width) + var(--sidebar-width) + 2 * var(--layout-gap));
+  gap: 0; // don't use gap, use margin
+  width: var(--main-width);
   margin: 0 auto;
+  padding: $u-layout-gap 0 0 0;
+  grid-template-columns: 1fr;
+  grid-template-areas: "header" "navbar" "main" "sidebar" "footer";
 
-  &:has(aside) {
-    grid-template-columns: auto var(--sidebar-width);
-    grid-template-areas: "header header" "navbar navbar" "main sidebar" "footer footer";
+  // by default: all stacked
 
-    @media (width <=1000px) {
-      grid-template-areas: "header" "navbar" "main" "sidebar" "footer";
+  @media (#{$u-main-width + $u-layout-gap + $u-sidebar-width} <=width) {
+    // main + sidebar is possible
+
+    &:has(>.sidebar) {
+      width: #{$u-main-width + $u-sidebar-width + $u-layout-gap};
+      grid-template-columns: 1fr auto;
+      grid-template-areas: "header header" "navbar navbar" "main sidebar" "footer footer";
     }
   }
 
-  header {
+  >header {
     grid-area: header;
+    margin-bottom: var(--layout-gap);
+  }
 
-    /* background-color: #f0f0f0; */
+  >.navbar {
+    grid-area: navbar;
+    margin-bottom: var(--layout-gap);
+  }
+
+  >main {
+    grid-area: main;
+  }
+
+  >.sidebar {
+    grid-area: sidebar;
+    margin-left: var(--layout-gap);
+  }
+
+  >footer {
+    grid-area: footer;
+    margin-top: var(--layout-gap);
+  }
+
+  &.fillscreen {
+    width: 100vw;
+    height: 100vh;
+    grid-template-rows: auto auto 1fr auto;
+  }
+
+  header {
     display: flex;
+    padding: var(--layout-padding);
+    background-color: var(--header-back);
+    color: var(--header-color);
 
     @media print {
       display: none !important;
     }
 
     >.icon {
-      width: 2.6rem;
-      height: 2.6rem;
+      width: 2rem;
+      height: 2rem;
     }
 
     >h1 {
       margin: 0;
+      padding: 0;
     }
 
     >* {
-      align-self: flex-end;
+      align-self: center;
       display: inline-block;
     }
 
     >*:not(:first-child) {
-      margin-left: var(--layout-gap);
+      margin-left: var(--layout-padding);
     }
 
     >.logo {
@@ -81,15 +155,17 @@ body.sitelayout {
     }
   }
 
-  // div.navbar is a horizontal always visible menu just below the header.
-  div.navbar {
-    grid-area: navbar;
+  // nav.navbar is a horizontal always visible area just below the header.
+  .navbar {
     display: flex;
     flex-flow: row nowrap;
-    margin-bottom: var(--navbar-spacing);
-    padding: var(--navbar-spacing);
+    padding: var(--layout-padding);
     background-color: var(--navbar-back);
     color: var(--navbar-color);
+
+    >* {
+      align-self: center;
+    }
 
     >.gap {
       flex-grow: 2;
@@ -99,7 +175,7 @@ body.sitelayout {
       text-decoration: none;
       font-size: 1.25em;
       min-width: 2em;
-      padding: 0 calc(var(--navbar-spacing) / 2);
+      padding: 0 var(--layout-padding);
 
       &:hover {
         border-color: var(--focus);
@@ -107,16 +183,21 @@ body.sitelayout {
       }
     }
 
+    >button,
     >img,
     >svg {
       padding: 0;
-      min-width: 1.4em !important;
-      width: 1.4em !important;
-      height: 1.4em !important;
+      min-width: 1.25em !important;
+      width: 1.25em !important;
+      height: 1.25em !important;
     }
 
     >*:not(:first-child) {
-      margin-left: var(--navbar-spacing);
+      margin-left: var(--layout-padding);
+    }
+
+    >button:hover {
+      box-shadow: var(--dropshadow);
     }
 
     @media print {
@@ -125,9 +206,11 @@ body.sitelayout {
 
   }
 
-  aside {
-    grid-area: sidebar;
-    padding: var(--layout-gap);
+  .sidebar {
+    color: var(--main-color);
+    background-color: var(--main-back);
+    padding: var(--layout-padding);
+    width: var(--sidebar-width);
 
     @media print {
       display: none !important;
@@ -135,43 +218,75 @@ body.sitelayout {
   }
 
   main {
-    grid-area: main;
+    background-color: var(--main-back);
+    color: var(--main-color);
+    padding: var(--layout-padding);
     container-name: main;
     container-type: inline-size;
-    padding: var(--layout-gap);
   }
 
   footer {
-    grid-area: footer;
-    padding: var(--layout-gap);
+    background-color: var(--main-back);
+    color: var(--main-color);
+    padding: var(--layout-padding);
   }
-
-  // ===== Page Layout =====
-
-  nav {
-    position: absolute;
-    background-color: var(--content-back);
-    min-height: 100%;
-    width: 24ch;
-    z-index: 1;
-    top: 80px;
-    left: -24ch;
-    transition: all 0.2s;
-    padding: 1rem 0.2rem 0.2rem;
-
-    &.open {
-      left: 0;
-    }
-
-    a,
-    a:hover {
-      text-decoration: none;
-    }
-
-    @media print {
-      display: none;
-    }
-  }
-
 
 }
+
+// ===== Menu mechanics =====
+
+// https://chrome.dev/css-wrapped-2024/#the-popover-api
+
+.menu {
+  position: absolute;
+  display: block;
+  border: 1px solid var(--menu-color);
+  background-color: var(--menu-back);
+  color: var(--menu-color);
+  width: var(--menu-width);
+  min-height: 360px;
+  z-index: 1;
+  top: 6.2rem;
+  left: 0;
+  transition: all var(--transition);
+  padding: var(--menu-padding);
+  margin: 0;
+  transform: translateX(calc(0px - var(--menu-width)));
+
+  &:popover-open {
+    transform: translateX(0);
+  }
+
+  &::backdrop {
+    background-color: rgb(200 200 200 / 70%);
+  }
+
+  a,
+  a:hover {
+    text-decoration: none;
+  }
+
+
+
+  @media print {
+    display: none;
+  }
+
+}
+
+@media (width > 1200px) {
+  .menu {
+    transform: translateX(0);
+  }
+
+  :root {
+    padding-left: var(--menu-width);
+    transition: padding-left var(--transition);
+  }
+
+  button[popovertarget] {
+    display: none;
+  }
+}
+
+// end of body.sitelayout

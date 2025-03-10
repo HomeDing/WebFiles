@@ -8,10 +8,6 @@
 @use "code";
 @use "iot";
 
-h2 {
-  clear: both;
-}
-
 // Tables
 
 table {
@@ -26,32 +22,22 @@ table {
     background-color: #203050;
 
     th {
-      vertical-align: top;
-      padding: 0.2em 0.6em;
       color: white;
-      font-weight: bold;
     }
   }
 
-  td {
+  td,
+  th {
     vertical-align: top;
     padding: 0.2em 0.6em;
     border-bottom: 1px solid #203050;
   }
+
+  th {
+    font-weight: bold;
+  }
 }
 
-
-img[title='w200'] {
-  width: 200px;
-}
-
-img[title='w400'] {
-  width: 400px;
-}
-
-img[title='w600'] {
-  width: 600px;
-}
 
 .warning {
   margin: 0.2rem;
@@ -74,16 +60,78 @@ a[href^='http']::after {
 }
 
 
-// formatted code blocks
+// ===== Text formatting =====
+
+p,
+pre,
+h1,
+h2,
+h3,
+h4,
+.text {
+  margin: 0;
+  min-height: 1em;
+
+  >img,
+  >svg {
+    // assume image in text containers to be inline icons
+    height: 1em;
+    height: auto;
+
+    &:first-child {
+      margin-right: 0.2em;
+    }
+  }
+}
+
+p:not(:first-child),
+pre:not(:first-child),
+.text:not(:first-child) {
+  margin-top: var(--text-spacing);
+}
+
+h1:not(:first-child),
+h2:not(:first-child),
+h3:not(:first-child),
+h4:not(:first-child) {
+  margin-top: calc(var(--text-spacing) * 3);
+}
+
+h1,
+h2,
+h3,
+h4 {
+  text-wrap: balance;
+  font-family: base.$u-font-sans-serif;
+  font-weight: bold;
+  clear: both;
+}
+
+// Title h1 in base.scss
+
+// Chapter
+h2 {
+  font-size: 1.6em;
+  min-height: 1.6em;
+}
+
+// Topic
+h3 {
+  font-size: 1.25em;
+  min-height: 1.25em;
+}
+
+// Subtitle
+h4 {
+  font-size: 1em;
+  min-height: 1em;
+}
+
 
 @media print {
   html,
   body {
     font-size: 0.66em;
     background-color: white;
-  }
-
-  .short {
-    border: 1px solid silver;
   }
 }

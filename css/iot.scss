@@ -7,12 +7,8 @@
 // Element and card rules for iot dashboards
 // This is part of the micro css implementation.
 
-// <nav> is a vertical menu that can slide in and out by using some scripting.
-// <nav> is used together with <main> for content
-// `inpage` class: nav is beside main content, not overlap
-// open class: nav is visible, maybe main needs to shift
-
-
+$u-on: color.scale(green, $lightness: 10%);
+$u-off: red;
 
 // ===== Cards layout =====
 
@@ -260,11 +256,11 @@ input.switch[type='range'] {
 }
 
 .u-bool[value='1'] {
-  background-image: linear-gradient(145deg, color.adjust(base.$u-on, $lightness: 30%), base.$u-on);
+  background-image: linear-gradient(145deg, color.adjust($u-on, $lightness: 30%), $u-on);
 }
 
 .u-bool[value='0'] {
-  background-image: linear-gradient(145deg, color.adjust(base.$u-off, $lightness: 30%), base.$u-off);
+  background-image: linear-gradient(145deg, color.adjust($u-off, $lightness: 30%), $u-off);
 }
 
 // visualizing the output level 0...max
@@ -343,7 +339,7 @@ input.switch[type='range'] {
     background-color: transparent;
 
     &.text {
-      color: base.$u-text;
+      color: var(--color);
     }
 
     &.dot {
@@ -366,7 +362,7 @@ input.switch[type='range'] {
     height: 10px;
     overflow: hidden;
     background-color: pink;
-    color: base.$u-text;
+    color: var(--color);
     border-radius: 0.4em;
   }
 

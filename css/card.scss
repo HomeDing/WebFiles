@@ -1,6 +1,7 @@
 // CSS for HTML cards and card design without any dependencies.
 
 @use "base";
+@use "page";
 
 // ===== card Layout settings =====
 // The card layout is based on a grid of cards with a fixed width and height.
@@ -15,9 +16,6 @@
 $u-card-width: 280px;
 $u-card-gap: 16px;
 
-$u-card-radius: 1em;
-$u-card-border: none;
-
 // ===== card style settings =====
 
 // $u-card-shadow: 0.2em 0.2em 0.4em rgba(0, 0, 0, 0.2);
@@ -30,22 +28,17 @@ $u-card-border: none;
   // cards can have fixed or variable height specified by the --card-height variable.
   --card-height: 320px;
 
-  /* horizontal cards have fixed height and are stretched to the total width of the card-container. See below */
+  // horizontal cards have fixed height and are stretched to the total width of the card-container.
 
-  /* Design of cards, colors borders, paddings,  */
-  --card-back: #fcfcfc;
-  --card-head: hsl(#{base.$u-hue 20% 80%});
-  --card-head-active: #{hsl(base.$u-hue, 80%, 70%)};
-  --card-border: $u-card-border;
+  // Design of cards, colors borders, paddings
+  --card-back: light-dark(white, black);
+  --card-color: var(--main-color);
+  --card-head: hsl(#{base.$u-hue} 20% 80%);
+  --card-head-active: #{hsl(base.$u-hue, 80%, 80%)};
+  --card-border: none;
   --card-padding: 0.5em;
   --card-image-size: 120px;
-  --card-radius: $u-card-radius;
-
-  @media (prefers-color-scheme: dark) {
-    --card-back: rgb(55 55 55);
-    --card-head: hsl(220deg 20% 30%);
-    --card-head-active: #{hsl(base.$u-hue 80% 30%)};
-  }
+  --card-radius: 1em;
 }
 
 // ===== card container =====
@@ -81,15 +74,15 @@ $u-card-border: none;
     border-radius: var(--card-radius);
 
     @media print {
-      border: 1px solid base.$u-text;
+      border: 1px solid var(--color);
     }
 
-    /* cards can be marked with class='wide' covering 2 columns  */
+    // cards can be marked with class='wide' covering 2 columns
     &.wide {
       width: calc(var(--card-width) * 2 + var(--card-gap));
     }
 
-    /* cards can be marked with class='wide' covering 2 columns  */
+    // cards can be marked with class='small' covering 1/2 column
     &.small {
       width: calc((var(--card-width) - var(--card-gap)) / 2);
       height: calc((var(--card-height) - var(--card-gap)) / 2);
@@ -140,8 +133,6 @@ $u-card-border: none;
     .body {
       grid-area: main;
       flex: 1;
-
-      /* background-color: lime; */
       padding: var(--card-padding);
     }
 

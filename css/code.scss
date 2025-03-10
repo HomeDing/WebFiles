@@ -39,7 +39,7 @@ pre:has(>code) {
 
   code {
     display: block;
-    color: var(--code-text);
+    color: black;
 
     // font-family: Consolas,Monaco,"Andale Mono","Ubuntu Mono",monospace;
     font-size: 1rem;
@@ -63,4 +63,5 @@ p > code {
   font-size: 1rem;
   padding: 0 var(--text-spacing);
   background-color: var(--code-back);
+  color: black;
 }

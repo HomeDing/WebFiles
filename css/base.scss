@@ -9,10 +9,6 @@
 
 // the u-hue value is the main color of the style
 $u-hue: 220deg;
-$u-background: #d4d6da;
-$u-background-darkmode: #111111;
-$u-text: #111111; // any text
-$u-text-darkmode: #eeeeee; // any text
 
 $u-primary: hsl($u-hue 80% 30%); // active objects
 $u-primary-text: white;
@@ -21,11 +17,7 @@ $u-border-color: #555555;
 $u-border-color-active: hsl($u-hue 100% 30%);
 
 $u-disabled: gray; // disabled objects
-$u-heading: $u-primary; // any headlines
 $u-connect: #00cc00; // connectivity / net
-
-$u-on: color.scale(green, $lightness: 10%);
-$u-off: red;
 
 $u-padding-text: 4px;
 $u-padding-block: calc(2 * $u-padding-text);
@@ -34,7 +26,6 @@ $u-border-size: 1px;
 $u-border: $u-border-size solid $u-border-color;
 $u-border-none: $u-border-size solid transparent;
 $u-border-active: $u-border-size solid $u-border-color-active;
-
 
 
 // ===== Content Box Sizes =====
@@ -57,17 +48,30 @@ $u-font-sans-serif: arial, ui-sans-serif, sans-serif;
 // ===== main =====
 
 :root {
-  --color: #{$u-text};
-  --back: #{$u-background};
+  color-scheme: light dark;
+
+  // standard colors used for <html>
+  --back: light-dark(hsl(#{$u-hue} 2% 85%), hsl(#{$u-hue} 2% 15%));
+  --color: light-dark(hsl(#{$u-hue} 0 10%), hsl(#{$u-hue} 0 90%)); 
+
+  --success-hue: 80deg;
+  --success-back: hsl(var(--success-hue) 90% 75%);
+  --success-line: hsl(var(--success-hue) 90% 40%);
+
+  --warning-hue: 40deg;
+  --warning-back: hsl(var(--warning-hue) 90% 75%);
+  --warning-line: hsl(var(--warning-hue) 90% 40%);
+  --warning-color: black;
+  
+  --error-hue: 0deg;
+  --error-back: hsl(var(--error-hue) 90% 75%);
+  --error-line: hsl(var(--error-hue) 90% 40%);
+  --error-color: color;
+
   --focus: #{hsl($u-hue, 50%, 50%)};
+
   --text-spacing: #{$u-text-spacing};
-
-  color-scheme: dark light;
-
-  @media (prefers-color-scheme: dark) {
-    --color: #{$u-text-darkmode};
-    --back: #{$u-background-darkmode};
-  }
+  --transition: 0.3s ease;
 }
 
 html,
@@ -76,17 +80,10 @@ body {
   margin: 0;
   padding: 0;
   font-family: $u-font-sans-serif;
-  font-size: 1em;
+  font-size: 1rem;
+  line-height: 1.2rem;
   color: var(--color);
   background-color: var(--back);
-}
-
-
-
-@media (width > 800px) {
-  body {
-    padding: 2 * $u-padding-text;
-  }
 }
 
 // apply a natural box layout model to all elements, but allowing components to change
@@ -99,6 +96,13 @@ body {
 img {
   max-width: 600px;
   height: auto;
+}
+
+a,
+a:any-link {
+  color: inherit;
+  text-decoration: underline;
+  cursor: pointer;
 }
 
 // use-cases of svg icons
@@ -127,75 +131,11 @@ svg {
 }
 
 
-// ===== Text containers =====
-p,
-pre,
-h1,
-h2,
-h3,
-h4,
-.text {
-  margin: 0;
-  min-height: 1rem;
-
-  >img,
-  >svg {
-    // assume image in text containers to be inline icons
-    height: 1em;
-    height: auto;
-
-    &:first-child {
-      margin-right: 0.2em;
-    }
-  }
+// Title us used everywhere
+h1 {
+  font-size: 2em;
 }
 
-p:not(:first-child),
-pre:not(:first-child),
-.text:not(:first-child) {
-  margin-top: var(--text-spacing);
-}
-
-h1:not(:first-child),
-h2:not(:first-child),
-h3:not(:first-child),
-h4:not(:first-child) {
-  margin-top: calc(var(--text-spacing) * 3);
-}
-
-a,
-a:any-link {
-  color: inherit;
-  text-decoration: underline;
-  cursor: pointer;
-}
-
-h1,
-h2,
-h3,
-h4 {
-  text-wrap: balance;
-  font-family: $u-font-sans-serif;
-  font-weight: bold;
-}
-
-// Chapter
-h2 {
-  font-size: 1.6em;
-  min-height: 1.6em;
-}
-
-// Topic
-h3 {
-  font-size: 1.25em;
-  min-height: 1.25em;
-}
-
-// Subtitle
-h4 {
-  font-size: 1em;
-  min-height: 1em;
-}
 
 
 // form elements
@@ -304,18 +244,28 @@ dialog {
   }
 }
 
-.error,
-.warning,
+.warning {
+  border: 2px solid var(--warning-line);
+  background-color: var(--warning-back);
+  color: var(--warning-color);
+}
+
+.error {
+  border: 2px solid var(--error-line);
+  background-color: var(--error-back);
+  color: var(--error-color);
+}
+
 .invalid {
   border: 2px solid #ff1111 !important;
   background-color: #ffcccc !important;
-  color: $u-text;
+  color: var(--color);
 }
 
 .valid {
   border: 2px solid #00cc00 !important;
   background-color: #ccffcc !important;
-  color: $u-text;
+  color: var(--color);
 }
 
 .noprint {
