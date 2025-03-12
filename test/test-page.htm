@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>test css page module</title>
+  <link rel="icon" type="image/png" href="/favicon48.png" sizes="48x48">
+
+  <link Content-Type="text/css" href="/docstyle.css" rel="stylesheet" />
+
+  <style>
+  </style>
+
+  <script src="/sfc/loader.js"></script>
+  <script>
+    window.loadComponent('u-toggle').then(() => {
+      console.log('Page', 'all components loaded.');
+    });
+  </script>
+</head>
+
+<body class="sitelayout fillscreen" style="--main-back:lightgoldenrodyellow;--menu-back:white">
+
+  <header>
+    <h1>test css page module</h1>
+  </header>
+
+  <nav class="navbar">
+    <button id="menu" popovertarget="my-menu">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+        <path fill="white" d="M0 8h48v6H0zm0 13h48v6H0zm0 13h48v6H0z" />
+      </svg>
+    </button>
+
+    <button id="load1">load</button>
+    <button id="text1">text</button>
+    <button id="theme">(*)</button>
+    <span id="cmode">--</span>
+
+  </nav>
+
+  <nav class="menu">Here</nav>
+
+  <main>
+    <h2>Full Page Layout</h2>
+    <p>Marking the code&lt;body&gt; with <code>class="sitelayout fillscreen"</code>
+      enables the full page mode where the main area is stretched to cover the whole available space and leaving
+      scrolling to
+      the inner areas of &lt;main&gt;.</p>
+    <h2>heading-2 of next chapter</h2>
+
+    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Culpa laborum magni consequatur qui facere hic, atque
+      dolores itaque! Non accusamus magnam, deleniti consequatur nostrum obcaecati placeat corrupti nam enim
+      dignissimos.</p>
+
+    <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Excepturi nesciunt, perspiciatis repellat quibusdam
+      deleniti quaerat deserunt? Adipisci dolorem esse reiciendis facere, debitis iusto soluta fuga. Consequuntur vitae
+      odio sint magnam.</p>
+    <p>Lorem</p>
+    <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Eligendi, exercitationem voluptate quisquam odio eaque
+      amet saepe et ratione? Ducimus incidunt obcaecati laboriosam deleniti delectus, unde soluta id porro dignissimos
+      vitae!</p>
+  </main>
+
+  <aside class="sidebar">
+    <code>&lt;nav.sidebar&gt;</code><br>
+    <li><a href="./test-style.htm">test-style</a></li>
+    <li><a href="./test-page.htm">test-page</a></li>
+    <li><a href="./test-docstyle.htm">test-docstyle</a></li>
+    <li><a href="./test-cards.htm">test-cards</a></li>
+    <li><a href="./test-dialog.htm">test-dialog</a></li>
+    <li><a href="./test-element.htm">test-element</a></li>
+  </aside>
+
+  <footer>
+    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Consectetur facere accusamus officia ipsam in neque aut
+      ab totam esse laboriosam, nemo et voluptatum, sed perferendis excepturi veritatis qui, aliquam harum.</p>
+  </footer>
+
+  <script>
+    document.querySelector(':root').style.colorScheme = "light";
+
+    document.querySelector('#load1').addEventListener('click', (e) => {
+      document.querySelector('u-markdown').setAttribute('src', "./test-md2.md");
+    });
+
+    document.querySelector('#text1').addEventListener('click', (e) => {
+      document.querySelector('u-markdown').setAttribute('textContent', "# Hello World\n\nHello to the World !!");
+    });
+  </script>
+</body>
+
+</html>

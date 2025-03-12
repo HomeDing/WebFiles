@@ -95,33 +95,15 @@ class UComponent extends HTMLElement {
 
 
 
-window.loadComponent = (function() {
+window.loadComponent = (function () {
   // plain script includes can read document.currentScript.src
   // modules can use meta
   const loaderURL = new URL(document.currentScript.src);
 
   console.debug('SFC', `loadComponent...`);
 
-  async function fetchSFC(tagName, folder = undefined) {
+  async function define(tagName, dom) {
     let def;
-
-    const sfcImpl = tagName + '.vue';
-    let baseUrl = loaderURL;
-
-    if (folder) {
-      if (! folder.endsWith('/')) folder += '/';
-      baseUrl = new URL(folder, document.location.href);
-    }
-
-    const url = new URL(sfcImpl, baseUrl);
-    console.debug('SFC', `loading module ${tagName} from ${url.href}...`);
-
-    // get DOM from sfc-file
-    const dom = await fetch(url)
-      .then(response => response.text())
-      .then(html => (new DOMParser()).parseFromString(html, 'text/html'));
-
-    // create class from script
     const scriptObj = dom.querySelector('script');
     if (scriptObj && scriptObj.textContent) {
       const jsFile = new Blob([scriptObj.textContent], { type: 'application/javascript' });
@@ -135,18 +117,44 @@ window.loadComponent = (function() {
     // make template and style available to object constructor()
     def.uTemplate = dom.querySelector('template');
     def.uStyle = dom.querySelector('style');
-    def.for = scriptObj.getAttribute('for');
+    def.extends = scriptObj.getAttribute('extends');
 
-    if (def.for) {
-      customElements.define(tagName, def, { extends: def.for });
-      if (def.uStyle) {
-        document.head.appendChild(def.uStyle.cloneNode(true));
-      }
+    if (def.extends) {
+      customElements.define(tagName, def, { extends: def.extends });
+      if (def.uStyle) document.head.appendChild(def.uStyle.cloneNode(true));
       console.debug('SFC', `${def.for}.${tagName} defined.`);
 
     } else {
       customElements.define(tagName, def);
       console.debug('SFC', `${tagName} defined.`);
+    }
+  }
+
+  async function fetchSFC(tagName, folder = undefined) {
+    const sfcImpl = tagName + '.vue';
+    let baseUrl = loaderURL;
+
+    if (folder) {
+      baseUrl = new URL(folder, document.location.href);
+    }
+
+    const url = new URL(sfcImpl, baseUrl);
+    console.debug('SFC', `loading module ${tagName} from ${url.href}...`);
+
+    // get DOM from sfc-file
+    const dom = await fetch(url)
+      .then(response => response.text())
+      .then(html => (new DOMParser()).parseFromString(html, 'text/html'));
+
+    const a = dom.querySelectorAll('sfc');
+
+    if (a.length === 0) {
+      define(tagName, dom);
+    } else {
+      for (const c of a) {
+        define(c.getAttribute('tag'), c);
+      }
+
     }
   }; // fetchSFC()
 
@@ -158,5 +166,3 @@ window.loadComponent = (function() {
 
   return loadComponent;
 }());
-
-// EOF

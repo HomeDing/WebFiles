@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>MD</title>
+  <title>test-markdown sfc</title>
   <link rel="icon" type="image/png" href="/favicon48.png" sizes="48x48">
 
   <meta property="og:title" content="The Rock" />
@@ -12,55 +12,24 @@
   <meta property="og:url" content="https://www.imdb.com/title/tt0117500/" />
   <meta property="og:image" content="https://ia.media-imdb.com/images/rock.jpg" />
   <!-- <link rel='stylesheet' href='/docstyle.css' media='all' /> -->
-  <link Content-Type="text/css" href="/iotstyle.css" rel="stylesheet" />
+  <link Content-Type="text/css" href="/docstyle.css" rel="stylesheet" />
 
-  <style>
-    :root {
-      --backs: #FFDDDD;
-    }
-
-    body {
-      padding: 1em
-    }
-
-    .form-grid {
-      display: grid;
-      grid-template-columns: 12.6ch auto;
-      grid-gap: 0.5em;
-      margin-bottom: 0.5rem;
-
-      >* {
-        grid-column-end: -1;
-      }
-
-      >label {
-        grid-column: 1;
-        text-align: right;
-      }
-
-      >.wide {
-        grid-column: 1/-1;
-      }
-    }
-
-    .input {
-      padding: 0.2em
-    }
-  </style>
   <script src="/sfc/loader.js"></script>
 </head>
 
 <body class="sitelayout">
 
   <header>
-    <h1>MD</h1>
+    <h1>test-markdown sfc</h1>
   </header>
-  <main>
 
+  <nav class="navbar">
     <button id="load1">load</button>
-    <button id="text1">text</button>
-    <hr />
-    <u-markdown src="./test-md1.md" style="  background-color: azure; "></u-markdown>
+    <button id="text1">text1</button>
+    <button id="text2">css-readme.md</button>
+  </nav>
+  <main>
+    <u-markdown src="./test-md1.md"></u-markdown>
   </main>
   <script>
     loadComponent('u-markdown').then(() => {
@@ -73,6 +42,10 @@
 
     document.querySelector('#text1').addEventListener('click', (e) => {
       document.querySelector('u-markdown').setAttribute('textContent', "# Hello World\n\nHello to the World !!");
+    });
+
+    document.querySelector('#text2').addEventListener('click', (e) => {
+      document.querySelector('u-markdown').setAttribute('src', "/css/readme.md");
     });
   </script>
 </body>

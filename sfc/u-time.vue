@@ -53,7 +53,7 @@ this.textContent = fmt.format(date);
     }
 </style>
 
-<script for="time">
+<script extends="time">
   export default class MyTime extends HTMLTimeElement {
     static observedAttributes = ["datetime", "datestyle", "timestyle"];
 

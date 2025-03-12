@@ -1,25 +1,34 @@
 <!doctype html>
-<html lang="en-US" prefix="og: https://ogp.me/ns#">
+<html lang="en-US">
 
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Card-container</title>
 
-  <meta property="og:title" content="The Rock" />
-  <meta property="og:type" content="video.movie" />
-  <meta property="og:url" content="https://www.imdb.com/title/tt0117500/" />
-  <meta property="og:image" content="https://ia.media-imdb.com/images/rock.jpg" />
   <link rel='stylesheet' href='/docstyle.css' media='all' />
 
   <style>
+    header,
+    nav.navbar,
+    nav.menu,
+    main,
+    nav.sidebar,
+    footer {
+      /* outline: 3px solid yellowgreen; */
+      box-shadow: 0 0 3px 3px yellowgreen;
+    }
+
+    .card >img {background-color: lightgoldenrodyellow;}
   </style>
 </head>
 
-<body class="sitelayout">
-
-  <h1>Card-container</h1>
-  <main style="background-color: lightgreen;">
+<body class="sitelayout" style="width: 100%;">
+  <header>
+    <h1>Card-container</h1>
+  </header>
+  <main>
+    <h2>Horizontal cards</h2>
     <div class="card-container col280 horizontal" style="--card-image-size:200px;--card-radius: 1em">
       <div class="card"> <img src="/i/default.svg" class="left" alt="github cat">
         <div class="body">
@@ -28,7 +37,7 @@
         </div>
         <div class="footer"> done.</div>
       </div>
-      <div class="card"> <img src="/i/scene.svg" alt="github cat" >
+      <div class="card"> <img src="/i/scene.svg" alt="github cat">
         <div class="body">Some thoughts...</div>
       </div>
       <div class="card">
@@ -36,7 +45,7 @@
       </div>
     </div>
 
-    &nbsp;
+    <h2>Vertical cards</h2>
     <div class="card-container col280" style="--card-height:auto">
       <div class="card">
         <img src="/i/analog.svg" alt="analog input" style="color:blue">
@@ -46,10 +55,12 @@
           <img src="/i/no.svg" alt="no meaning" style="height: 1lh;">
         </div>
       </div>
+
       <div class="card wide autolink">
         <img src="/i/socket.svg" alt="British">
         <div class="body">
-          <h3>Autolink included</h3>
+          <h3><a href="https://homeding.github.io/boards/sockets.htm">Sockets</a></h3>
+          <p>Autolink included</p>
           <a href="https://ishadeed.com/article/css-container-query-guide/">container queries</a>
           <p>here</p>
           <a href="https://getbootstrap.com/docs/4.1/components/card/">cards</a>

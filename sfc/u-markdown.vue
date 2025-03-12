@@ -35,7 +35,8 @@ References:
 
 
 <template>
-  <script src="/sfc/markdown-it.js" defer onload="this.isLoaded = true;"></script>
+  <script src="/sfc/markdown-it.js"       defer onload="this.isLoaded = true;"></script>
+  <script src="/sfc/markdown-it-attrs.js" defer onload="this.isLoaded = true;"></script>
   <div></div>
 </template>
 
@@ -78,11 +79,14 @@ export default class MyMarkdown extends UComponent {
   renderMarkdown() {
     const oDiv = this.shadowRoot.querySelector('div');
     if (!this.md) {
+      window.markdownItAttrs
+
       this.md = window.markdownit({
         html: true,
         linkify: true,
         typographer: true
-      });
+      })
+      .use (window.markdownItAttrs);
     }
     oDiv.innerHTML = this.md.render(this.srcText);
   }
@@ -102,12 +106,18 @@ export default class MyMarkdown extends UComponent {
 
   init() {
     // The markdown script will be available after loading it. Then processing might be required.
-    const oScript = this.shadowRoot.querySelector('script');
+    const oScript = this.shadowRoot.querySelectorAll('script');
+    let loaded = true;
 
-    if (oScript.isLoaded) {
+    for (const s of oScript) {
+      if (!s.isLoaded) {
+        loaded = false;
+        s.addEventListener("load", () => { this.init(); });
+      }
+    }
+
+    if (loaded) {
       this.process();
-    } else {
-      oScript.addEventListener("load", () => { this.process(); });
     }
   } // init()
 

@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="en">
+
+
+<!-- 
+
+## TODO:
+
+* display module (only HomeDing)
+
+The modules of the Style Construction Kit therefore uses scss variables for all width definitions
+and uses css variables to apply colors.
+
+<https://css-tricks.com/come-to-the-light-dark-side/>
+<https://blog.kizu.dev/querying-the-color-scheme/>
+<https://dev.to/abbeyperini/dark-mode-toggle-using-html-web-components-h0g>
+
+
+
+block level elements have background:
+* card
+
+textual inline elements have transparent background:
+
+* Headings
+* Text
+* links
+
+exceptions:
+
+* p>code -- inline 'code' words have a highlight background
+* button --
+
+<https://www.farb-tabelle.de/>
+
+neutral rgb(240, 240, 240) #F0F0F0 -> main, aside, nav
+content background #E5EFF9 -> main
+cards-background: white
+functions:
+
+-->
+
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Colors DocStyle</title>
+  <link Content-Type="text/css" href="/docstyle.css" rel="stylesheet" />
+
+  <style>
+    header,
+    nav.navbar,
+    nav.menu,
+    main,
+    nav.sidebar,
+    footer {
+      /* outline: 3px solid yellowgreen; */
+      box-shadow: 0 0 3px 3px yellowgreen;
+    }
+  </style>
+</head>
+
+<body class="sitelayout">
+  <header>&lt;header&gt; <h1>DocStyle</h1>
+  </header>
+  <nav class="navbar">
+    <code>&lt;nav&gt;</code>
+    <svg id="menu" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+      <path fill="white" d="M0 8h48v6H0zm0 13h48v6H0zm0 13h48v6H0z" />
+    </svg>
+
+    <span class="gap"></span>
+    <svg id="themebutton" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+      <path fill="white" d="M24 1c-13 0-23 10-23 23s10 23 23 23s23-11 23-23s-11-23-23-23z M24 43V5c10 0 19 10 19 19s-9 19-19 19z" />
+    </svg>
+  </nav>
+
+  <nav class="menu">
+    &lt;nav.menu&gt;
+  </nav>
+
+  <main>
+    <h2>CSS Doc Module</h2>
+    <p>The page shows some of the style elements from the <code>&lt;doc&gt;</code> module like</p>
+
+    <ul>
+      <li>code formatting in documents</li>
+    </ul>
+
+    <p>The <b>doc</b> style is created for text-heavy pages.
+      It is a variant that supports flowing content in the main sections for writing the documentation and
+      blogs. The following page-level areas can be used:</p>
+
+    <p><code>&lt;header&gt;</code> &mdash; This area is the place to put the web site logo and top level navigations.
+    </p>
+
+    <p><code>&lt;nav class='navbar'&gt;</code> &mdash; This optional area is the place to add clickable items to start
+      functionality other than navigation like controlling page level processes.</p>
+
+    <p><code>&lt;nav class='menu'&gt;</code> &mdash; This optional area is made to provide more detailled navigation
+      within the domain. This may be the
+    </p>
+
+    <p><code>&lt;main&gt;</code> &mdash; This area is made for a comfortable reading experience and has enough space for
+      good
+      reading as well as horizontal cards.</p>
+
+    <p><code>&lt;nav class='sidebar'&gt;</code> &mdash; This optional area is made to provide more detailled navigation
+      within the domain. This may be the
+    </p>
+
+    <p><code>&lt;footer&gt;</code> &mdash; This optional area exists for ...</p>
+
+    <p>When designing HTML areas for reading text, it's important to consider both the width of the text container and
+      the text size to ensure readability and a comfortable reading experience.</p>
+
+    <h2>Size</h2>
+
+    <p><code>Width</code> &mdash; A line length of 50-75 characters per line, including spaces is considered for a good
+      reading.
+      The standard width of the main area is set to 42em ~ 672px including some padding resulting in about 80
+      characters.
+      This size also is usable on almost all mobile devices.</p>
+
+    <p><code>Text Size</code> &mdash; The text resolution that is defined by the default font-size on a device is not
+      changed. All font-sizes foc text are implemented by relative factors or are based on the rem units.
+      The line-height is set to 1.2 for all text.</p>
+
+
+    <h2>Colors</h2>
+
+    <p>Unlike sizing properties, colors can be defined using CSS variables exclusively, as they don't affect
+      element dimensions, positioning, or sizes. This approach enhances the <em>reusability</em> of the style toolkit
+      and enables <em>easy customization</em> of the color scheme.</p>
+
+    <p>The color scheme is based on the <em>light</em> and <em>dark</em> modes, which can be toggled by the user or
+      automatically based on the user's preferences.</p>
+
+    <p>The page-level areas have their specific coloring defined by using css variables:</p>
+
+    <pre><code>--back: light-dark(hsl(220deg 2% 85%), hsl(220deg 2% 15%));
+--color: light-dark(hsl(220deg 0 10%), hsl(220deg 0 90%));
+
+--header-back: var (--back);
+--header-color: var (--color);
+
+--navbar-back: hsl(220, 80%, 30%);
+--navbar-color: white;
+
+--main-back: light-dark(hsl(220deg 0 90%), hsl(220deg 0 10%));
+--main-color: var(--color);
+
+--header-back: var (--back);
+--header-color: var (--color);
+
+--footer-back: var(--back);
+--footer-color: var(--color);
+
+--menu-back: light-dark(white, black);
+--menu-color: var(--color);
+</code></pre>
+
+    <p>These color values are defined at the <code>:root</code> level and can be redefined through additional page-level
+      assignments, enabling easy style adaptations without recompiling the CSS.</p>
+
+    <h2>Chapter H2</h2>
+
+    <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Aut numquam recusandae, deserunt in eum ab nihil, totam
+      exercitationem quae, est fugit vel? Nisi error totam similique deserunt vitae magnam quos!</p>
+
+    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Animi nobis sit voluptatum quod eligendi fugiat veniam.
+      Explicabo cum magnam reiciendis consequatur inventore nam, rerum hic vero sequi amet blanditiis deleniti?</p>
+
+    <h3>Section h3</h3>
+
+    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Pariatur obcaecati quidem delectus esse cupiditate quam
+      rem at voluptas facilis quia dicta, nulla iusto fuga atque, ex deserunt dignissimos molestias recusandae.</p>
+
+    <h3>Section h3</h3>
+
+    <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Laboriosam earum magni, cumque repellat error
+      cupiditate sed ea iusto perferendis assumenda totam aut optio officia quis, saepe sapiente harum omnis modi.</p>
+  </main>
+
+  <nav class="sidebar">
+    <code>&lt;nav.sidebar&gt;</code><br>
+    <li><a href="./test-style.htm">test-style</a></li>
+    <li><a href="./test-page.htm">test-page</a></li>
+    <li><a href="./test-docstyle.htm">test-docstyle</a></li>
+    <li><a href="./test-cards.htm">test-cards</a></li>
+    <li><a href="./test-dialog.htm">test-dialog</a></li>
+    <li><a href="./test-element.htm">test-element</a></li>
+  </nav>
+
+  <footer>&lt;footer&gt;...</footer>
+
+  <script>
+    function setTheme(lightMode) {
+      const theme = lightMode ? 'light' : 'dark';
+      document.querySelector(':root').style.colorScheme = theme;
+    }
+
+    let isLightTheme = window.matchMedia('(prefers-color-scheme: light)').matches;
+    setTheme(isLightTheme);
+
+    document.querySelector('#themebutton').addEventListener('click', function(e) {
+      isLightTheme = !isLightTheme;
+      setTheme(isLightTheme);
+    });
+ 
+    document.querySelector('#menu').addEventListener('click', function(e) {
+      const navObj = document.querySelector('nav.menu');
+      navObj.classList.toggle('open');
+    });
+
+  </script>
+
+</body>
+
+</html>

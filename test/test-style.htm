@@ -61,15 +61,22 @@
       padding-top: .3em;
       text-align: center;
     }
+
+    #colorsample {
+      background-color: white;
+      color: black;
+    }
+  </style>
+
   </style>
 
   <script>
-    window.loadComponent('u-colorpick', '/sfc/');
+    // window.loadComponent('u-colorpick', '/sfc/');
   </script>
 
 </head>
 
-<body class="sitelayout" style="max-width:100%;--layout-gap: 0;--content-back:none">
+<body class="sitelayout" style="width:1000px;--layout-gap: 0;--main-back:transparent">
   <header>
     <svg class="icon">
       <use href="/icons.svg#device" />
@@ -77,19 +84,46 @@
     <h1>IoT Style Check Page Header</h1>
   </header>
 
-  <div class="navbar">
-    <svg tabindex=0>
-      <use href="/icons.svg#menu" id="menuButton" />
-    </svg>
+  <nav class="navbar">
+    <button id="menu" popovertarget="my-menu">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+        <path fill="white" d="M0 8h48v6H0zm0 13h48v6H0zm0 13h48v6H0z" />
+      </svg>
+    </button>
     <a href="/">Home</a>
-    <a href="/board.htm">Board</a>
+    <a href="test-page.htm">test-page</a>
     <a href="/microide.htm">IDE</a>
     <a href="/portal.htm">Portal</a>
     <a href="/portalconfig.htm">PortalConfig</a>
     <a href="/log.htm">Log</a>
-  </div>
+
+    <span class="gap"></span>
+    <svg id="themebutton" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+      <path fill="white" d="M24 1c-13 0-23 10-23 23s10 23 23 23s23-11 23-23s-11-23-23-23z M24 43V5c10 0 19 10 19 19s-9 19-19 19z" />
+    </svg>
+  </nav>
+
+  <nav popover id="my-menu" class="menu">&lt;menu&gt;</nav>
+
+  <nav class="sidebar">
+    <code>&lt;nav.sidebar&gt;</code><br>
+    <li><a href="./test-style.htm">test-style</a></li>
+    <li><a href="./test-page.htm">test-page</a></li>
+    <li><a href="./test-docstyle.htm">test-docstyle</a></li>
+    <li><a href="./test-cards.htm">test-cards</a></li>
+    <li><a href="./test-dialog.htm">test-dialog</a></li>
+    <li><a href="./test-element.htm">test-element</a></li>
+    <li><a href="./test-gaugechart.htm">gaugechart</a></li>
+    <li><a href="./test-piechart.htm">piechart</a></li>
+  </nav>
 
   <main>
+    <h2>Style Toolkit Base Module</h2>
+    <p>The page shows some of the style elements from the <code>&lt;base&gt;</code> module like</p>
+    <ul>
+      <li>text spacing</li>
+      <li>colors</li>
+    </ul>
     <h2>Chapter headings &lt;h2&gt;</h2>
     <p>Some regular text.</p>
     <h3>Topic headings &lt;h3&gt;</h3>
@@ -106,12 +140,75 @@
       code: <u-colorpick cssvar="code"></u-colorpick>
       focus: <u-colorpick cssvar="focus"></u-colorpick>
     </p>
+
+    <table id="colorsample" style="color-scheme:light">
+      <thead>
+        <tr>
+          <th></th>
+          <th>-hue</th>
+          <th>-back 90% 75%</th>
+          <th>-line 90% 40%</th>
+          <th>-color</th>
+        </tr>
+      </thead>
+      <tr>
+        <th>--success</th>
+        <td>80deg</td>
+        <td class="cc" style="background-color:var(--success-back)"></td>
+        <td class="cc" style="background-color:var(--success-line)"></td>
+        <td>black</td>
+      </tr>
+      <tr>
+        <th>--warning</th>
+        <td>40deg</td>
+        <td class="cc" style="background-color:var(--warning-back)"></td>
+        <td class="cc" style="background-color:var(--warning-line)"></td>
+        <td>black</td>
+      </tr>
+      <tr>
+        <th>--error</th>
+        <td>0deg</td>
+        <td class="cc" style="background-color:var(--error-back)"></td>
+        <td class="cc" style="background-color:var(--error-line)"></td>
+        <td>black</td>
+      </tr>
+
+      <tr>
+        <th>--focus</th>
+        <td>220deg</td>
+        <td class="cc" colspan=2 style="background-color:var(--focus)"></td>
+        <td>black</td>
+      </tr>
+
+      <tr>
+        <th>--code-back</th>
+        <td></td>
+        <td class="cc" colspan=2 style="background-color:var(--code-back)"></td>
+        <td>black</td>
+      </tr>
+    </table>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', (e) => {
+        // print the computed background color in the cell.
+        const colorCellList = document.querySelectorAll('#colorsample .cc');
+        const rgbRegExp = /^rgb\((\d*), ?(\d*), ?(\d*)\)$/;
+
+        for (const c1 of colorCellList) {
+          const rgbcol = window.getComputedStyle(c1).backgroundColor;
+          const r = rgbcol.match(rgbRegExp);
+          c1.textContent = `#${Number(r[1]).toString(16).padStart(2, '0')}${Number(r[2]).toString(16).padStart(2, '0')}${Number(r[3]).toString(16).padStart(2, '0')}`;
+        }
+      });
+
+    </script>
+
     <!-- <p>Use <code>class="hidden-xs"</code> and <span class="code">class="hidden-xs"</span> to hide text elements.</p> -->
     <h4>Code blocks:</h4>
 
     <p>Some <code>code-snippets</code> are inline with text.</p>
 
-<pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
+    <pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
   <span class="token property">"device"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
     <span class="token property">"0"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
       <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"nano"</span><span class="token punctuation">,</span>
@@ -766,7 +863,22 @@
 
   <script>
 
-    function checkDefaultParameter(a, b = 8) {
+    function setTheme(lightMode) {
+      const theme = lightMode ? 'light' : 'dark';
+      document.querySelector(':root').style.colorScheme = theme;
+    }
+
+    let isLightTheme = window.matchMedia('(prefers-color-scheme: light)').matches;
+    console.log('prefersLightTheme', isLightTheme);
+    setTheme(isLightTheme);
+
+    document.querySelector('#themebutton').addEventListener('click', function(e) {
+      isLightTheme = !isLightTheme;
+      setTheme(isLightTheme);
+    });
+
+
+   function checkDefaultParameter(a, b = 8) {
       var result = (b === 8) ? 'valid' : 'invalid';
       document.querySelector('#checkDefault').classList.add(result);
     }

@@ -1,6 +1,8 @@
 # h1 Heading test-md1 8-)
 
-## h2 Heading
+## h2 Heading {.header2}
+
+some text in red {style=color:red}
 
 ### h3 Heading
 
