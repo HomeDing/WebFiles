@@ -25,6 +25,9 @@
   </script>
 
   <style>
+    main {
+      overflow-y: scroll;
+    }
     pre.code {
       padding: 0.2em;
       font-size: 0.75rem;
@@ -33,26 +36,28 @@
       color: black;
       border: 1px solid black;
       overflow-x: hidden;
-      overflow-y: scroll;
     }
   </style>
 
 </head>
 
-<body style="margin:0;padding:0">
+<body class="sitelayout fillscreen" style="--layout-gap:0">
   <u-toast></u-toast>
-  <div class="u-header">
+  <header>
     <h1>Log output</h1>
-  </div>
-  <div class="u-navbar">
+  </header>
+  <nav class="navbar">
     <a href="/">Home</a>
     <a href="/board.htm">Board</a>
     <a href="/microide.htm">IDE</a>
     <a href="/log.htm">Log</a>
     <span class="gap"></span>
     <button id="clearButton">clear</button>
-  </div>
-  <pre class="code" id="logtext"></pre>
+  </nav>
+
+  <main>
+    <pre class="code" id="logtext"></pre>
+  </main>
 
   <script>
     var clearObj = document.getElementById('clearButton');

@@ -24,6 +24,7 @@ import * as proxy from './ProxyElement.js';
 
 export interface HomeDingServerOptions {
   port?: number;
+  discovery?: boolean;
   monitor?: boolean;
   secure?: boolean;
   case?: string;
@@ -103,8 +104,12 @@ export class HomeDingServer {
 
     // ===== Bind api services
 
-    const discoveryService = DeviceDiscovery.createInstance(this._settings.discovery || {});
-    this._api.use('/discovery', discoveryService.router);
+    if (opts.discovery) {
+      // ===== enable device discovery service =====
+      Logger.info('Starting discovery service...');
+      const discoveryService = DeviceDiscovery.createInstance(this._settings.discovery || {});
+      this._api.use('/discovery', discoveryService.router);
+    }
 
     const configService = ConfigCache.createInstance(this._settings.config || {});
     this._api.use('/config', this.expressNoCache, configService.router);

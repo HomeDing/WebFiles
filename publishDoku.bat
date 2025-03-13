@@ -20,6 +20,7 @@ copy iotstyle.css %tar%
 echo.
 echo *** Copy to blog...
 set tar=%USERPROFILE%\Projects\blog\src
+copy css\*.scss %tar%\css
 copy docstyle.css %tar%
 
 :end

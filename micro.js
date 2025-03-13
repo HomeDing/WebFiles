@@ -1135,15 +1135,15 @@ function jsonLocate(obj, path) {
 }
 let LogWidgetClass = class LogWidgetClass extends GenericWidgetClass {
     _fName;
-    _SVGObj;
+    _chart;
     _lineType;
     _xFormat;
     _yFormat;
-    _api;
-    _chart;
+    _isSetup = false;
+    _isDirty = false;
     connectedCallback() {
         super.connectedCallback();
-        this._SVGObj = this.querySelector('object');
+        this._chart = this.querySelector('u-linechart');
         this._lineType = 'line';
         this._xFormat = 'datetime';
         this._yFormat = 'num';
@@ -1172,42 +1172,37 @@ let LogWidgetClass = class LogWidgetClass extends GenericWidgetClass {
             allData = txt + '\n' + allData;
         });
         Promise.allSettled([p1, p2]).then(function () {
-            const re = /^\d{4,},\d+/;
-            const pmArray = allData.split('\n').filter(e => e.match(re));
-            this._api.draw(this._chart, pmArray.map(v => {
+            const pmArray = allData
+                .replace(/\r/g, '')
+                .split('\n')
+                .filter(e => e.match(/^\d{4,},\d+/))
+                .map(v => {
                 const p = v.split(',');
                 return { x: p[0], y: p[1] };
-            }));
+            });
+            this._chart.draw(pmArray);
         }.bind(this));
     }
     loadSVG() {
-        let done = false;
-        if (this._SVGObj) {
-            let svgObj = null;
-            try {
-                svgObj = (this._SVGObj.getSVGDocument());
-            }
-            catch (err) { }
-            if ((svgObj) && (svgObj.api)) {
-                this._api = this._SVGObj.getSVGDocument().api;
-                this._chart = this._api.add('line', { linetype: this._lineType });
-                this._api.add(['VAxis',
-                    { type: 'hAxis', options: { format: 'datetime' } },
-                    { type: 'indicator', options: { xFormat: this._xFormat, yFormat: this._yFormat } },
-                ]);
+        if (this._chart) {
+            customElements.whenDefined('u-linechart').then(() => {
+                if (!this._isSetup) {
+                    this._chart.add('line', { linetype: this._lineType });
+                    this._chart.add([
+                        { type: 'vAxis' },
+                        { type: 'hAxis', options: { format: 'datetime' } },
+                        { type: 'indicator', options: { xFormat: this._xFormat, yFormat: this._yFormat } },
+                    ]);
+                    this._isSetup = true;
+                }
                 this.loadData();
-                done = true;
-            }
-        }
-        if (!done) {
-            window.setTimeout(this.loadSVG.bind(this), 1000);
+            });
         }
     }
     newData(path, key, value) {
         super.newData(path, key, value);
         if (key === 'filename') {
             this._fName = value;
-            this.loadSVG();
         }
         else if (key === 'xformat') {
             this._xFormat = value;
@@ -1217,6 +1212,10 @@ let LogWidgetClass = class LogWidgetClass extends GenericWidgetClass {
         }
         else if (key === 'linetype') {
             this._lineType = value;
+        }
+        if (!this._isDirty) {
+            this._isDirty = true;
+            this.loadSVG();
         }
     }
 };

@@ -12,13 +12,6 @@
   <script src="panel.js"></script>
 
   <style>
-    /* body with streched main */
-    body.sitelayout {
-      width: 100vw;
-      height: 100vh;
-      grid-template-rows: header max-content navbar max-content main 1fr;
-    }
-
     #panel {
       --con-color: #080808;
       fill: none;
@@ -45,9 +38,9 @@
     }
 
     .node {
-      font-size: 12px;
+      font-size: 11px;
       font-family: sans-serif;
-      fill: #000000;
+      fill: black;
       fill-opacity: 1;
       stroke: none;
       font-style: normal;
@@ -61,6 +54,7 @@
     }
 
     /* connector pins */
+
     .node circle {
       fill: var(--con-color);
       stroke-width: 2;
@@ -84,15 +78,16 @@
         fill: #e0e0e0;
         stroke: none
       }
+    }
   </style>
 </head>
 
-<body class="sitelayout" style="max-width:100%;--layout-gap: 0;--content-back:none">
+<body class="sitelayout fillscreen" style="--layout-gap:0">
   <header>
     <h1>Flow Workspace</h1>
   </header>
 
-  <div class="navbar">
+  <nav class="navbar">
     <a class="button" href="/">Home</a>
     <a class="button" href="/board.htm">Board</a>
     <a class="button" href="/microide.htm">IDE</a>
@@ -102,7 +97,7 @@
     <button id="unlock">unlock</button>
     <button id="auto">auto</button>
     <button id="sysButton">sys</button>
-  </div>
+  </nav>
 
   <main style="user-select: none;overflow:scroll">
     <svg id="panel">

@@ -19,7 +19,7 @@
   <script src="/micro.js" defer></script>
   <script src="/sfc/loader.js"></script>
   <script>
-    var allSFCLoaded = window.loadComponent('u-toast', '/sfc');
+    var allSFCLoaded = window.loadComponent('u-toast,u-linechart');
   </script>
   <style>
     svg.setconfig {
@@ -50,16 +50,14 @@
       border-color: red;
     }
   </style>
-  <link Content-Type="text/css" href="/u-toast.css" rel="stylesheet" />
-  <script src="u-toast.js"></script>
 </head>
 
-<body class="sitelayout" style="max-width:100%;--layout-gap: 0;--content-back:none">
+<body class="sitelayout" style="width:100%;--layout-gap: 0;--main-back:transparent">
   <u-toast></u-toast>
   <header>
     <h1>Board</h1>
   </header>
-  <div class="navbar">
+  <nav class="navbar">
     <a href="/">Home</a>
     <a href="/board.htm">Board</a>
     <a href="/microide.htm">IDE</a>
@@ -67,7 +65,7 @@
     <span class="gap"></span>
     <button id="sysButton">sys</button>
     <button id="addButton">+</button>
-  </div>
+  </nav>
 
   <main >
     <div id="panl" class="card-container col365" style="--card-height: auto;">
@@ -294,6 +292,23 @@
         <label>Pin:</label><output u-text="pin"></output>
         <label>Interval:</label><output u-text="interval"></output>
       </div>
+    </div>
+
+    <div class="card" u-control="log" u-is="log" microID="${id}">
+      <div class="header">
+        <svg class="icon">
+          <use href="./icons.svg#${type}" />
+        </svg>
+        <h3 u-text="title"></h3>
+        <h4 u-text="description"></h4>
+        <svg class="fullscreen">
+          <use href="./icons.svg#fullscreen" />
+        </svg>
+        <svg class="setconfig">
+          <use href="./icons.svg#config" />
+        </svg>
+      </div>
+      <div class="main"><u-linechart style="width:100%"></u-linechart></div>
     </div>
 
   </div>

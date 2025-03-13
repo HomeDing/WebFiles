@@ -101,12 +101,13 @@
 
       grid-template-columns: minmax(32ch, max-content) minmax(32ch, auto);
       grid-template-rows: min-content calc(100vh - 8em);
+      /* grid-template-rows: auto 1fr; */
       column-gap: 0.5rem;
     }
   </style>
 </head>
 
-<body class="sitelayout" style="max-width:100%;--layout-gap: 0;--content-back:none">
+<body class="sitelayout fillscreen" style="max-width:100%;--layout-gap: 0;--main-back:transparent">
   <u-toast></u-toast>
   <header>
     <svg class="icon">
@@ -115,14 +116,14 @@
     <h1>HomeDing IDE</h1>
   </header>
 
-  <div class="navbar">
+  <nav class="navbar">
     <a href="/">Home</a>
     <a href="/board.htm">Board</a>
     <a href="/microide.htm">IDE</a>
     <a href="/log.htm">Log</a>
     <span class="gap"></span>
     <button class="once" id="doReboot">reboot</button>
-  </div>
+  </nav>
 
   <main class="grid-container">
     <div style="grid-column: 1">

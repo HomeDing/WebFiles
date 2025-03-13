@@ -149,10 +149,10 @@ window.loadComponent = (function () {
     const a = dom.querySelectorAll('sfc');
 
     if (a.length === 0) {
-      define(tagName, dom);
+      await define(tagName, dom);
     } else {
       for (const c of a) {
-        define(c.getAttribute('tag'), c);
+        await define(c.getAttribute('tag'), c);
       }
 
     }
