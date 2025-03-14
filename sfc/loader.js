@@ -94,15 +94,17 @@ class UComponent extends HTMLElement {
 } // class UComponent
 
 
-
-window.loadComponent = (function () {
+// loadComponent is a function to load a SFC from a web server and define it as a web component.
+// The function is called with a list of tags and an optional folder.
+// The function returns a promise that is resolved when all SFCs are loaded.
+window.loadComponent = (function() {
   // plain script includes can read document.currentScript.src
   // modules can use meta
   const loaderURL = new URL(document.currentScript.src);
 
   console.debug('SFC', `loadComponent...`);
 
-  async function define(tagName, dom) {
+  async function define(tagName, dom, url) {
     let def;
     const scriptObj = dom.querySelector('script');
     if (scriptObj && scriptObj.textContent) {
@@ -118,6 +120,7 @@ window.loadComponent = (function () {
     def.uTemplate = dom.querySelector('template');
     def.uStyle = dom.querySelector('style');
     def.extends = scriptObj.getAttribute('extends');
+    def.baseURL = url;
 
     if (def.extends) {
       customElements.define(tagName, def, { extends: def.extends });
@@ -130,29 +133,30 @@ window.loadComponent = (function () {
     }
   }
 
-  async function fetchSFC(tagName, folder = undefined) {
-    const sfcImpl = tagName + '.vue';
+  // fetchSFC loads a SFC file from a web server and triggers defining the contained web components.
+  async function fetchSFC(fileName, folder = undefined) {
+    let sfcURL = fileName + '.sfc';
     let baseUrl = loaderURL;
 
     if (folder) {
       baseUrl = new URL(folder, document.location.href);
     }
 
-    const url = new URL(sfcImpl, baseUrl);
-    console.debug('SFC', `loading module ${tagName} from ${url.href}...`);
+    sfcURL = new URL(sfcURL, baseUrl);
+    console.debug('SFC', `loading module ${fileName} from ${sfcURL.href}...`);
 
     // get DOM from sfc-file
-    const dom = await fetch(url)
+    const dom = await fetch(sfcURL)
       .then(response => response.text())
       .then(html => (new DOMParser()).parseFromString(html, 'text/html'));
 
     const a = dom.querySelectorAll('sfc');
 
     if (a.length === 0) {
-      await define(tagName, dom);
+      await define(fileName, dom, baseUrl);
     } else {
       for (const c of a) {
-        await define(c.getAttribute('tag'), c);
+        await define(c.getAttribute('tag'), c, baseUrl);
       }
 
     }
