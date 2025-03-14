@@ -279,7 +279,7 @@ body.sitelayout {
     transform: translateX(0);
   }
 
-  :root {
+  :root:has(.menu) {
     padding-left: var(--menu-width);
     transition: padding-left var(--transition);
   }

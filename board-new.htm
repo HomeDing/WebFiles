@@ -1,7 +1,7 @@
 <dialog id="addElement" u-is="dialog">
   <h2>Add a new Element</h2>
   <div class="u-close" u-action="close"></div>
-  <form is="form-json" method="dialog">
+  <form is="u-form-json" method="dialog">
     <div class="form-grid">
       <label>Type:</label>
       <select name="type" required>
@@ -18,7 +18,7 @@
   <h2><span u-text="type"></span>/<span u-text="id"></span> Configuration</h2>
   <div class="u-close" u-action="close"></div>
 
-  <form is="form-json" method="dialog">
+  <form is="u-form-json" method="dialog">
     <div class="form-grid"></div>
     <div><button u-action="done" type="submit" style="float:right">save</button></div>
   </form>
@@ -28,7 +28,7 @@
   <h2>Event Configuration</h2>
   <div class="u-close" u-action="close"></div>
 
-  <form method="dialog" is="form-json">
+  <form method="dialog" is="u-form-json">
     <div class="form-grid">
       <h4 class="wide">on Event:</h4>
       <label>Source:</label><input name="srcId" required />

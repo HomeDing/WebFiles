@@ -650,7 +650,7 @@ let DialogClass = DialogClass_1 = class DialogClass extends MicroControlClass {
             }
         });
         if (this._form) {
-            this._form.setJsonData(data);
+            (this._form).setJsonData(data);
         }
         this.showModal();
     }
@@ -923,82 +923,6 @@ let DisplayWidgetClass = class DisplayWidgetClass extends GenericWidgetClass {
 DisplayWidgetClass = __decorate([
     MicroControl('display')
 ], DisplayWidgetClass);
-class FormJson extends HTMLFormElement {
-    #analyzed = false;
-    #emptyRecord = {};
-    #booleanAttributes = new Set();
-    _validateForm() {
-        const v = this.checkValidity();
-        this.querySelectorAll("button[type=Submit]").forEach(btn => {
-            btn.disabled = !v;
-        });
-    }
-    connectedCallback() {
-        this.addEventListener("change", this._validateForm);
-        this.addEventListener("keyup", this._validateForm);
-    }
-    _analyze() {
-        this.querySelectorAll('input[name]').forEach(e => this.#emptyRecord[e.name] = '');
-        this.querySelectorAll('textarea[name]').forEach(e => this.#emptyRecord[e.name] = '');
-        this.querySelectorAll('select[name]').forEach(e => this.#emptyRecord[e.name] = e.value || '');
-        this.querySelectorAll('input[name][type=range]').forEach(e => this.#emptyRecord[e.name] = 0);
-        this.querySelectorAll('input[name][type=color]').forEach(e => this.#emptyRecord[e.name] = '#000000');
-        this.querySelectorAll('input[name][type=checkbox]').forEach(e => {
-            this.#emptyRecord[e.name] = false;
-            this.#booleanAttributes.add(e.name);
-        });
-        this._validateForm();
-        this.#analyzed = true;
-    }
-    getJsonData() {
-        if (!this.#analyzed)
-            this._analyze();
-        const formData = new FormData(this);
-        let jData = Object.fromEntries(formData);
-        jData = Object.assign({}, this.#emptyRecord, jData);
-        Object.entries(jData).forEach(([name, value]) => {
-            if (this.#booleanAttributes.has(name)) {
-                jData[name] = Boolean(value === 'on');
-            }
-        });
-        return (jData);
-    }
-    setJsonData(jData) {
-        let hasChanged = false;
-        if (!this.#analyzed)
-            this._analyze();
-        Object.entries(jData).forEach(([name, value]) => {
-            this.querySelectorAll(`*[name=${name}]`).forEach(el => {
-                if (el.type === 'radio') {
-                    if (el.checked !== (el.value === value)) {
-                        el.checked = (el.value === value);
-                        hasChanged = true;
-                    }
-                }
-                else if (el.type === 'checkbox') {
-                    if (el.checked !== (!!value)) {
-                        el.checked = (!!value);
-                        hasChanged = true;
-                    }
-                }
-                else if ((el.tagName === 'METER') || (el.tagName === 'OUTPUT')) {
-                    el.value = value;
-                }
-                else {
-                    if (el.value !== value) {
-                        el.value = value;
-                        hasChanged = true;
-                    }
-                }
-            });
-        });
-        if (hasChanged) {
-            const evt = new Event('change');
-            this.dispatchEvent(evt);
-        }
-    }
-}
-customElements.define('form-json', FormJson, { extends: 'form' });
 let IncludeWidgetClass = class IncludeWidgetClass extends MicroControlClass {
     ref;
     connectedCallback() {
