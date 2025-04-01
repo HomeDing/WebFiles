@@ -23,4 +23,9 @@ set tar=%USERPROFILE%\Projects\blog\src
 copy css\*.scss %tar%\css
 copy docstyle.css %tar%
 
+echo.
+echo *** Copy to sfc...
+set tar=sfc
+copy *.css %tar%
+
 :end
