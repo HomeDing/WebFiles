@@ -433,89 +433,6 @@ body.sitelayout footer {
   gap: var(--card-gap);
   margin: 0 auto;
 }
-.card-container > .card {
-  position: relative;
-  width: var(--card-width);
-  height: var(--card-height);
-  display: grid;
-  grid-template: "header" auto "main" 1fr "footer" auto/auto;
-  gap: 0;
-  margin: 0;
-  padding: 0;
-  page-break-inside: avoid;
-  overflow: hidden;
-  background-color: var(--card-back);
-  border: var(--card-border);
-  border-radius: var(--card-radius);
-}
-@media print {
-  .card-container > .card {
-    border: 1px solid var(--color);
-  }
-}
-.card-container > .card.wide {
-  width: calc(var(--card-width) * 2 + var(--card-gap));
-}
-.card-container > .card.small {
-  width: calc((var(--card-width) - var(--card-gap)) / 2);
-  height: calc((var(--card-height) - var(--card-gap)) / 2);
-}
-.card-container > .card.shadow {
-  box-shadow: var(--dropshadow);
-}
-.card-container > .card > svg:first-child,
-.card-container > .card > img:first-child {
-  grid-area: header;
-  width: 100%;
-  height: var(--card-image-size);
-  object-fit: cover;
-}
-.card-container > .card > svg:first-child.icon,
-.card-container > .card > img:first-child.icon {
-  width: 2.75rem;
-  height: 2.75rem;
-}
-.card-container > .card .header {
-  grid-area: header;
-  background-color: var(--card-head);
-  padding: var(--card-padding);
-  min-height: 2.75em;
-  max-height: 4rem;
-}
-.card-container > .card .header h3,
-.card-container > .card .header h4 {
-  margin: 0;
-}
-.card-container > .card .header > svg:first-child,
-.card-container > .card .header > img:first-child {
-  float: left;
-  height: 2.75rem;
-  aspect-ratio: 1/1;
-  margin-right: var(--card-padding);
-}
-.card-container > .card .main,
-.card-container > .card .body {
-  grid-area: main;
-  flex: 1;
-  padding: var(--card-padding);
-}
-.card-container > .card .footer,
-.card-container > .card .actions {
-  grid-area: footer;
-  height: auto;
-  width: 100%;
-  padding: var(--card-padding);
-  border-top: 1px solid rgba(0, 0, 0, 0.125);
-  background-color: inherit;
-}
-.card-container > .card.autolink h3 > a::before {
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 100%;
-  content: "";
-}
 .card-container.horizontal {
   --card-width: 100%;
   --card-height: 7.2rem;
@@ -551,7 +468,7 @@ body.sitelayout footer {
   --card-gap: 10px;
   width: 1490px;
 }
-@container main (width <= 1490px) {
+@container main (width <=1490px) {
   .card-container.col365 {
     width: 1115px;
   }
@@ -565,6 +482,93 @@ body.sitelayout footer {
   .card-container.col365 {
     width: 365px;
   }
+}
+
+.card {
+  position: relative;
+  width: var(--card-width);
+  height: var(--card-height);
+  display: grid;
+  grid-template: "header" auto "main" 1fr "footer" auto/auto;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  page-break-inside: avoid;
+  overflow: hidden;
+  background-color: var(--card-back);
+  border: var(--card-border);
+  border-radius: var(--card-radius);
+}
+@media print {
+  .card {
+    border: 1px solid var(--color);
+  }
+}
+.card.wide {
+  width: calc(var(--card-width) * 2 + var(--card-gap));
+}
+.card.small {
+  width: calc((var(--card-width) - var(--card-gap)) / 2);
+  height: calc((var(--card-height) - var(--card-gap)) / 2);
+}
+.card.shadow {
+  box-shadow: var(--dropshadow);
+}
+.card > svg:first-child,
+.card > img:first-child {
+  grid-area: header;
+  width: 100%;
+  height: var(--card-image-size);
+  object-fit: cover;
+}
+.card > svg:first-child.icon,
+.card > img:first-child.icon {
+  width: 2.75rem;
+  height: 2.75rem;
+}
+.card .header {
+  grid-area: header;
+  background-color: var(--card-head);
+  padding: var(--card-padding);
+  min-height: 2.75em;
+  max-height: 4rem;
+}
+.card .header h3,
+.card .header h4 {
+  margin: 0;
+}
+.card .header > svg:first-child,
+.card .header > img:first-child {
+  float: left;
+  height: 2.75rem;
+  aspect-ratio: 1/1;
+  margin-right: var(--card-padding);
+}
+.card .main,
+.card .body {
+  grid-area: main;
+  flex: 1;
+  padding: var(--card-padding);
+}
+.card .footer {
+  grid-area: footer;
+  height: auto;
+  width: 100%;
+  padding: var(--card-padding);
+  border-top: 1px solid rgba(0, 0, 0, 0.125);
+  background-color: inherit;
+  text-align: right;
+}
+.card .footer button:not(:first-child) {
+  margin-left: var(--text-spacing);
+}
+.card.autolink h3 > a::before {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  content: "";
 }
 
 .imgcard {

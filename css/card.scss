@@ -56,106 +56,6 @@ $u-card-gap: 16px;
   // center in main container by default
   margin: 0 auto;
 
-  >.card {
-    position: relative;
-    width: var(--card-width);
-    height: var(--card-height);
-
-    // used a card grid for normal cards (not horizonal)
-    display: grid;
-    grid-template: "header" auto "main" 1fr "footer" auto / auto;
-    gap: 0;
-    margin: 0;
-    padding: 0;
-    page-break-inside: avoid;
-    overflow: hidden;
-    background-color: var(--card-back);
-    border: var(--card-border);
-    border-radius: var(--card-radius);
-
-    @media print {
-      border: 1px solid var(--color);
-    }
-
-    // cards can be marked with class='wide' covering 2 columns
-    &.wide {
-      width: calc(var(--card-width) * 2 + var(--card-gap));
-    }
-
-    // cards can be marked with class='small' covering 1/2 column
-    &.small {
-      width: calc((var(--card-width) - var(--card-gap)) / 2);
-      height: calc((var(--card-height) - var(--card-gap)) / 2);
-    }
-
-    &.shadow {
-      box-shadow: var(--dropshadow);
-    }
-
-    // images as first element in card
-    >svg:first-child,
-    >img:first-child {
-      grid-area: header;
-      width: 100%;
-      height: var(--card-image-size);
-      object-fit: cover;
-
-      &.icon {
-        width: 2.75rem;
-        height: 2.75rem;
-      }
-    }
-
-    .header {
-      grid-area: header;
-      background-color: var(--card-head);
-      padding: var(--card-padding);
-      min-height: 2.75em; // with or without icon
-      max-height: 4rem;
-
-      h3,
-      h4 {
-        margin: 0;
-      }
-
-      // images in header
-      >svg:first-child,
-      >img:first-child {
-        // display: block;
-        float: left;
-        height: 2.75rem;
-        aspect-ratio: 1/1;
-        margin-right: var(--card-padding);
-      }
-    }
-
-    .main,
-    .body {
-      grid-area: main;
-      flex: 1;
-      padding: var(--card-padding);
-    }
-
-    .footer,
-    .actions {
-      grid-area: footer;
-      height: auto;
-      width: 100%;
-      padding: var(--card-padding);
-      border-top: 1px solid rgb(0 0 0 / 12.5%);
-      background-color: inherit;
-    }
-
-    &.autolink h3>a::before {
-      position: absolute;
-      top: 0;
-      left: 0;
-      height: 100%;
-      width: 100%;
-      content: "";
-    }
-  }
-
   // container marked with class='horizontal' for horizontal oriented cards
   // stretching on the whole with with image on the left */
   &.horizontal {
@@ -210,7 +110,7 @@ $u-card-gap: 16px;
     width: calc(365px * 4 + 10px * 3);
 
     // @container main (width < #{$u-card-4col}) {
-    @container main (width <= #{365px * 4 + 10px * 3}) {
+    @container main (width <=#{365px * 4 + 10px * 3}) {
       width: calc(365px * 3 + 10px * 2);
     }
 
@@ -221,6 +121,110 @@ $u-card-gap: 16px;
     @container main (width < #{365px * 2}) {
       width: 365px;
     }
+  }
+}
+
+.card {
+  position: relative;
+  width: var(--card-width);
+  height: var(--card-height);
+
+  // used a card grid for normal cards (not horizonal)
+  display: grid;
+  grid-template: "header" auto "main" 1fr "footer" auto / auto;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  page-break-inside: avoid;
+  overflow: hidden;
+  background-color: var(--card-back);
+  border: var(--card-border);
+  border-radius: var(--card-radius);
+
+  @media print {
+    border: 1px solid var(--color);
+  }
+
+  // cards can be marked with class='wide' covering 2 columns
+  &.wide {
+    width: calc(var(--card-width) * 2 + var(--card-gap));
+  }
+
+  // cards can be marked with class='small' covering 1/2 column
+  &.small {
+    width: calc((var(--card-width) - var(--card-gap)) / 2);
+    height: calc((var(--card-height) - var(--card-gap)) / 2);
+  }
+
+  &.shadow {
+    box-shadow: var(--dropshadow);
+  }
+
+  // images as first element in card
+  >svg:first-child,
+  >img:first-child {
+    grid-area: header;
+    width: 100%;
+    height: var(--card-image-size);
+    object-fit: cover;
+
+    &.icon {
+      width: 2.75rem;
+      height: 2.75rem;
+    }
+  }
+
+  .header {
+    grid-area: header;
+    background-color: var(--card-head);
+    padding: var(--card-padding);
+    min-height: 2.75em; // with or without icon
+    max-height: 4rem;
+
+    h3,
+    h4 {
+      margin: 0;
+    }
+
+    // images in header
+    >svg:first-child,
+    >img:first-child {
+      // display: block;
+      float: left;
+      height: 2.75rem;
+      aspect-ratio: 1/1;
+      margin-right: var(--card-padding);
+    }
+  }
+
+  .main,
+  .body {
+    grid-area: main;
+    flex: 1;
+    padding: var(--card-padding);
+  }
+
+  .footer {
+    grid-area: footer;
+    height: auto;
+    width: 100%;
+    padding: var(--card-padding);
+    border-top: 1px solid rgb(0 0 0 / 12.5%);
+    background-color: inherit;
+    text-align: right;
+
+    button:not(:first-child) {
+      margin-left: var(--text-spacing);
+    }
+  }
+
+  &.autolink h3>a::before {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    content: "";
   }
 }
 
