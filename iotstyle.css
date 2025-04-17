@@ -357,7 +357,7 @@ body.sitelayout .sidebar {
 body.sitelayout main {
   background-color: var(--main-back);
   color: var(--main-color);
-  padding: var(--layout-padding);
+  padding: var(--layout-padding) 0;
   container-name: main;
   container-type: inline-size;
 }
@@ -535,6 +535,7 @@ body.sitelayout footer {
 }
 .card .header h3,
 .card .header h4 {
+  display: inline-block;
   margin: 0;
 }
 .card .header > svg:first-child,
