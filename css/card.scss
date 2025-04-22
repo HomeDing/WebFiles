@@ -38,6 +38,7 @@ $u-card-gap: 16px;
   --card-border: none;
   --card-padding: 0.5em;
   --card-image-size: 120px;
+  --card-icon-size: 2.75em;
   --card-radius: 1em;
 }
 
@@ -168,9 +169,9 @@ $u-card-gap: 16px;
     height: var(--card-image-size);
     object-fit: cover;
 
-    &.icon {
-      width: 2.75rem;
-      height: 2.75rem;
+    &.xicon {
+      width: 2.75em;
+      height: 2.75em;
     }
   }
 
@@ -178,7 +179,7 @@ $u-card-gap: 16px;
     grid-area: header;
     background-color: var(--card-head);
     padding: var(--card-padding);
-    min-height: 2.75em; // with or without icon
+    min-height: calc(var(--card-icon-size) + 2 * var(--card-padding)); // with or without icon
     max-height: 4rem;
 
     h3,
@@ -187,12 +188,11 @@ $u-card-gap: 16px;
       margin: 0;
     }
 
-    // images in header
+    // icons in header
     >svg:first-child,
     >img:first-child {
-      // display: block;
       float: left;
-      height: 2.75rem;
+      height: var(--card-icon-size);
       aspect-ratio: 1/1;
       margin-right: var(--card-padding);
     }

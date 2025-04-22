@@ -423,6 +423,7 @@ body.sitelayout footer {
   --card-border: none;
   --card-padding: 0.5em;
   --card-image-size: 120px;
+  --card-icon-size: 2.75em;
   --card-radius: 1em;
 }
 
@@ -521,16 +522,16 @@ body.sitelayout footer {
   height: var(--card-image-size);
   object-fit: cover;
 }
-.card > svg:first-child.icon,
-.card > img:first-child.icon {
-  width: 2.75rem;
-  height: 2.75rem;
+.card > svg:first-child.xicon,
+.card > img:first-child.xicon {
+  width: 2.75em;
+  height: 2.75em;
 }
 .card .header {
   grid-area: header;
   background-color: var(--card-head);
   padding: var(--card-padding);
-  min-height: 2.75em;
+  min-height: calc(var(--card-icon-size) + 2 * var(--card-padding));
   max-height: 4rem;
 }
 .card .header h3,
@@ -541,7 +542,7 @@ body.sitelayout footer {
 .card .header > svg:first-child,
 .card .header > img:first-child {
   float: left;
-  height: 2.75rem;
+  height: var(--card-icon-size);
   aspect-ratio: 1/1;
   margin-right: var(--card-padding);
 }
@@ -618,11 +619,6 @@ body.sitelayout footer {
   height: 1px;
   margin: 0;
   padding: 0;
-}
-.card .icon {
-  width: 2.6rem;
-  height: 2.6rem;
-  vertical-align: top;
 }
 
 button,
