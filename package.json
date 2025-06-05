@@ -11,10 +11,10 @@
   "dependencies": {
     "debug": "^4.3.5",
     "express": "^5.1.0",
-    "multer": "^1.4.5-lts.1",
+    "multer": "^2.0.0",
     "multicast-dns": "^7.2.5",
     "timeout-signal": "^2.0.0",
-    "yargs": "^17.7.2"
+    "yargs": "^18.0.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.5.0",
@@ -26,13 +26,14 @@
     "eslint": "^9.9.0",
     "globals": "^16.0.0",
     "html-minifier-terser": "^7.2.0",
+    "npm-run-all2": "^8.0.3",
     "postcss": "^8.4.38",
     "postcss-scss": "^4.0.9",
     "sass": "^1.84.0",
-    "shelljs": "^0.9.2",
+    "shelljs": "^0.10.0",
     "shx": "^0.4.0",
     "stylelint": "^16.6.1",
-    "stylelint-config-standard-scss": "^14.0.0",
+    "stylelint-config-standard-scss": "^15.0.1",
     "stylelint-scss": "^6.3.1",
     "svgstore": "^3.0.1",
     "terser": "^5.31.1",
@@ -66,7 +67,8 @@
     "publish:doku": "cmd /C publishDoku.bat",
     "publish:webfiles": "cmd /C publishWebFiles.bat v10",
     "prestart": "npm run build",
-    "start": "node app.js"
+    "start": "node app.js",
+    "dev": "run-p -n start build:css-watch build:ts-watch"
   },
   "files": [
     "dist",
