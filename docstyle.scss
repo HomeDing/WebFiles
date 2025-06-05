@@ -10,9 +10,7 @@
 @use "css/iot";
 
 // simple content cards with image + text
-.plaincard,
-.imgcard,
-.iconcard {
+.imgcard {
   position: relative;
   margin: base.$u-gutter base.$u-gutter base.$u-gutter 0;
   width: 100%;
@@ -23,30 +21,7 @@
   >h3 {
     margin-top: 0;
   }
-}
 
-// card with text only
-.plaincard {
-  padding: base.$u-gutter2;
-  min-height: 6rem;
-}
-
-// cards with icon
-.iconcard {
-  padding: base.$u-gutter base.$u-gutter base.$u-gutter calc(4rem + 2 * base.$u-gutter);
-  min-height: 5.4rem;
-
-  svg {
-    position: absolute;
-    top: base.$u-gutter;
-    left: base.$u-gutter;
-    height: 4rem;
-    width: 4rem;
-  }
-}
-
-// picture with 4:3 ratio + text
-.imgcard {
   padding: base.$u-gutter2 base.$u-gutter2 0 calc(9.6rem + base.$u-gutter2);
   min-height: 7.2rem;
 

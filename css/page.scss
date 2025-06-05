@@ -220,7 +220,7 @@ body.sitelayout {
   main {
     background-color: var(--main-back);
     color: var(--main-color);
-    padding: var(--layout-padding);
+    padding: var(--layout-padding) 0;
     container-name: main;
     container-type: inline-size;
   }
@@ -279,7 +279,7 @@ body.sitelayout {
     transform: translateX(0);
   }
 
-  :root {
+  :root:has(.menu) {
     padding-left: var(--menu-width);
     transition: padding-left var(--transition);
   }

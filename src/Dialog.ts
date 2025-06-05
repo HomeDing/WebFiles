@@ -15,7 +15,7 @@ class DialogClass extends MicroControlClass {
 
   private _defaultData = {};
   private _data = {};
-  private _form?: FormJson;
+  private _form? : any;
   private _callback?: DialogCallback = undefined;
 
   /**
@@ -35,7 +35,7 @@ class DialogClass extends MicroControlClass {
 
     const f = this.querySelector('form');
     if (f) {
-      this._form = (f as FormJson);
+      this._form = f;
       this._defaultData = this._form.getJsonData();
     }
   }
@@ -68,7 +68,7 @@ class DialogClass extends MicroControlClass {
     });
 
     if (this._form) {
-      (this._form as FormJson).setJsonData(data);
+      (this._form).setJsonData(data);
     }
     // open Dialog in modal mode
     (<any>this).showModal();

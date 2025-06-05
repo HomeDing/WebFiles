@@ -121,9 +121,9 @@ export class HomeDingServer {
     });
 
     // ----- enable buildin setup pages -----
-    this._app.get('/\\$setup*', function(_req, res) { res.sendFile(path.join(process.cwd(), 'setup.htm')); });
-    this._app.get('/\\$update*', function(_req, res) { res.sendFile(path.join(process.cwd(), 'update.htm')); });
-    this._app.get('/\\$upload*', function(_req, res) { res.sendFile(path.join(process.cwd(), 'upload.htm')); });
+    this._app.get('/$setup*ext', function(_req, res) { res.sendFile(path.join(process.cwd(), 'setup.htm')); });
+    this._app.get('/$update*ext', function(_req, res) { res.sendFile(path.join(process.cwd(), 'update.htm')); });
+    this._app.get('/$upload*ext', function(_req, res) { res.sendFile(path.join(process.cwd(), 'upload.htm')); });
 
     // configure upload storage to save in /uploads and use the filename+date
     const storage = multer.diskStorage({

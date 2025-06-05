@@ -17,9 +17,14 @@ if [%1]==[] (
 )
 
 set version=%1
-set tar=%USERPROFILE%\Projects\homeding-docu
-
 set rcflags=/XO /FFT /NJH /NS /NC /NFL /NDL /NJS
+
+REM Update the published UI files for download
+REM ===========================================
+
+set tar=%USERPROFILE%\Projects\homeding-docu
+echo updating files in %tar%  ...
+
 
 robocopy dist %tar%\%version% /S /PURGE %rcflags%
 echo copied: Full WebUI
@@ -30,7 +35,13 @@ echo copied: Minimal WebUI
 echo.
 echo *** Updating data folders in examples
 
+
+REM Update the HomeDing Project data folders
+REM ========================================
+echo.
+
 set tar=%USERPROFILE%\Documents\Arduino\libraries\HomeDing
+echo updating files in %tar%  ...
 
 robocopy dist %tar%\examples\standard\data /S /PURGE %rcflags% /XF list.txt
 echo copied: standard example
@@ -40,6 +51,20 @@ echo copied: minimal example
 
 copy upload.h %tar%\src 
 echo copied: upload.h
+
+
+REM Update the Blog 
+REM ========================================
+echo.
+
+set tar=%USERPROFILE%\Projects\blog\src
+echo updating files in %tar% ...
+
+robocopy sfc %tar%\sfc /S /PURGE %rcflags%
+echo copied SFC to Blog
+
+
+REM ========================================
 
 echo done.
 

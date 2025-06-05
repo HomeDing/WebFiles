@@ -38,6 +38,7 @@ $u-card-gap: 16px;
   --card-border: none;
   --card-padding: 0.5em;
   --card-image-size: 120px;
+  --card-icon-size: 2.75em;
   --card-radius: 1em;
 }
 
@@ -55,106 +56,6 @@ $u-card-gap: 16px;
   gap: var(--card-gap); // $u-card-gap;
   // center in main container by default
   margin: 0 auto;
-
-  >.card {
-    position: relative;
-    width: var(--card-width);
-    height: var(--card-height);
-
-    // used a card grid for normal cards (not horizonal)
-    display: grid;
-    grid-template: "header" auto "main" 1fr "footer" auto / auto;
-    gap: 0;
-    margin: 0;
-    padding: 0;
-    page-break-inside: avoid;
-    overflow: hidden;
-    background-color: var(--card-back);
-    border: var(--card-border);
-    border-radius: var(--card-radius);
-
-    @media print {
-      border: 1px solid var(--color);
-    }
-
-    // cards can be marked with class='wide' covering 2 columns
-    &.wide {
-      width: calc(var(--card-width) * 2 + var(--card-gap));
-    }
-
-    // cards can be marked with class='small' covering 1/2 column
-    &.small {
-      width: calc((var(--card-width) - var(--card-gap)) / 2);
-      height: calc((var(--card-height) - var(--card-gap)) / 2);
-    }
-
-    &.shadow {
-      box-shadow: var(--dropshadow);
-    }
-
-    // images as first element in card
-    >svg:first-child,
-    >img:first-child {
-      grid-area: header;
-      width: 100%;
-      height: var(--card-image-size);
-      object-fit: cover;
-
-      &.icon {
-        width: 2.75rem;
-        height: 2.75rem;
-      }
-    }
-
-    .header {
-      grid-area: header;
-      background-color: var(--card-head);
-      padding: var(--card-padding);
-      min-height: 2.75em; // with or without icon
-      max-height: 4rem;
-
-      h3,
-      h4 {
-        margin: 0;
-      }
-
-      // images in header
-      >svg:first-child,
-      >img:first-child {
-        // display: block;
-        float: left;
-        height: 2.75rem;
-        aspect-ratio: 1/1;
-        margin-right: var(--card-padding);
-      }
-    }
-
-    .main,
-    .body {
-      grid-area: main;
-      flex: 1;
-      padding: var(--card-padding);
-    }
-
-    .footer,
-    .actions {
-      grid-area: footer;
-      height: auto;
-      width: 100%;
-      padding: var(--card-padding);
-      border-top: 1px solid rgb(0 0 0 / 12.5%);
-      background-color: inherit;
-    }
-
-    &.autolink h3>a::before {
-      position: absolute;
-      top: 0;
-      left: 0;
-      height: 100%;
-      width: 100%;
-      content: "";
-    }
-  }
 
   // container marked with class='horizontal' for horizontal oriented cards
   // stretching on the whole with with image on the left */
@@ -224,47 +125,126 @@ $u-card-gap: 16px;
   }
 }
 
+.card {
+  position: relative;
+  width: var(--card-width);
+  height: var(--card-height);
+
+  // used a card grid for normal cards (not horizonal)
+  display: grid;
+  grid-template: "header" auto "main" 1fr "footer" auto / auto;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  page-break-inside: avoid;
+  overflow: hidden;
+  background-color: var(--card-back);
+  border: var(--card-border);
+  border-radius: var(--card-radius);
+
+  @media print {
+    border: 1px solid var(--color);
+  }
+
+  // cards can be marked with class='wide' covering 2 columns
+  &.wide {
+    width: calc(var(--card-width) * 2 + var(--card-gap));
+  }
+
+  // cards can be marked with class='small' covering 1/2 column
+  &.small {
+    width: calc((var(--card-width) - var(--card-gap)) / 2);
+    height: calc((var(--card-height) - var(--card-gap)) / 2);
+  }
+
+  &.shadow {
+    box-shadow: var(--dropshadow);
+  }
+
+  // images as first element in card
+  >svg:first-child,
+  >img:first-child {
+    grid-area: header;
+    width: 100%;
+    height: var(--card-image-size);
+    object-fit: cover;
+
+    &.xicon {
+      width: 2.75em;
+      height: 2.75em;
+    }
+  }
+
+  .header {
+    grid-area: header;
+    background-color: var(--card-head);
+    padding: var(--card-padding);
+    min-height: calc(var(--card-icon-size) + 2 * var(--card-padding)); // with or without icon
+    max-height: 4rem;
+
+    h3,
+    h4 {
+      display: inline-block;
+      margin: 0;
+    }
+
+    // icons in header
+    >svg:first-child,
+    >img:first-child {
+      float: left;
+      height: var(--card-icon-size);
+      aspect-ratio: 1/1;
+      margin-right: var(--card-padding);
+    }
+  }
+
+  .main,
+  .body {
+    grid-area: main;
+    flex: 1;
+    padding: var(--card-padding);
+  }
+
+  .footer {
+    grid-area: footer;
+    height: auto;
+    width: 100%;
+    padding: var(--card-padding);
+    border-top: 1px solid rgb(0 0 0 / 12.5%);
+    background-color: inherit;
+    text-align: right;
+
+    button:not(:first-child) {
+      margin-left: var(--text-spacing);
+    }
+  }
+
+  &.autolink h3>a::before {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    content: "";
+  }
+}
+
 
 // simple content cards with image + text
-.plaincard,
-.imgcard,
-.iconcard {
+// picture with 4:3 ratio + text
+.imgcard {
   position: relative;
   margin: base.$u-gutter base.$u-gutter base.$u-gutter 0;
   width: 100%;
   max-width: 100%;
   background-color: var(--card-back);
   page-break-inside: avoid;
+  padding: base.$u-gutter2 base.$u-gutter2 0 calc(9.6rem + base.$u-gutter2);
+  min-height: 7.2rem;
 
   >h3 {
     margin-top: 0;
   }
-}
-
-// card with text only
-.plaincard {
-  padding: base.$u-gutter2;
-  min-height: 6rem;
-}
-
-// cards with icon
-.iconcard {
-  padding: base.$u-gutter base.$u-gutter base.$u-gutter calc(4rem + 2 * base.$u-gutter);
-  min-height: 5.4rem;
-
-  svg {
-    position: absolute;
-    top: base.$u-gutter;
-    left: base.$u-gutter;
-    height: 4rem;
-    width: 4rem;
-  }
-}
-
-// picture with 4:3 ratio + text
-.imgcard {
-  padding: base.$u-gutter2 base.$u-gutter2 0 calc(9.6rem + base.$u-gutter2);
-  min-height: 7.2rem;
 
   img {
     position: absolute;

@@ -69,9 +69,7 @@ The doc module is implemented in `doc.scss` implements css rules used for docume
 Tables:
 
 Cards:
-  .plaincard // card with text only
   .imgcard // picture with 4:3 ratio + text
-  .iconcard  // cards with icon (svg)
 
 Images for markdown documentation with widths:
 
