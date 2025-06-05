@@ -111,7 +111,7 @@ $u-card-gap: 16px;
     width: calc(365px * 4 + 10px * 3);
 
     // @container main (width < #{$u-card-4col}) {
-    @container main (width <=#{365px * 4 + 10px * 3}) {
+    @container main (width <= #{365px * 4 + 10px * 3}) {
       width: calc(365px * 3 + 10px * 2);
     }
 

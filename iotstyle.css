@@ -469,7 +469,7 @@ body.sitelayout footer {
   --card-gap: 10px;
   width: 1490px;
 }
-@container main (width <=1490px) {
+@container main (width <= 1490px) {
   .card-container.col365 {
     width: 1115px;
   }

@@ -469,7 +469,7 @@ body.sitelayout footer {
   --card-gap: 10px;
   width: 1490px;
 }
-@container main (width <=1490px) {
+@container main (width <= 1490px) {
   .card-container.col365 {
     width: 1115px;
   }
@@ -604,6 +604,7 @@ body.sitelayout footer {
 
 pre:has(> code) {
   display: block;
+  clear: both;
   padding: 0;
   font-size: 1rem;
   border: var(--code-border);
@@ -625,16 +626,30 @@ pre:has(> code) code {
   line-height: 1.2;
   padding-left: 0.2em;
 }
-pre:has(> code) code .comment, pre:has(> code) code .block-comment {
+pre:has(> code) code .comment,
+pre:has(> code) code .block-comment {
   color: #7d8b99;
 }
-pre:has(> code) code .property, pre:has(> code) code .tag, pre:has(> code) code .boolean, pre:has(> code) code .number, pre:has(> code) code .function-name, pre:has(> code) code .constant, pre:has(> code) code .symbol {
+pre:has(> code) code .property,
+pre:has(> code) code .tag,
+pre:has(> code) code .boolean,
+pre:has(> code) code .number,
+pre:has(> code) code .function-name,
+pre:has(> code) code .constant,
+pre:has(> code) code .symbol {
   color: #c92c2c;
 }
-pre:has(> code) code .selector, pre:has(> code) code .attr-name, pre:has(> code) code .string, pre:has(> code) code .char, pre:has(> code) code .function, pre:has(> code) code .builtin {
+pre:has(> code) code .selector,
+pre:has(> code) code .attr-name,
+pre:has(> code) code .string,
+pre:has(> code) code .char,
+pre:has(> code) code .function,
+pre:has(> code) code .builtin {
   color: #2f9c0a;
 }
-pre:has(> code) code .attr-value, pre:has(> code) code .keyword, pre:has(> code) code .class-name {
+pre:has(> code) code .attr-value,
+pre:has(> code) code .keyword,
+pre:has(> code) code .class-name {
   color: #1990b8;
 }
 @media print {
