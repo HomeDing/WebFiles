@@ -982,6 +982,82 @@ input.band.white, input.band.lightness, input.band.saturation {
   background: linear-gradient(to right, black 0%, white 100%);
 }
 
+:root {
+  --tip-hue: var(--success-hue);
+  --note-hue: 240deg;
+  --important-hue: 261deg;
+  --caution-hue: var(--error-hue);
+  --question-hue: var(--quote-hue);
+}
+
+blockquote,
+.markdown-alert {
+  display: block;
+  background: var(--main-back);
+  clear: both;
+  padding: 0.5rem 1rem;
+  margin: 0;
+  border-style: solid;
+  border-color: black;
+}
+blockquote:not(:first-child),
+.markdown-alert:not(:first-child) {
+  margin-top: var(--text-spacing);
+}
+
+.markdown-alert .markdown-alert-title {
+  display: flex;
+  font-weight: 500;
+  align-items: center;
+  line-height: 1;
+}
+
+.markdown-alert .markdown-alert-title .octicon {
+  margin-right: 0.5rem;
+  display: inline-block;
+  overflow: visible !important;
+  vertical-align: text-bottom;
+  fill: currentColor;
+}
+
+blockquote {
+  border-width: 0 0 0 0.5em;
+}
+
+.markdown-alert {
+  border-width: 0.1em 0.1em 0.1em 0.5em;
+}
+
+.markdown-alert.markdown-alert-tip {
+  border-color: hsl(var(--tip-hue), 90%, 40%);
+}
+
+.markdown-alert.markdown-alert-note {
+  border-color: var(--color);
+}
+
+.markdown-alert.markdown-alert-important {
+  border-color: hsl(var(--important-hue), 90%, 40%);
+}
+
+.markdown-alert.markdown-alert-warning {
+  border-color: var(--warning-line);
+  background-color: var(--warning-back);
+  color: var(--warning-color);
+}
+
+.markdown-alert.markdown-alert-caution {
+  border-color: hsl(var(--caution-hue), 90%, 40%);
+  background-color: hsl(var(--caution-hue), 60%, 85%);
+  color: black;
+}
+
+.markdown-alert.markdown-alert-question {
+  border-color: hsl(var(--caution-hue), 90%, 40%);
+  background-color: hsl(var(--caution-hue), 60%, 85%);
+  color: black;
+}
+
 table {
   empty-cells: show;
   border-collapse: collapse;

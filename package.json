@@ -64,7 +64,7 @@
     "pack:minimal": "node packminimal.js",
     "pack:icons": "node packicons.js",
     "pack:embed": "node packembedweb.js",
-    "publish:doku": "cmd /C publishDoku.bat",
+    "publish:docu": "cmd /C publishDoku.bat",
     "publish:webfiles": "cmd /C publishWebFiles.bat v10",
     "prestart": "npm run build",
     "start": "node app.js",
