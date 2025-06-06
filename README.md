@@ -188,6 +188,101 @@ The source files used are:
 * boot.htm
 
 
+## Icons
+
+The Project contains a list of icons that can be used to illustrate sensors and iot devices.
+
+The `icons.svg` files (built from files in folder `i`) can be used by use-references.
+They are all based on a 48*48 size with minimal file size.
+
+To build the `icons.svg` the command `npm run pack:icons` can be used.
+
+``` html
+<svg class="icon"><use href="./icons.svg#audio" /></svg>
+```
+
+<style>.icon{ width:64px}</style>
+<div style="background-color:silver">
+<img class="icon" src='i/add.svg' title='add'>
+<img class="icon" src='i/aht20.svg' title='aht20'>
+<img class="icon" src='i/analog.svg' title='analog'>
+<img class="icon" src='i/and.svg' title='and'>
+<img class="icon" src='i/audio.svg' title='audio'>
+<img class="icon" src='i/bme680.svg' title='bme680'>
+<img class="icon" src='i/bmp280.svg' title='bmp280'>
+<img class="icon" src='i/bulb.svg' title='bulb'>
+<img class="icon" src='i/button.svg' title='button'>
+<img class="icon" src='i/coffee.svg' title='coffee'>
+<img class="icon" src='i/color.svg' title='color'>
+<img class="icon" src='i/config.svg' title='config'>
+<img class="icon" src='i/dallas.svg' title='dallas'>
+<img class="icon" src='i/dcftime.svg' title='dcftime'>
+<img class="icon" src='i/default.svg' title='default'>
+<img class="icon" src='i/device.svg' title='device'>
+<img class="icon" src='i/dht.svg' title='dht'>
+<img class="icon" src='i/digitalin.svg' title='digitalin'>
+<img class="icon" src='i/digitalout.svg' title='digitalout'>
+<img class="icon" src='i/displaybar.svg' title='displaybar'>
+<img class="icon" src='i/displaydot.svg' title='displaydot'>
+<img class="icon" src='i/displaylcd.svg' title='displaylcd'>
+<img class="icon" src='i/displayline.svg' title='displayline'>
+<img class="icon" src='i/displaymax7219.svg' title='displaymax7219'>
+<img class="icon" src='i/displaysh1106.svg' title='displaysh1106'>
+<img class="icon" src='i/displayssd1306.svg' title='displayssd1306'>
+<img class="icon" src='i/displaytext.svg' title='displaytext'>
+<img class="icon" src='i/door.svg' title='door'>
+<img class="icon" src='i/dstime.svg' title='dstime'>
+<img class="icon" src='i/edit.svg' title='edit'>
+<img class="icon" src='i/element.svg' title='element'>
+<img class="icon" src='i/fan.svg' title='fan'>
+<img class="icon" src='i/fullscreen.svg' title='fullscreen'>
+<img class="icon" src='i/ide.svg' title='ide'>
+<img class="icon" src='i/led.svg' title='led'>
+<img class="icon" src='i/light.svg' title='light'>
+<img class="icon" src='i/log.svg' title='log'>
+<img class="icon" src='i/map.svg' title='map'>
+<img class="icon" src='i/max7219.svg' title='max7219'>
+<img class="icon" src='i/menu.svg' title='menu'>
+<img class="icon" src='i/minus.svg' title='minus'>
+<img class="icon" src='i/neo.svg' title='neo'>
+<img class="icon" src='i/no.svg' title='no'>
+<img class="icon" src='i/ntptime.svg' title='ntptime'>
+<img class="icon" src='i/or.svg' title='or'>
+<img class="icon" src='i/ota.svg' title='ota'>
+<img class="icon" src='i/pin.svg' title='pin'>
+<img class="icon" src='i/pined.svg' title='pined'>
+<img class="icon" src='i/plus.svg' title='plus'>
+<img class="icon" src='i/pms.svg' title='pms'>
+<img class="icon" src='i/power.svg' title='power'>
+<img class="icon" src='i/pwmout.svg' title='pwmout'>
+<img class="icon" src='i/radio.svg' title='radio'>
+<img class="icon" src='i/reference.svg' title='reference'>
+<img class="icon" src='i/reload.svg' title='reload'>
+<img class="icon" src='i/remote.svg' title='remote'>
+<img class="icon" src='i/remove.svg' title='remove'>
+<img class="icon" src='i/rfsend.svg' title='rfsend'>
+<img class="icon" src='i/rotary.svg' title='rotary'>
+<img class="icon" src='i/scene.svg' title='scene'>
+<img class="icon" src='i/schedule.svg' title='schedule'>
+<img class="icon" src='i/sdcard.svg' title='sdcard'>
+<img class="icon" src='i/select.svg' title='select'>
+<img class="icon" src='i/serialcmd.svg' title='serialcmd'>
+<img class="icon" src='i/socket.svg' title='socket'>
+<img class="icon" src='i/ssdp.svg' title='ssdp'>
+<img class="icon" src='i/start.svg' title='start'>
+<img class="icon" src='i/stop.svg' title='stop'>
+<img class="icon" src='i/switch.svg' title='switch'>
+<img class="icon" src='i/time.svg' title='time'>
+<img class="icon" src='i/timer.svg' title='timer'>
+<img class="icon" src='i/tm1637.svg' title='tm1637'>
+<img class="icon" src='i/tone.svg' title='tone'>
+<img class="icon" src='i/touch.svg' title='touch'>
+<img class="icon" src='i/value.svg' title='value'>
+<img class="icon" src='i/washing.svg' title='washing'>
+<img class="icon" src='i/water.svg' title='water'>
+<img class="icon" src='i/weatherfeed.svg' title='weatherfeed'>
+</div>
+
 ## Plugins used
 
 The server and the build tasks are using the following packages:
