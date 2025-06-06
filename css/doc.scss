@@ -10,11 +10,11 @@
 
 // Blockquotes and Github style alerts
 // ['tip', 'note', 'important', 'warning', 'caution', 'question' ]
+// --warning-hue in base.scss
 :root {
   --tip-hue: var(--success-hue);
   --note-hue: 240deg;
   --important-hue: 261deg;
-  // --warning-hue: 40deg; // in base.scss
   --caution-hue: var(--error-hue);
   --question-hue: var(--quote-hue);
 }
@@ -46,7 +46,7 @@ blockquote,
   display: inline-block;
   overflow: visible !important;
   vertical-align: text-bottom;
-  fill: currentColor;
+  fill: currentcolor;
 }
 
 blockquote {
@@ -208,7 +208,6 @@ h4 {
 
 
 @media print {
-
   html,
   body {
     font-size: 0.66em;
