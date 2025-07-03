@@ -324,13 +324,10 @@ body.sitelayout .navbar > a:hover {
   border-color: var(--focus);
   background-color: var(--focus);
 }
-body.sitelayout .navbar > button,
-body.sitelayout .navbar > img,
-body.sitelayout .navbar > svg {
+body.sitelayout .navbar > * {
   padding: 0;
-  min-width: 1.25em !important;
-  width: 1.25em !important;
-  height: 1.25em !important;
+  min-width: 1.25em;
+  height: 1em;
 }
 body.sitelayout .navbar > *:not(:first-child) {
   margin-left: var(--layout-padding);
@@ -1017,7 +1014,7 @@ blockquote:not(:first-child),
   display: inline-block;
   overflow: visible !important;
   vertical-align: text-bottom;
-  fill: currentColor;
+  fill: currentcolor;
 }
 
 blockquote {
