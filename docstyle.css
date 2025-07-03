@@ -310,6 +310,9 @@ body.sitelayout .navbar {
 }
 body.sitelayout .navbar > * {
   align-self: center;
+  padding: 0;
+  min-width: 1.25em;
+  height: 1em;
 }
 body.sitelayout .navbar > .gap {
   flex-grow: 2;
@@ -323,11 +326,6 @@ body.sitelayout .navbar > a {
 body.sitelayout .navbar > a:hover {
   border-color: var(--focus);
   background-color: var(--focus);
-}
-body.sitelayout .navbar > * {
-  padding: 0;
-  min-width: 1.25em;
-  height: 1em;
 }
 body.sitelayout .navbar > *:not(:first-child) {
   margin-left: var(--layout-padding);

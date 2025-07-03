@@ -48,7 +48,7 @@
     "build": "npm run build:ts && npm run build:ts-mini && npm run build:css && npm run build:server",
     "test": "npm audit && npm run test:ts && npm run test:server && npm run test:css",
     "pack": "npm run pack:icons && npm run pack:dist && npm run pack:minimal && npm run pack:embed",
-    "publish": "npm run publish:doku && npm run publish:webfiles",
+    "publish": "npm run publish:docu && npm run publish:webfiles",
     "clean": "shx rm -rf dist && shx rm -rf dist-mini",
     "xprebuild": "npm run test",
     "build:css": "sass docstyle.scss:docstyle.css iotstyle.scss:iotstyle.css",

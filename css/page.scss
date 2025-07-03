@@ -165,6 +165,9 @@ body.sitelayout {
 
     >* {
       align-self: center;
+      padding: 0;
+      min-width: 1.25em ;
+      height: 1em ;
     }
 
     >.gap {
@@ -181,12 +184,6 @@ body.sitelayout {
         border-color: var(--focus);
         background-color: var(--focus);
       }
-    }
-
-    >* {
-      padding: 0;
-      min-width: 1.25em ;
-      height: 1em ;
     }
 
     >*:not(:first-child) {
