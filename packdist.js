@@ -126,11 +126,11 @@ const assets = [
   { m: 'css', src: 'css/iot.scss', tar: 'iotstyle.css' },
 
   { m: 'js', src: 'sfc/loader.js' },
-  { m: 'm', src: 'sfc/u-colorpick.vue' },
-  { m: 'm', src: 'sfc/u-piechart.vue' },
-  { m: 'm', src: 'sfc/u-gaugechart.vue' },
-  { m: 'm', src: 'sfc/u-linechart.vue' },
-  { m: 'm', src: 'sfc/u-toast.vue' },
+  { m: 'm', src: 'sfc/u-color.sfc' },
+  { m: 'm', src: 'sfc/u-gaugechart.sfc' },
+  { m: 'm', src: 'sfc/u-linechart.sfc' },
+  { m: 'm', src: 'sfc/u-piechart.sfc' },
+  { m: 'm', src: 'sfc/u-toast.sfc' },
 
   { m: 'js', src: 'microsvg.js' },
 
@@ -144,7 +144,7 @@ const assets = [
   { m: 'c', src: 'elements.json' },
   { m: 'm', src: 'log.htm' },
   { m: 'm', src: 'panel.htm' },
-  { m: 'js', src: 'panel.js' },
+  // { m: 'js', src: 'panel.js' },
 
   { m: 'js', src: 'micro.js' },
   { m: 'm', src: 'microide.htm' }

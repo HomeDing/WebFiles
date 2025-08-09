@@ -9,7 +9,48 @@
 
   <script src="micro.js"></script>
   <script src="microsvg.js"></script>
-  <script src="panel.js"></script>
+  <script src="/sfc/loader.js"></script>
+
+  <script>
+    var allComponentsLoaded = window.loadComponent(['u-toast', 'u-form-json']);
+
+    // calc the current event/mouse/touch position
+    function getSVGPos(panel, evt) {
+      var newScale = panel.currentScale;
+      var translation = panel.currentTranslate;
+      var panelPos = panel.getBoundingClientRect();
+      var ret = {
+        x: Math.round((evt.clientX - translation.x) / newScale - panelPos.left),
+        y: Math.round((evt.clientY - translation.y) / newScale - panelPos.top)
+      };
+      return (ret);
+    } // getSVGPos()
+
+    // mode a svg group to a specific position using transform:translate
+    function moveSVGGroup(g, x, y) {
+      g.setAttribute('transform', 'translate(' + x + ',' + y + ')');
+    } // moveSVGGroup
+
+
+    // find the center position of the named pin in a svg node group.
+    function _pinPos(g, pin) {
+      var panelPos = panelObj.getBoundingClientRect();
+
+      var obj = g.querySelector('[pin="' + pin + '"]');
+      if (!obj) {
+        obj = g;
+        debugger;
+      }
+
+      var b2 = obj.getBoundingClientRect();
+
+      var pos = {
+        x: Math.round(b2.left + b2.width / 2 - panelPos.left),
+        y: Math.round(b2.top + b2.height / 2 - panelPos.top)
+      };
+      return (pos);
+    } // _pinPos()
+  </script>
 
   <style>
     #panel {
@@ -25,16 +66,11 @@
       display: none;
     }
 
-    #links>line,
-    #links>path {
+    #edges>path {
       stroke: var(--con-color);
       stroke-width: 3;
       stroke-linecap: round;
       marker-end: url(#arrow);
-    }
-
-    #links>marker path {
-      fill: var(--con-color);
     }
 
     .node {
@@ -112,19 +148,34 @@
           <title></title>
           <rect width="64" height="64" rx="8"></rect>
           <use class="icon" x="16" y="8" width="32" height="32" color="#203050" href="" />
-          <use class="config" x="48" y="4" width="12" height="12" color="#203050" href="/icons.svg#config" />
+          <use class="config" x="48" y="4" width="12" height="12" color="#203050" cursor="pointer"
+            href="/icons.svg#config" />
           <text class="id" x="32" y="56" text-anchor="middle">subtitle</text>
           <circle pin="in" cx="3" cy="32"></circle>
           <circle pin="out" draggable="true" cx="61" cy="32"></circle>
         </g>
       </g>
-      <g id="viewport">
-        <g id="nodes"></g>
-        <g id="links"></g>
-      </g>
+      <g id="nodes"></g>
+      <g id="edges"></g>
     </svg>
 
   </main>
+
+  <dialog id="newElement" is="-form-dialog">
+    <h2>Add a new Element</h2>
+    <div class="u-close" u-action="close"></div>
+    <form is="u-form-json" method="dialog">
+      <div class="form-grid">
+        <label>Type:</label>
+        <select name="type" required>
+          <option disabled selected hidden value="">Select Element...</option>
+        </select>
+        <label>ID:</label>
+        <input name="id" required pattern="[0-9a-z]+" placeholder="enter a name ..." maxlength="12">
+      </div>
+      <div><button u-action="next:configElement" type="submit" style="float:right">Next</button></div>
+    </form>
+  </dialog>
 
   <script>
     // GRID dimension and size
@@ -134,6 +185,19 @@
     const PANEL_HEIGHT = 12;
     const XPref = 64; // x-prefering curve for Edges
     const ITERATE = 200;
+
+    // svg container objects
+    const panelObj = document.getElementById('panel');
+    const nodesGroup = document.getElementById('nodes');
+    const edgesGroup = document.getElementById('edges');
+
+    // Drag & Drop support variables. 
+    var DragNode; // node element where dragging started. 
+    var DragObj = null; // SVGObject that will be dragged
+    var DragMode = null;
+    var DragOffset = null;
+
+
 
     // https://cs.brown.edu/people/rtamassi/gdhandbook/chapters/force-directed.pdf
     class LAYOUT {
@@ -158,9 +222,7 @@
       addEdge(srcPath, tarPath) {
         this.edges.push({
           src: srcPath,
-          srcPin: "out",
-          tar: tarPath,
-          tarPin: "in"
+          tar: tarPath
         });
       }
 
@@ -233,14 +295,17 @@
 
     document.getElementById('auto').addEventListener("click", evt => {
       for (let n = 0; n < ITERATE; n++) moveNodes();
-      drawNodes();
-      drawEdges();
+      drawAllNodes();
+      drawAllEdges();
     });
 
     document.getElementById('addButton').addEventListener("click", async evt => {
       // load dialogs on demand.
       await loadPlugins();
-      DialogClass.openModalForm('addElement', {});
+      // DialogClass.openModalForm('addElement', {});
+      const d = document.querySelector('dialog#newElement');
+      // d.open(); 
+      d.showModal(); 
     });
 
 
@@ -276,17 +341,9 @@
       state: {}
     };
 
-    var panelObj = document.getElementById('panel');
-    var linksObj = document.getElementById('links');
-    var viewObj = document.getElementById('viewport');
-
+    // adjust size of the panelObj.
     panelObj.style.width = PANEL_GRIDSIZE * PANEL_WIDTH + "px";
     panelObj.style.height = PANEL_GRIDSIZE * PANEL_HEIGHT + "px";
-
-    var DragNode; // node element where dragging started. 
-    var DragObj = null; // SVGObject that will be dragged
-    var DragMode = null;
-    var DragOffset = null;
 
     // nodes are all existing elements from the device configuration
     // extended by _x, _y
@@ -296,7 +353,7 @@
     /*
     HomeDing config data model ->
       create nodes = {id, xPos, _y, onXXX, obj }
-      create edges = {src, srcPin, tar, tarPin, obj}
+      create edges = {src, tar, obj}
     */
 
     // create all nodes and edges from the HomeDing config files
@@ -436,7 +493,7 @@
 
 
     // create / update svg objects for all nodes
-    function drawNodes() {
+    function drawAllNodes() {
       for (var nodeId in nodes) {
         var t = nodeId.split('/')[0];
         var e = nodes[nodeId];
@@ -446,9 +503,8 @@
         var obj = e.obj;
         if (!obj) {
           // create a new svg object for node
-          var nodesObj = document.getElementById('nodes');
           obj = e.obj = document.querySelector('#templates .node').cloneNode(true);
-          nodesObj.appendChild(obj);
+          nodesGroup.appendChild(obj);
           obj.id = nodeId;
 
           // ingoing pin is always visible. disable outgoing pin ?
@@ -486,22 +542,27 @@
           uPos[n.id] = { _x: n._x, _y: n._y };
       });
       window.localStorage.setItem(layout.XY, JSON.stringify(uPos));
-    } // drawNodes()
+    } // drawAllNodes()
 
 
     // create / update all svg objects edges to current position of nodes
-    function drawSingleEdge(obj, aPos, ePos) {
+    function drawEdge(obj, aPos, ePos) {
       if (!obj) {
-        obj = linksObj.ownerDocument.createElementNS("http://www.w3.org/2000/svg", 'path');
-        linksObj.appendChild(obj);
+        obj = edgesGroup.ownerDocument.createElementNS("http://www.w3.org/2000/svg", 'path');
+        edgesGroup.appendChild(obj);
+        // obj.addEventListener('click', function(evt) {
+        //   // delete edge ?
+        //   debugger;
+        // });
+
       } // if
-      obj.setAttribute("d", `M ${aPos.x},${aPos.y} C ${aPos.x + XPref},${aPos.y} ${ePos.x - XPref},${ePos.y} ${ePos.x - 12},${ePos.y} L ${ePos.x},${ePos.y}`);
+      obj.setAttribute("d", `M ${aPos.x + 6},${aPos.y} C ${aPos.x + XPref},${aPos.y} ${ePos.x - XPref},${ePos.y} ${ePos.x - 18},${ePos.y} L ${ePos.x - 6},${ePos.y}`);
       return (obj);
-    } // drawSingleEdge()
+    } // drawEdge()
 
 
     // create / update all svg objects edges to current position of nodes
-    function drawEdges() {
+    function drawAllEdges() {
       var aPos, ePos;
 
       for (var n = 0; n < edges.length; n++) {
@@ -511,15 +572,9 @@
 
         if (sObj && tObj) {
           var obj = f.obj;
-          aPos = _pinPos(sObj, f.srcPin);
-          ePos = _pinPos(tObj, f.tarPin);
-
-          // spline version
-          if (!obj) {
-            obj = f.obj = linksObj.ownerDocument.createElementNS("http://www.w3.org/2000/svg", 'path');
-            linksObj.appendChild(obj);
-          } // if
-          obj.setAttribute("d", `M ${aPos.x + 6},${aPos.y} C ${aPos.x + XPref},${aPos.y} ${ePos.x - XPref},${ePos.y} ${ePos.x - 18},${ePos.y} L ${ePos.x - 6},${ePos.y}`);
+          aPos = _pinPos(sObj.obj, 'out');
+          ePos = _pinPos(tObj.obj, 'in');
+          f.obj = drawEdge(obj, aPos, ePos);
         } // for
       }
     } // drawEdges()
@@ -543,8 +598,8 @@
 
         placeNodes();
         for (let n = 0; n < ITERATE; n++) moveNodes();
-        drawNodes();
-        drawEdges();
+        drawAllNodes();
+        drawAllEdges();
         loadPlugins();
       });
     });
@@ -573,7 +628,8 @@
         if (DragObj.getAttribute('pin') === 'out') {
           DragMode = 'c';
           // create draggable circle
-          DragOffset = getSVGPos(panelObj, evt);
+
+          DragOffset = _pinPos(DragObj.parentNode, 'out');
           DragObj = createSVGNode(panelObj, 'circle', {
             class: 'dragCircle',
             cx: DragOffset.x,
@@ -581,7 +637,7 @@
             r: 6
           });
           _conPos = { x: DragOffset.x, y: DragOffset.y };
-          _conObj = drawSingleEdge(undefined, _conPos, _conPos);
+          _conObj = drawEdge(undefined, _conPos, _conPos);
 
         } else {
           DragMode = 'n';
@@ -600,10 +656,10 @@
         var DragPos = getSVGPos(panelObj, evt);
         moveSVGGroup(DragObj, DragPos.x - DragOffset.x, DragPos.y - DragOffset.y);
         if (DragMode === 'n') {
-          drawEdges();
-        }
-        else {
-          drawSingleEdge(_conObj, _conPos, DragPos);
+          drawAllEdges();
+        } else {
+          DragPos.x += 6;
+          drawEdge(_conObj, _conPos, DragPos);
         }
       } // if
     }); // mousemove
@@ -646,16 +702,8 @@
 
         }
 
-        // for (var n in nodes) {
-        //   if (nodes[n].obj === DragObj) {
-        //     nodes[n]._x = Math.floor(6 * (DragPos.x - DragOffset.x) / PANEL_GRIDSIZE) / 6;
-        //     nodes[n]._y = Math.floor(6 * (DragPos.y - DragOffset.y) / PANEL_GRIDSIZE) / 6;
-        //     nodes[n]._fixed = true;
-        //     break;
-        //   }
-        // } // for
-        drawNodes();
-        drawEdges();
+        drawAllNodes();
+        drawAllEdges();
 
       } // if
       DragObj = null;
