@@ -13,6 +13,9 @@ $u-hue: 220deg;
 $u-primary: hsl($u-hue 80% 30%); // active objects
 $u-primary-text: white;
 
+$u-secondary: #aaaaaa; // active objects, not primary
+$u-secondary-text: black;
+
 $u-border-color: #555555;
 $u-border-color-active: hsl($u-hue 100% 30%);
 
@@ -52,7 +55,7 @@ $u-font-sans-serif: arial, ui-sans-serif, sans-serif;
 
   // standard colors used for <html>
   --back: light-dark(hsl(#{$u-hue} 2% 85%), hsl(#{$u-hue} 2% 15%));
-  --color: light-dark(hsl(#{$u-hue} 0 10%), hsl(#{$u-hue} 0 90%)); 
+  --color: light-dark(hsl(#{$u-hue} 0 10%), hsl(#{$u-hue} 0 90%));
 
   --success-hue: 80deg;
   --success-back: hsl(var(--success-hue) 90% 75%);
@@ -62,7 +65,7 @@ $u-font-sans-serif: arial, ui-sans-serif, sans-serif;
   --warning-back: hsl(var(--warning-hue) 90% 75%);
   --warning-line: hsl(var(--warning-hue) 90% 40%);
   --warning-color: black;
-  
+
   --error-hue: 0deg;
   --error-back: hsl(var(--error-hue) 90% 75%);
   --error-line: hsl(var(--error-hue) 90% 40%);
@@ -216,6 +219,15 @@ dialog {
   padding: 1rem;
   background-color: canvas;
   border: 0;
+
+  h2 {
+    margin: 0 0 var(--text-spacing) 0;
+  }
+
+  h3,
+  h4 {
+    margin: 0
+  }
 
   .u-close {
     position: absolute;

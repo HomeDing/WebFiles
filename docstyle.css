@@ -144,6 +144,13 @@ dialog {
   background-color: canvas;
   border: 0;
 }
+dialog h2 {
+  margin: 0 0 var(--text-spacing) 0;
+}
+dialog h3,
+dialog h4 {
+  margin: 0;
+}
 dialog .u-close {
   position: absolute;
   top: 1rem;
@@ -715,8 +722,8 @@ button.active,
 }
 button.secondary,
 .button.secondary {
-  background-color: #777777;
-  border-color: #777777;
+  background-color: #aaaaaa;
+  border-color: black;
 }
 
 option[disabled] {
@@ -791,8 +798,8 @@ input.switch[type=range] {
   grid-column: 1/-1;
 }
 .form-grid .icon {
-  width: 1.2em;
-  height: 1.2em;
+  width: 1em;
+  height: 1em;
   margin: 0.2em;
 }
 
@@ -801,6 +808,15 @@ input.switch[type=range] {
 }
 .form-inline > * {
   vertical-align: top;
+}
+.form-inline > *:not(:first-child) {
+  margin-left: 3px;
+}
+.form-inline > button {
+  padding: 0;
+  border: 0;
+  min-width: 0;
+  height: 1.4rem;
 }
 
 .form-actions {

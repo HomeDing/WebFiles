@@ -1330,7 +1330,7 @@ function changeConfig(id, newConfig) {
     const formData = new FormData();
     formData.append(fName, new Blob([JSON.stringify(c)], { type: 'text/html' }), fName);
     fetch('/', { method: 'POST', body: formData }).then(function () {
-        window.alert('saved.');
+        document.querySelector('u-toast')?.info('saved.');
     });
 }
 function debounce(func, wait = 20) {

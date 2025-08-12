@@ -1,5 +1,5 @@
 <!doctype html>
-<html>
+<html lang="en">
 
 <head>
   <meta charset="utf-8">
@@ -12,7 +12,7 @@
   <script src="/sfc/loader.js"></script>
 
   <script>
-    var allComponentsLoaded = window.loadComponent(['u-toast', 'u-form-json']);
+    var allComponentsLoaded = window.loadComponent(['u-toast', 'u-form-json', 'u-form-dialog']);
 
     // calc the current event/mouse/touch position
     function getSVGPos(panel, evt) {
@@ -39,7 +39,6 @@
       var obj = g.querySelector('[pin="' + pin + '"]');
       if (!obj) {
         obj = g;
-        debugger;
       }
 
       var b2 = obj.getBoundingClientRect();
@@ -119,6 +118,7 @@
 </head>
 
 <body class="sitelayout fillscreen" style="--layout-gap:0">
+  <u-toast></u-toast>
   <header>
     <h1>Flow Workspace</h1>
   </header>
@@ -160,22 +160,6 @@
     </svg>
 
   </main>
-
-  <dialog id="newElement" is="-form-dialog">
-    <h2>Add a new Element</h2>
-    <div class="u-close" u-action="close"></div>
-    <form is="u-form-json" method="dialog">
-      <div class="form-grid">
-        <label>Type:</label>
-        <select name="type" required>
-          <option disabled selected hidden value="">Select Element...</option>
-        </select>
-        <label>ID:</label>
-        <input name="id" required pattern="[0-9a-z]+" placeholder="enter a name ..." maxlength="12">
-      </div>
-      <div><button u-action="next:configElement" type="submit" style="float:right">Next</button></div>
-    </form>
-  </dialog>
 
   <script>
     // GRID dimension and size
@@ -302,10 +286,7 @@
     document.getElementById('addButton').addEventListener("click", async evt => {
       // load dialogs on demand.
       await loadPlugins();
-      // DialogClass.openModalForm('addElement', {});
-      const d = document.querySelector('dialog#newElement');
-      // d.open(); 
-      d.showModal(); 
+      d = document.querySelector('dialog#newElement').open();
     });
 
 
@@ -322,7 +303,7 @@
 
     async function loadPlugins() {
       var ret;
-      if (!document.querySelector('dialog#addElement')) {
+      if (!document.querySelector('dialog#action')) {
         // lazy load dialogs.
         ret = fetchText("./board-new.htm")
           .then(txt => {
@@ -520,7 +501,8 @@
             while (t && !t.classList.contains('node')) t = t.parentElement;
             const d = t.getAttribute('data');
             const id = t.getAttribute('id').split('/');
-            DialogClass.openModalForm('configElement', { ...JSON.parse(d), type: id[0], id: id[1] });
+            const dlg = document.querySelector('dialog#configElement');
+            dlg.open({ ...JSON.parse(d), type: id[0], id: id[1] });
           });
         }
 
@@ -551,8 +533,7 @@
         obj = edgesGroup.ownerDocument.createElementNS("http://www.w3.org/2000/svg", 'path');
         edgesGroup.appendChild(obj);
         // obj.addEventListener('click', function(evt) {
-        //   // delete edge ?
-        //   debugger;
+        //   // how to delete an edge ?
         // });
 
       } // if
@@ -714,6 +695,7 @@
       document.querySelector('.u-header').style.display = 'none';
       document.querySelector('.u-navbar').style.display = 'none';
     } // if
+
 
   </script>
 </body>
