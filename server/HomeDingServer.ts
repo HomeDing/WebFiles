@@ -132,7 +132,7 @@ export class HomeDingServer {
       },
       filename: function(req, file, cb) {
         const p = file.originalname.split('/');
-        cb(null, '/' + Date.now() + '-' + p[p.length - 1]);
+        cb(null, '/' + (new Date()).toISOString().substr(0,19) + '-' + p[p.length - 1]);
       }
     });
 

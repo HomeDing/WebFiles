@@ -178,9 +178,10 @@ class GenericWidgetClass extends MicroControlClass {
         this.dispatchAction(p.getAttribute('u-action'), p.getAttribute('value') || '1');
 
       } else if (p.classList.contains('setconfig')) {
+        const dlg = document.querySelector('#configElement') as HTMLDialogElement;
         const ti = this.microid.split('/');
         // @ts-ignore
-        DialogClass.openModalForm('configElement', { ...this.data, type: ti[1], id: ti[2] });
+        dlg.showModal({ ...this.data, type: ti[1], id: ti[2] });
 
       } else if (p.classList.contains('setactive')) {
         this.dispatchAction(toBool(this.data.active) ? 'stop' : 'start', '1');

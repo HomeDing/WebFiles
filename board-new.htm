@@ -1,6 +1,6 @@
 <dialog id="newElement" is="u-form-dialog">
   <h2>Add a new Element</h2>
-  <div class="u-close" u-action="close"></div>
+  <div class="u-close" u-action="cancel"></div>
   <form is="u-form-json" method="dialog">
     <div class="form-grid">
       <label>Type:</label>
@@ -10,23 +10,23 @@
       <label>ID:</label>
       <input name="id" required pattern="[0-9a-z]+" placeholder="enter a name ..." maxlength="12">
     </div>
-    <div><button type="submit" u-action="next:configElement" style="float:right">Next</button></div>
+    <div><button u-action="next:configElement" style="float:right">Next</button></div>
   </form>
 </dialog>
 
 <dialog id="configElement" is="u-form-dialog">
   <h2><span u-text="type"></span>/<span u-text="id"></span> Configuration</h2>
-  <div class="u-close" u-action="close"></div>
+  <div class="u-close" u-action="cancel"></div>
 
   <form is="u-form-json" method="dialog">
     <div class="form-grid"></div>
-    <div><button type="submit" u-action="save" style="float:right">save</button></div>
+    <div><button u-action="save" style="float:right">save</button></div>
   </form>
 </dialog>
 
 <dialog id="action" is="u-form-dialog">
   <h2>Event Configuration</h2>
-  <div class="u-close" u-action="close"></div>
+  <div class="u-close" u-action="cancel"></div>
 
   <form method="dialog" is="u-form-json">
     <div class="form-grid">
@@ -38,7 +38,7 @@
       <label>Action:</label><select name="action" required></select>
       <label>Value:</label><input name="value" value="$v" required />
     </div>
-    <div><button type="submit" u-action="save" style="float:right">Save</button></div>
+    <div><button u-action="ok" style="float:right">OK</button></div>
   </form>
 </dialog>
 
@@ -66,7 +66,7 @@
 
   // ===== newElement dialog =====
 
-  dNew.addEventListener('opened', evt => {
+  dNew.addEventListener('init', evt => {
     const form = evt.detail.form;
 
     // populate SELECT with available element types
@@ -80,20 +80,19 @@
     }
   });
 
-  dNew.addEventListener('closed', evt => {
-    console.debug('panel', 'newElement dialog closed', evt.detail);
-
-    if (evt.detail.action === 'next:configElement') {
-      // start a new unsaved element configuration
-      // pass the {type, id } data over to the configElement dialog, no change required
-      dConfig.open(configData);
-    }
-  });
+  // dNew.addEventListener('action', evt => {
+  //   console.debug('panel', 'newElement dialog action', evt.detail);
+  //   if (evt.detail.action === 'next:configElement') {
+  //     // start a new unsaved element configuration
+  //     // pass the {type, id } data over to the configElement dialog, no change required
+  //     dConfig.showModal(evt.detail.data);
+  //   }
+  // });
 
 
   // ===== configElement dialog =====
 
-  dConfig.addEventListener('opened', evt => {
+  dConfig.addEventListener('init', evt => {
     const ic = '<svg class="icon"><use href="./icons.svg#$"></use></svg>';
     const data = lowerKeys(evt.detail.data);
     const fg = dConfig.querySelector('.form-grid');
@@ -118,7 +117,7 @@
       });
 
       if (isEvent) {
-        let l = createHTMLElement(g, 'label', { 'u-action': `next:action:${k}` });
+        let l = createHTMLElement(g, 'span', { 'u-action': `next:action:${k}` });
         l.innerHTML = ic.replace('$', 'start');
       }
     } // _add()
@@ -138,40 +137,56 @@
     if (d?.properties) { d.properties.forEach(k => _add(k, false, false)); }
     if (d?.events) { d.events.forEach(k => _add(k, true, false)); }
     if (d?.actions) { d.actions.forEach(k => _add(k, false, true)); }
-  });
+  }); // dConfig::init
 
-  dConfig.addEventListener('closed', evt => {
-    console.debug('panel', 'configElement dialog closed', evt.detail);
+
+  // handle action events from the config dialog
+  // for opening the action dialog or saving the configuration
+  dConfig.addEventListener('action', evt => {
+    console.debug('panel', 'configElement dialog action', evt.detail);
     const action = evt.detail.action.toLowerCase();
 
     // open event configuration dialog
     if (action.startsWith('next:action:')) {
+      const ev = action.split(':')[2]; // event name of the srcId Element
 
       // construct the data for the action dialog
       const actionData = {
         srcId: configData.type + '/' + configData.id,
-        event: action.split(':')[2]
+        event: ev,
       };
 
-      dAction.open(actionData);
+      if (evt.detail.data[ev]) {
+        const ex = evt.detail.data[ev].split('?');  // like "digitalout/d6?value=$v"
+        actionData.target = ex[0]
+        actionData.action = ex[1].split('=')[0],
+        actionData.value = ex[1].split('=')[1]
+      }
+
+      dAction.showModal(actionData)
+        .then(data => {
+          // merge the action data into the configData
+          configData[data.event] = `${data.target}?${data.action}=${data.value}`;
+          dConfig.showModal(configData);
+        });
 
     } else if (action === 'save') {
       // save the configuration
       changeConfig(configData.type + '/' + configData.id, evt.detail.data);
     }
-
   });
 
 
   // ===== action dialog =====
 
-  dAction.addEventListener('opened', evt => {
+  dAction.addEventListener('init', evt => {
+
     const form = evt.detail.form;
     const data = evt.detail.data;
 
-    const oAction = form.querySelector('SELECT[name=action]');
     const oTarget = form.querySelector('SELECT[name=target]');
     const oEvent = form.querySelector('SELECT[name=event]');
+    const oAction = form.querySelector('SELECT[name=action]');
     oTarget.innerHTML = '';
 
     // populate event dropdown with available events of the srcID element
@@ -199,20 +214,23 @@
 
 
     // populate options for selecting a action for the target
-    function listActions() {
+    function _listActions() {
       oAction.innerHTML = '';
       oAction.value = '';
       createHTMLElement(oAction, 'option', { disabled: true, selected: true, hidden: true, value: "" }).textContent = 'Select action...';
+      const target =  oTarget.value;
 
-      const d = getDefs(oTarget.value);
-      const actionList = [].concat(
-        (d.extends ? getDefs(d.extends).actions : []),
-        (d.actions ? d.actions : []));
-      actionList.forEach(a => { createHTMLElement(oAction, 'option', { value: a }).textContent = a; });
-      if (actionList.length === 1) {
-        oAction.selectedIndex = 1;
+      if (target) {
+        const d = getDefs(target);
+        const actionList = [].concat(
+          (d.extends ? getDefs(d.extends).actions : []),
+          (d.actions ? d.actions : []));
+        actionList.forEach(a => { createHTMLElement(oAction, 'option', { value: a }).textContent = a; });
+        if (actionList.length === 1) {
+          oAction.selectedIndex = 1;
+        }
       }
-    }
+    } // _listActions()
 
     _listEvents();
     if (data.event) {
@@ -222,28 +240,21 @@
       oEvent.readonly = false;
     }
 
-
-    if (data.tarId) {
-      createHTMLElement(oTarget, 'option', { value: data.tarId }).textContent = data.tarId;
-      oTarget.selected = 1;
-      listActions();
-
-    } else {
-      _listTargets();
+    _listTargets();
+    if (data.target) {
+      oTarget.value = data.target;
+    }
+    
+    _listActions();
+    if (data.action) {
+      oAction.value = data.action;
     }
 
-    oTarget.addEventListener('change', evt => {
-      listActions();
-    });
+    if (evt.detail.firstInit) {
+      oTarget.addEventListener('change', _listActions);
+    }
+
   });
 
-  dAction.addEventListener('closed', evt => {
-    if (evt.detail.action === 'save') {
-      const d = evt.detail.data;
-      configData[d.event] = `${d.target}?${d.action}=${d.value}`;
-    }
-    // restart config dialog
-    dConfig.open(configData);
-  });
 
 </script>

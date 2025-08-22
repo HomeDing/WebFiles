@@ -67,7 +67,7 @@
     <button id="addButton">+</button>
   </nav>
 
-  <main >
+  <main>
     <div id="panl" class="card-container col365" style="--card-height: auto;">
     </div>
   </main>
@@ -197,7 +197,8 @@
       <div class="block form-grid">
         <label>mode:</label><output u-text="mode"></output>
         <label>duration:</label>
-        <div><input type="range" max="20000" step="100" u-value="duration" u-units="ms"><output u-value="duration"></output></div>
+        <div><input type="range" max="20000" step="100" u-value="duration" u-units="ms"><output
+            u-value="duration"></output></div>
         <label>Effect Length:</label>
         <div><input type="range" max="255" u-value="effectlength"><output u-value="effectlength"></output></div>
       </div>
@@ -316,8 +317,8 @@
   <script>
     if (window !== window.top) {
       // disable header and navbar in portal mode.
-      document.querySelector('.u-header').style.display = 'none';
-      document.querySelector('.u-navbar').style.display = 'none';
+      document.querySelector('header').style.display = 'none';
+      document.querySelector('nav.navbar').style.display = 'none';
     } // if
 
     // Element definitions and config+state of running elements
@@ -339,7 +340,7 @@
 
       async function loadPlugins() {
         var ret;
-        if (!document.querySelector('dialog#addElement')) {
+        if (!document.querySelector('dialog#newElement')) {
           // lazy load dialogs.
           ret = fetchText("./board-new.htm")
             .then(txt => {
@@ -362,7 +363,7 @@
       addObj.addEventListener('click', async function(evt) {
         // load dialogs on demand.
         await loadPlugins();
-        DialogClass.openModalForm('addElement', {});
+        document.querySelector('dialog#newElement').showModal();
       });
 
 

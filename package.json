@@ -68,7 +68,7 @@
     "publish:webfiles": "cmd /C publishWebFiles.bat v10",
     "prestart": "npm run build",
     "start": "node app.js",
-    "dev": "run-p -n start build:css-watch build:ts-watch"
+    "dev": "run-p -n build:css-watch build:ts-watch start"
   },
   "files": [
     "dist",

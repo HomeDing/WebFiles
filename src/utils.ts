@@ -47,34 +47,44 @@ function setAttr(el: HTMLElement, name: string, value: string) {
 } // setAttr
 
 
-/** change an element configuration in /config.json */
-function changeConfig(id: string, newConfig: any) {
-  let c: any, node: any, fName: string;
+/** find configuration file for the element (type/id) */
+function findConfig(id: string): { fName: string, config: any } {
+  let c: any, config: any, fName: string;
 
+  // try a env configuration first
   fName = '/env.json';
   c = JSON.parse(hub.read('env'));
-  node = jsonFind(c, id);
+  config = jsonFind(c, id);
 
-  if (!node) {
+  if (!config) {
     // not a env configuration
     fName = '/config.json';
-    c = JSON.parse(hub.read('config'));
-    node = jsonLocate(c, id);
+    const r = hub.read('config');
+    console.log(r);
+    c = JSON.parse(r);
+    config = jsonLocate(c, id);
   }
 
+  return ({ fName, config });
+};
+
+/** change an element configuration in /env.json or /config.json */
+function changeConfig(id: string, newConfig: any) {
+  const { fName, config } = findConfig(id);
+
   for (const n in newConfig) {
-    const rn = Object.keys(node).find(e => (e.toLowerCase() === n.toLowerCase()));
+    const rn = Object.keys(config).find(e => (e.toLowerCase() === n.toLowerCase()));
     if (newConfig[n]) {
-      node[rn || n] = newConfig[n];
+      config[rn || n] = newConfig[n];
     } else {
-      delete node[n];
+      delete config[n];
     }
   }
 
   const formData = new FormData();
-  formData.append(fName, new Blob([JSON.stringify(c)], { type: 'text/html' }), fName);
+  formData.append(fName, new Blob([JSON.stringify(config)], { type: 'text/html' }), fName);
   fetch('/', { method: 'POST', body: formData }).then(function() {
-    window.alert('saved.');
+    (document.querySelector('u-toast') as HTMLElement & { info(msg: string): void })?.info('saved.');
   });
 } // changeConfig()
 
@@ -147,14 +157,14 @@ function createHTMLElement(parentNode: HTMLElement, tag: string, attr: { [id: st
 } // createHTMLElement()
 
 // initiate a fetch with JSON result expected.
-async function fetchJSON(url:string, options: object) {
+async function fetchJSON(url: string, options: object) {
   const p = fetch(url, options)
     .then(raw => raw.json());
   return (p);
 }
 
 // initiate a fetch with Text result expected.
-async function fetchText(url:string, options: object) {
+async function fetchText(url: string, options: object) {
   const p = fetch(url, options)
     .then(raw => raw.text());
   return (p);

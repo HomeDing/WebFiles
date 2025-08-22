@@ -24,7 +24,8 @@ export default [
         updateState: "readonly",
         jsonLocate: "readonly",
         getHashParams: "readonly",
-        DialogClass: "readonly"
+        DialogClass: "readonly",
+        loadComponent: "readonly"
       }
 
     },

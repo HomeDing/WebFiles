@@ -286,7 +286,11 @@
     document.getElementById('addButton').addEventListener("click", async evt => {
       // load dialogs on demand.
       await loadPlugins();
-      d = document.querySelector('dialog#newElement').open();
+      document.querySelector('dialog#newElement').showModal()
+        .then(data => {
+          const dConfig = document.querySelector('dialog#configElement');
+          dConfig.showModal(data);
+        });
     });
 
 
@@ -502,7 +506,7 @@
             const d = t.getAttribute('data');
             const id = t.getAttribute('id').split('/');
             const dlg = document.querySelector('dialog#configElement');
-            dlg.open({ ...JSON.parse(d), type: id[0], id: id[1] });
+            dlg.showModal({ ...JSON.parse(d), type: id[0], id: id[1] });
           });
         }
 
@@ -664,14 +668,25 @@
 
           // Start the action connect dialog
           if ((node) && (node !== DragNode)) {
-            DialogClass.openModalForm('action',
-              { srcId: DragNode.id, tarId: node.id },
-              d => {
-                if ((d.srcEvent) && (d.target) && (d.action) && (d.value)) {
-                  DragNode.conf[d.srcEvent] = `${d.target}?${d.action}=${d.value}`;
-                  changeConfig(DragNode.id, DragNode.conf);
-                }
-              });
+            const dlg = document.querySelector('dialog#action');
+            const d = {
+              srcId: DragNode.id,
+              event: '',
+              target: node.id,
+              action: '',
+              value: '$v'
+
+            };
+            // debugger;
+            dlg.showModal(d).then(data => {
+              console.debug('panel', 'action dialog result', data);
+
+              // DragNode and target node do exist.
+              const { fName, config } = findConfig(DragNode.id);
+              config[data.event] = `${data.target}?${data.action}=${data.value}`;
+              debugger;
+              changeConfig(DragNode.id, config);
+            });
           }
 
         } else if (DragMode === 'n') {

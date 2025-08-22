@@ -373,8 +373,9 @@ let GenericWidgetClass = class GenericWidgetClass extends MicroControlClass {
                 this.dispatchAction(p.getAttribute('u-action'), p.getAttribute('value') || '1');
             }
             else if (p.classList.contains('setconfig')) {
+                const dlg = document.querySelector('#configElement');
                 const ti = this.microid.split('/');
-                DialogClass.openModalForm('configElement', { ...this.data, type: ti[1], id: ti[2] });
+                dlg.showModal({ ...this.data, type: ti[1], id: ti[2] });
             }
             else if (p.classList.contains('setactive')) {
                 this.dispatchAction(toBool(this.data.active) ? 'stop' : 'start', '1');
@@ -418,8 +419,8 @@ let ButtonWidgetClass = class ButtonWidgetClass extends GenericWidgetClass {
     _objButton;
     connectedCallback() {
         super.connectedCallback();
-        const panelObj = document.querySelector('.panel');
-        let btnPanel = panelObj.querySelector('.btnPanel');
+        const panelObj = document.querySelector('#panl');
+        let btnPanel = panelObj?.querySelector('.btnPanel');
         if (!btnPanel) {
             btnPanel = createHTMLElement(panelObj, 'div', { class: 'card btnPanel' }, panelObj.firstElementChild);
         }
@@ -610,88 +611,6 @@ let DSTimeWidgetClass = class DSTimeWidgetClass extends GenericWidgetClass {
 DSTimeWidgetClass = __decorate([
     MicroControl('dstime')
 ], DSTimeWidgetClass);
-var DialogClass_1;
-let DialogClass = DialogClass_1 = class DialogClass extends MicroControlClass {
-    _defaultData = {};
-    _data = {};
-    _form;
-    _callback = undefined;
-    static openModalForm(id, data = {}, cb) {
-        const dlg = document.querySelector('dialog#' + id);
-        if (dlg)
-            dlg.openModalForm(data, cb);
-    }
-    connectedCallback() {
-        super.connectedCallback();
-        const f = this.querySelector('form');
-        if (f) {
-            this._form = f;
-            this._defaultData = this._form.getJsonData();
-        }
-    }
-    openModalForm(data = {}, cb) {
-        this._data = Object.assign({}, this._defaultData, data);
-        this.returnValue = '';
-        this._callback = cb;
-        this.dispatchEvent(new CustomEvent("open", {
-            detail: {
-                dialog: this,
-                data: this._data,
-                form: this._form
-            },
-            bubbles: true,
-            cancelable: true,
-            composed: false,
-        }));
-        this.querySelectorAll('*[u-text]').forEach((e) => {
-            const key = e.getAttribute('u-text');
-            if (key) {
-                e.textContent = data[key];
-            }
-        });
-        if (this._form) {
-            (this._form).setJsonData(data);
-        }
-        this.showModal();
-    }
-    on_click(evt) {
-        const tar = evt.target;
-        const ua = tar.getAttribute('u-action');
-        if (ua === 'close') {
-            this.returnValue = 'cancel';
-            this.close();
-        }
-    }
-    on_submit(evt) {
-        const uSub = evt.submitter;
-        if (uSub && this._form) {
-            const ret = this._form.getJsonData();
-            const ua = uSub.getAttribute('u-action');
-            if (ua?.startsWith('next:')) {
-                this.returnValue = 'ok';
-                const nextID = ua.substring(5);
-                DialogClass_1.openModalForm(nextID, ret);
-            }
-            else if (ua === 'return') {
-                if (this._callback) {
-                    this._callback(ret);
-                }
-            }
-            else if (ua === 'done') {
-                this.returnValue = 'ok';
-            }
-            else {
-                evt.preventDefault();
-            }
-        }
-    }
-    on_cancel(_evt) {
-        this.returnValue = 'cancel';
-    }
-};
-DialogClass = DialogClass_1 = __decorate([
-    MicroControl('dialog')
-], DialogClass);
 class DisplayItemWidgetClass extends GenericWidgetClass {
     _dispElem;
     _grid;
@@ -1308,27 +1227,34 @@ function setAttr(el, name, value) {
         el.setAttribute(name, value);
     }
 }
-function changeConfig(id, newConfig) {
-    let c, node, fName;
+function findConfig(id) {
+    let c, config, fName;
     fName = '/env.json';
     c = JSON.parse(hub.read('env'));
-    node = jsonFind(c, id);
-    if (!node) {
+    config = jsonFind(c, id);
+    if (!config) {
         fName = '/config.json';
-        c = JSON.parse(hub.read('config'));
-        node = jsonLocate(c, id);
+        const r = hub.read('config');
+        console.log(r);
+        c = JSON.parse(r);
+        config = jsonLocate(c, id);
     }
+    return ({ fName, config });
+}
+;
+function changeConfig(id, newConfig) {
+    const { fName, config } = findConfig(id);
     for (const n in newConfig) {
-        const rn = Object.keys(node).find(e => (e.toLowerCase() === n.toLowerCase()));
+        const rn = Object.keys(config).find(e => (e.toLowerCase() === n.toLowerCase()));
         if (newConfig[n]) {
-            node[rn || n] = newConfig[n];
+            config[rn || n] = newConfig[n];
         }
         else {
-            delete node[n];
+            delete config[n];
         }
     }
     const formData = new FormData();
-    formData.append(fName, new Blob([JSON.stringify(c)], { type: 'text/html' }), fName);
+    formData.append(fName, new Blob([JSON.stringify(config)], { type: 'text/html' }), fName);
     fetch('/', { method: 'POST', body: formData }).then(function () {
         document.querySelector('u-toast')?.info('saved.');
     });
