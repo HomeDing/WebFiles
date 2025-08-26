@@ -17,10 +17,13 @@
   <link rel="manifest" href="/site.webmanifest" />
   <meta name="theme-color" content="#ffffff" />
 
-  <link Content-Type="text/css" href="/docstyle.css" rel="stylesheet" />
-
   <script src="/micro.js"></script>
   <script src="/sfc/loader.js"></script>
+  <script>
+    window.loadComponent(['u-color', 'u-include']);
+  </script>
+
+  <link Content-Type="text/css" href="/docstyle.css" rel="stylesheet" />
   <style>
     svg.setconfig {
       position: absolute;
@@ -38,12 +41,6 @@
       height: 1.4rem;
       width: 1.4rem;
       background-size: 1.4rem;
-    }
-
-    span.setconfig {
-      position: absolute;
-      right: 2.2rem;
-      background-image: url(/i/config.svg);
     }
 
     .tag {
@@ -66,13 +63,13 @@
       background-color: white;
       color: black;
     }
-  </style>
 
-  </style>
+    .card .main .e-icon {
+      width: calc(var(--card-icon-size)*2);
+      height: calc(var(--card-icon-size)*2);
 
-  <script>
-    // window.loadComponent('u-colorpick', '/sfc/');
-  </script>
+    }
+  </style>
 
 </head>
 
@@ -99,7 +96,8 @@
 
     <span class="gap"></span>
     <svg id="themebutton" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
-      <path fill="white" d="M24 1c-13 0-23 10-23 23s10 23 23 23s23-11 23-23s-11-23-23-23z M24 43V5c10 0 19 10 19 19s-9 19-19 19z" />
+      <path fill="white"
+        d="M24 1c-13 0-23 10-23 23s10 23 23 23s23-11 23-23s-11-23-23-23z M24 43V5c10 0 19 10 19 19s-9 19-19 19z" />
     </svg>
   </nav>
 
@@ -132,13 +130,13 @@
     <p>Normal floating text with <a href="#">links</a>.</p>
     <h4>Colors:</h4>
     <p style="background-color: var(--code-back);">
-      text: <u-colorpick cssvar="color"></u-colorpick>
-      background: <u-colorpick cssvar="back"></u-colorpick>
-      card-back: <u-colorpick cssvar="card-back"></u-colorpick>
-      card-head: <u-colorpick cssvar="card-head"></u-colorpick>
-      card-head-active: <u-colorpick cssvar="card-head-active"></u-colorpick>
-      code: <u-colorpick cssvar="code"></u-colorpick>
-      focus: <u-colorpick cssvar="focus"></u-colorpick>
+      text: <u-color cssvar="color"></u-color>
+      background: <u-color cssvar="back"></u-color>
+      card-back: <u-color cssvar="card-back"></u-color>
+      card-head: <u-color cssvar="card-head"></u-color>
+      card-head-active: <u-color cssvar="card-head-active"></u-color>
+      code: <u-color cssvar="code"></u-color>
+      focus: <u-color cssvar="focus"></u-color>
     </p>
 
     <table id="colorsample" style="color-scheme:light">
@@ -254,7 +252,7 @@
 
       <div class="card active" u-control="timer" microID="${id}" u-is="timer">
         <div class="header">
-          <svg class="icon">
+          <svg>
             <use href="/icons.svg#timer" />
           </svg>
           <h3 u-text="title">{h3} Title here.</h3>
@@ -321,7 +319,7 @@
 
       <div class="card">
         <div class="header">
-          <svg class="icon">
+          <svg>
             <use href="/icons.svg#timer" />
           </svg>
           <h3>.header</h3>
@@ -337,7 +335,7 @@
 
       <div class="card small active">
         <div class="header">
-          <svg class="icon">
+          <svg>
             <use href="/icons.svg#timer" />
           </svg>
           <h3>h3-text</h3>
@@ -352,7 +350,7 @@
 
       <div class="card small">
         <div class="header">
-          <svg class="icon">
+          <svg>
             <use href="/icons.svg#timer" />
           </svg>
           <h3>.header</h3>
@@ -366,10 +364,13 @@
       </div>
 
       <div class="card small">
-        <div class="main">
-          <svg class="icon small">
+        <div class="header">
+          <svg>
             <use href="/icons.svg#timer" />
           </svg>
+          <h3>.header</h3>
+        </div>
+        <div class="main">
           <h3>.icon.small</h3>
           <div u-is="input" u-active="value">
             <span class="down">off</span>
@@ -431,420 +432,420 @@
     <div class="card-container col365">
       <div class="card small">
         <div class="main">
-          <h3>add</h3><svg class="icon">
+          <h3>add</h3><svg class="e-icon">
             <use href="/icons.svg#add" />
           </svg>
         </div>
       </div>
       <div class="card small">
         <div class="main">
-          <h3>analog</h3><svg class="icon">
+          <h3>analog</h3><svg class="e-icon">
             <use href="/icons.svg#analog" />
           </svg>
         </div>
       </div>
       <div class="card small">
         <div class="main">
-          <h3>and</h3><svg class="icon">
+          <h3>and</h3><svg class="e-icon">
             <use href="/icons.svg#and" />
           </svg>
         </div>
       </div>
       <div class="card small">
         <div class="main">
-          <h3>bme680</h3><svg class="icon">
+          <h3>bme680</h3><svg class="e-icon">
             <use href="/icons.svg#bme680" />
           </svg>
         </div>
       </div>
       <div class="card small">
         <div class="main">
-          <h3>bmp280</h3><svg class="icon">
+          <h3>bmp280</h3><svg class="e-icon">
             <use href="/icons.svg#bmp280" />
           </svg>
         </div>
       </div>
       <div class="card small">
         <div class="main">
-          <h3>bulb</h3><svg class="icon">
+          <h3>bulb</h3><svg class="e-icon">
             <use href="/icons.svg#bulb" />
           </svg>
         </div>
       </div>
       <div class="card small">
         <div class="main">
-          <h3>button</h3><svg class="icon">
+          <h3>button</h3><svg class="e-icon">
             <use xlink:href="/icons.svg#button" />
           </svg>
         </div>
       </div>
       <div class="card small">
         <div class="main">
-          <h3>config</h3><svg class="icon">
+          <h3>config</h3><svg class="e-icon">
             <use xlink:href="/icons.svg#config" />
           </svg>
         </div>
       </div>
       <div class="card small">
         <div class="main">
-          <h3>dcftime</h3><svg class="icon">
+          <h3>dcftime</h3><svg class="e-icon">
             <use xlink:href="/icons.svg#dcftime" />
           </svg>
         </div>
       </div>
       <div class="card small">
         <div class="main">
-          <h3>default</h3><svg class="icon">
+          <h3>default</h3><svg class="e-icon">
             <use xlink:href="/icons.svg#default" />
           </svg>
         </div>
       </div>
       <div class="card small">
         <div class="main">
-          <h3>device</h3><svg class="icon">
+          <h3>device</h3><svg class="e-icon">
             <use xlink:href="/icons.svg#device" />
           </svg>
         </div>
       </div>
       <div class="card small">
         <div class="main">
-          <h3>dht</h3><svg class="icon">
+          <h3>dht</h3><svg class="e-icon">
             <use xlink:href="/icons.svg#dht" />
           </svg>
         </div>
       </div>
       <div class="card small">
         <div class="main">
-          <h3>digitalin</h3><svg class="icon">
+          <h3>digitalin</h3><svg class="e-icon">
             <use xlink:href="/icons.svg#digitalin" />
           </svg>
         </div>
       </div>
       <div class="card small">
         <div class="main">
-          <h3>digitalout</h3><svg class="icon">
+          <h3>digitalout</h3><svg class="e-icon">
             <use xlink:href="/icons.svg#digitalout" />
           </svg>
         </div>
       </div>
       <div class="card small">
         <div class="main">
-          <h3>displaybar</h3><svg class="icon">
+          <h3>displaybar</h3><svg class="e-icon">
             <use xlink:href="/icons.svg#displaybar" />
           </svg>
         </div>
       </div>
       <div class="card small">
         <div class="main">
-          <h3>displaydot</h3><svg class="icon">
+          <h3>displaydot</h3><svg class="e-icon">
             <use xlink:href="/icons.svg#displaydot" />
           </svg>
         </div>
       </div>
       <div class="card small">
         <div class="main">
-          <h3>displaylcd</h3><svg class="icon">
+          <h3>displaylcd</h3><svg class="e-icon">
             <use xlink:href="/icons.svg#displaylcd" />
           </svg>
         </div>
       </div>
       <div class="card small">
         <div class="main">
-          <h3>displayline</h3><svg class="icon">
+          <h3>displayline</h3><svg class="e-icon">
             <use xlink:href="/icons.svg#displayline" />
           </svg>
         </div>
       </div>
       <div class="card small">
         <div class="main">
-          <h3>displaysh1106</h3><svg class="icon">
+          <h3>displaysh1106</h3><svg class="e-icon">
             <use xlink:href="/icons.svg#displaysh1106" />
           </svg>
         </div>
       </div>
       <div class="card small">
         <div class="main">
-          <h3>displayssd1306</h3><svg class="icon">
+          <h3>displayssd1306</h3><svg class="e-icon">
             <use xlink:href="/icons.svg#displayssd1306" />
           </svg>
         </div>
       </div>
       <div class="card small">
         <div class="main">
-          <h3>displaytext</h3><svg class="icon">
+          <h3>displaytext</h3><svg class="e-icon">
             <use xlink:href="/icons.svg#displaytext" />
           </svg>
         </div>
       </div>
       <div class="card small">
         <div class="main">
-          <h3>door</h3><svg class="icon">
+          <h3>door</h3><svg class="e-icon">
             <use xlink:href="/icons.svg#door" />
           </svg>
         </div>
       </div>
       <div class="card small">
         <div class="main">
-          <h3>dallas</h3><svg class="icon">
+          <h3>dallas</h3><svg class="e-icon">
             <use xlink:href="/icons.svg#dallas" />
           </svg>
         </div>
       </div>
       <div class="card small">
         <div class="main">
-          <h3>dstime</h3><svg class="icon">
+          <h3>dstime</h3><svg class="e-icon">
             <use xlink:href="/icons.svg#dstime" />
           </svg>
         </div>
       </div>
       <div class="card small">
         <div class="main">
-          <h3>edit</h3><svg class="icon">
+          <h3>edit</h3><svg class="e-icon">
             <use xlink:href="/icons.svg#edit" />
           </svg>
         </div>
       </div>
       <div class="card small">
         <div class="main">
-          <h3>element</h3><svg class="icon">
+          <h3>element</h3><svg class="e-icon">
             <use xlink:href="/icons.svg#element" />
           </svg>
         </div>
       </div>
       <div class="card small">
         <div class="main">
-          <h3>ide</h3><svg class="icon">
+          <h3>ide</h3><svg class="e-icon">
             <use xlink:href="/icons.svg#ide" />
           </svg>
         </div>
       </div>
       <div class="card small">
         <div class="main">
-          <h3>led</h3><svg class="icon">
+          <h3>led</h3><svg class="e-icon">
             <use xlink:href="/icons.svg#led" />
           </svg>
         </div>
       </div>
       <div class="card small">
         <div class="main">
-          <h3>log</h3><svg class="icon">
+          <h3>log</h3><svg class="e-icon">
             <use xlink:href="/icons.svg#log" />
           </svg>
         </div>
       </div>
       <div class="card small">
         <div class="main">
-          <h3>max7219</h3><svg class="icon">
+          <h3>max7219</h3><svg class="e-icon">
             <use xlink:href="/icons.svg#max7219" />
           </svg>
         </div>
       </div>
       <div class="card small">
         <div class="main">
-          <h3>menu</h3><svg class="icon">
+          <h3>menu</h3><svg class="e-icon">
             <use xlink:href="/icons.svg#menu" />
           </svg>
         </div>
       </div>
       <div class="card small">
         <div class="main">
-          <h3>minus</h3><svg class="icon">
+          <h3>minus</h3><svg class="e-icon">
             <use xlink:href="/icons.svg#minus" />
           </svg>
         </div>
       </div>
       <div class="card small">
         <div class="main">
-          <h3>neo</h3><svg class="icon">
+          <h3>neo</h3><svg class="e-icon">
             <use xlink:href="/icons.svg#neo" />
           </svg>
         </div>
       </div>
       <div class="card small">
         <div class="main">
-          <h3>no</h3><svg class="icon">
+          <h3>no</h3><svg class="e-icon">
             <use xlink:href="/icons.svg#no" />
           </svg>
         </div>
       </div>
       <div class="card small">
         <div class="main">
-          <h3>ntptime</h3><svg class="icon">
+          <h3>ntptime</h3><svg class="e-icon">
             <use xlink:href="/icons.svg#ntptime" />
           </svg>
         </div>
       </div>
       <div class="card small">
         <div class="main">
-          <h3>ota</h3><svg class="icon">
+          <h3>ota</h3><svg class="e-icon">
             <use xlink:href="/icons.svg#ota" />
           </svg>
         </div>
       </div>
       <div class="card small">
         <div class="main">
-          <h3>pin</h3><svg class="icon">
+          <h3>pin</h3><svg class="e-icon">
             <use xlink:href="/icons.svg#pin" />
           </svg>
         </div>
       </div>
       <div class="card small">
         <div class="main">
-          <h3>pined</h3><svg class="icon">
+          <h3>pined</h3><svg class="e-icon">
             <use xlink:href="/icons.svg#pined" />
           </svg>
         </div>
       </div>
       <div class="card small">
         <div class="main">
-          <h3>plus</h3><svg class="icon">
+          <h3>plus</h3><svg class="e-icon">
             <use xlink:href="/icons.svg#plus" />
           </svg>
         </div>
       </div>
       <div class="card small">
         <div class="main">
-          <h3>pms</h3><svg class="icon">
+          <h3>pms</h3><svg class="e-icon">
             <use xlink:href="/icons.svg#pms" />
           </svg>
         </div>
       </div>
       <div class="card small">
         <div class="main">
-          <h3>power</h3><svg class="icon">
+          <h3>power</h3><svg class="e-icon">
             <use xlink:href="/icons.svg#power" />
           </svg>
         </div>
       </div>
       <div class="card small">
         <div class="main">
-          <h3>pwmout</h3><svg class="icon">
+          <h3>pwmout</h3><svg class="e-icon">
             <use xlink:href="/icons.svg#pwmout" />
           </svg>
         </div>
       </div>
       <div class="card small">
         <div class="main">
-          <h3>radio</h3><svg class="icon">
+          <h3>radio</h3><svg class="e-icon">
             <use xlink:href="/icons.svg#radio" />
           </svg>
         </div>
       </div>
       <div class="card small">
         <div class="main">
-          <h3>reload</h3><svg class="icon">
+          <h3>reload</h3><svg class="e-icon">
             <use xlink:href="/icons.svg#reload" />
           </svg>
         </div>
       </div>
       <div class="card small">
         <div class="main">
-          <h3>remove</h3><svg class="icon">
+          <h3>remove</h3><svg class="e-icon">
             <use xlink:href="/icons.svg#remove" />
           </svg>
         </div>
       </div>
       <div class="card small">
         <div class="main">
-          <h3>remote</h3><svg class="icon">
+          <h3>remote</h3><svg class="e-icon">
             <use xlink:href="/icons.svg#remote" />
           </svg>
         </div>
       </div>
       <div class="card small">
         <div class="main">
-          <h3>rfsend</h3><svg class="icon">
+          <h3>rfsend</h3><svg class="e-icon">
             <use xlink:href="/icons.svg#rfsend" />
           </svg>
         </div>
       </div>
       <div class="card small">
         <div class="main">
-          <h3>rotary</h3><svg class="icon">
+          <h3>rotary</h3><svg class="e-icon">
             <use xlink:href="/icons.svg#rotary" />
           </svg>
         </div>
       </div>
       <div class="card small">
         <div class="main">
-          <h3>schedule</h3><svg class="icon">
+          <h3>schedule</h3><svg class="e-icon">
             <use xlink:href="/icons.svg#schedule" />
           </svg>
         </div>
       </div>
       <div class="card small">
         <div class="main">
-          <h3>serialcmd</h3><svg class="icon">
+          <h3>serialcmd</h3><svg class="e-icon">
             <use xlink:href="/icons.svg#serialcmd" />
           </svg>
         </div>
       </div>
       <div class="card small">
         <div class="main">
-          <h3>socket</h3><svg class="icon">
+          <h3>socket</h3><svg class="e-icon">
             <use xlink:href="/icons.svg#socket" />
           </svg>
         </div>
       </div>
       <div class="card small">
         <div class="main">
-          <h3>ssdp</h3><svg class="icon">
+          <h3>ssdp</h3><svg class="e-icon">
             <use xlink:href="/icons.svg#ssdp" />
           </svg>
         </div>
       </div>
       <div class="card small">
         <div class="main">
-          <h3>start</h3><svg class="icon">
+          <h3>start</h3><svg class="e-icon">
             <use xlink:href="/icons.svg#start" />
           </svg>
         </div>
       </div>
       <div class="card small">
         <div class="main">
-          <h3>stop</h3><svg class="icon">
+          <h3>stop</h3><svg class="e-icon">
             <use xlink:href="/icons.svg#stop" />
           </svg>
         </div>
       </div>
       <div class="card small">
         <div class="main">
-          <h3>switch</h3><svg class="icon">
+          <h3>switch</h3><svg class="e-icon">
             <use xlink:href="/icons.svg#switch" />
           </svg>
         </div>
       </div>
       <div class="card small">
         <div class="main">
-          <h3>time</h3><svg class="icon">
+          <h3>time</h3><svg class="e-icon">
             <use xlink:href="/icons.svg#time" />
           </svg>
         </div>
       </div>
       <div class="card small">
         <div class="main">
-          <h3>timer</h3><svg class="icon">
+          <h3>timer</h3><svg class="e-icon">
             <use xlink:href="/icons.svg#timer" />
           </svg>
         </div>
       </div>
       <div class="card small">
         <div class="main">
-          <h3>value</h3><svg class="icon">
+          <h3>value</h3><svg class="e-icon">
             <use xlink:href="/icons.svg#value" />
           </svg>
         </div>
       </div>
       <div class="card small">
         <div class="main">
-          <h3>washing</h3><svg class="icon">
+          <h3>washing</h3><svg class="e-icon">
             <use xlink:href="/icons.svg#washing" />
           </svg>
         </div>
       </div>
       <div class="card small">
         <div class="main">
-          <h3>weatherfeed</h3><svg class="icon">
+          <h3>weatherfeed</h3><svg class="e-icon">
             <use xlink:href="/icons.svg#weatherfeed" />
           </svg>
         </div>
@@ -878,7 +879,7 @@
     });
 
 
-   function checkDefaultParameter(a, b = 8) {
+    function checkDefaultParameter(a, b = 8) {
       var result = (b === 8) ? 'valid' : 'invalid';
       document.querySelector('#checkDefault').classList.add(result);
     }

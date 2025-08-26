@@ -25,7 +25,7 @@ body {
   padding: 0;
   font-family: arial, ui-sans-serif, sans-serif;
   font-size: 1rem;
-  line-height: 1.2rem;
+  line-height: 1.2;
   color: var(--color);
   background-color: var(--back);
 }
@@ -471,7 +471,7 @@ body.sitelayout footer {
   --card-gap: 10px;
   width: 1490px;
 }
-@container main (width <= 1490px) {
+@container main (width <=1490px) {
   .card-container.col365 {
     width: 1115px;
   }
@@ -514,6 +514,13 @@ body.sitelayout footer {
   width: calc((var(--card-width) - var(--card-gap)) / 2);
   height: calc((var(--card-height) - var(--card-gap)) / 2);
 }
+.card.small .header {
+  min-height: calc(1em + 2 * var(--card-padding));
+}
+.card.small .header > svg:first-child,
+.card.small .header > img:first-child {
+  height: 1.2em;
+}
 .card.shadow {
   box-shadow: var(--dropshadow);
 }
@@ -524,11 +531,6 @@ body.sitelayout footer {
   height: var(--card-image-size);
   object-fit: cover;
 }
-.card > svg:first-child.xicon,
-.card > img:first-child.xicon {
-  width: 2.75em;
-  height: 2.75em;
-}
 .card .header {
   grid-area: header;
   background-color: var(--card-head);
@@ -538,8 +540,8 @@ body.sitelayout footer {
 }
 .card .header h3,
 .card .header h4 {
-  display: inline-block;
   margin: 0;
+  clear: none;
 }
 .card .header > svg:first-child,
 .card .header > img:first-child {
