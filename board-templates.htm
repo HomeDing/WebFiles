@@ -1,5 +1,5 @@
 <div class="card" u-control="air" id="${id}" microID="${id}" u-is="generic">
-  <div u-is="include" ref=".cHead"></div>
+  <u-include ref="#cardHeader"></u-include>
   <hr />
   <div class="main" style="display: flex;flex-wrap: wrap;column-gap: 1rem;">
     <div style="flex: 1;min-width:8rem;text-align:center;display:none" u-display="temperature">
@@ -26,7 +26,7 @@
 </div>
 
 <div class="card" u-control="dallas" id="${id}" microID="${id}" u-is="generic">
-  <div u-is="include" ref=".cHead"></div>
+  <u-include ref="#cardHeader"></u-include>
   <hr />
   <div class="main" style="display: flex;">
     <div style="flex: 1">
@@ -37,7 +37,7 @@
 </div>
 
 <form method="dialog" class="card" u-control="timer" microID="${id}" u-is="timer">
-  <div u-is="include" ref=".cHead"></div>
+  <u-include ref="#cardHeader"></u-include>
   <span class="u-bool ux-value" u-active="value" style="top:2rem;"></span>
   <fieldset class="block btn-group">
     <legend>Mode</legend>
@@ -64,7 +64,7 @@
 </div>
 
 <div class="card" u-control="digitalvalue" microID="${id}" u-is="generic">
-  <div u-is="include" ref=".cHead"></div>
+  <u-include ref="#cardHeader"></u-include>
   <div class="main">
     <span class="u-bool ux-value" u-active="value" style="position: absolute;top:0.5rem;right:0.5rem"></span>
     <div class="form-grid"><label>Value:</label><output u-text="value"></output></div>
@@ -72,7 +72,7 @@
 </div>
 
 <div class="card" u-control="reference" microID="${id}" u-is="generic">
-  <div u-is="include" ref=".cHead"></div>
+  <u-include ref="#cardHeader"></u-include>
   <div class="main">
     <span class="u-bool ux-value" u-active="value" style="position: absolute;top:0.5rem;right:0.5rem"></span>
     <div class="form-grid">
@@ -83,7 +83,7 @@
 </div>
 
 <div class="card" u-control="pwmout" u-is="pwmout" microID="${id}">
-  <div u-is="include" ref=".cHead"></div>
+  <u-include ref="#cardHeader"></u-include>
   <div class="main" style="position: relative;min-height: 5rem">
     <span class="ux-levelbar ux-value"></span>
     <div style="font-size: 2rem"><span u-text="value"></span> / <span u-text="range"></span></div>
