@@ -213,28 +213,32 @@ none.
 
 ## Size matters
 
-When designing HTML areas for reading text,\
-it's important to consider both the width of the text container and the text size to ensure readability and a comfortable reading experience.
+When designing HTML areas for reading text, it's important to consider both the width of
+the text container and the text size to ensure readability and a comfortable reading
+experience.
 
-`Width` —- A line length of 50-75 characters per line, including spaces is considered for a good reading.  The standard
-width of the main area is therefore set to 42em ~ 672px including some padding resulting in about 80 characters.  This size also
-is usable on almost all mobile devices.
+`Width` —- A line length of 50-75 characters per line, including spaces is considered
+for a good reading. The standard width of the main area is therefore set to 42em ~ 672px
+including some padding resulting in about 80 characters. This size also is usable on
+almost all mobile devices.
 
-`Font Size` -— The text resolution that is defined by the default font-size on a device is not changed.  All font-sizes
-of the text containing elements are implemented by relative factors or are based on the rem units.  The line-height is
-set to 1.2 for all text.
+`Font Size` -— The text resolution that is defined by the default font-size on a device
+is not changed. All font-sizes of the text containing elements are implemented by
+relative factors or are based on the rem units. The line-height is set to 1.2 for all
+text.
 
 
 ## Color matters
 
-Unlike sizing properties, colors can be defined using CSS variables exclusively, as they don't affect element
-dimensions, positioning, or sizes.  This approach enhances the reusability of the style toolkit and enables easy
-customization of the color scheme.
+Unlike sizing properties, colors can be defined using CSS variables exclusively, as they
+don't affect element dimensions, positioning, or sizes. This approach enhances the
+reusability of the style toolkit and enables easy customization of the color scheme.
 
-The color scheme is based on the light and dark modes, which can be toggled by the user or automatically based on the
-user's preferences.
+The color scheme is based on the light and dark modes, which can be toggled by
+the user or automatically based on the user's preferences.
 
-The page-level areas have their specific coloring defined by using css variables:
+The page-level areas have their specific coloring defined by using css
+variables:
 
 ``` css
 :root {

@@ -69,9 +69,14 @@ FOR %%F IN (%_webfolder%\*.*) DO (
   curl --form "fileupload=@%%F;filename=/%%~nxF" http://%devicename%/ %_curlopts%
 )
 
-FOR %%F IN ("%_webfolder%\i\*.svg") DO (
+@REM FOR %%F IN ("%_webfolder%\i\*.svg") DO (
+@REM   echo [37m%%F[30m
+@REM   curl --form "fileupload=@%%F;filename=/i/%%~nxF" http://%devicename%/ %_curlopts%
+@REM )
+
+FOR %%F IN ("%_webfolder%\sfc\*.*") DO (
   echo [37m%%F[30m
-  curl --form "fileupload=@%%F;filename=/i/%%~nxF" http://%devicename%/ %_curlopts%
+  curl --form "fileupload=@%%F;filename=/sfc/%%~nxF" http://%devicename%/ %_curlopts%
 )
 
 echo.

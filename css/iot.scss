@@ -158,7 +158,7 @@ input.switch[type='range'] {
 .form-grid {
   display: grid;
   grid-template-columns: 12.6ch auto;
-  grid-gap: 5px;
+  gap: 5px;
   margin-bottom: 0.5rem;
 
   >* {

@@ -60,7 +60,7 @@ echo.
 set tar=%USERPROFILE%\Projects\blog\src
 echo updating files in %tar% ...
 
-robocopy sfc %tar%\sfc /S /PURGE %rcflags%
+robocopy sfc %tar%\sfc /S /PURGE %rcflags% /XD node_modules
 echo copied SFC to Blog
 
 

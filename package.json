@@ -8,10 +8,13 @@
     "type": "git",
     "url": "https://github.com/HomeDing/WebFiles.git"
   },
+  "bin": {
+    "pack-sfc": "sfc/bin/pack-sfc.js"
+  },
   "dependencies": {
     "debug": "^4.3.5",
     "express": "^5.1.0",
-    "multer": "^2.0.0",
+    "multer": "^2.0.2",
     "multicast-dns": "^7.2.5",
     "timeout-signal": "^2.0.0",
     "yargs": "^18.0.0"
@@ -33,7 +36,7 @@
     "shelljs": "^0.10.0",
     "shx": "^0.4.0",
     "stylelint": "^16.6.1",
-    "stylelint-config-standard-scss": "^15.0.1",
+    "stylelint-config-standard-scss": "^16.0.0",
     "stylelint-scss": "^6.3.1",
     "svgstore": "^3.0.1",
     "terser": "^5.31.1",
@@ -68,7 +71,8 @@
     "publish:webfiles": "cmd /C publishWebFiles.bat v10",
     "prestart": "npm run build",
     "start": "node app.js",
-    "dev": "run-p -n build:css-watch build:ts-watch start"
+    "dev": "run-p -n build:css-watch build:ts-watch start",
+    "sfc:pack": "node sfc/bin/pack-sfc.js sfc/u-toast.sfc sfc/u-linechart.sfc sfc/u-piechart.sfc sfc/u-form-*.sfc sfc/u-tablesort.sfc  -o bundle.sfc"
   },
   "files": [
     "dist",
