@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "debug": "^4.3.5",
-    "express": "^5.1.0",
+    "express": "^5.2.0",
     "multer": "^2.0.2",
     "multicast-dns": "^7.2.5",
     "timeout-signal": "^2.0.0",
