@@ -1,0 +1,58 @@
+# Dependencies
+node_modules/
+*.min.js
+*.min.css
+
+# Build outputs
+dist/
+dist-mini/
+dist-server/
+build/
+
+# Generated files
+micro.js
+micro-mini.js
+docstyle.css
+iotstyle.css
+upload.h
+bundle.sfc
+
+# SFC (handled separately)
+sfc/loader.js
+sfc/data-hub.js
+
+# IDE and editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Lock files (manage via npm/yarn)
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Temporary files
+*.log
+*.tmp
+.tmp/
+
+# Test coverage
+coverage/
+.nyc_output/
+
+# Config files that shouldn't be formatted
+.prettierignore
+.gitignore
+.eslintignore
+
+# Certificates
+certs/
+*.pem
+*.key
+*.crt

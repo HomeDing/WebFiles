@@ -27,24 +27,25 @@
     "@types/multicast-dns": "^7.2.4",
     "@types/yargs": "^17.0.32",
     "eslint": "^9.9.0",
-    "globals": "^16.0.0",
+    "globals": "^17.0.0",
     "html-minifier-terser": "^7.2.0",
     "npm-run-all2": "^8.0.3",
     "postcss": "^8.4.38",
     "postcss-scss": "^4.0.9",
-    "sass": "^1.84.0",
     "shelljs": "^0.10.0",
     "shx": "^0.4.0",
-    "stylelint": "^16.6.1",
-    "stylelint-config-standard-scss": "^16.0.0",
-    "stylelint-scss": "^6.3.1",
     "svgstore": "^3.0.1",
     "terser": "^5.31.1",
     "typescript": "^5.4.5",
     "typescript-eslint": "^8.2.0"
   },
   "peerDependencies": {
-    "sass": "^1.84.0"
+    "markdownlint": "^0.40.0",
+    "markdownlint-cli": "0.47.0",
+    "sass": "^1.97.2",
+    "stylelint": "^16.6.1",
+    "stylelint-config-standard-scss": "^16.0.0",
+    "stylelint-scss": "^6.3.1"
   },
   "scripts": {
     "all": "npm run build && npm run test && npm run pack && npm run publish",
