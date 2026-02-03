@@ -16,7 +16,7 @@
   width: 100%;
   max-width: 100%;
   background-color: var(--card-back);
-  page-break-inside: avoid;
+  break-inside: avoid;
 
   >h3 {
     margin-top: 0;

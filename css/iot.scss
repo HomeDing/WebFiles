@@ -56,6 +56,7 @@ $u-off: red;
 button,
 .button {
   display: inline-block;
+  height:1.6em;
   min-width: 6.5ch;
 
   // height: 1.4em;
@@ -85,6 +86,23 @@ button,
   &.secondary {
     background-color: base.$u-secondary;
     border-color: base.$u-secondary-text;
+  }
+
+  >svg {
+    height: 1.2em;
+    width: 1.2em;
+    vertical-align: text-top;
+    margin-right: 0.2em;
+  }
+
+  &.icon {
+    width: 1.6em;
+    min-width: unset;
+    padding: 2px;
+
+    >svg {
+      margin: 0;
+    }
   }
 }
 

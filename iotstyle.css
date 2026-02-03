@@ -628,6 +628,7 @@ body.sitelayout footer {
 button,
 .button {
   display: inline-block;
+  height: 1.6em;
   min-width: 6.5ch;
   padding: 2px 4px;
   border-radius: 4px;
@@ -656,6 +657,23 @@ button.secondary,
 .button.secondary {
   background-color: #aaaaaa;
   border-color: black;
+}
+button > svg,
+.button > svg {
+  height: 1.2em;
+  width: 1.2em;
+  vertical-align: text-top;
+  margin-right: 0.2em;
+}
+button.icon,
+.button.icon {
+  width: 1.6em;
+  min-width: unset;
+  padding: 2px;
+}
+button.icon > svg,
+.button.icon > svg {
+  margin: 0;
 }
 
 option[disabled] {
