@@ -21,7 +21,7 @@ function toBool(s: string | null) {
 
 // convert a string to a duration or time value from various formate into seconde.
 function toSeconds(v: string): number {
-  let ret = 0;
+  let ret: number;
   v = v.toLowerCase();
   if (v.endsWith('h')) {
     ret = parseInt(v, 10) * 60 * 60;

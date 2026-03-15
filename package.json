@@ -13,14 +13,15 @@
   },
   "dependencies": {
     "debug": "^4.3.5",
-    "express": "^5.1.0",
+    "express": "^5.2.1",
     "multer": "^2.0.2",
     "multicast-dns": "^7.2.5",
+    "qs": "^6.15.0",
     "timeout-signal": "^2.0.0",
     "yargs": "^18.0.0"
   },
   "devDependencies": {
-    "@eslint/js": "^9.5.0",
+    "@eslint/js": "^10.0.1",
     "@types/debug": "^4.1.12",
     "@types/express": "^5.0.0",
     "@types/multer": "^2.0.0",
@@ -45,7 +46,7 @@
   "peerDependencies": {
     "markdownlint": "^0.40.0",
     "markdownlint-cli": "^0.48.0",
-    "sass": "^1.97.2"
+    "sass": "^1.98.0"
   },
   "scripts": {
     "all": "npm run build && npm run test && npm run pack && npm run publish",
