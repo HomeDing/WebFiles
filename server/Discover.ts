@@ -85,8 +85,8 @@ export class DeviceDiscovery {
   // got a response, check for new device
   private addDevice(response: mDNS.ResponsePacket) {
     Logger.trace('Answer:', response.answers[0].name);
+    let isNew;
 
-    let isNew = true;
     const isHomeDingDevice = response.answers
       .filter((a) => (a.type === 'PTR'))
       .filter((a) => (a.name === '_homeding._tcp.local'))
