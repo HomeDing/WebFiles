@@ -19,7 +19,10 @@
   <script src="/micro.js" defer></script>
   <script src="/sfc/loader.js"></script>
   <script>
-    var allSFCLoaded = window.loadComponent('u-toast,u-linechart,u-form-json,u-include');
+    window.loadComponent('/bundle.sfc')
+      .then(() => {
+        window.loadComponent('hdw-generic,hdw-air,hdw-reference,hdw-schedule,hdw-switch,hdw-digitalvalue', '/hdw');
+      });
   </script>
   <style>
     svg.setconfig {
@@ -99,22 +102,12 @@
       </div>
     </div>
 
-    <form method="dialog" class="card" u-control="schedule" id="${id}" u-is="generic" microID="${id}">
-      <u-include ref="#cardHeader"></u-include>
-      <span class="u-bool ux-value" u-active="value" style="top:2rem;"></span>
-      <fieldset class="block btn-group">
-        <legend>Mode</legend>
-        <label><input name="mode" u-value="mode" type="radio" value="off">Off</label>
-        <label><input name="mode" u-value="mode" type="radio" value="on">On</label>
-        <label><input name="mode" u-value="mode" type="radio" value="timer">Timer</label>
-      </fieldset>
-      <div class="main">
-        <div class="form-grid">
-          <label>Start:</label><output u-text="ontime"></output>
-          <label>End:</label><output u-text="offtime"></output>
-        </div>
-      </div>
-    </form>
+    <hdw-digitalvalue class="card" u-control="digitalvalue" microID="${id}"></hdw-digitalvalue>
+    <hdw-switch class="card" u-control="switch" id="${id}" microID="${id}"></hdw-switch>
+
+    <hdw-air class="card" u-control="air" id="${id}" microID="${id}"></hdw-air>
+    <hdw-reference class="card" u-control="reference" id="${id}" microID="${id}"></hdw-reference>
+    <hdw-schedule class="card" u-control="schedule" id="${id}" microID="${id}"></hdw-schedule>
 
     <div class="card" u-control="dstime" id="${id}" u-is="dstime" microID="${id}">
       <u-include ref="#cardHeader"></u-include>
@@ -130,17 +123,6 @@
       </div>
     </div>
 
-    <div class="card" u-control="switch" id="${id}" u-is="generic" microID="${id}">
-      <u-include ref="#cardHeader"></u-include>
-      <div class="main">
-        <span class="u-bool ux-value border" u-active="value"></span>
-        <div u-is="input">
-          <span class="down">off</span>
-          <input id="${id}O" class="switch" u-value="value" type="range">
-          <span class="up">on</span>
-        </div>
-      </div>
-    </div>
 
     <div class="card" u-control="value" id="${id}" u-is="value" microID="${id}">
       <u-include ref="#cardHeader"></u-include>
@@ -148,14 +130,6 @@
         <label>value:</label>
         <span u-is="input">
           <input type="range" u-value="value"><output u-text="value"></output></span>
-      </div>
-    </div>
-
-    <div class="card" u-control="logic" id="${id}" u-is="generic" microID="${id}">
-      <u-include ref="#cardHeader"></u-include>
-      <div class="main">
-        <span class="u-bool ux-value" u-active="value"></span>
-        <div class="form-grid"><label>value:</label><output u-text="value"></output></div>
       </div>
     </div>
 
@@ -283,7 +257,9 @@
     </div>
 
     <div class="card" u-control="scene" microID="${id}" u-is="scene">
-      <div class="header"><h3>Scenes</h3></div>
+      <div class="header">
+        <h3>Scenes</h3>
+      </div>
       <div class="block form-actions"></div>
     </div>
 
@@ -411,6 +387,9 @@
                 if ((def) && (def.icon)) {
                   p.icon = def.icon;
                 }
+                // console.log('custom:', 'hdw-' + t, customElements.get('hdw-' + t));
+                // console.log('custom:', 'hdw-' + def?.ui, customElements.get('hdw-' + def?.ui));
+
                 var e = micro.insertTemplate(panelObj, t, p);
                 if (!e) {
                   t = def?.ui || 'generic';

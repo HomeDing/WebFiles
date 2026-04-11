@@ -38,10 +38,12 @@ function toSeconds(v: string): number {
 } // toSeconds()
 
 
+// set text content only if the value is different to avoid unnecessary DOM updates.
 function setTextContent(el: HTMLElement, txt: string) {
   if (el && (el.textContent !== txt)) { el.textContent = txt; }
 } // setTextContent
 
+// set an attribute only if the value is different to avoid unnecessary DOM updates.
 function setAttr(el: HTMLElement, name: string, value: string) {
   if (el && (el.getAttribute(name) !== value)) { el.setAttribute(name, value); }
 } // setAttr

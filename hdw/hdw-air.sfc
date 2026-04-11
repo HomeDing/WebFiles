@@ -1,0 +1,49 @@
+<!--
+File: hdw-air.sfc
+
+Copyright (c) 2025 by Matthias Hertel, http://www.mathertel.de
+This work is licensed under a BSD-3-Clause license. See http://www.mathertel.de/License.aspx
+
+This is a HomeDing widget implementation of sensor elements that display any of the units
+temperature,humidity, co2, pressurepressure, gas (VOC).
+
+The current values are provided by the data hub. Data binding is implemented in the
+generic widget, so the specific widget only needs to define the UI elements and the data
+keys to bind to.
+
+-->
+
+<template light>
+  <u-include ref="#cardHeader"></u-include>
+  <div class="main" style="display: flex;flex-wrap: wrap;column-gap: 1rem;">
+    <div style="flex: 1;min-width:8rem;text-align:center;display:none" u-display="temperature">
+      <div style="font-size: 2rem"><span>${temperature}</span>&deg;C</div>
+      <div>Temperature</div>
+    </div>
+    <div style="flex: 1;min-width:8rem;text-align:center;display:none" u-display="humidity">
+      <div style="font-size: 2rem"><span>${humidity}</span>%</div>
+      <div>Humidity</div>
+    </div>
+    <div style="flex: 1;min-width:8rem;text-align:center;display:none" u-display="co2">
+      <div style="font-size: 2rem"><span>${}</span></div>
+      <div>CO2 (ppm)</div>
+    </div>
+    <div style="flex: 1;min-width:8rem;text-align:center;display:none" u-display="pressure">
+      <div style="font-size: 2rem"><span>${pressure}</span></div>
+      <div>Pressure</div>
+    </div>
+    <div style="flex: 1;min-width:8rem;text-align:center;display:none" u-display="gas">
+      <div style="font-size: 2rem"><span>${gas}</span></div>
+      <div>VOC</div>
+    </div>
+  </div>
+</template>
+
+
+<script>
+  // subclassing the generic hardware widget
+  // adding the air quality elements specific UI.
+  // the generic widget will take care of fetching the data and updating the UI. 
+  export default class HDWAir extends HDWGeneric {
+  } // HDWAir class
+</script>

@@ -7,9 +7,13 @@ import { VirtualBaseElement } from './VirtualBaseElement.js';
 
 export class MockSwitch extends VirtualBaseElement {
   async doAction(action: { [key: string]: any }) {
+    const v = this.state.value;
     if (action.value != null) { this.state.value = action.value; }
     if (action.toggle != null) { this.state.value = (this.state.value ? 0 : 1); }
     super.doAction(action);
+    if (v !== this.state.value) {
+      this.eventBus.queueEvents(this.config.onvalue, String(this.state.value));
+    }
   }
 } // MockSwitch
 

@@ -1,8 +1,8 @@
 {
   "dht": {
     "on": {
-      "type": "DHT22",
       "description": "Temperature and Humidity sensor",
+      "sensor": "DHT22",
       "pin": "D5",
       "readtime": "60s",
       "ontemperature": "log/temp?value=$v,reference/temp?value=$v",
@@ -27,7 +27,8 @@
       "title": "target temp",
       "onreference": "digitalout/heater?value=$v",
       "inverse": "true",
-      "value": "1"
+      "reference": "20",
+      "value": "31"
     }
   },
   "digitalout": {
@@ -45,7 +46,7 @@
       "title": "target temp",
       "min": "12",
       "max": "40",
-      "value": "22",
+      "value": "21",
       "onvalue": "reference/temp?reference=$v"
     }
   }

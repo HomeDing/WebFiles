@@ -1,0 +1,34 @@
+<!--
+File: hdw-reference.sfc
+
+Copyright (c) 2025 by Matthias Hertel, http://www.mathertel.de
+This work is licensed under a BSD-3-Clause license. See http://www.mathertel.de/License.aspx
+
+This is a HomeDing widget implementation of the reference element.
+
+The current values are provided by the data hub. Data binding is implemented in the
+generic widget, so the specific widget only needs to define the UI elements and the data
+keys to bind to.
+
+-->
+
+<template light>
+  <u-include ref="#cardHeader"></u-include>
+  <div class="main">
+    <span class="u-bool ux-value" u-active="value"></span>
+    <div class="form-grid">
+      <label>Reference:</label><output u-value="reference"></output>
+      <label>Input:</label><output u-value="invalue"></output>
+      <label>Value:</label><output u-value="value"></output>
+    </div>
+  </div>
+</template>
+
+
+<script>
+  // subclassing the generic hardware widget
+  // adding the reference element specific UI.
+  // the generic widget will take care of fetching the data and updating the UI. 
+  export default class HDWReference extends HDWGeneric {
+  } // HDWReference class
+</script>

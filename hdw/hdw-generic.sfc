@@ -1,0 +1,289 @@
+<!--
+File: hdw-generic.sfc
+
+Copyright (c) 2025 by Matthias Hertel, http://www.mathertel.de
+This work is licensed under a BSD-3-Clause license. See http://www.mathertel.de/License.aspx
+
+This is a generic widget that can be used as a base for specific hardware widgets, e.g.
+for air quality, energy, etc.
+
+It implements the basic functionality for data binding and action dispatching to the
+board.
+
+-->
+
+<template light>
+  <u-include ref="#cardHeader"></u-include>
+</template>
+
+
+<script>
+  // === Generic HomeDing Widget ===
+  class HDWGeneric extends UComponent {
+    static observedAttributes = ["microid"];
+
+    _microid;
+    data;
+    actions = [];
+    bindings = [];
+    subId;
+
+    static idc = 42;
+
+    // create a unique id for an object if it doesn't have one and return it.
+    uid(obj) {
+      if (!obj.id) {
+        obj.id = 'o' + (HDWGeneric.idc++);
+      }
+      return (obj.id);
+    }
+
+    connectedCallback() {
+      console.debug('hdw-generic', 'connected()');
+      super.connectedCallback();
+
+      // for label+input pairs, the label is attached to the input element by setting the for attribute to the id of the input element.
+      // If the label does not have a for attribute, it is assumed to be the previous sibling of the input element.
+      this.querySelectorAll('label:not([for])+input').forEach(iObj => {
+        const lObj = iObj.previousElementSibling;
+        lObj.htmlFor = this.uid(iObj);
+      });
+
+      // This also works for inputs wrapped in a div, e.g. for styling purposes.
+      this.querySelectorAll('label:not([for])+div input').forEach(iObj => {
+        const lObj = iObj.parentElement?.previousElementSibling;
+        lObj.htmlFor = this.uid(iObj);
+      });
+
+      this.bindings = this._findPlaceholders(this);
+      console.log("placeholders.connected", this.tagName, this.bindings);
+
+      // initial dataset for the widget
+      this.data = { id: this._microid, type: this._microid ? this._microid.split('/')[1] : '' };
+      this.subId = hub.subscribe(this._microid + '?*', this.newData.bind(this));
+      this._setPlaceholders(this.data); // set id and type placeholders immediately
+      hub.replay(this.subId); // add any other data for this widget that is already available in the hub
+    } // connectedCallback
+
+
+    /**
+     * find objects with placeholders like ${name} in the attribute for databinding.
+     * return array of { obj, attr, templ } for each attribute with placeholders found.
+     * @param {Node} obj
+     */
+    _findPlaceholders(obj) {
+      const result = [];
+
+      if (obj.nodeType === Node.TEXT_NODE) {
+        if ((obj.textContent) && obj.textContent.indexOf('${') >= 0) {
+          result.push({ obj: obj, attr: 'textContent', templ: obj.textContent });
+        }
+
+      } else if (obj.nodeType === Node.ELEMENT_NODE) {
+        const attr = obj.attributes;
+
+        for (let i = 0; i < attr.length; i++) {
+          const v = attr[i].value;
+          if (v.indexOf('${') >= 0) {
+            result.push({ obj: obj, attr: attr[i].name, templ: v });
+          } // if
+        } // for
+
+        obj.childNodes.forEach(c => {
+          result.push(...this._findPlaceholders(c));
+        });
+      }
+      return (result);
+    } // _findPlaceholders
+
+    /**
+     * replace placeholders like ${name} with the corresponding attribute or textContent value.
+     * @param {Object} data - the data object with the values for the placeholders, e.g. { temperature: 22.5 }
+     * @param {string} key - the key of the property that has changed, used for optimization to only update the placeholders that depend on this key.
+     */
+    _setPlaceholders(data, key) {
+      for (const ph of this.bindings) {
+        if ((key === undefined) || (ph.templ.indexOf('${' + key + '}') >= 0)) {
+          let v = ph.templ;
+          Object.getOwnPropertyNames(data).forEach(p => v = v.replace(new RegExp('\\$\\{' + p + '\\}', 'g'), data[p]));
+
+          if (ph.attr === 'textContent') {
+            if (ph.obj.textContent !== v) {
+              ph.obj.textContent = v;
+            }
+          } else if (ph.obj[ph.attr] && ph.obj[ph.attr].baseVal !== undefined) {
+            // svg animated attribute
+            ph.obj[ph.attr].baseVal = v;
+
+          } else {
+            ph.obj.setAttribute(ph.attr, v);
+          }
+        }
+      } // for
+    } // _setPlaceholders
+
+
+    // visualize any new data for the widget.
+    newData(_path, key, value) {
+      // save all data to title
+      this.data[key] = value;
+      const ic = this.querySelector('h1,h3,img');
+      if (ic) {
+        setAttr(ic, 'title', JSON.stringify(this.data, null, 1).replaceAll(/(^{\n)|(\n})|(^ )/mg, ''));
+      }
+
+      // active card
+      if (key === 'active') {
+        this.classList.toggle('active', toBool(value));
+      }
+
+      // u-active flags
+      this.querySelectorAll(`span[u-active='${key}'], div[u-active='${key}']`)
+        .forEach(elem => {
+          const b = toBool(value);
+          setAttr(elem, 'value', b ? '1' : '0');
+          setAttr(elem, 'title', b ? 'active' : 'not active');
+          elem.classList.toggle('active', b);
+        });
+
+      // u-display: set visibility of any object using style.display
+      this.querySelectorAll(`*[u-display='${key}']`).forEach(elem => {
+        (elem).style.display = (value ? '' : 'none');
+      });
+
+      // u-text: set textContent of any element, e.g. span, div, h1, etc.
+      this.querySelectorAll(`*[u-text='${key}']`).forEach(elem => {
+        if (elem.textContent !== value) { elem.textContent = value; }
+      });
+
+      // u-value: set value of input, output and select fields
+      this.querySelectorAll(`*[u-value='${key}']`)
+        .forEach(elem => {
+          if (elem.type === 'radio') {
+            elem.checked = elem.value === value;
+          } else if (elem.value !== value) {
+            elem.value = value ? value : '';
+          }
+        });
+
+      // u-color: set BackgroundColor, value can be in format #RRGGBB or xRRGGBB (without #)
+      this.querySelectorAll(`span[u-color='${key}']`).forEach(function(elem) {
+        let col = value ? value.replace(/^x/, '#') : '#888';
+        col = col.replace(/^#\S{2}(\S{6})$/, '#$1');
+        (elem).style.backgroundColor = col;
+      });
+
+      this._setPlaceholders(this.data, key);
+    } // newData()
+
+    /// @brief values registered as observedAttributes got changed 
+    attributeChangedCallback(name, oldValue, newValue) {
+      console.debug(this.tagName, "attributeChanged", name, oldValue, newValue);
+
+      if (oldValue !== newValue) {
+        if (name === "microid") {
+          this._microid = newValue;
+        }
+      }
+
+    } // attributeChangedCallback()
+
+    dispatchNext() {
+      if (this.actions) {
+        const a = this.actions.shift();
+        if (a) {
+          // assume format "/type/id?action=value", value needs to be encoded correctly
+          // encode all special chars after = character.
+          const aa = a.split('=');
+          const aUrl = aa[0] + '=' + encodeURIComponent(aa[1]);
+          fetch(aUrl).then(() => {
+            if (this.actions.length > 0) {
+              debounce(this.dispatchNext.bind(this))();
+            } else {
+              // @ts-ignore
+              try { window.updateState(); } catch { }
+            } // if
+          });
+        }
+      }
+    } // dispatchNext()
+
+
+    // send an action to the board and dispatch to the element
+    dispatchAction(prop, val) {
+      let action = undefined;
+
+      if (prop && val) {
+        if (prop.includes('/')) {
+          // list of actions with optional value placeholder
+          prop = prop.replace('${v}', encodeURI(val));
+          prop.split(',').forEach((a) => {
+            if (!a.startsWith('/')) { a = '/' + a; }
+            action = '/api/state' + a;
+          });
+        } else {
+          // simple set one property to this element
+          action = `/api/state${this._microid}?${prop}=${encodeURI(val)}`;
+        }
+        if (action) {
+          if ((this.actions.length == 0) || (action !== this.actions[this.actions.length - 1])) {
+            this.actions.push(action);
+          };
+        }
+        debounce(this.dispatchNext.bind(this))();
+      }
+    } // dispatchAction()
+
+    showSys() {
+      const p = getHashParams({ sys: false }).sys;
+      return (toBool(p));
+    }
+
+
+    // send changed value of property as an action to the board
+    onchange(e) {
+      const src = e.target;
+      const units = src.getAttribute('u-units');
+      this.dispatchAction(src.getAttribute('u-value'), src.value + (units ? units : ''));
+    }
+
+    // send an action to the board
+    // + change config mode
+    on_click(event) {
+      const chain = [];
+      // let n: HTMLElement | null = event.target
+      // while (n) {
+      //   chain.push(n);
+      //   if (n === this) { break; }
+      //   n = n.parentElement;
+      // }
+
+      // chain.every(p => {
+      //   let ret = false;
+      //   if (p.getAttribute('u-action')) {
+      //     this.dispatchAction(p.getAttribute('u-action'), p.getAttribute('value') || '1');
+
+      //   } else if (p.classList.contains('setconfig')) {
+      //     const dlg = document.querySelector('#configElement') as HTMLDialogElement;
+      //     const ti = this.microid.split('/');
+      //     // @ts-ignore
+      //     dlg.showModal({ ...this.data, type: ti[1], id: ti[2] });
+
+      //   } else if (p.classList.contains('setactive')) {
+      //     this.dispatchAction(toBool(this.data.active) ? 'stop' : 'start', '1');
+
+      //   } else if (p.classList.contains('fullscreen')) {
+      //     this.requestFullscreen();
+
+      //   } else {
+      //     ret = true;
+      //   }
+      //   return (ret);
+      // });
+    }
+
+  } // HDWGeneric class
+
+  export default HDWGeneric;
+
+</script>
