@@ -40,7 +40,7 @@
     "stylelint-scss": "^7.0.0",
     "svgstore": "^3.0.1",
     "terser": "^5.31.1",
-    "typescript": "^5.4.5",
+    "typescript": "^6.0.3",
     "typescript-eslint": "^8.2.0"
   },
   "peerDependencies": {
