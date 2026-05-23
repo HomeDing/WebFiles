@@ -16,7 +16,7 @@
     "express": "^5.2.1",
     "multer": "^2.0.2",
     "multicast-dns": "^7.2.5",
-    "qs": "^6.15.0",
+    "qs": "^6.15.2",
     "timeout-signal": "^2.0.0",
     "yargs": "^18.0.0"
   },
