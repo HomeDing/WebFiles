@@ -174,5 +174,4 @@ export async function fetchText(url: string, options: object) {
   return (p);
 }
 
-console.log('utils.ts loaded', fetchJSON);
 // End

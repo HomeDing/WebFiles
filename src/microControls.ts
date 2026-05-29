@@ -1,4 +1,4 @@
-// moved to micro.ts
+// MicroControls.ts
 
 export interface MicroControlClass extends HTMLElement {
   _attachedBehavior: MicroControlClass | undefined;

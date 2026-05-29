@@ -50,14 +50,14 @@
   },
 
   "and": {
-    "ui": "logic",
+    "ui": "digitalvalue",
     "properties": ["invert"],
     "actions": ["value[n]"],
     "events": ["onvalue"]
   },
 
   "or": {
-    "ui": "logic",
+    "ui": "digitalvalue",
     "properties": ["invert"],
     "actions": ["value[n]"],
     "events": ["onvalue"]

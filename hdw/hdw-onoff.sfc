@@ -1,0 +1,87 @@
+<!--
+File: hdw-onoff.sfc
+
+Copyright (c) 2025 by Matthias Hertel, http://www.mathertel.de
+This work is licensed under a BSD-3-Clause license. See http://www.mathertel.de/License.aspx
+
+Implementation of a range or switch UI element using a input element.
+
+
+Example: <hdw-onoff> <button>...</button> <div>...</div> </hdw-onoff>
+-->
+
+<template light>
+  <span class="down">off</span>
+  <input class="switch" type="range" min="0" max="1" step="1">
+  <span class="up">on</span>
+</template>
+
+<style>
+</style>
+
+<script>
+  export default class UOnOff extends UComponent {
+    static observedAttributes = ["value"];
+
+    _value = 0;
+    _input;
+    _on;
+    _off;
+
+    constructor(p) {
+      super();
+      console.debug('OnOff', "constructor", this.value);
+      
+      this._value = this.getAttribute("value") || "0";
+      this._input = this.querySelector('input');
+      this._on = this.querySelector('.up');
+      this._off = this.querySelector('.down');
+      
+      this._input.value = this._value;
+      this._input.setAttribute('u-value', this.getAttribute('u-value'))
+
+    } // constructor()
+
+
+    onclick(e) {
+      let src = e.target;
+
+      if (src === this._on) {
+        this._value = "1";
+
+      } else if (src === this._off) {
+        this._value = "0";
+
+      } else {
+        // simple clicks will toggle the value
+        this._value = String(1 - Number(this._value));
+      }
+
+      if (this._value !== this._input.value) {
+        this._input.value = this._value;
+        this._input.dispatchEvent(new Event('change', { bubbles: true }));
+      }
+      this._input.focus();
+    } // onclick()
+
+        // send changed value of property as an action to the board
+    // onchange(e) {
+    //   debugger;
+    //   super.onchange(e);
+    //   const src = e.target;
+    //   const units = src.getAttribute('u-units');
+    //   this.dispatchAction(src.getAttribute('u-value'), src.value + (units ? units : ''));
+    // }
+
+    attributeChangedCallback(name, oldValue, newValue) {
+      console.debug('OnOff', "attributeChanged", name, oldValue, newValue);
+      if (name === 'value') {
+        this._value = newValue;
+        if (this._input.value !== this._value) {
+          this._input.value = this._value;
+        }
+      }
+    } // attributeChangedCallback()
+
+  }
+</script>

@@ -18,7 +18,7 @@
   <meta name="theme-color" content="#ffffff" />
 
   <link Content-Type="text/css" href="/iotstyle.css" rel="stylesheet" />
-  <script src="/micro.js"></script>
+  <!-- <script type="module" src="/micro.js"></script> -->
   <script src="/sfc/loader.js"></script>
   <script>
     var allComponentsLoaded = window.loadComponent('u-piechart');
@@ -133,7 +133,9 @@
     </div>
   </main>
 
-  <script>
+  <script type="module">
+    import {fetchJSON} from '/micro.js';
+
     window.onerror = function(msg, url, lineNo, columnNo, error) {
       var string = msg.toLowerCase();
       var substring = 'script error';
@@ -153,9 +155,7 @@
 
       return false;
     };
-  </script>
 
-  <script>
     var memObj = document.querySelector('#meminfo');
     window.addEventListener('load', function() {
       fetchJSON('/api/sysinfo')

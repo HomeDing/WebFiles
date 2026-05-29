@@ -267,7 +267,6 @@ async function fetchText(url, options) {
   const p = fetch(url, options).then((raw) => raw.text());
   return p;
 }
-console.log("utils.ts loaded", fetchJSON);
 
 // src/microRegistry.ts
 var MicroRegistry = class {
@@ -1130,7 +1129,6 @@ TimerWidgetClass = __decorateClass([
 ], TimerWidgetClass);
 
 // src/micro-mini.ts
-console.log("micro.ts loaded");
 var obs = new MutationObserver(function(mutationsList, _observer) {
   for (const mutation of mutationsList) {
     mutation.addedNodes.forEach((n) => {

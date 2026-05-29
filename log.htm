@@ -17,7 +17,7 @@
   <link rel="manifest" href="/site.webmanifest" />
   <meta name="theme-color" content="#ffffff" />
 
-  <script src="micro.js"></script>
+  <script type="module" src="micro.js"></script>
 
   <script src="/sfc/loader.js"></script>
   <script>
@@ -59,7 +59,9 @@
     <pre class="code" id="logtext"></pre>
   </main>
 
-  <script>
+  <script type="module">
+    import { fetchText } from '/micro.js';
+
     var clearObj = document.getElementById('clearButton');
     var logTextObj = document.getElementById('logtext');
     var toastObj = document.querySelector('u-toast');

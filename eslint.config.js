@@ -9,27 +9,6 @@ export default [
   {
     plugins: {
     },
-    languageOptions: {
-      globals: {
-        ...globals.browser,
-        ...globals.node,
-        micro: "readonly",
-        MicroControl: "readonly",
-        toBool: "readonly",
-        toSeconds: "readonly",
-        createHTMLElement: "readonly",
-        GenericWidgetClass: "readonly",
-        hub: "readonly",
-        jsonFind: "readonly",
-        updateState: "readonly",
-        jsonLocate: "readonly",
-        getHashParams: "readonly",
-        DialogClass: "readonly",
-        loadComponent: "readonly"
-      }
-
-    },
-
     rules: {
       semi: [2, "always"],
 
@@ -46,7 +25,7 @@ export default [
       "@typescript-eslint/no-unused-vars": "off",
       "@typescript-eslint/no-unused-expressions": "off",
       "@typescript-eslint/no-explicit-any": "off",
-      "@typescript-eslint/ban-ts-comment": 0,
+      "@typescript-eslint/ban-ts-comment": 1,
       "@typescript-eslint/no-unsafe-declaration-merging": 0,
     },
 

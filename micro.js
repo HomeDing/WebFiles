@@ -1,6 +1,1567 @@
-var j=Object.defineProperty;var K=Object.getOwnPropertyDescriptor;var X=(r,t,e)=>t in r?j(r,t,{enumerable:!0,configurable:!0,writable:!0,value:e}):r[t]=e;var a=(r,t,e,i)=>{for(var s=i>1?void 0:i?K(t,e):t,n=r.length-1,o;n>=0;n--)(o=r[n])&&(s=(i?o(t,e,s):o(s))||s);return i&&s&&j(t,e,s),s};var J=(r,t,e)=>X(r,typeof t!="symbol"?t+"":t,e);function _(r,t){function e(i,s,n){let o=s?i+"/"+s:i;if(o=o.replace("/[","["),Array.isArray(n))for(let h=0;h<n.length;h++)e(o,"["+h+"]",n[h]);else typeof n=="object"?(t(o,"",""),Object.getOwnPropertyNames(n).forEach(h=>e(o,h,n[h]))):t(i,s,String(n))}e("","",r)}var V=class{_registrations={};_registrationsId=0;_store={};read(t){return this._findStoreObject(this.pPath(t))[this.pKey(t)]}write(t,e){let i=this._findStoreObject(this.pPath(t));i[this.pKey(t)]=e}subscribe(t,e,i=!1){let s=this._registrationsId,o="^"+t.toLocaleLowerCase().replace(/(\[|\]|\/|\?)/g,"\\$1").replace(/\*\*/g,"\\S{0,}").replace(/\*/g,"[^/?]*")+"$",h={id:s,match:RegExp(o),callback:e};return this._registrations[s]=h,this._registrationsId++,i&&_(this._store,function(F,B,U){let P=F+(B?"?"+B:"");P&&(P=P.toLocaleLowerCase(),P.match(h.match)&&h.callback(F,(B||"").toLowerCase(),U||""))}.bind(this)),s}unsubscribe(t){delete this._registrations[t]}replay(t){let e=this._registrations[t];e&&_(this._store,function(i,s,n){let o=i+(s?"?"+s:"");o&&(o=o.toLocaleLowerCase(),o.match(e.match)&&e.callback(i,(s||"").toLowerCase(),n||""))}.bind(this))}publishObj(t){_(t,function(e,i,s){this.publishValue(e,i?i.toLowerCase():"",s||"")}.bind(this))}publishValue(t,e,i){let s=t+(e?"?"+e:"");if(s){if(e){let n=this._findStoreObject(t);n[e]=i}s=s.toLocaleLowerCase(),Object.values(this._registrations).forEach(n=>{s.match(n.match)&&n.callback(t,e,i)})}}onunload(){Object.getOwnPropertyNames(this._registrations).forEach(t=>delete this._registrations[t])}_findStoreObject(t){let e=this._store;t[0]==="/"&&(t=t.substring(1));let i=t.split("/");for(;i.length>0&&e[i[0]];)e=e[i[0]],i.shift();for(;i.length>0&&i[0];)e=e[i[0]]={},i.shift();return e}pPath(t){t[0]==="/"&&(t=t.substring(1));let e=t.split("/");return e.slice(0,e.length-1).join("/")}pKey(t){let e=t.split("/");return e[e.length-1]}},m=new V;window.addEventListener("unload",m.onunload.bind(m),!1);function p(r){if(!r)return!1;switch(r.toLowerCase().trim()){case"true":case"yes":return!0;case"false":case"no":case"0":case null:return!1;default:return!!r}}function b(r){let t;return r=r.toLowerCase(),r.endsWith("h")?t=parseInt(r,10)*60*60:r.endsWith("m")?t=parseInt(r,10)*60:r.endsWith("s")?t=parseInt(r,10):r.includes(":")?t=(Date.parse("1.1.1970 "+r)-Date.parse("1.1.1970"))/1e3:t=Number(r),t}function R(r,t){r&&r.textContent!==t&&(r.textContent=t)}function E(r,t,e){r&&r.getAttribute(t)!==e&&r.setAttribute(t,e)}function q(r,t=20){let e;return function(){e&&clearTimeout(e),e=window.setTimeout(()=>{e=0,r()},t)}}function $(r){let t={...r};return window.location.hash.substring(1).split("&").forEach(function(e){let i=e.split("=");t[i[0]]=i[1]}),t}function d(r,t,e,i=null){let s=document.createElement(t);if(e)for(let n in e)s.setAttribute(n,e[n]);return r&&(i?r.insertBefore(s,i):r.appendChild(s)),s}async function z(r,t){return fetch(r,t).then(i=>i.json())}async function Y(r,t){return fetch(r,t).then(i=>i.text())}console.log("utils.ts loaded",z);var G=class{_tco=null;_registry={};_state=1;_unloadedList=[];List=[];constructor(){this._state=2,window.addEventListener("DOMContentLoaded",this.init.bind(this))}loadFile(t){return fetch(t).then(i=>i.text()).then(i=>{let s=document.createRange().createContextualFragment(i);this._tco||(this._tco=document.getElementById("u-templates")),this._tco||(this._tco=d(document.body,"div",{id:"u-templates"})),this._tco&&this._tco.appendChild(s)})}attach(t){if(this._state===3){let e=t.getAttribute("u-is");if(e){let i=this._registry[e];i&&this.loadBehavior(t,i)}}else this._unloadedList.push(t)}_setPlaceholders(t,e){function i(s){return Object.getOwnPropertyNames(e).forEach(n=>s=s.replace(new RegExp("\\$\\{"+n+"\\}","g"),e[n])),s}if(e){if(t.nodeType===Node.TEXT_NODE)t.textContent&&(t.textContent=i(t.textContent));else if(t.nodeType===Node.ELEMENT_NODE){let s=t.attributes;for(let n=0;n<s.length;n++){let o=s[n].value;o.indexOf("${")>=0&&(t[s[n].name]&&t[s[n].name].baseVal!==void 0?t[s[n].name].baseVal=i(o):t.setAttribute(s[n].name,i(o)))}t.childNodes.forEach(n=>{this._setPlaceholders(n,e)})}}}isVisible(t){let e=!1;if(t.offsetWidth>0&&t.offsetHeight>0){let i=t.getBoundingClientRect();e=i.top<=window.innerHeight&&i.bottom>=0}return e}loadDataImage(t){t.dataset.src&&this.isVisible(t)&&(t.src=t.dataset.src)}insertTemplate(t,e,i){let s=null;if(t&&e&&this._tco){let n=this._tco.querySelector('[u-control="'+e.toLowerCase()+'"]');n&&(s=n.cloneNode(!0)),s&&(s.params=i,this._setPlaceholders(s,i),t.appendChild(s),t.querySelectorAll("[u-is]").forEach(o=>g.attach(o)),this._setPlaceholders(s,i),t.querySelectorAll("[data-src]:not([src])").forEach(o=>this.loadDataImage(o)))}return s}getMethods(t){let e=new Set;do Object.getOwnPropertyNames(t).filter(i=>typeof t[i]=="function").forEach(i=>e.add(i));while(t=Object.getPrototypeOf(t));return e}loadBehavior(t,e){let i=e,s=t;if(!t)console.error("loadBehavior: obj argument is missing.");else if(!e)console.error("loadBehavior: behavior argument is missing.");else if(s._attachedBehavior!==e){for(let n of t.attributes)t[n.name]||(t[n.name]=n.value);for(let n of this.getMethods(i))n==="on_touchstart"?t.addEventListener(n.substring(3),i[n].bind(t),{passive:!0}):n.substring(0,3)==="on_"?t.addEventListener(n.substring(3),i[n].bind(t),!1):n.substring(0,2)==="on"?t.addEventListener(n.substring(2),i[n].bind(t),!1):(i[n]==null||i[n].constructor!==Function)&&t[n]||(t[n]=i[n]);s._attachedBehavior=e,t.parentElement!==this._tco&&(s.connectedCallback(),this.List.push(t))}}define(t,e){this._registry[t]=e}init(){this._state=3,this._tco||(this._tco=document.getElementById("u-templates")),document.querySelectorAll("[u-is]").forEach(t=>g.attach(t)),this._unloadedList.forEach(t=>{let e=t.getAttribute("u-is");if(e){let i=this._registry[e];i&&this.loadBehavior(t,i),this.List.push(t)}}),this._unloadedList=[]}},g=new G;function l(r){return function(t){return g.define(r,new t),t}}var k=class{_attachedBehavior=void 0;connectedCallback(){}_clearWhitespace(){let t=this.firstChild;for(;t;){let e=t.nextSibling;t.nodeType===3&&t.parentNode?.removeChild(t),t=e}}};var Q=102,c=class extends k{microid;data;actions;subId;uid(t){return t.id||(t.id="o"+Q++),t.id}connectedCallback(){super.connectedCallback(),this.querySelectorAll("label:not([for])+input").forEach(t=>{let e=t.previousElementSibling;e.htmlFor=this.uid(t)}),this.querySelectorAll("label:not([for])+div input").forEach(t=>{let e=t.parentElement?.previousElementSibling;e.htmlFor=this.uid(t)}),this.microid||(this.microid=""),this.data={id:this.microid},this.actions=[],this.subId=m.subscribe(this.microid+"?*",this.newData.bind(this)),m.replay(this.subId)}newData(t,e,i){this.data[e]=i;let s=this.querySelector("h1,h3,img");s&&E(s,"title",JSON.stringify(this.data,null,1).replace(`{
-`,"").replace(`
-}`,"")),e==="active"&&this.classList.toggle("active",p(i)),["span","div"].forEach(n=>{this.querySelectorAll(`${n}[u-active='${e}']`).forEach(function(o){let h=p(i);E(o,"value",h?"1":"0"),E(o,"title",h?"active":"not active"),o.classList.toggle("active",h)})}),this.querySelectorAll(`*[u-display='${e}']`).forEach(n=>{n.style.display=i?"":"none"}),this.querySelectorAll(`*[u-text='${e}']`).forEach(n=>{n.textContent!==i&&(n.textContent=i)}),["input","output","select"].forEach(n=>{this.querySelectorAll(`${n}[u-value='${e}']`).forEach(o=>{o.type==="radio"?o.checked=o.value===i:o.value!==i&&(o.value=i||"")})}),this.querySelectorAll(`span[u-color='${e}']`).forEach(function(n){let o=i?i.replace(/^x/,"#"):"#888";o=o.replace(/^#\S{2}(\S{6})$/,"#$1"),n.style.backgroundColor=o})}dispatchNext(){if(this.actions){let t=this.actions.shift();if(t){let e=t.split("="),i=e[0]+"="+encodeURIComponent(e[1]);fetch(i).then(()=>{if(this.actions.length>0)q(this.dispatchNext.bind(this))();else if("updateState"in window)try{window.updateState()}catch{}})}}}dispatchAction(t,e){let i;t&&e&&(t.includes("/")?(t=t.replace("${v}",encodeURI(e)),t.split(",").forEach(s=>{s.startsWith("/")||(s="/"+s),i="/api/state"+s})):i=`/api/state${this.microid}?${t}=${encodeURI(e)}`,i&&(this.actions.length==0||i!==this.actions[this.actions.length-1])&&this.actions.push(i),q(this.dispatchNext.bind(this))())}showSys(){let t=$({sys:!1}).sys;return p(t)}on_change(t){let e=t.target,i=e.getAttribute("u-units");this.dispatchAction(e.getAttribute("u-value"),e.value+(i||""))}on_click(t){let e=[],i=t.target;for(;i&&(e.push(i),i!==this);)i=i.parentElement;e.every(s=>{let n=!1;if(s.getAttribute("u-action"))this.dispatchAction(s.getAttribute("u-action"),s.getAttribute("value")||"1");else if(s.classList.contains("setconfig")){let o=document.querySelector("#configElement"),h=this.microid.split("/");o.showModal({...this.data,type:h[1],id:h[2]})}else s.classList.contains("setactive")?this.dispatchAction(p(this.data.active)?"stop":"start","1"):s.classList.contains("fullscreen")?this.requestFullscreen():n=!0;return n})}};c=a([l("generic")],c);var w=class extends c{connectedCallback(){super.connectedCallback(),this.data={id:this.microid},m.replay(this.subId)}newData(t,e,i){super.newData(t,e,i),e==="mode"&&["current","voltage"].forEach(s=>{let n=this.querySelector(`[u-text="${s}"]`);n.parentElement.style.display=s===i?"":"none"})}};w=a([l("bl0937")],w);var x=class extends c{_timer;_start;_duration;_objButton;connectedCallback(){super.connectedCallback();let t=document.querySelector("#panl"),e=t?.querySelector(".btnPanel");e||(e=d(t,"div",{class:"card btnPanel"},t.firstElementChild)),e&&e.appendChild(this),this._objButton=this.querySelector("button")}on_click(t){super.on_click(t),t.target===this._objButton&&(this._duration>800?this.dispatchAction("action=press","1"):(this._timer&&window.clearTimeout(this._timer),this._timer=window.setTimeout(()=>{this.dispatchAction("action=click","1")},250)))}on_dblclick(t){t.target===this._objButton&&(this._timer&&window.clearTimeout(this._timer),this.dispatchAction("action=doubleclick","1"))}on_pointerdown(t){t.target===this._objButton&&(this._start=new Date().valueOf())}on_pointerup(t){t.target===this._objButton&&(this._duration=new Date().valueOf()-this._start)}};x=a([l("button")],x);var L=class extends c{_value;_color;_white;_brightness;_duration;connectedCallback(){super.connectedCallback(),this._value="00000000",this._color="x000000",this._white=void 0}newData(t,e,i){if(super.newData(t,e,i),e==="value"){let s=this.normColor(i);s.match(/[0-9a-z]{8}/)?this._color="#"+s.substring(2):this._color=s,this._white=parseInt(s.substring(0,2),16),s!==this._value&&(this._value=s,this.querySelectorAll("*[name=value]").forEach(n=>{n.value=i}),this.querySelectorAll("*[name=color]").forEach(n=>{n.value=this._color}),this.querySelectorAll("*[name=white]").forEach(n=>{n.value=String(this._white)}))}else if(e==="brightness")this._brightness=parseInt(i,10),this.querySelectorAll("*[name=brightness]").forEach(s=>{s.value=String(this._brightness)});else if(e==="duration")this._duration=parseInt(i,10),this.querySelectorAll("*[name=duration]").forEach(s=>{s.value=String(this._duration)});else if(e==="config"&&i.toLowerCase()==="wrgb"){let s=this.querySelector("input[name=white]");s&&(s=s.parentElement),s&&s.previousElementSibling&&(s.style.display="",s.previousElementSibling.style.display="")}}on_input(t){let e=t.target.name,i=t.target.value;if(e==="brightness")this._brightness=parseInt(i,10),this.dispatchAction(e,i);else if(e==="white"){this._white=parseInt(i,10);let s="x"+this.x16(this._white)+this._color.substring(1);this.dispatchAction("value",s)}else if(e==="color"){this._color=i;let s=this._color.substring(1);this._white&&(s=this.x16(this._white)+s),this.dispatchAction("value","x"+s)}else e==="duration"&&(this._duration=parseInt(i,10),this.dispatchAction(e,i+"ms"))}normColor(t){let e={black:"000000",red:"ff0000",green:"00ff00",blue:"0000ff",white:"ffffff"};return!t||t.length===0?t="00000000":(t=t.toLowerCase(),t=e[t]??t,(t.substring(0,1)==="x"||t.substring(0,1)==="#")&&(t=t.substring(1)),t.length===6&&(t="00"+t)),t.toLowerCase()}x16(t){let e=t.toString(16);return e.length===1&&(e="0"+e),e}};L=a([l("color")],L);var y=class extends c{_input;_type;_value;connectedCallback(){let t=this.querySelector("input");this._input=this,this.tagName!=="INPUT"&&t&&(this._input=t),super.connectedCallback();let e=this._input.getAttribute("type")||"text";e==="range"&&this._input.classList.contains("switch")&&(e="switch",this._input.min="0",this._input.max="1"),this._type=e,this._value=this._input.value,this._clearWhitespace()}_check(){let t=this._value,e=this._type;e==="checkbox"?t=this._input.checked?"1":"0":(e==="range"||e==="switch")&&(t=this._input.value),t!==this._value&&(this._value=t,this._input.dispatchEvent(new Event("change",{bubbles:!0})))}on_change(){this._check()}on_click(t){let e=t.target;for(this._value=this._input.value;e;){if(this._type==="range"||this._type==="switch"){let i=e.classList;if(i.contains("up")){let s=Number(this._input.value)+Number(this._input.step||1);this._input.value=String(s);break}else if(i.contains("down")){let s=Number(this._input.value)-Number(this._input.step||1);this._input.value=String(s);break}}if(this._type==="switch"&&(e===this._input||e===this)){this._input.value=String(1-Number(this._input.value));break}if(e===this)break;e=e.parentElement}this._input.focus(),this._check()}};y=a([l("input")],y);var M=class extends c{_range;_last;connectedCallback(){super.connectedCallback(),m.subscribe(this.microid+"?*",this.newValue.bind(this)),this._range=255,this._last=""}newValue(t,e,i){if(i){if(e==="range")this._range=Number(i);else if(e==="value"&&this._last!==i){let s=this.querySelector(".ux-levelbar"),n=s.offsetHeight,o=n*Number(i)/this._range;o>n-1&&(o=n-1),o<1&&(o=1),s.style.borderBottomWidth=o+"px",this._last=i}}}};M=a([l("pwmout")],M);var T=class extends c{_input;connectedCallback(){super.connectedCallback(),this._input=this.querySelector("input")}newData(t,e,i){super.newData(t,e,i),this._input&&(e==="min"?this._input.min=i:e==="max"?this._input.max=i:e==="step"&&(this._input.step=i))}};T=a([l("value")],T);var u=class extends c{_buttonObj;connectedCallback(){super.connectedCallback(),u._sceneCard?this.style.display="none":u._sceneCard=this;let t=u._sceneCard.querySelector("div.block:last-child");this._buttonObj=d(t,"button",{microid:this.microid}),this._buttonObj.textContent="-"}on_click(t){let i=t.target.getAttribute("microid");i&&(i.startsWith("/")&&(i=i.substring(1)),this.dispatchAction(i+"?start=1","1"))}startScene(){}newData(t,e,i){super.newData(t,e,i),e==="title"&&(this._buttonObj.textContent=i)}};J(u,"_sceneCard"),u=a([l("scene")],u);var C=class extends c{_objSelect;connectedCallback(){super.connectedCallback(),this._objSelect=this.querySelector("select"),this.subId=m.subscribe(this.microid+"/options[*]?*",this.newData.bind(this)),m.replay(this.subId)}newData(t,e,i){super.newData(t,e,i);let s=t.match(/\/options\[(\d+)\]/);if(s){let n=this._objSelect.options,o,h=Number(s[1]);h<n.length?o=n[h]:(o=document.createElement("option"),n.add(o)),e==="key"?o.text=i:e==="value"&&(o.value=i)}else e==="key"&&(this._objSelect.value=i)}on_change(t){super.on_change(t),this.dispatchAction(this.microid+"?index=${v}",String(this._objSelect.selectedIndex))}};C=a([l("select")],C);var v=class extends c{wt=0;pt=0;ct=0;time=0;connectedCallback(){super.connectedCallback(),this.wt=0,this.pt=0,this.ct=0,this.time=0}newData(t,e,i){if(super.newData(t,e,i),e==="waittime"?this.wt=b(i):e==="pulsetime"?this.pt=b(i):e==="cycletime"?this.ct=b(i):e==="time"&&(this.time=b(i)),this.ct<this.wt+this.pt&&(this.ct=this.wt+this.pt),this.ct>0){let s=this.querySelector(".u-bar"),n=s.clientWidth/this.ct,o=s.querySelector(".pulse");o.style.left=Math.floor(this.wt*n)+"px",o.style.width=Math.floor(this.pt*n)+"px";let h=s.querySelector(".current");h.style.width=Math.floor(this.time*n)+"px"}}};v=a([l("timer")],v);var f=class extends c{_dispElem;_grid;_elem;connectedCallback(){super.connectedCallback(),this._dispElem=document.querySelector(".panel .display"),this._dispElem&&(this._grid=Number(this._dispElem.getAttribute("grid")||1)),this.showSys()||(this.style.display="none")}newData(t,e,i){if(super.newData(t,e,i),this._elem){let s=this._elem.style;e==="x"?s.left=i+(this._grid>1?"ch":"px"):e==="y"?s.top=i+(this._grid>1?"em":"px"):e==="page"?this._elem.setAttribute("displayPage",i):e==="color"?s.color=i.replace(/^x/,"#"):e==="background"&&(s.backgroundColor=i.replace(/^x/,"#"))}}};var H=class extends f{connectedCallback(){super.connectedCallback(),this._dispElem&&(this._elem=d(this._dispElem,"button",{class:"but",style:"top:0;left:0"}),this._elem.addEventListener("click",t=>{console.log("evt",t),this.dispatchAction("action=click","1")}))}newData(t,e,i){super.newData(t,e,i);let s=this._elem,n=this._elem.style;e==="text"?s.innerText=i:e==="w"?n.width=i+(this._grid>1?"ch":"px"):e==="h"?(n.height=i+(this._grid>1?"em":"px"),n.fontSize=Number(i)*.7+(this._grid>1?"em":"px")):e==="color"&&(n.borderColor=i.replace(/^x/,"#"))}on_click(t){super.on_click(t),console.log(t)}};H=a([l("displaybutton")],H);var S=class extends f{connectedCallback(){super.connectedCallback(),this._elem=d(this._dispElem,"span",{class:"dot"})}newData(t,e,i){super.newData(t,e,i),e==="value"&&this._elem.classList.toggle("active",p(i))}};S=a([l("displaydot")],S);var A=class extends f{_svgElem;createSVGNode(t,e,i,s){let n=document.createElementNS("http://www.w3.org/2000/svg",e);return i&&Object.getOwnPropertyNames(i).forEach(function(o){n.setAttribute(o,i[o])}),s&&(n.textContent=s),t.appendChild(n),n}connectedCallback(){super.connectedCallback(),this._dispElem&&(this._svgElem=this._dispElem.querySelector("svg"),this._elem=this.createSVGNode(this._svgElem,"line",{strokeWidth:1}))}newData(t,e,i){let s=this._elem;s&&(e==="x"?s.x1.baseVal.value=Number(i):e==="y"?s.y1.baseVal.value=Number(i):e==="x1"?s.x2.baseVal.value=Number(i):e==="y1"?s.y2.baseVal.value=Number(i):e==="color"?s.style.stroke=i:super.newData(t,e,i))}};A=a([l("displayline")],A);var I=class extends f{_prefix;_postfix;connectedCallback(){super.connectedCallback(),this._elem=d(this._dispElem,"span",{class:"text",style:"top:0;left:0"}),this._prefix="",this._postfix=""}newData(t,e,i){if(super.newData(t,e,i),e==="value"){let s=`${this._prefix}${i}${this._postfix}`.replace(/ /g,"&nbsp;");this._elem.innerHTML!==s&&(this._elem.innerHTML=s)}else e==="fontsize"?(this._elem.style.fontSize=i+"px",this._elem.style.lineHeight=i+"px",this._elem.style.height=i+"px"):e==="prefix"?this._prefix=i:e==="postfix"&&(this._postfix=i)}};I=a([l("displaytext")],I);var D=class extends c{_page;_dialogElem;_svg;_height=64;_width=64;_rotation=0;_resize(){let t=this._dialogElem.style,e=this._width,i=this._height;this._rotation%180===90&&(e=i,i=this._width),t.width=e+"px",t.height=i+"px",e<=128?t.setProperty("zoom","2"):e>260&&this.classList.add("wide")}connectedCallback(){super.connectedCallback(),this._page="",this._dialogElem=this.querySelector(".display"),this._svg=this.querySelector("svg")}newData(t,e,i){super.newData(t,e,i),e==="height"?(this._height=parseInt(i),this._resize()):e==="width"?(this._width=parseInt(i),this._resize()):e==="rotation"?(this._rotation=parseInt(i),this._resize()):e==="background"?this._dialogElem.style.backgroundColor=i.replace(/^x/,"#"):e==="page"&&i!==this._page&&(this._page=i,this._dialogElem.querySelectorAll(":scope > span").forEach(s=>{let n=s.getAttribute("displayPage")||"1";s.style.display=n===this._page?"":"none"}))}};D=a([l("display")],D);var N=class extends c{_nowObj;connectedCallback(){super.connectedCallback(),this._nowObj=this.querySelector(".setnow"),window.setInterval(function(){R(this._nowObj,this.isoDate())}.bind(this),200)}on_click(t){let e=t.target;e&&e.classList.contains("setnow")?this.dispatchAction("time",this.isoDate()):super.on_click(t)}isoDate(){function t(s){return(s<10?"0":"")+s}let e=new Date;return e.getFullYear()+"-"+t(e.getMonth()+1)+"-"+t(e.getDate())+" "+t(e.getHours())+":"+t(e.getMinutes())+":"+t(e.getSeconds())}};N=a([l("dstime")],N);var O=class extends c{_fName;_chart;_lineType;_xFormat;_yFormat;_isSetup=!1;_isDirty=!1;connectedCallback(){super.connectedCallback(),this._chart=this.querySelector("u-linechart"),this._lineType="line",this._xFormat="datetime",this._yFormat="num"}loadData(){let t=this._fName,e="",i=fetch(t,{cache:"no-store"}).then(n=>{if(n.ok)return n.text();throw new Error}).then(function(n){e=e+`
-`+n}),s=fetch(t.replace(".txt","_old.txt"),{cache:"no-store"}).then(n=>{if(n.ok)return n.text();throw new Error}).then(function(n){e=n+`
-`+e});Promise.allSettled([i,s]).then(function(){let n=e.replace(/\r/g,"").split(`
-`).filter(o=>o.match(/^\d{4,},\d+/)).map(o=>{let h=o.split(",");return{x:h[0],y:h[1]}});this._chart.draw(n)}.bind(this))}loadSVG(){this._chart&&customElements.whenDefined("u-linechart").then(()=>{this._isSetup||(this._chart.add("line",{linetype:this._lineType}),this._chart.add([{type:"vAxis"},{type:"hAxis",options:{format:"datetime"}},{type:"indicator",options:{xFormat:this._xFormat,yFormat:this._yFormat}}]),this._isSetup=!0),this.loadData()})}newData(t,e,i){super.newData(t,e,i),e==="filename"?this._fName=i:e==="xformat"?this._xFormat=i:e==="yformat"?this._yFormat=i:e==="linetype"&&(this._lineType=i),this._isDirty||(this._isDirty=!0,this.loadSVG())}};O=a([l("log")],O);console.log("micro.ts loaded");var Z=new MutationObserver(function(r,t){for(let e of r)e.addedNodes.forEach(i=>{let s=i;s.getAttribute&&s.getAttribute("u-is")&&g.attach(i)})});Z.observe(document,{childList:!0,subtree:!0});document.addEventListener("DOMContentLoaded",function(){function r(){document.querySelectorAll("[data-src]:not([src])").forEach(t=>g.loadDataImage(t))}window.addEventListener("scroll",r),window.setTimeout(r,40)});export{d as createHTMLElement,q as debounce,z as fetchJSON,Y as fetchText,$ as getHashParams,m as hub,_ as jsonParse,g as micro,E as setAttr,p as toBool};
+var __defProp = Object.defineProperty;
+var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __decorateClass = (decorators, target, key, kind) => {
+  var result = kind > 1 ? void 0 : kind ? __getOwnPropDesc(target, key) : target;
+  for (var i = decorators.length - 1, decorator; i >= 0; i--)
+    if (decorator = decorators[i])
+      result = (kind ? decorator(target, key, result) : decorator(result)) || result;
+  if (kind && result) __defProp(target, key, result);
+  return result;
+};
+var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
+
+// src/JsonParse.ts
+function jsonParse(obj, cbFunc) {
+  function _jsonParse(path, key, value) {
+    let path2 = key ? path + "/" + key : path;
+    path2 = path2.replace("/[", "[");
+    if (Array.isArray(value)) {
+      for (let n = 0; n < value.length; n++) {
+        _jsonParse(path2, "[" + n + "]", value[n]);
+      }
+    } else if (typeof value === "object") {
+      cbFunc(path2, "", "");
+      Object.getOwnPropertyNames(value).forEach((k) => _jsonParse(path2, k, value[k]));
+    } else {
+      cbFunc(path, key, String(value));
+    }
+  }
+  _jsonParse("", "", obj);
+}
+function jsonFind(obj, path) {
+  if (path[0] === "/") {
+    path = path.substring(1);
+  }
+  const steps = path.split("/");
+  while (obj && steps.length > 0) {
+    const n = steps[0].toLowerCase();
+    const p = Object.keys(obj).find((e) => e.toLowerCase() === n);
+    obj = p ? obj[p] : void 0;
+    steps.shift();
+  }
+  return obj;
+}
+function jsonLocate(obj, path) {
+  if (path[0] === "/") {
+    path = path.substring(1);
+  }
+  const steps = path.split("/");
+  while (obj && steps.length > 0) {
+    const n = steps[0];
+    const p = Object.keys(obj).find((e) => e.toLowerCase() === n.toLowerCase());
+    obj = p ? obj[p] : obj[n] = {};
+    steps.shift();
+  }
+  return obj;
+}
+
+// src/microHub.ts
+var MicroHub = class {
+  _registrations = {};
+  _registrationsId = 0;
+  _store = {};
+  read(path) {
+    const o = this._findStoreObject(this.pPath(path));
+    return o[this.pKey(path)];
+  }
+  write(path, value) {
+    const o = this._findStoreObject(this.pPath(path));
+    o[this.pKey(path)] = value;
+  }
+  /**
+   * Subscribe to changes in the store using a path expression
+   * @param {string} matchPath expression for the registration
+   * @param {JsonParseCallback} fCallback
+   * @param {boolean} replay
+   * @returns {number} number of registration
+   */
+  subscribe(matchPath, fCallback, replay = false) {
+    const h = this._registrationsId;
+    const rn = matchPath.toLocaleLowerCase();
+    const re = "^" + rn.replace(/(\[|\]|\/|\?)/g, "\\$1").replace(/\*\*/g, "\\S{0,}").replace(/\*/g, "[^/?]*") + "$";
+    const newEntry = {
+      id: h,
+      match: RegExp(re),
+      callback: fCallback
+    };
+    this._registrations[h] = newEntry;
+    this._registrationsId++;
+    if (replay) {
+      jsonParse(
+        this._store,
+        function(path, key, value) {
+          let fullPath = path + (key ? "?" + key : "");
+          if (fullPath) {
+            fullPath = fullPath.toLocaleLowerCase();
+            if (fullPath.match(newEntry.match)) {
+              newEntry.callback(path, (key || "").toLowerCase(), value || "");
+            }
+          }
+        }.bind(this)
+      );
+    }
+    return h;
+  }
+  // subscribe
+  /**
+   * Cancel a subscription.
+   * @param h subscription registration id.
+   */
+  unsubscribe(h) {
+    delete this._registrations[h];
+  }
+  // unsubscribe
+  /**
+   * Replay the store data for a specific registration.
+   * @param h subscription registration id.
+   */
+  replay(h) {
+    const e = this._registrations[h];
+    if (e) {
+      jsonParse(
+        this._store,
+        function(path, key, value) {
+          let fullPath = path + (key ? "?" + key : "");
+          if (fullPath) {
+            fullPath = fullPath.toLocaleLowerCase();
+            if (fullPath.match(e.match)) {
+              e.callback(path, (key || "").toLowerCase(), value || "");
+            }
+          }
+        }.bind(this)
+      );
+    }
+  }
+  // replay
+  /**
+   * Publish new structured data from an object.
+   * @param obj
+   */
+  publishObj(obj) {
+    jsonParse(
+      obj,
+      function(path, key, value) {
+        this.publishValue(path, key ? key.toLowerCase() : "", value ? value : "");
+      }.bind(this)
+    );
+  }
+  // publishObj()
+  /**
+   * Publish a single value using.
+   * @param path Path of the value
+   * @param key Key of the property
+   * @param value Value of the property.
+   */
+  publishValue(path, key, value) {
+    let fullPath = path + (key ? "?" + key : "");
+    if (fullPath) {
+      if (key) {
+        const p = this._findStoreObject(path);
+        p[key] = value;
+      }
+      fullPath = fullPath.toLocaleLowerCase();
+      Object.values(this._registrations).forEach((r) => {
+        if (fullPath.match(r.match)) {
+          r.callback(path, key, value);
+        }
+      });
+    }
+  }
+  // publish
+  onunload() {
+    Object.getOwnPropertyNames(this._registrations).forEach((n) => delete this._registrations[n]);
+  }
+  // onunload
+  _findStoreObject(path) {
+    let p = this._store;
+    if (path[0] === "/") {
+      path = path.substring(1);
+    }
+    const steps = path.split("/");
+    while (steps.length > 0 && p[steps[0]]) {
+      p = p[steps[0]];
+      steps.shift();
+    }
+    while (steps.length > 0 && steps[0]) {
+      p = p[steps[0]] = {};
+      steps.shift();
+    }
+    return p;
+  }
+  // _findStoreObject
+  // return path to parent object
+  pPath(path) {
+    if (path[0] === "/") {
+      path = path.substring(1);
+    }
+    const steps = path.split("/");
+    const res = steps.slice(0, steps.length - 1).join("/");
+    return res;
+  }
+  // pPath
+  // return key in parent object
+  pKey(path) {
+    const steps = path.split("/");
+    const res = steps[steps.length - 1];
+    return res;
+  }
+};
+var hub = new MicroHub();
+window.addEventListener("unload", hub.onunload.bind(hub), false);
+
+// src/utils.ts
+function toBool(s) {
+  if (!s) {
+    return false;
+  }
+  switch (s.toLowerCase().trim()) {
+    case "true":
+    case "yes":
+      return true;
+    case "false":
+    case "no":
+    case "0":
+    case null:
+      return false;
+    default:
+      return Boolean(s);
+  }
+}
+function toSeconds(v) {
+  let ret;
+  v = v.toLowerCase();
+  if (v.endsWith("h")) {
+    ret = parseInt(v, 10) * 60 * 60;
+  } else if (v.endsWith("m")) {
+    ret = parseInt(v, 10) * 60;
+  } else if (v.endsWith("s")) {
+    ret = parseInt(v, 10);
+  } else if (v.includes(":")) {
+    ret = (Date.parse("1.1.1970 " + v) - Date.parse("1.1.1970")) / 1e3;
+  } else {
+    ret = Number(v);
+  }
+  return ret;
+}
+function setTextContent(el, txt) {
+  if (el && el.textContent !== txt) {
+    el.textContent = txt;
+  }
+}
+function setAttr(el, name, value) {
+  if (el && el.getAttribute(name) !== value) {
+    el.setAttribute(name, value);
+  }
+}
+function findConfig(id) {
+  let c, config, fName;
+  fName = "/env.json";
+  c = JSON.parse(hub.read("env"));
+  config = jsonFind(c, id);
+  if (!config) {
+    fName = "/config.json";
+    const r = hub.read("config");
+    console.log(r);
+    c = JSON.parse(r);
+    config = jsonLocate(c, id);
+  }
+  return { fName, config };
+}
+function debounce(func, wait = 20) {
+  let timer;
+  return function() {
+    if (timer) {
+      clearTimeout(timer);
+    }
+    timer = window.setTimeout(() => {
+      timer = 0;
+      func();
+    }, wait);
+  };
+}
+function getHashParams(defaults) {
+  const params = { ...defaults };
+  window.location.hash.substring(1).split("&").forEach(function(p) {
+    const pa = p.split("=");
+    params[pa[0]] = pa[1];
+  });
+  return params;
+}
+function createHTMLElement(parentNode, tag, attr, beforeNode = null) {
+  const o = document.createElement(tag);
+  if (attr) {
+    for (const a in attr) {
+      o.setAttribute(a, attr[a]);
+    }
+  }
+  if (parentNode) {
+    if (beforeNode) {
+      parentNode.insertBefore(o, beforeNode);
+    } else {
+      parentNode.appendChild(o);
+    }
+  }
+  return o;
+}
+async function fetchJSON(url, options) {
+  const p = fetch(url, options).then((raw) => raw.json());
+  return p;
+}
+async function fetchText(url, options) {
+  const p = fetch(url, options).then((raw) => raw.text());
+  return p;
+}
+
+// src/microRegistry.ts
+var MicroRegistry = class {
+  /** Templates Container Object */
+  _tco = null;
+  _registry = {};
+  // all registered mixins by name.
+  _state = 1 /* PREP */;
+  /// A list with all objects that are attached to any behavior
+  _unloadedList = [];
+  List = [];
+  constructor() {
+    this._state = 2 /* INIT */;
+    window.addEventListener("DOMContentLoaded", this.init.bind(this));
+  }
+  /**
+   * Load html templates into container.
+   * @param {string} url file with templates
+   */
+  loadFile(url) {
+    const ret = fetch(url).then((raw) => raw.text()).then((htm) => {
+      const f = document.createRange().createContextualFragment(htm);
+      if (!this._tco) {
+        this._tco = document.getElementById("u-templates");
+      }
+      if (!this._tco) {
+        this._tco = createHTMLElement(document.body, "div", { id: "u-templates" });
+      }
+      if (this._tco) {
+        this._tco.appendChild(f);
+      }
+    });
+    return ret;
+  }
+  // loadFile()
+  // extend the element by the registered behavior mixin.
+  // The "u-is" attribute specifies what mixin should be used.
+  attach(elem) {
+    if (this._state === 3 /* LOADED */) {
+      const cn = elem.getAttribute("u-is");
+      if (cn) {
+        const bc = this._registry[cn];
+        if (bc) {
+          this.loadBehavior(elem, bc);
+        }
+      }
+    } else {
+      this._unloadedList.push(elem);
+    }
+  }
+  // attach()
+  /**
+   * replace placeholders like ${name} with the corresponding value in text nodes and attributes.
+   * @param {Node} obj
+   * @param {Object} props
+   */
+  _setPlaceholders(obj, props) {
+    function fill(val) {
+      Object.getOwnPropertyNames(props).forEach((p) => val = val.replace(new RegExp("\\$\\{" + p + "\\}", "g"), props[p]));
+      return val;
+    }
+    if (props) {
+      if (obj.nodeType === Node.TEXT_NODE) {
+        if (obj.textContent) {
+          obj.textContent = fill(obj.textContent);
+        }
+      } else if (obj.nodeType === Node.ELEMENT_NODE) {
+        const attr = obj.attributes;
+        for (let i = 0; i < attr.length; i++) {
+          const v = attr[i].value;
+          if (v.indexOf("${") >= 0) {
+            if (!obj[attr[i].name]) {
+              obj.setAttribute(attr[i].name, fill(v));
+            } else if (obj[attr[i].name].baseVal !== void 0) {
+              obj[attr[i].name].baseVal = fill(v);
+            } else {
+              obj.setAttribute(attr[i].name, fill(v));
+            }
+          }
+        }
+        obj.childNodes.forEach((c) => {
+          this._setPlaceholders(c, props);
+        });
+      }
+    }
+  }
+  // _setPlaceholders
+  // verify that element is not hidden by styles and scrolled into the visible area.
+  isVisible(el) {
+    let vis = false;
+    if (el.offsetWidth > 0 && el.offsetHeight > 0) {
+      const rect = el.getBoundingClientRect();
+      vis = rect.top <= window.innerHeight && rect.bottom >= 0;
+    }
+    return vis;
+  }
+  // isVisible()
+  // load the image when image is visible
+  loadDataImage(imgElem) {
+    if (imgElem.dataset["src"] && this.isVisible(imgElem)) {
+      imgElem.src = imgElem.dataset["src"];
+    }
+  }
+  /**
+   * Insert a new control based on a template into the root object and activate behavior.
+   * @param {HTMLObjectElement} root parent object for the new control
+   * @param {string} controlName
+   * @param {Object} props
+   */
+  insertTemplate(root, controlName, props) {
+    let e = null;
+    if (root && controlName && this._tco) {
+      const te = this._tco.querySelector('[u-control="' + controlName.toLowerCase() + '"]');
+      if (te) {
+        e = te.cloneNode(true);
+      }
+      if (e) {
+        e.params = props;
+        this._setPlaceholders(e, props);
+        root.appendChild(e);
+        root.querySelectorAll("[u-is]").forEach((el) => micro.attach(el));
+        this._setPlaceholders(e, props);
+        root.querySelectorAll("[data-src]:not([src])").forEach((el) => this.loadDataImage(el));
+      }
+    }
+    return e;
+  }
+  // insertTemplate()
+  getMethods(obj) {
+    const fSet = /* @__PURE__ */ new Set();
+    do {
+      Object.getOwnPropertyNames(obj).filter((item) => typeof obj[item] === "function").forEach((item) => fSet.add(item));
+    } while (obj = Object.getPrototypeOf(obj));
+    return fSet;
+  }
+  // getMethods
+  // attach events, methods and default-values to a html object (using the english spelling)
+  loadBehavior(obj, behavior) {
+    const b = behavior;
+    const oc = obj;
+    if (!obj) {
+      console.error("loadBehavior: obj argument is missing.");
+    } else if (!behavior) {
+      console.error("loadBehavior: behavior argument is missing.");
+    } else if (oc._attachedBehavior === behavior) {
+    } else {
+      for (const a of obj.attributes) {
+        if (!obj[a.name]) {
+          obj[a.name] = a.value;
+        }
+      }
+      for (const p of this.getMethods(b)) {
+        if (p === "on_touchstart") {
+          obj.addEventListener(p.substring(3), b[p].bind(obj), { passive: true });
+        } else if (p.substring(0, 3) === "on_") {
+          obj.addEventListener(p.substring(3), b[p].bind(obj), false);
+        } else if (p.substring(0, 2) === "on") {
+          obj.addEventListener(p.substring(2), b[p].bind(obj), false);
+        } else if (b[p] == null || b[p].constructor !== Function) {
+          if (!obj[p]) {
+            obj[p] = b[p];
+          }
+        } else {
+          obj[p] = b[p];
+        }
+      }
+      oc._attachedBehavior = behavior;
+      if (obj.parentElement !== this._tco) {
+        oc.connectedCallback();
+        this.List.push(obj);
+      }
+    }
+  }
+  // loadBehavior
+  // define a micro control mixin in the registry.
+  define(name, mixin) {
+    this._registry[name] = mixin;
+  }
+  // defer initialization of controls after DOM is loaded
+  init() {
+    this._state = 3 /* LOADED */;
+    if (!this._tco) {
+      this._tco = document.getElementById("u-templates");
+    }
+    document.querySelectorAll("[u-is]").forEach((el) => micro.attach(el));
+    this._unloadedList.forEach((el) => {
+      const cn = el.getAttribute("u-is");
+      if (cn) {
+        const bc = this._registry[cn];
+        if (bc) {
+          this.loadBehavior(el, bc);
+        }
+        this.List.push(el);
+      }
+    });
+    this._unloadedList = [];
+  }
+  // init()
+};
+var micro = new MicroRegistry();
+function MicroControl(isSelector) {
+  return function(target) {
+    micro.define(isSelector, new target());
+    return target;
+  };
+}
+
+// src/microControls.ts
+var MicroControlClass = class {
+  _attachedBehavior = void 0;
+  connectedCallback() {
+  }
+  /// <summary>remove all textnodes from the control to avoid unwanted spaces.</summary>
+  _clearWhitespace() {
+    let obj = this.firstChild;
+    while (obj) {
+      const nextObj = obj.nextSibling;
+      if (obj.nodeType === 3) {
+        obj.parentNode?.removeChild(obj);
+      }
+      obj = nextObj;
+    }
+  }
+  // _clearWhitespace
+};
+
+// src/GenericWidget.ts
+var GenericWidgetIDCounter = 102;
+var GenericWidgetClass = class extends MicroControlClass {
+  microid;
+  data;
+  actions;
+  subId;
+  uid(obj) {
+    if (!obj.id) {
+      obj.id = "o" + GenericWidgetIDCounter++;
+    }
+    return obj.id;
+  }
+  connectedCallback() {
+    super.connectedCallback();
+    this.querySelectorAll("label:not([for])+input").forEach((iObj) => {
+      const lObj = iObj.previousElementSibling;
+      lObj.htmlFor = this.uid(iObj);
+    });
+    this.querySelectorAll("label:not([for])+div input").forEach((iObj) => {
+      const lObj = iObj.parentElement?.previousElementSibling;
+      lObj.htmlFor = this.uid(iObj);
+    });
+    if (!this.microid) {
+      this.microid = "";
+    }
+    this.data = { id: this.microid };
+    this.actions = [];
+    this.subId = hub.subscribe(this.microid + "?*", this.newData.bind(this));
+    hub.replay(this.subId);
+  }
+  // connectedCallback
+  // visualize any new data for the widget.
+  newData(_path, key, value) {
+    this.data[key] = value;
+    const ic = this.querySelector("h1,h3,img");
+    if (ic) {
+      setAttr(
+        ic,
+        "title",
+        JSON.stringify(this.data, null, 1).replace("{\n", "").replace("\n}", "")
+      );
+    }
+    if (key === "active") {
+      this.classList.toggle("active", toBool(value));
+    }
+    ["span", "div"].forEach((elType) => {
+      this.querySelectorAll(`${elType}[u-active='${key}']`).forEach(function(elem) {
+        const b = toBool(value);
+        setAttr(elem, "value", b ? "1" : "0");
+        setAttr(elem, "title", b ? "active" : "not active");
+        elem.classList.toggle("active", b);
+      });
+    });
+    this.querySelectorAll(`*[u-display='${key}']`).forEach((elem) => {
+      elem.style.display = value ? "" : "none";
+    });
+    this.querySelectorAll(`*[u-text='${key}']`).forEach((elem) => {
+      if (elem.textContent !== value) {
+        elem.textContent = value;
+      }
+    });
+    ["input", "output", "select"].forEach((elType) => {
+      this.querySelectorAll(`${elType}[u-value='${key}']`).forEach((elem) => {
+        if (elem.type === "radio") {
+          elem.checked = elem.value === value;
+        } else if (elem.value !== value) {
+          elem.value = value ? value : "";
+        }
+      });
+    });
+    this.querySelectorAll(`span[u-color='${key}']`).forEach(function(elem) {
+      let col = value ? value.replace(/^x/, "#") : "#888";
+      col = col.replace(/^#\S{2}(\S{6})$/, "#$1");
+      elem.style.backgroundColor = col;
+    });
+  }
+  // newData()
+  dispatchNext() {
+    if (this.actions) {
+      const a = this.actions.shift();
+      if (a) {
+        const aa = a.split("=");
+        const aUrl = aa[0] + "=" + encodeURIComponent(aa[1]);
+        fetch(aUrl).then(() => {
+          if (this.actions.length > 0) {
+            debounce(this.dispatchNext.bind(this))();
+          } else if ("updateState" in window) {
+            try {
+              window.updateState();
+            } catch {
+            }
+          }
+        });
+      }
+    }
+  }
+  // dispatchNext()
+  // send an action to the board and dispatch to the element
+  dispatchAction(prop, val) {
+    let action = void 0;
+    if (prop && val) {
+      if (prop.includes("/")) {
+        prop = prop.replace("${v}", encodeURI(val));
+        prop.split(",").forEach((a) => {
+          if (!a.startsWith("/")) {
+            a = "/" + a;
+          }
+          action = "/api/state" + a;
+        });
+      } else {
+        action = `/api/state${this.microid}?${prop}=${encodeURI(val)}`;
+      }
+      if (action) {
+        if (this.actions.length == 0 || action !== this.actions[this.actions.length - 1]) {
+          this.actions.push(action);
+        }
+        ;
+      }
+      debounce(this.dispatchNext.bind(this))();
+    }
+  }
+  // dispatchAction()
+  showSys() {
+    const p = getHashParams({ sys: false }).sys;
+    return toBool(p);
+  }
+  // send changed value of property as an action to the board
+  on_change(e) {
+    const src = e.target;
+    const units = src.getAttribute("u-units");
+    this.dispatchAction(src.getAttribute("u-value"), src.value + (units ? units : ""));
+  }
+  // send an action to the board
+  // + change config mode
+  on_click(event) {
+    const chain = [];
+    let n = event.target;
+    while (n) {
+      chain.push(n);
+      if (n === this) {
+        break;
+      }
+      n = n.parentElement;
+    }
+    chain.every((p) => {
+      let ret = false;
+      if (p.getAttribute("u-action")) {
+        this.dispatchAction(p.getAttribute("u-action"), p.getAttribute("value") || "1");
+      } else if (p.classList.contains("setconfig")) {
+        const dlg = document.querySelector("#configElement");
+        const ti = this.microid.split("/");
+        dlg.showModal({ ...this.data, type: ti[1], id: ti[2] });
+      } else if (p.classList.contains("setactive")) {
+        this.dispatchAction(toBool(this.data.active) ? "stop" : "start", "1");
+      } else if (p.classList.contains("fullscreen")) {
+        this.requestFullscreen();
+      } else {
+        ret = true;
+      }
+      return ret;
+    });
+  }
+};
+GenericWidgetClass = __decorateClass([
+  MicroControl("generic")
+], GenericWidgetClass);
+
+// src/BL0937Widget.ts
+var BL0937WidgetClass = class extends GenericWidgetClass {
+  connectedCallback() {
+    super.connectedCallback();
+    this.data = { id: this.microid };
+    hub.replay(this.subId);
+  }
+  // connectedCallback
+  // visualize any new data for the widget.
+  newData(path, key, value) {
+    super.newData(path, key, value);
+    if (key === "mode") {
+      ["current", "voltage"].forEach((m) => {
+        const td = this.querySelector(`[u-text="${m}"]`);
+        td.parentElement.style.display = m === value ? "" : "none";
+      });
+    }
+  }
+};
+BL0937WidgetClass = __decorateClass([
+  MicroControl("bl0937")
+], BL0937WidgetClass);
+
+// src/ButtonWidget.ts
+var ButtonWidgetClass = class extends GenericWidgetClass {
+  _timer;
+  _start;
+  _duration;
+  _objButton;
+  connectedCallback() {
+    super.connectedCallback();
+    const panelObj = document.querySelector("#panl");
+    let btnPanel = panelObj?.querySelector(".btnPanel");
+    if (!btnPanel) {
+      btnPanel = createHTMLElement(panelObj, "div", { class: "card btnPanel" }, panelObj.firstElementChild);
+    }
+    if (btnPanel) {
+      btnPanel.appendChild(this);
+    }
+    this._objButton = this.querySelector("button");
+  }
+  on_click(evt) {
+    super.on_click(evt);
+    if (evt.target === this._objButton) {
+      if (this._duration > 800) {
+        this.dispatchAction("action=press", "1");
+      } else {
+        if (this._timer) {
+          window.clearTimeout(this._timer);
+        }
+        this._timer = window.setTimeout(() => {
+          this.dispatchAction("action=click", "1");
+        }, 250);
+      }
+    }
+  }
+  // on_click
+  on_dblclick(evt) {
+    if (evt.target === this._objButton) {
+      if (this._timer) {
+        window.clearTimeout(this._timer);
+      }
+      this.dispatchAction("action=doubleclick", "1");
+    }
+  }
+  // on_dblclick
+  on_pointerdown(evt) {
+    if (evt.target === this._objButton) {
+      this._start = (/* @__PURE__ */ new Date()).valueOf();
+    }
+  }
+  // on_pointerdown
+  on_pointerup(evt) {
+    if (evt.target === this._objButton) {
+      this._duration = (/* @__PURE__ */ new Date()).valueOf() - this._start;
+    }
+  }
+  // on_pointerup()
+};
+ButtonWidgetClass = __decorateClass([
+  MicroControl("button")
+], ButtonWidgetClass);
+
+// src/ColorWidget.ts
+var ColorWidgetClass = class extends GenericWidgetClass {
+  _value;
+  // actual value
+  _color;
+  // actual color value from the color input
+  _white;
+  // actual white value from the slider
+  _brightness;
+  // actual brightness value from the slider
+  _duration;
+  // actual duration of the effect in msec.
+  connectedCallback() {
+    super.connectedCallback();
+    this._value = "00000000";
+    this._color = "x000000";
+    this._white = void 0;
+  }
+  // connectedCallback
+  // visualize any new data for the widget.
+  newData(_path, key, value) {
+    super.newData(_path, key, value);
+    if (key === "value") {
+      const newValue = this.normColor(value);
+      if (newValue.match(/[0-9a-z]{8}/)) {
+        this._color = "#" + newValue.substring(2);
+      } else {
+        this._color = newValue;
+      }
+      this._white = parseInt(newValue.substring(0, 2), 16);
+      if (newValue !== this._value) {
+        this._value = newValue;
+        this.querySelectorAll("*[name=value]").forEach((e) => {
+          e.value = value;
+        });
+        this.querySelectorAll("*[name=color]").forEach((e) => {
+          e.value = this._color;
+        });
+        this.querySelectorAll("*[name=white]").forEach((e) => {
+          e.value = String(this._white);
+        });
+      }
+    } else if (key === "brightness") {
+      this._brightness = parseInt(value, 10);
+      this.querySelectorAll("*[name=brightness]").forEach((e) => {
+        e.value = String(this._brightness);
+      });
+    } else if (key === "duration") {
+      this._duration = parseInt(value, 10);
+      this.querySelectorAll("*[name=duration]").forEach((e) => {
+        e.value = String(this._duration);
+      });
+    } else if (key === "config") {
+      if (value.toLowerCase() === "wrgb") {
+        let o = this.querySelector("input[name=white]");
+        if (o) o = o.parentElement;
+        if (o && o.previousElementSibling) {
+          o.style.display = "";
+          o.previousElementSibling.style.display = "";
+        }
+      }
+    }
+  }
+  // calculate the new color value from input sliders
+  on_input(evt) {
+    const n = evt.target.name;
+    const val = evt.target.value;
+    if (n === "brightness") {
+      this._brightness = parseInt(val, 10);
+      this.dispatchAction(n, val);
+    } else if (n === "white") {
+      this._white = parseInt(val, 10);
+      const v = "x" + this.x16(this._white) + this._color.substring(1);
+      this.dispatchAction("value", v);
+    } else if (n === "color") {
+      this._color = val;
+      let v = this._color.substring(1);
+      if (this._white) {
+        v = this.x16(this._white) + v;
+      }
+      this.dispatchAction("value", "x" + v);
+    } else if (n === "duration") {
+      this._duration = parseInt(val, 10);
+      this.dispatchAction(n, val + "ms");
+    }
+  }
+  // on_input
+  // convert from various value formats to 'wwrrggbb'
+  normColor(color) {
+    const colNames = {
+      "black": "000000",
+      "red": "ff0000",
+      "green": "00ff00",
+      "blue": "0000ff",
+      "white": "ffffff"
+    };
+    if (!color || color.length === 0) {
+      color = "00000000";
+    } else {
+      color = color.toLowerCase();
+      color = colNames[color] ?? color;
+      if (color.substring(0, 1) === "x" || color.substring(0, 1) === "#") {
+        color = color.substring(1);
+      }
+      if (color.length === 6) {
+        color = "00" + color;
+      }
+    }
+    return color.toLowerCase();
+  }
+  // normColor()
+  x16(d) {
+    let x = d.toString(16);
+    if (x.length === 1) {
+      x = "0" + x;
+    }
+    return x;
+  }
+};
+ColorWidgetClass = __decorateClass([
+  MicroControl("color")
+], ColorWidgetClass);
+
+// src/InputWidget.ts
+var InputWidgetClass = class extends GenericWidgetClass {
+  _input;
+  // Reference to the real input element, maybe "this".
+  _type;
+  _value;
+  connectedCallback() {
+    const inObj = this.querySelector("input");
+    this._input = this;
+    if (this.tagName !== "INPUT" && inObj) {
+      this._input = inObj;
+    }
+    super.connectedCallback();
+    let type = this._input.getAttribute("type") || "text";
+    if (type === "range" && this._input.classList.contains("switch")) {
+      type = "switch";
+      this._input.min = "0";
+      this._input.max = "1";
+    }
+    this._type = type;
+    this._value = this._input.value;
+    this._clearWhitespace();
+  }
+  // connectedCallback
+  _check() {
+    let newVal = this._value;
+    const t = this._type;
+    if (t === "checkbox") {
+      newVal = this._input.checked ? "1" : "0";
+    } else if (t === "range" || t === "switch") {
+      newVal = this._input.value;
+    }
+    if (newVal !== this._value) {
+      this._value = newVal;
+      this._input.dispatchEvent(new Event("change", { bubbles: true }));
+    }
+  }
+  on_change() {
+    this._check();
+  }
+  on_click(e) {
+    let src = e.target;
+    this._value = this._input.value;
+    while (src) {
+      if (this._type === "range" || this._type === "switch") {
+        const cl = src.classList;
+        if (cl.contains("up")) {
+          const nv = Number(this._input.value) + Number(this._input.step || 1);
+          this._input.value = String(nv);
+          break;
+        } else if (cl.contains("down")) {
+          const nv = Number(this._input.value) - Number(this._input.step || 1);
+          this._input.value = String(nv);
+          break;
+        }
+      }
+      if (this._type === "switch") {
+        if (src === this._input || src === this) {
+          this._input.value = String(1 - Number(this._input.value));
+          break;
+        }
+      }
+      if (src === this) {
+        break;
+      } else {
+        src = src.parentElement;
+      }
+    }
+    this._input.focus();
+    this._check();
+  }
+  // on_click
+};
+InputWidgetClass = __decorateClass([
+  MicroControl("input")
+], InputWidgetClass);
+
+// src/PWMoutWidget.ts
+var PWMOutWidgetClass = class extends GenericWidgetClass {
+  _range;
+  _last;
+  connectedCallback() {
+    super.connectedCallback();
+    hub.subscribe(this.microid + "?*", this.newValue.bind(this));
+    this._range = 255;
+    this._last = "";
+  }
+  newValue(_path, key, value) {
+    if (!value) {
+    } else if (key === "range") {
+      this._range = Number(value);
+    } else if (key === "value") {
+      if (this._last !== value) {
+        const o = this.querySelector(".ux-levelbar");
+        const h = o.offsetHeight;
+        let bh = h * Number(value) / this._range;
+        if (bh > h - 1) {
+          bh = h - 1;
+        }
+        if (bh < 1) {
+          bh = 1;
+        }
+        o.style.borderBottomWidth = bh + "px";
+        this._last = value;
+      }
+    }
+  }
+};
+PWMOutWidgetClass = __decorateClass([
+  MicroControl("pwmout")
+], PWMOutWidgetClass);
+
+// src/ValueWidget.ts
+var ValueWidgetClass = class extends GenericWidgetClass {
+  _input;
+  connectedCallback() {
+    super.connectedCallback();
+    this._input = this.querySelector("input");
+  }
+  newData(path, key, value) {
+    super.newData(path, key, value);
+    if (this._input) {
+      if (key === "min") {
+        this._input.min = value;
+      } else if (key === "max") {
+        this._input.max = value;
+      } else if (key === "step") {
+        this._input.step = value;
+      }
+    }
+  }
+};
+ValueWidgetClass = __decorateClass([
+  MicroControl("value")
+], ValueWidgetClass);
+
+// src/SceneWidget.ts
+var SceneWidgetClass = class extends GenericWidgetClass {
+  _buttonObj;
+  connectedCallback() {
+    super.connectedCallback();
+    if (!SceneWidgetClass._sceneCard) {
+      SceneWidgetClass._sceneCard = this;
+    } else {
+      this.style.display = "none";
+    }
+    const c = SceneWidgetClass._sceneCard.querySelector("div.block:last-child");
+    this._buttonObj = createHTMLElement(c, "button", {
+      "microid": this.microid
+    });
+    this._buttonObj.textContent = "-";
+  }
+  on_click(evt) {
+    const btnObj = evt.target;
+    let action = btnObj.getAttribute("microid");
+    if (action) {
+      if (action.startsWith("/")) action = action.substring(1);
+      this.dispatchAction(action + "?start=1", "1");
+    }
+  }
+  startScene() {
+    0;
+  }
+  newData(path, key, value) {
+    super.newData(path, key, value);
+    if (key === "title") {
+      this._buttonObj.textContent = value;
+    }
+  }
+  // newData()
+};
+__publicField(SceneWidgetClass, "_sceneCard");
+SceneWidgetClass = __decorateClass([
+  MicroControl("scene")
+], SceneWidgetClass);
+
+// src/SelectWidget.ts
+var SelectWidgetClass = class extends GenericWidgetClass {
+  _objSelect;
+  connectedCallback() {
+    super.connectedCallback();
+    this._objSelect = this.querySelector("select");
+    this.subId = hub.subscribe(this.microid + "/options[*]?*", this.newData.bind(this));
+    hub.replay(this.subId);
+  }
+  newData(path, key, value) {
+    super.newData(path, key, value);
+    const m = path.match(/\/options\[(\d+)\]/);
+    if (m) {
+      const opts = this._objSelect.options;
+      let opt;
+      const indx = Number(m[1]);
+      if (indx < opts.length) {
+        opt = opts[indx];
+      } else {
+        opt = document.createElement("option");
+        opts.add(opt);
+      }
+      if (key === "key") {
+        opt.text = value;
+      } else if (key === "value") {
+        opt.value = value;
+      }
+    } else if (key === "key") {
+      this._objSelect.value = value;
+    }
+  }
+  // newData()
+  on_change(evt) {
+    super.on_change(evt);
+    this.dispatchAction(this.microid + "?index=${v}", String(this._objSelect.selectedIndex));
+  }
+  // on_click
+};
+SelectWidgetClass = __decorateClass([
+  MicroControl("select")
+], SelectWidgetClass);
+
+// src/TimerWidget.ts
+var TimerWidgetClass = class extends GenericWidgetClass {
+  wt = 0;
+  pt = 0;
+  ct = 0;
+  time = 0;
+  connectedCallback() {
+    super.connectedCallback();
+    this.wt = 0;
+    this.pt = 0;
+    this.ct = 0;
+    this.time = 0;
+  }
+  newData(path, key, value) {
+    super.newData(path, key, value);
+    if (key === "waittime") {
+      this.wt = toSeconds(value);
+    } else if (key === "pulsetime") {
+      this.pt = toSeconds(value);
+    } else if (key === "cycletime") {
+      this.ct = toSeconds(value);
+    } else if (key === "time") {
+      this.time = toSeconds(value);
+    }
+    if (this.ct < this.wt + this.pt) {
+      this.ct = this.wt + this.pt;
+    }
+    if (this.ct > 0) {
+      const el = this.querySelector(".u-bar");
+      const f = el.clientWidth / this.ct;
+      const pto = el.querySelector(".pulse");
+      pto.style.left = Math.floor(this.wt * f) + "px";
+      pto.style.width = Math.floor(this.pt * f) + "px";
+      const cto = el.querySelector(".current");
+      cto.style.width = Math.floor(this.time * f) + "px";
+    }
+  }
+  // newData()}
+};
+TimerWidgetClass = __decorateClass([
+  MicroControl("timer")
+], TimerWidgetClass);
+
+// src/DisplayItemWidget.ts
+var DisplayItemWidgetClass = class extends GenericWidgetClass {
+  _dispElem;
+  _grid;
+  _elem;
+  connectedCallback() {
+    super.connectedCallback();
+    this._dispElem = document.querySelector(".panel .display");
+    if (this._dispElem) {
+      this._grid = Number(this._dispElem.getAttribute("grid") || 1);
+    }
+    if (!this.showSys()) {
+      this.style.display = "none";
+    }
+  }
+  newData(path, key, value) {
+    super.newData(path, key, value);
+    if (this._elem) {
+      const sty = this._elem.style;
+      if (key === "x") {
+        sty.left = value + (this._grid > 1 ? "ch" : "px");
+      } else if (key === "y") {
+        sty.top = value + (this._grid > 1 ? "em" : "px");
+      } else if (key === "page") {
+        this._elem.setAttribute("displayPage", value);
+      } else if (key === "color") {
+        sty.color = value.replace(/^x/, "#");
+      } else if (key === "background") {
+        sty.backgroundColor = value.replace(/^x/, "#");
+      }
+    }
+  }
+};
+
+// src/DisplayButtonWidget.ts
+var DisplayButtonWidgetClass = class extends DisplayItemWidgetClass {
+  connectedCallback() {
+    super.connectedCallback();
+    if (this._dispElem) {
+      this._elem = createHTMLElement(this._dispElem, "button", { class: "but", style: "top:0;left:0" });
+      this._elem.addEventListener("click", (evt) => {
+        console.log("evt", evt);
+        this.dispatchAction("action=click", "1");
+      });
+    }
+  }
+  // connectedCallback
+  newData(path, key, value) {
+    super.newData(path, key, value);
+    const e = this._elem;
+    const sty = this._elem.style;
+    if (key === "text") {
+      e.innerText = value;
+    } else if (key === "w") {
+      sty.width = value + (this._grid > 1 ? "ch" : "px");
+    } else if (key === "h") {
+      sty.height = value + (this._grid > 1 ? "em" : "px");
+      sty.fontSize = Number(value) * 0.7 + (this._grid > 1 ? "em" : "px");
+    } else if (key === "color") {
+      sty.borderColor = value.replace(/^x/, "#");
+    }
+  }
+  // newData
+  on_click(evt) {
+    super.on_click(evt);
+    console.log(evt);
+  }
+  // on_click
+};
+DisplayButtonWidgetClass = __decorateClass([
+  MicroControl("displaybutton")
+], DisplayButtonWidgetClass);
+
+// src/DisplayDotWidget.ts
+var DisplayDotWidgetClass = class extends DisplayItemWidgetClass {
+  // When the card is created also create a html tag inside the display.
+  connectedCallback() {
+    super.connectedCallback();
+    this._elem = createHTMLElement(this._dispElem, "span", { class: "dot" });
+  }
+  // connectedCallback
+  // new value is set in the element.
+  newData(path, key, value) {
+    super.newData(path, key, value);
+    if (key === "value") {
+      this._elem.classList.toggle("active", toBool(value));
+    }
+  }
+  // newData
+};
+DisplayDotWidgetClass = __decorateClass([
+  MicroControl("displaydot")
+], DisplayDotWidgetClass);
+
+// src/DisplayLineWidget.ts
+var DisplayLineWidgetClass = class extends DisplayItemWidgetClass {
+  _svgElem;
+  /**
+  * Create a SVG element
+  * @param {SVGAElement} parentNode container node for the new element
+  * @param {string} tagName tagName of the new element
+  * @param {Object | undefined} attr attributes of the new element passed as Object 
+  * @param {string | undefined} txt inner text content.   
+  */
+  createSVGNode(parentNode, tagName, attr, txt) {
+    const n = document.createElementNS("http://www.w3.org/2000/svg", tagName);
+    if (attr) {
+      Object.getOwnPropertyNames(attr).forEach(function(p) {
+        n.setAttribute(p, attr[p]);
+      });
+    }
+    if (txt) {
+      n.textContent = txt;
+    }
+    parentNode.appendChild(n);
+    return n;
+  }
+  // createSVGNode()
+  connectedCallback() {
+    super.connectedCallback();
+    if (this._dispElem) {
+      this._svgElem = this._dispElem.querySelector("svg");
+      this._elem = this.createSVGNode(this._svgElem, "line", { strokeWidth: 1 });
+    }
+  }
+  // connectedCallback
+  newData(path, key, value) {
+    const e = this._elem;
+    if (e) {
+      if (key === "x") {
+        e.x1.baseVal.value = Number(value);
+      } else if (key === "y") {
+        e.y1.baseVal.value = Number(value);
+      } else if (key === "x1") {
+        e.x2.baseVal.value = Number(value);
+      } else if (key === "y1") {
+        e.y2.baseVal.value = Number(value);
+      } else if (key === "color") {
+        e.style.stroke = value;
+      } else {
+        super.newData(path, key, value);
+      }
+    }
+  }
+  // newData
+};
+DisplayLineWidgetClass = __decorateClass([
+  MicroControl("displayline")
+], DisplayLineWidgetClass);
+
+// src/DisplayTextWidget.ts
+var DisplayTextWidgetClass = class extends DisplayItemWidgetClass {
+  _prefix;
+  _postfix;
+  connectedCallback() {
+    super.connectedCallback();
+    this._elem = createHTMLElement(this._dispElem, "span", { class: "text", style: "top:0;left:0" });
+    this._prefix = "";
+    this._postfix = "";
+  }
+  newData(path, key, value) {
+    super.newData(path, key, value);
+    if (key === "value") {
+      const t = `${this._prefix}${value}${this._postfix}`.replace(/ /g, "&nbsp;");
+      if (this._elem.innerHTML !== t) {
+        this._elem.innerHTML = t;
+      }
+    } else if (key === "fontsize") {
+      this._elem.style.fontSize = value + "px";
+      this._elem.style.lineHeight = value + "px";
+      this._elem.style.height = value + "px";
+    } else if (key === "prefix") {
+      this._prefix = value;
+    } else if (key === "postfix") {
+      this._postfix = value;
+    }
+  }
+};
+DisplayTextWidgetClass = __decorateClass([
+  MicroControl("displaytext")
+], DisplayTextWidgetClass);
+
+// src/DisplayWidget.ts
+var DisplayWidgetClass = class extends GenericWidgetClass {
+  _page;
+  _dialogElem;
+  _svg;
+  _height = 64;
+  _width = 64;
+  _rotation = 0;
+  _resize() {
+    const sty = this._dialogElem.style;
+    let w = this._width;
+    let h = this._height;
+    if (this._rotation % 180 === 90) {
+      w = h;
+      h = this._width;
+    }
+    sty.width = w + "px";
+    sty.height = h + "px";
+    if (w <= 128) {
+      sty.setProperty("zoom", "2");
+    } else if (w > 260) {
+      this.classList.add("wide");
+    }
+  }
+  connectedCallback() {
+    super.connectedCallback();
+    this._page = "";
+    this._dialogElem = this.querySelector(".display");
+    this._svg = this.querySelector("svg");
+  }
+  // new value is set in the element.
+  newData(path, key, value) {
+    super.newData(path, key, value);
+    if (key === "height") {
+      this._height = parseInt(value);
+      this._resize();
+    } else if (key === "width") {
+      this._width = parseInt(value);
+      this._resize();
+    } else if (key === "rotation") {
+      this._rotation = parseInt(value);
+      this._resize();
+    } else if (key === "background") {
+      this._dialogElem.style.backgroundColor = value.replace(/^x/, "#");
+    } else if (key === "page") {
+      if (value !== this._page) {
+        this._page = value;
+        this._dialogElem.querySelectorAll(":scope > span").forEach((e) => {
+          const p = e.getAttribute("displayPage") || "1";
+          e.style.display = p === this._page ? "" : "none";
+        });
+      }
+    }
+  }
+  // newData
+};
+DisplayWidgetClass = __decorateClass([
+  MicroControl("display")
+], DisplayWidgetClass);
+
+// src/DSTimeWidget.ts
+var DSTimeWidgetClass = class extends GenericWidgetClass {
+  _nowObj;
+  connectedCallback() {
+    super.connectedCallback();
+    this._nowObj = this.querySelector(".setnow");
+    window.setInterval(function() {
+      setTextContent(this._nowObj, this.isoDate());
+    }.bind(this), 200);
+  }
+  // connectedCallback()
+  on_click(e) {
+    const src = e.target;
+    if (src && src.classList.contains("setnow")) {
+      this.dispatchAction("time", this.isoDate());
+    } else {
+      super.on_click(e);
+    }
+  }
+  isoDate() {
+    function pad02(num) {
+      return (num < 10 ? "0" : "") + num;
+    }
+    const d = /* @__PURE__ */ new Date();
+    const ds = d.getFullYear() + "-" + pad02(d.getMonth() + 1) + "-" + pad02(d.getDate()) + " " + pad02(d.getHours()) + ":" + pad02(d.getMinutes()) + ":" + pad02(d.getSeconds());
+    return ds;
+  }
+};
+DSTimeWidgetClass = __decorateClass([
+  MicroControl("dstime")
+], DSTimeWidgetClass);
+
+// src/LogWidget.ts
+var LogWidgetClass = class extends GenericWidgetClass {
+  _fName;
+  _chart;
+  _lineType;
+  _xFormat;
+  _yFormat;
+  _isSetup = false;
+  // chart is configured
+  _isDirty = false;
+  // drawing needs some update
+  connectedCallback() {
+    super.connectedCallback();
+    this._chart = this.querySelector("u-linechart");
+    this._lineType = "line";
+    this._xFormat = "datetime";
+    this._yFormat = "num";
+  }
+  loadData() {
+    const fName = this._fName;
+    let allData = "";
+    const p1 = fetch(fName, { cache: "no-store" }).then((res) => {
+      if (res.ok) {
+        return res.text();
+      }
+      throw new Error();
+    }).then(function(txt) {
+      allData = allData + "\n" + txt;
+    });
+    const p2 = fetch(fName.replace(".txt", "_old.txt"), { cache: "no-store" }).then((res) => {
+      if (res.ok) {
+        return res.text();
+      }
+      throw new Error();
+    }).then(function(txt) {
+      allData = txt + "\n" + allData;
+    });
+    Promise.allSettled([p1, p2]).then(function() {
+      const pmArray = allData.replace(/\r/g, "").split("\n").filter((e) => e.match(/^\d{4,},\d+/)).map((v) => {
+        const p = v.split(",");
+        return { x: p[0], y: p[1] };
+      });
+      this._chart.draw(pmArray);
+    }.bind(this));
+  }
+  // loadData()
+  /** get the API from the SVG object when loaded */
+  loadSVG() {
+    if (this._chart) {
+      customElements.whenDefined("u-linechart").then(() => {
+        if (!this._isSetup) {
+          this._chart.add("line", { linetype: this._lineType });
+          this._chart.add([
+            { type: "vAxis" },
+            { type: "hAxis", options: { format: "datetime" } },
+            { type: "indicator", options: { xFormat: this._xFormat, yFormat: this._yFormat } }
+          ]);
+          this._isSetup = true;
+        }
+        this.loadData();
+      });
+    }
+  }
+  // loadSVG()
+  newData(path, key, value) {
+    super.newData(path, key, value);
+    if (key === "filename") {
+      this._fName = value;
+    } else if (key === "xformat") {
+      this._xFormat = value;
+    } else if (key === "yformat") {
+      this._yFormat = value;
+    } else if (key === "linetype") {
+      this._lineType = value;
+    }
+    if (!this._isDirty) {
+      this._isDirty = true;
+      this.loadSVG();
+    }
+  }
+  // newValue()
+};
+LogWidgetClass = __decorateClass([
+  MicroControl("log")
+], LogWidgetClass);
+
+// src/micro.ts
+var obs = new MutationObserver(function(mutationsList, _observer) {
+  for (const mutation of mutationsList) {
+    mutation.addedNodes.forEach((n) => {
+      const e = n;
+      if (e.getAttribute && e.getAttribute("u-is")) {
+        micro.attach(n);
+      }
+    });
+  }
+});
+obs.observe(document, { childList: true, subtree: true });
+document.addEventListener("DOMContentLoaded", function() {
+  function f() {
+    document.querySelectorAll("[data-src]:not([src])").forEach((e) => micro.loadDataImage(e));
+  }
+  window.addEventListener("scroll", f);
+  window.setTimeout(f, 40);
+});
+export {
+  createHTMLElement,
+  debounce,
+  fetchJSON,
+  fetchText,
+  findConfig,
+  getHashParams,
+  hub,
+  jsonParse,
+  micro,
+  setAttr,
+  toBool
+};

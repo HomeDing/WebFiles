@@ -8,7 +8,7 @@
         <option disabled selected hidden value="">Select Element...</option>
       </select>
       <label>ID:</label>
-      <input name="id" required pattern="[0-9a-z]+" placeholder="enter a name ..." maxlength="12">
+      <input name="id" required pattern="[0-9a-z]+" placeholder="enter new ID ..." maxlength="12">
     </div>
     <div><button u-action="next:configElement" style="float:right">Next</button></div>
   </form>
@@ -42,7 +42,9 @@
   </form>
 </dialog>
 
-<script>
+<script type="module">
+  import { createHTMLElement, hub, micro, fetchJSON, fetchText, getHashParams, toBool } from '/micro.js';
+
   function lowerKeys(d) {
     const out = {};
     Object.entries(d).forEach(([key, value]) => {

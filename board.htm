@@ -16,12 +16,13 @@
   <meta name="theme-color" content="#ffffff" />
 
   <link Content-Type="text/css" href="/iotstyle.css" rel="stylesheet" defer />
-  <script src="/micro.js" defer></script>
+  <script type="module" src="/micro.js"></script>
   <script src="/sfc/loader.js"></script>
   <script>
     window.loadComponent('/bundle.sfc')
       .then(() => {
-        window.loadComponent('hdw-generic,hdw-air,hdw-reference,hdw-schedule,hdw-switch,hdw-digitalvalue', '/hdw');
+        window.loadComponent('hdw-generic,hdw-air,hdw-reference,hdw-schedule,hdw-switch,hdw-digitalvalue,hdw-onoff', '/hdw');
+        // window.loadComponent('/hdwbundle.sfc', '/hdw');
       });
   </script>
   <style>
@@ -128,8 +129,13 @@
       <u-include ref="#cardHeader"></u-include>
       <div class="block form-grid">
         <label>value:</label>
-        <span u-is="input">
-          <input type="range" u-value="value"><output u-text="value"></output></span>
+        <span>
+          <input type="range" u-value="value"><output u-text="value"></output>
+        </span>
+        <!-- <span u-is="input">
+          <span class="down">&lt;</span>
+          <span class="up">&gt;</span>
+        </span> -->
       </div>
     </div>
 
@@ -289,8 +295,13 @@
     </div>
 
   </div>
+ 
+  <script type="module">
+    import {hub, micro, fetchJSON, fetchText, getHashParams, toBool, setAttr, jsonParse} from '/micro.js';
+    window.hub = hub;
+    window.setAttr = setAttr;
+    window.toBool = toBool;
 
-  <script>
     if (window !== window.top) {
       // disable header and navbar in portal mode.
       document.querySelector('header').style.display = 'none';
@@ -306,7 +317,7 @@
       state: {}
     };
 
-    (function() { // allows variable names to be packed by minifier
+    // (function() { // allows variable names to be packed by minifier
       const REFRESH_INTERVAL = 4000;
       var panelObj = document.querySelector('#panl');
       var addObj = document.getElementById('addButton');
@@ -432,7 +443,7 @@
       } // loaded()
 
       window.addEventListener('DOMContentLoaded', loaded);
-    })();
+    // })();
   </script>
 </body>
 

@@ -28,7 +28,7 @@ board.
     bindings = [];
     subId;
 
-    static idc = 42;
+    static idc = 1024; // counter for generated unique ids for elements without id attribute.
 
     // create a unique id for an object if it doesn't have one and return it.
     uid(obj) {

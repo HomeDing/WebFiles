@@ -16,11 +16,7 @@ keys to bind to.
   <u-include ref="#cardHeader"></u-include>
   <div class="main">
     <span class="u-bool ux-value border" u-active="value"></span>
-    <div u-is="input">
-      <span class="down">off</span>
-      <input id="${id}O" class="switch" u-value="value" type="range">
-      <span class="up">on</span>
-    </div>
+    <hdw-onoff u-value="value"></hdw-onoff>
   </div>
 </template>
 

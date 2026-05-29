@@ -7,49 +7,9 @@
   <title>Flow Workspace</title>
   <link href="/iotstyle.css" rel="stylesheet" type="text/css">
 
-  <script src="micro.js"></script>
+  <script type="module" src="micro.js"></script>
   <script src="microsvg.js"></script>
   <script src="/sfc/loader.js"></script>
-
-  <script>
-    var allComponentsLoaded = window.loadComponent(['u-toast', 'u-form-json', 'u-form-dialog']);
-
-    // calc the current event/mouse/touch position
-    function getSVGPos(panel, evt) {
-      var newScale = panel.currentScale;
-      var translation = panel.currentTranslate;
-      var panelPos = panel.getBoundingClientRect();
-      var ret = {
-        x: Math.round((evt.clientX - translation.x) / newScale - panelPos.left),
-        y: Math.round((evt.clientY - translation.y) / newScale - panelPos.top)
-      };
-      return (ret);
-    } // getSVGPos()
-
-    // mode a svg group to a specific position using transform:translate
-    function moveSVGGroup(g, x, y) {
-      g.setAttribute('transform', 'translate(' + x + ',' + y + ')');
-    } // moveSVGGroup
-
-
-    // find the center position of the named pin in a svg node group.
-    function _pinPos(g, pin) {
-      var panelPos = panelObj.getBoundingClientRect();
-
-      var obj = g.querySelector('[pin="' + pin + '"]');
-      if (!obj) {
-        obj = g;
-      }
-
-      var b2 = obj.getBoundingClientRect();
-
-      var pos = {
-        x: Math.round(b2.left + b2.width / 2 - panelPos.left),
-        y: Math.round(b2.top + b2.height / 2 - panelPos.top)
-      };
-      return (pos);
-    } // _pinPos()
-  </script>
 
   <style>
     #panel {
@@ -161,14 +121,62 @@
 
   </main>
 
-  <script>
+  <script type="module">
+    import { hub, micro, fetchJSON, fetchText, getHashParams, toBool } from '/micro.js';
+    window.hub = hub;
+    window.getHashParams = getHashParams;
+    window.toBool = toBool;
+
+    var params = getHashParams({ sys: false });
+
+    var allComponentsLoaded = window.loadComponent(['u-toast', 'u-form-json', 'u-form-dialog']);
+
+    // calc the current event/mouse/touch position
+    function getSVGPos(panel, evt) {
+      var newScale = panel.currentScale;
+      var translation = panel.currentTranslate;
+      var panelPos = panel.getBoundingClientRect();
+      var ret = {
+        x: Math.round((evt.clientX - translation.x) / newScale - panelPos.left),
+        y: Math.round((evt.clientY - translation.y) / newScale - panelPos.top)
+      };
+      return (ret);
+    } // getSVGPos()
+
+    // mode a svg group to a specific position using transform:translate
+    function moveSVGGroup(g, x, y) {
+      g.setAttribute('transform', 'translate(' + x + ',' + y + ')');
+    } // moveSVGGroup
+
+
+    // find the center position of the named pin in a svg node group.
+    function _pinPos(g, pin) {
+      var panelPos = panelObj.getBoundingClientRect();
+
+      var obj = g.querySelector('[pin="' + pin + '"]');
+      if (!obj) {
+        obj = g;
+      }
+
+      var b2 = obj.getBoundingClientRect();
+
+      var pos = {
+        x: Math.round(b2.left + b2.width / 2 - panelPos.left),
+        y: Math.round(b2.top + b2.height / 2 - panelPos.top)
+      };
+      return (pos);
+    } // _pinPos()
+
+    // =====
+
     // GRID dimension and size
     const PANEL_GRIDSIZE = 72; // px
     const NODE_SIZE = 64; // px
     const PANEL_WIDTH = 16;
     const PANEL_HEIGHT = 12;
     const XPref = 64; // x-prefering curve for Edges
-    const ITERATE = 200;
+    const ITERATE = 500; // number of iterations for the force-directed layout algorithm
+    const DELTA = 0.0004; // minimum movement of a node to be counted as a move in the force-directed layout algorithm. Used to stop the algorithm when no significant movement is observed.
 
     // svg container objects
     const panelObj = document.getElementById('panel');
@@ -187,6 +195,12 @@
     class LAYOUT {
       XY = "uXY"; // key in localstorage for placements
 
+      /*
+      HomeDing config data model ->
+        create nodes = {id, icon, conf, x, y, fx, fy }
+        create edges = {src, tar, obj}
+      */
+
       nodes = {};
       edges = [];
 
@@ -196,10 +210,10 @@
         n.id = id;
         n.icon = uElements.defs[t]?.icon || t;
         n.conf = s;
-        n._x = 0;
-        n._y = 0;
-        n._fx = 0;
-        n._fy = 0;
+        n.x = 0;
+        n.y = 0;
+        n.fx = 0;
+        n.fy = 0;
       }
 
       // add a new edge
@@ -210,7 +224,11 @@
         });
       }
 
-      // analyse connections, find unconnected Nodes.
+      /** analyse edges (connections)
+       * to identify void actions and unconnected nodes.
+       * - for every edge, count outgoing and incoming edges of the connected nodes.
+       * - remove edges with non-existing source or target node.
+       * */
       analyseChains() {
         // reset in/out counters to 0
         for (const n of Object.values(this.nodes)) {
@@ -235,18 +253,31 @@
       }
 
 
+      /**
+       * Place disconnected nodes in a fixed row at the top.
+       *
+       * For every node without incoming or outgoing edges, this method
+       * assigns a distinct x coordinate, fixes y at 0, and marks the node
+       * as fixed so the force-directed layout does not move it.
+       */
       placeSingleNodes() {
         let px = 1;
         for (const n of Object.values(this.nodes)) {
           if (n._out == 0 && n._in == 0) {
-            n._x = px++;
-            n._y = 0;
+            n.x = px++;
+            n.y = 0;
             n._fixed = true;
           }
         }
       } // placeSingleNodes()
 
 
+      /** Load possibly existingnode placements from localStorage and assign them to the nodes.
+       *
+       * This method reads the node placements from localStorage using the key defined in this.XY.
+       * It then iterates over all nodes and checks if they are not already fixed and if there is a corresponding placement in the loaded data.
+       * If both conditions are met, it assigns the loaded x and y coordinates to the node and marks it as fixed to prevent further movement by the layout algorithm.
+       * */
       loadPlacements() {
         // read position from localstorage
         const locs = JSON.parse(window.localStorage.getItem(this.XY) || "{}");
@@ -254,16 +285,191 @@
         let px = 1;
         for (const [id, n] of Object.entries(this.nodes)) {
           if ((!n._fixed) && (locs[id])) {
-            n._x = locs[id]._x;
-            n._y = locs[id]._y;
+            n.x = locs[id].x;
+            n.y = locs[id].y;
             n._fixed = true;
           }
         }
       } // loadPlacements()
+
+      /* initial placement of all nodes
+        - force-directed graph layout
+        - nodes repel each other
+        - edges attract their nodes
+        - single nodes are placed in a row at the top.
+      */
+      placeNodes() {
+        var py = 1;
+
+        this.analyseChains();
+        this.placeSingleNodes();
+        this.loadPlacements();
+
+        // heuristic initial placement from left to right
+        for (const n of Object.values(this.nodes)) {
+          if (!n._fixed) {
+            // nodes with edges vertically;
+            if (n._in === 0) {
+              n.x = 3;
+            } else if (n._out === 0) {
+              n.x = 8;
+            } else {
+              n.x = 6 + n._in - n._out;
+            }
+            n.x = Math.max(n.x, 0);
+            n.y = py++;
+          }
+        } // for
+      } // placeNodes()
+
+
+      // reset the force calculation of all nodes.
+      // If unlock is true, also reset the fixed state of all nodes with edges
+      // and clear the localStorage persisted positioning.
+      calcReset(unlock = false) {
+        for (const n of Object.values(this.nodes)) {
+          n.fx = 0;
+          n.fy = 0;
+          if ((unlock) && (n._out > 0 || n._in > 0)) {
+            n._fixed = false;
+          }
+        } // for
+        if (unlock) {
+          window.localStorage.removeItem(this.XY);
+        }
+      }
+
+      // perform one iteration of the force-directed layout algorithm.
+      // For each pair of nodes, it calculates the repelling force
+      // and updates the force accumulators (fx and fx) of the nodes accordingly.
+      // Then, for each edge, it calculates the attracting force between the connected nodes and updates their force accumulators.
+      // Finally, it moves each node based on the accumulated forces, unless the node is marked as fixed.
+      // The method returns the total number of nodes that were moved during this iteration.
+      moveNodes() {
+        let cntMoves = 0;
+        this.calcReset();
+        const prev = [];
+        for (const node1 of Object.values(this.nodes).filter(node => node.y > 0)) {
+          // only use nodes with edges.
+          for (const node2 of prev) {
+            calcRepel(node1, node2);
+          }
+          prev.push(node1);
+        }
+
+        for (const edge of this.edges) {
+          calcSpring(this.nodes[edge.src], this.nodes[edge.tar]);
+        }
+
+        for (const node of Object.values(this.nodes)) {
+          cntMoves += moveForce(node);
+        }
+        return (cntMoves);
+      } // moveNodes()
+
+
+      // create / update all svg objects for nodes to current position of nodes
+      drawAllNodes() {
+        for (const nodeId in this.nodes) {
+          const t = nodeId.split('/')[0];
+          const e = this.nodes[nodeId];
+          const ed = uElements.defs[t];
+          const sData = JSON.stringify(e.conf ?? {}, null, 2);
+
+          let obj = e.obj;
+          if (!obj) {
+            obj = e.obj = document.querySelector('#templates .node').cloneNode(true);
+            nodesGroup.appendChild(obj);
+            obj.id = nodeId;
+
+            if (ed) {
+              if ((!ed.events) || (ed.events.length == 0)) {
+                const pin = obj.querySelector('[pin="out"]');
+                if (pin) pin.style.display = "none";
+              }
+            }
+
+            obj.querySelector('.config').addEventListener('click', function(evt) {
+              let t = evt.target;
+              while (t && !t.classList.contains('node')) t = t.parentElement;
+              const d = t.getAttribute('data');
+              const id = t.getAttribute('id').split('/');
+              const dlg = document.querySelector('dialog#configElement');
+              dlg.showModal({ ...JSON.parse(d), type: id[0], id: id[1] });
+            });
+          }
+
+          if (e.icon)
+            obj.querySelector('.icon').setAttribute("href", "/icons.svg#" + e.icon);
+
+          obj.querySelector('title').textContent = sData;
+          obj.setAttribute("data", sData);
+          obj.querySelector('.id').firstChild.textContent = nodeId;
+
+          moveSVGGroup(obj, e.x * PANEL_GRIDSIZE + 4, e.y * PANEL_GRIDSIZE + 4);
+        }
+
+        const uPos = {};
+        Object.values(this.nodes).forEach(n => {
+          if (n._fixed)
+            uPos[n.id] = { x: n.x, y: n.y };
+        });
+        window.localStorage.setItem(this.XY, JSON.stringify(uPos));
+      } // drawAllNodes()
+
+
+      // create / update all svg objects edges to current position of nodes
+      drawAllEdges() {
+        let aPos, ePos;
+
+        for (let n = 0; n < this.edges.length; n++) {
+          const f = this.edges[n];
+          const sObj = this.nodes[f.src];
+          const tObj = this.nodes[f.tar];
+
+          if (sObj && tObj) {
+            const obj = f.obj;
+            aPos = _pinPos(sObj.obj, 'out');
+            ePos = _pinPos(tObj.obj, 'in');
+            f.obj = this.drawEdge(obj, aPos, ePos);
+          }
+        }
+      } // drawAllEdges()
+
+
+      // create / update a svg object for an edge from aPos to ePos. If obj is given, reuse it, otherwise create a new one.
+      drawEdge(obj, aPos, ePos) {
+        if (!obj) {
+          obj = edgesGroup.ownerDocument.createElementNS("http://www.w3.org/2000/svg", 'path');
+          edgesGroup.appendChild(obj);
+          // obj.addEventListener('click', function(evt) {
+          //   // how to delete an edge ?
+          // });
+        }
+        obj.setAttribute("d", `M ${aPos.x + 6},${aPos.y} C ${aPos.x + XPref},${aPos.y} ${ePos.x - XPref},${ePos.y} ${ePos.x - 18},${ePos.y} L ${ePos.x - 6},${ePos.y}`);
+        return obj;
+      } // drawEdge()
+
+
+      /// perform multiple iterations of the force-directed layout algorithm
+      // until no significant movement of nodes is observed
+      // or the maximum number of iterations is reached.
+      // After the iterations, it updates the positions of all nodes and edges on the SVG panel.
+      shiftNodes() {
+        for (let n = 0; n < ITERATE; n++) {
+          if (!this.moveNodes()) {
+            console.log("shiftNodes:", n);
+            break;
+          }
+        };
+        this.drawAllNodes();
+        this.drawAllEdges();
+      } // shiftNodes()
     }
 
     const layout = new LAYOUT();
 
+    /// helper function to constrain a value between a min and max value.
     function constrain(val, min, max) {
       if (val < min) {
         val = min;
@@ -273,16 +479,21 @@
       return (val);
     } // constrain()
 
+    // ===== attach event listeners to buttons and panel
+
+    /// add click handler on the unlock button to reset the force calculation and unlock all nodes for manual placement.
     document.getElementById('unlock').addEventListener("click", evt => {
-      calcReset(true);
+      layout.calcReset(true);
     });
 
+
+    /// add click handler on the auto button to start the force-directed layout algorithm.
     document.getElementById('auto').addEventListener("click", evt => {
-      for (let n = 0; n < ITERATE; n++) moveNodes();
-      drawAllNodes();
-      drawAllEdges();
+      layout.shiftNodes();
     });
 
+
+    /// add click handler on the add button to open the new element dialog.
     document.getElementById('addButton').addEventListener("click", async evt => {
       // load dialogs on demand.
       await loadPlugins();
@@ -293,6 +504,17 @@
         });
     });
 
+
+    window.onerror = function(msg, url, lineNo, columnNo, error) {
+      var message = [
+        'Error: ' + msg,
+        'Script: ' + url,
+        'Line: ' + lineNo,
+        'Column: ' + columnNo,
+        'Error object: ' + JSON.stringify(error)
+      ].join(' - ');
+      console.error(message);
+    };
 
     var params = getHashParams({ sys: false });
 
@@ -325,21 +547,11 @@
       config: {},
       state: {}
     };
+    window.uElements = uElements;
 
     // adjust size of the panelObj.
     panelObj.style.width = PANEL_GRIDSIZE * PANEL_WIDTH + "px";
     panelObj.style.height = PANEL_GRIDSIZE * PANEL_HEIGHT + "px";
-
-    // nodes are all existing elements from the device configuration
-    // extended by _x, _y
-    var nodes = {};
-    var edges = [];
-
-    /*
-    HomeDing config data model ->
-      create nodes = {id, xPos, _y, onXXX, obj }
-      create edges = {src, tar, obj}
-    */
 
     // create all nodes and edges from the HomeDing config files
     function createNodes(conf) {
@@ -370,64 +582,28 @@
     } // createNodes()
 
 
-    // initial placement of all nodes
-    function placeNodes() {
-      var py = 1;
-
-      layout.analyseChains();
-      layout.placeSingleNodes();
-      layout.loadPlacements();
-
-      // heuristic initial placement from left to right
-      for (const n of Object.values(this.nodes)) {
-        if (!n._fixed) {
-          // nodes with edges vertically;
-          if (n._in === 0) {
-            n._x = 3;
-          } else if (n._out === 0) {
-            n._x = 8;
-          } else {
-            n._x = 6 + n._in - n._out;
-          }
-          n._x = Math.max(n._x, 0);
-          n._y = py++;
-        }
-      } // for
-    } // placeNodes()
-
-
-    function calcReset(unlock = false) {
-      for (const n of Object.values(this.nodes)) {
-        n._fx = 0;
-        n._fy = 0;
-        if ((unlock) && (n._out > 0 || n._in > 0)) {
-          n._fixed = false;
-        }
-      }
-    }
-
     // calc force given by 2 nodes repel each other 
     function calcRepel(node1, node2) {
-      const dx = node2._x - node1._x;
-      const dy = node2._y - node1._y;
+      const dx = node2.x - node1.x;
+      const dy = node2.y - node1.y;
       const d2 = dx * dx + dy * dy;
 
       const f1 = 0.1;
       const fx = f1 * dx / d2;
       const fy = f1 * dy / d2;
 
-      node1._fx -= fx;
-      node1._fy -= fy;
-      node2._fx += fx;
-      node2._fy += fy;
+      node1.fx -= fx;
+      node1.fy -= fy;
+      node2.fx += fx;
+      node2.fy += fy;
     } // calcRepel()
 
 
     // calc force given by 2 connected nodes attacting each other 
     function calcSpring(node1, node2) {
       if (node1 && node2) {
-        const dx = node2._x - node1._x;
-        const dy = node2._y - node1._y;
+        const dx = node2.x - node1.x;
+        const dy = node2.y - node1.y;
         const d2 = dx * dx + dy * dy;
         const d = Math.sqrt(d2);
 
@@ -439,131 +615,35 @@
         fx -= 0.3;
         fy = 2 * fy;
 
-        node1._fx += fx;
-        node1._fy += fy;
-        node2._fx -= fx;
-        node2._fy -= fy;
+        node1.fx += fx;
+        node1.fy += fy;
+        node2.fx -= fx;
+        node2.fy -= fy;
       }
     } // calcSpring
 
 
+    // calc the movement of a node given its accumulated forces.
+    // return 1 when the node was moved, otherwise 0.
+    // The movement is constrained to the panel size and a factor is applied to slow down the movement.
     function moveForce(node) {
+      let ret = 0;
       if (!node._fixed) {
-        node._x = constrain(node._x + node._fx * 0.1, 0, PANEL_WIDTH - 1);
-        node._y = constrain(node._y + node._fy * 0.1, 1, PANEL_HEIGHT - 1);
+        const nx = constrain(node.x + node.fx * 0.1, 0, PANEL_WIDTH - 1);
+        const ny = constrain(node.y + node.fy * 0.1, 1, PANEL_HEIGHT - 1);
+        if (Math.abs(nx - node.x) > DELTA || Math.abs(ny - node.y) > DELTA) {
+          node.x = nx;
+          node.y = ny;
+          ret = 1;
+        }
       }
+      return (ret);
     }
 
-    function moveNodes() {
-      calcReset();
-      const prev = [];
-      for (const node1 of Object.values(nodes)) {
-        if (node1._y > 0) {
-          // only use nodes with edges.
-          for (const node2 of prev) {
-            calcRepel(node1, node2);
-          }
-          prev.push(node1);
-        }
-      }
-
-      for (const edge of edges) {
-        calcSpring(nodes[edge.src], nodes[edge.tar]);
-      }
-
-      for (const node of Object.values(nodes)) {
-        moveForce(node);
-      }
-    } // moveNodes()
-
-
-    // create / update svg objects for all nodes
-    function drawAllNodes() {
-      for (var nodeId in nodes) {
-        var t = nodeId.split('/')[0];
-        var e = nodes[nodeId];
-        var ed = uElements.defs[t];
-        const sData = JSON.stringify(e.conf ?? {}, null, 2);
-
-        var obj = e.obj;
-        if (!obj) {
-          // create a new svg object for node
-          obj = e.obj = document.querySelector('#templates .node').cloneNode(true);
-          nodesGroup.appendChild(obj);
-          obj.id = nodeId;
-
-          // ingoing pin is always visible. disable outgoing pin ?
-          if (ed) {
-            if ((!ed.events) || (ed.events.length == 0)) {
-              const pin = obj.querySelector('[pin="out"]');
-              if (pin) pin.style.display = "none";
-            }
-          }
-
-          obj.querySelector('.config').addEventListener('click', function(evt) {
-            var t = evt.target;
-            while (t && !t.classList.contains('node')) t = t.parentElement;
-            const d = t.getAttribute('data');
-            const id = t.getAttribute('id').split('/');
-            const dlg = document.querySelector('dialog#configElement');
-            dlg.showModal({ ...JSON.parse(d), type: id[0], id: id[1] });
-          });
-        }
-
-        // update svg object by node properties
-        if (e.icon)
-          obj.querySelector('.icon').setAttribute("href", "/icons.svg#" + e.icon);
-
-        obj.querySelector('title').textContent = sData;
-        obj.setAttribute("data", sData);
-        obj.querySelector('.id').firstChild.textContent = nodeId;
-
-        moveSVGGroup(obj, e._x * PANEL_GRIDSIZE + 4, e._y * PANEL_GRIDSIZE + 4);
-      } // for
-
-      // save pos
-      const uPos = {};
-      Object.values(nodes).forEach(n => {
-        if (n._fixed)
-          uPos[n.id] = { _x: n._x, _y: n._y };
-      });
-      window.localStorage.setItem(layout.XY, JSON.stringify(uPos));
-    } // drawAllNodes()
+    // create / update all svg objects edges to current position of nodes
 
 
     // create / update all svg objects edges to current position of nodes
-    function drawEdge(obj, aPos, ePos) {
-      if (!obj) {
-        obj = edgesGroup.ownerDocument.createElementNS("http://www.w3.org/2000/svg", 'path');
-        edgesGroup.appendChild(obj);
-        // obj.addEventListener('click', function(evt) {
-        //   // how to delete an edge ?
-        // });
-
-      } // if
-      obj.setAttribute("d", `M ${aPos.x + 6},${aPos.y} C ${aPos.x + XPref},${aPos.y} ${ePos.x - XPref},${ePos.y} ${ePos.x - 18},${ePos.y} L ${ePos.x - 6},${ePos.y}`);
-      return (obj);
-    } // drawEdge()
-
-
-    // create / update all svg objects edges to current position of nodes
-    function drawAllEdges() {
-      var aPos, ePos;
-
-      for (var n = 0; n < edges.length; n++) {
-        var f = edges[n];
-        var sObj = nodes[f.src];
-        var tObj = nodes[f.tar];
-
-        if (sObj && tObj) {
-          var obj = f.obj;
-          aPos = _pinPos(sObj.obj, 'out');
-          ePos = _pinPos(tObj.obj, 'in');
-          f.obj = drawEdge(obj, aPos, ePos);
-        } // for
-      }
-    } // drawEdges()
-
     window.addEventListener('load', async function() {
       // get configuration data
       var p2 = fetchJSON('/elements.json').then(json => uElements.defs = json);
@@ -578,13 +658,8 @@
         createNodes(uElements.env);
         createNodes(uElements.config);
 
-        nodes = layout.nodes;
-        edges = layout.edges;
-
-        placeNodes();
-        for (let n = 0; n < ITERATE; n++) moveNodes();
-        drawAllNodes();
-        drawAllEdges();
+        layout.placeNodes();
+        layout.shiftNodes();
         loadPlugins();
       });
     });
@@ -607,7 +682,7 @@
 
       let obj = DragObj;
       while (obj && !obj.classList.contains('node')) obj = obj.parentElement;
-      DragNode = Object.values(nodes).find(n => (n.obj === obj));
+      DragNode = Object.values(layout.nodes).find(n => (n.obj === obj));
 
       if (DragObj) {
         if (DragObj.getAttribute('pin') === 'out') {
@@ -622,7 +697,7 @@
             r: 6
           });
           _conPos = { x: DragOffset.x, y: DragOffset.y };
-          _conObj = drawEdge(undefined, _conPos, _conPos);
+          _conObj = layout.drawEdge(undefined, _conPos, _conPos);
 
         } else {
           DragMode = 'n';
@@ -641,10 +716,10 @@
         var DragPos = getSVGPos(panelObj, evt);
         moveSVGGroup(DragObj, DragPos.x - DragOffset.x, DragPos.y - DragOffset.y);
         if (DragMode === 'n') {
-          drawAllEdges();
+          layout.drawAllEdges();
         } else {
           DragPos.x += 6;
-          drawEdge(_conObj, _conPos, DragPos);
+          layout.drawEdge(_conObj, _conPos, DragPos);
         }
       } // if
     }); // mousemove
@@ -662,8 +737,8 @@
           // find target node
           const x = DragPos.x / PANEL_GRIDSIZE;
           const y = DragPos.y / PANEL_GRIDSIZE;
-          const node = Object.values(nodes).find(n =>
-            (n._x <= x) && (n._x + 1 > x) && (n._y <= y) && (n._y + 1 > y)
+          const node = Object.values(layout.nodes).find(n =>
+            (n.x <= x) && (n.x + 1 > x) && (n.y <= y) && (n.y + 1 > y)
           );
 
           // Start the action connect dialog
@@ -691,15 +766,15 @@
 
         } else if (DragMode === 'n') {
           // node drop
-          const node = Object.values(nodes).find(n => (n.obj === DragObj));
-          node._x = Math.floor(6 * (DragPos.x - DragOffset.x) / PANEL_GRIDSIZE) / 6;
-          node._y = Math.floor(6 * (DragPos.y - DragOffset.y) / PANEL_GRIDSIZE) / 6;
+          const node = Object.values(layout.nodes).find(n => (n.obj === DragObj));
+          node.x = Math.floor(6 * (DragPos.x - DragOffset.x) / PANEL_GRIDSIZE) / 6;
+          node.y = Math.floor(6 * (DragPos.y - DragOffset.y) / PANEL_GRIDSIZE) / 6;
           node._fixed = true;
 
         }
 
-        drawAllNodes();
-        drawAllEdges();
+        layout.drawAllNodes();
+        layout.drawAllEdges();
 
       } // if
       DragObj = null;

@@ -9,7 +9,7 @@
   <link rel="icon" type="image/png" href="/favicon48.png" sizes="48x48" />
   <!-- no web site meta data here -->
   <link Content-Type="text/css" href="iotstyle.css" rel="stylesheet" />
-  <script src="micro.js"></script>
+  <script type="module" src="micro.js"></script>
   <script src="/sfc/loader.js"></script>
   <script>
     var allSFCLoaded = window.loadComponent('u-toast');
@@ -151,7 +151,14 @@
       autocapitalize="off" spellcheck="false"></pre>
   </main>
 
-  <script>
+  <script type="module">
+    import {hub, micro, fetchJSON, fetchText, getHashParams, toBool, setAttr, jsonParse,
+      createHTMLElement
+    } from '/micro.js';
+    window.hub = hub;
+    window.setAttr = setAttr;
+    window.toBool = toBool;
+
     const filesObj = document.getElementById('files');
     const contentObj = document.getElementById('content');
     const toastObj = document.querySelector('u-toast');

@@ -5,19 +5,13 @@
 
 import { micro } from "./microRegistry";
 
-export { fetchJSON, fetchText, createHTMLElement, debounce, getHashParams, setAttr, toBool } from "./utils";
+export { fetchJSON, fetchText, createHTMLElement, debounce, getHashParams, setAttr, toBool,
+  findConfig
+ } from "./utils";
 export { hub } from "./microHub";
 export { micro } from "./microRegistry";
 
 export { jsonParse } from './JsonParse.js';
-
-// import { JsonParseCallback, jsonParse, jsonFind, jsonLocate } from "./JsonParse";
-
-// import { MicroControlClass, MicroControl} from "./microControls";
-// import { MicroRegistry, micro } from "./microRegistry";
-// micro;
-
-console.log('micro.ts loaded');
 
 // detect that a new micro control was created using Mutation Observe Callback
 const obs = new MutationObserver(function(mutationsList: MutationRecord[], _observer) {

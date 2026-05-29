@@ -13,7 +13,6 @@
   },
   "dependencies": {
     "debug": "^4.3.5",
-    "esbuild": "^0.28.0",
     "express": "^5.2.1",
     "multer": "^2.0.2",
     "multicast-dns": "^7.2.5",
@@ -28,10 +27,11 @@
     "@types/multer": "^2.0.0",
     "@types/multicast-dns": "^7.2.4",
     "@types/yargs": "^17.0.32",
+    "esbuild": "^0.28.0",
     "eslint": "^10.0.3",
     "globals": "^17.0.0",
     "html-minifier-terser": "^7.2.0",
-    "npm-run-all2": "^8.0.3",
+    "npm-run-all2": "^9.0.1",
     "postcss": "^8.5.14",
     "postcss-scss": "^4.0.9",
     "shelljs": "^0.10.0",
@@ -61,19 +61,15 @@
     "build:css-watch": "npm run build:css -- -w",
     "build:server": "tsc -p server",
     "no-build:ts": "tsc -p src",
-    
-    "build:ts":      "npx esbuild src/micro.ts      --outfile=./micro.js      --target=esnext --bundle --format=esm --sourcemap=external --platform=browser",
+    "build:ts": "npx esbuild src/micro.ts      --outfile=./micro.js      --target=esnext --bundle --format=esm --sourcemap=external --platform=browser",
     "build:ts-mini": "npx esbuild src/micro-mini.ts --outfile=./micro-mini.js --target=esnext --bundle --format=esm --sourcemap=external --platform=browser",
     "build:ts-old": "tsc -p src --project src/tsconfig.mini.json",
     "build:ts-watch": "npm run build:ts -- --watch",
     "build:ts-mini-watch": "npm run build:ts-mini -- --watch",
-
     "test:css": "stylelint css/*.scss",
     "test:server": "eslint ./server/*.ts",
     "test:ts": "eslint ./src/*.ts",
-
     "typecheck:ts": "tsc -p src --project src/tsconfig.json --noEmit",
-    
     "pack:dist": "node packdist.js",
     "pack:minimal": "node packminimal.js",
     "pack:icons": "node packicons.js",

@@ -16,7 +16,7 @@
   <meta name="theme-color" content="#ffffff" />
 
   <link Content-Type="text/css" href="/iotstyle.css" rel="stylesheet" defer />
-  <script src="/micro.js" defer></script>
+  <script type="module" src="/micro.js"></script>
 </head>
 
 <body class="sitelayout" style="width:100%;--layout-gap: 0;--main-back:transparent">
@@ -174,7 +174,15 @@
 
   <a style="position:absolute;top:1em;right:1em" href="/microide.htm">IDE</a>
 
-  <script>
+  <script type="module">
+    import {hub, micro, fetchJSON, fetchText, getHashParams, toBool, setAttr, jsonParse,
+      createHTMLElement
+    } from '/micro.js';
+    window.hub = hub;
+    window.setAttr = setAttr;
+    window.toBool = toBool;
+    window.createHTMLElement = createHTMLElement;
+    
     (function() { // allows variable names to be packed by minifier
       const REFRESH_INTERVAL = 4000;
       var panelObj = document.querySelector('#panl');
