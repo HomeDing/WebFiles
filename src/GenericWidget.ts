@@ -1,21 +1,24 @@
 // GenericWidget.ts: Basic Behavior implementation for UI of Elements
 
-/// <reference path="micro.ts" />
-/// <reference path="microControls.ts" />
+import { setAttr, toBool, debounce, getHashParams } from "./utils";
+import { MicroControlClass } from "./microControls";
+import { MicroControl } from "./microRegistry";
+import { hub } from "./microHub";
 
 // === Generic Widget Behavior ===
 
+let GenericWidgetIDCounter = 102;
+
 @MicroControl('generic')
-class GenericWidgetClass extends MicroControlClass {
+export class GenericWidgetClass extends MicroControlClass {
   microid!: string;
   data: any;
   actions!: string[];
   subId!: number;
 
-  static idc = 42;
   protected uid(obj: HTMLElement): string {
     if (!obj.id) {
-      obj.id = 'o' + (GenericWidgetClass.idc++);
+      obj.id = 'o' + (GenericWidgetIDCounter++);
     }
     return (obj.id);
   }
@@ -113,8 +116,8 @@ class GenericWidgetClass extends MicroControlClass {
         fetch(aUrl).then(() => {
           if (this.actions.length > 0) {
             debounce(this.dispatchNext.bind(this))();
-          } else {
-            // @ts-ignore
+          } else if ("updateState" in window) {
+            // @ts-expect-error may fail, but continue anyway
             try { window.updateState(); } catch { }
           } // if
         });
@@ -180,7 +183,7 @@ class GenericWidgetClass extends MicroControlClass {
       } else if (p.classList.contains('setconfig')) {
         const dlg = document.querySelector('#configElement') as HTMLDialogElement;
         const ti = this.microid.split('/');
-        // @ts-ignore
+        // @ts-expect-error the override function has parameters
         dlg.showModal({ ...this.data, type: ti[1], id: ti[2] });
 
       } else if (p.classList.contains('setactive')) {

@@ -1,16 +1,13 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
   "display": "client-side",
-  
   "compilerOptions": {
-    "target": "ES2022",
+    "target": "es2025",
     "strict": true,
-    "outFile": "../micro.js",
-
     "allowJs": false,
     "experimentalDecorators": true,
     "lib": [
-      "es2015",
+      "es2025",
       "es6",
       "dom",
       "dom.iterable"
@@ -19,7 +16,6 @@
     "forceConsistentCasingInFileNames": true,
     "allowUnusedLabels": false,
     "allowUnreachableCode": false,
-
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
@@ -27,15 +23,10 @@
     "noImplicitReturns": true,
     "noPropertyAccessFromIndexSignature": true,
     // "noUncheckedIndexedAccess": true,
-
-    "sourceMap": true,
-    "newLine": "LF",
-    "removeComments": true,
-    "downlevelIteration": true
+    // "noemit": true,
   },
   "include": [
     "./*.ts"
   ],
   "exclude": []
-
 }

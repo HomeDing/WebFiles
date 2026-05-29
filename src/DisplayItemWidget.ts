@@ -3,11 +3,9 @@
 // This file is part of the Widget implementation for the HomeDing Library
 // implementing the Web UI corresponding to an internal configured element.
 
-/// <reference path="micro.ts" />
-/// <reference path="microControls.ts" />
-/// <reference path="GenericWidget.ts" />
+import { GenericWidgetClass } from "./GenericWidget";
 
-class DisplayItemWidgetClass extends GenericWidgetClass {
+export class DisplayItemWidgetClass extends GenericWidgetClass {
   _dispElem!: HTMLElement;
   _grid!: number;
   _elem!: HTMLElement;

@@ -3,12 +3,12 @@
 // This file is part of the Widget implementation for the HomeDing Library
 // implementing the Web UI corresponding to an internal configured element.
 
-/// <reference path="micro.ts" />
-/// <reference path="microControls.ts" />
-/// <reference path="GenericWidget.ts" />
+import { createHTMLElement } from "./utils";
+import { GenericWidgetClass } from "./GenericWidget";
+import { MicroControl } from "./microRegistry";
 
 @MicroControl('button')
-class ButtonWidgetClass extends GenericWidgetClass {
+export class ButtonWidgetClass extends GenericWidgetClass {
   _timer: number | undefined;
   _start!: number;
   _duration!: number;

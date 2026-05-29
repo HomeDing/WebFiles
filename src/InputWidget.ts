@@ -7,12 +7,11 @@
 // for range-input up and down labels can be added using class="up"|"down".
 // The focus is set to the input element on click events.
 
-/// <reference path="micro.ts" />
-/// <reference path="microControls.ts" />
-/// <reference path="GenericWidget.ts" />
+import { GenericWidgetClass } from "./GenericWidget";
+import { MicroControl } from "./microRegistry";
 
 @MicroControl('input')
-class InputWidgetClass extends MicroControlClass {
+export class InputWidgetClass extends GenericWidgetClass {
   _input!: HTMLInputElement; // Reference to the real input element, maybe "this".
   _type!: string;
   _value!: string;
@@ -50,11 +49,11 @@ class InputWidgetClass extends MicroControlClass {
     }
   }
 
-  on_change() {
+  override on_change() {
     this._check();
   }
 
-  on_click(e: MouseEvent) {
+  override on_click(e: MouseEvent) {
     let src: HTMLElement | null = e.target as HTMLElement;
 
     this._value = this._input.value;

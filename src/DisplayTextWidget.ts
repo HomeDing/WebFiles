@@ -3,13 +3,12 @@
 // This file is part of the Widget implementation for the HomeDing Library
 // implementing the Web UI corresponding to an internal configured element.
 
-/// <reference path="micro.ts" />
-/// <reference path="microControls.ts" />
-/// <reference path="GenericWidget.ts" />
-/// <reference path="DisplayItemWidget.ts" />
+import { createHTMLElement } from "./utils";
+import { DisplayItemWidgetClass } from "./DisplayItemWidget";
+import { MicroControl } from "./microRegistry";
 
 @MicroControl('displaytext')
-class DisplayTextWidgetClass extends DisplayItemWidgetClass {
+export class DisplayTextWidgetClass extends DisplayItemWidgetClass {
   private _prefix!: string;
   private _postfix!: string;
 

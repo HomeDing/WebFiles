@@ -3,12 +3,12 @@
 // This file is part of the Widget implementation for the HomeDing Library
 // implementing the Web UI corresponding to an internal configured element.
 
-/// <reference path="micro.ts" />
-/// <reference path="microControls.ts" />
-/// <reference path="GenericWidget.ts" />
+import { createHTMLElement } from "./utils";
+import { GenericWidgetClass } from "./GenericWidget";
+import { MicroControl } from "./microRegistry";
 
 @MicroControl('scene')
-class SceneWidgetClass extends GenericWidgetClass {
+export class SceneWidgetClass extends GenericWidgetClass {
   static _sceneCard?: HTMLElement;
   _buttonObj!: HTMLButtonElement;
 

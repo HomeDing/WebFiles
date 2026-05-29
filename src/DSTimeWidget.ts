@@ -3,12 +3,12 @@
 // This file is part of the Widget implementation for the HomeDing Library
 // implementing the Web UI corresponding to an internal configured element.
 
-/// <reference path="micro.ts" />
-/// <reference path="microControls.ts" />
-/// <reference path="GenericWidget.ts" />
+import { setTextContent } from "./utils";
+import { GenericWidgetClass } from "./GenericWidget";
+import { MicroControl } from "./microRegistry";
 
 @MicroControl('dstime')
-class DSTimeWidgetClass extends GenericWidgetClass {
+export class DSTimeWidgetClass extends GenericWidgetClass {
   _nowObj!: HTMLElement;
 
   override connectedCallback() {

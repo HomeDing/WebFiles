@@ -3,12 +3,11 @@
 // This file is part of the Widget implementation for the HomeDing Library
 // implementing the Web UI corresponding to an internal configured element.
 
-/// <reference path="micro.ts" />
-/// <reference path="microControls.ts" />
-/// <reference path="GenericWidget.ts" />
+import { GenericWidgetClass } from "./GenericWidget";
+import { MicroControl } from "./microRegistry";
 
 @MicroControl('value')
-class ValueWidget extends GenericWidgetClass {
+export class ValueWidgetClass extends GenericWidgetClass {
   _input!: HTMLInputElement | null;
 
   override connectedCallback() {

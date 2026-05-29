@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "debug": "^4.3.5",
+    "esbuild": "^0.28.0",
     "express": "^5.2.1",
     "multer": "^2.0.2",
     "multicast-dns": "^7.2.5",
@@ -49,7 +50,7 @@
     "sass": "^1.98.0"
   },
   "scripts": {
-    "all": "npm run build && npm run test && npm run pack && npm run publish",
+    "all": "npm run build && npm run typecheck:ts && npm run test && npm run pack && npm run publish",
     "build": "npm run build:ts && npm run build:ts-mini && npm run build:css && npm run build:server",
     "test": "npm audit && npm run test:ts && npm run test:server && npm run test:css",
     "pack": "npm run pack:icons && npm run pack:dist && npm run pack:minimal && npm run pack:embed",
@@ -59,12 +60,20 @@
     "build:css": "sass docstyle.scss:docstyle.css iotstyle.scss:iotstyle.css",
     "build:css-watch": "npm run build:css -- -w",
     "build:server": "tsc -p server",
-    "build:ts": "tsc -p src",
-    "build:ts-mini": "tsc -p src --project src/tsconfig.mini.json",
-    "build:ts-watch": "npm run build:ts -- -w",
+    "no-build:ts": "tsc -p src",
+    
+    "build:ts":      "npx esbuild src/micro.ts      --outfile=./micro.js      --target=esnext --bundle --format=esm --sourcemap=external --platform=browser",
+    "build:ts-mini": "npx esbuild src/micro-mini.ts --outfile=./micro-mini.js --target=esnext --bundle --format=esm --sourcemap=external --platform=browser",
+    "build:ts-old": "tsc -p src --project src/tsconfig.mini.json",
+    "build:ts-watch": "npm run build:ts -- --watch",
+    "build:ts-mini-watch": "npm run build:ts-mini -- --watch",
+
     "test:css": "stylelint css/*.scss",
     "test:server": "eslint ./server/*.ts",
     "test:ts": "eslint ./src/*.ts",
+
+    "typecheck:ts": "tsc -p src --project src/tsconfig.json --noEmit",
+    
     "pack:dist": "node packdist.js",
     "pack:minimal": "node packminimal.js",
     "pack:icons": "node packicons.js",
@@ -73,7 +82,7 @@
     "publish:webfiles": "cmd /C publishWebFiles.bat v10",
     "prestart": "npm run build",
     "start": "node app.js",
-    "dev": "run-p -n build:css-watch build:ts-watch start",
+    "dev": "run-p -n build:css-watch build:ts-watch build:ts-mini-watch",
     "sfc:sfc": "node sfc/bin/pack-sfc.js sfc/u-toast.sfc sfc/u-linechart.sfc sfc/u-piechart.sfc sfc/u-form-*.sfc sfc/u-tablesort.sfc sfc/u-include.sfc  -o bundle.sfc",
     "sfc:hdw": "node sfc/bin/pack-sfc.js hdw/hdw-generic.sfc hdw/hdw-air.sfc hdw/hdw-digitalvalue.sfc hdw/hdw-reference.sfc hdw/hdw-schedule.sfc hdw/hdw-switch.sfc -o hdwbundle.sfc"
   },

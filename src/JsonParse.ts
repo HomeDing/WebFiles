@@ -4,9 +4,9 @@
 // See also:
 // http://goessner.net/articles/JsonPath/
 
-type JsonParseCallback = (path: string, key: string, value: string) => void;
+export type JsonParseCallback = (path: string, key: string, value: string) => void;
 
-function jsonParse(obj: any, cbFunc: JsonParseCallback) {
+export function jsonParse(obj: any, cbFunc: JsonParseCallback) {
   /** internal function used in recursion */
   function _jsonParse(path: string, key: string, value: any) {
     let path2 = key ? path + '/' + key : path;
@@ -33,7 +33,7 @@ function jsonParse(obj: any, cbFunc: JsonParseCallback) {
   _jsonParse('', '', obj);
 } // jsonParse()
 
-function jsonFind(obj: any, path: string): any {
+export function jsonFind(obj: any, path: string): any {
   if (path[0] === '/') {
     path = path.substring(1);
   }
@@ -54,7 +54,7 @@ function jsonFind(obj: any, path: string): any {
 
 // find node with the path in the object and create when not yet present.
 
-function jsonLocate(obj: any, path: string): any {
+export function jsonLocate(obj: any, path: string): any {
   if (path[0] === '/') {
     path = path.substring(1);
   }

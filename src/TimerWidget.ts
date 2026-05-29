@@ -3,14 +3,12 @@
 // This file is part of the Widget implementation for the HomeDing Library
 // implementing the Web UI corresponding to an internal configured element.
 
-/// <reference path="micro.ts" />
-/// <reference path="utils.ts" />
-/// <reference path="microControls.ts" />
-/// <reference path="GenericWidget.ts" />
-
+import { toSeconds } from "./utils";
+import { GenericWidgetClass } from "./GenericWidget";
+import { MicroControl } from "./microRegistry";
 
 @MicroControl('timer')
-class TimerWidgetClass extends GenericWidgetClass {
+export class TimerWidgetClass extends GenericWidgetClass {
   wt = 0;
   pt = 0;
   ct = 0;

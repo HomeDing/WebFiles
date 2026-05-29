@@ -4,13 +4,11 @@
 // implementing the Web UI corresponding to an internal configured element.
 // Support hue, brightness and white bands for single `WWRRGGBB` value.
 
-/// <reference path="micro.ts" />
-/// <reference path="microControls.ts" />
-/// <reference path="GenericWidget.ts" />
-
+import { GenericWidgetClass } from "./GenericWidget";
+import { MicroControl } from "./microRegistry";
 
 @MicroControl('color')
-class ColorWidgetClass extends GenericWidgetClass {
+export class ColorWidgetClass extends GenericWidgetClass {
   private _value!: string;   // actual value
   private _color!: string;   // actual color value from the color input
   private _white: number | undefined;   // actual white value from the slider

@@ -3,13 +3,12 @@
 // This file is part of the Widget implementation for the HomeDing Library
 // implementing the Web UI corresponding to an internal configured element.
 
-/// <reference path="micro.ts" />
-/// <reference path="microControls.ts" />
-/// <reference path="GenericWidget.ts" />
-/// <reference path="DisplayItemWidget.ts" />
+import { createHTMLElement, toBool } from "./utils";
+import { DisplayItemWidgetClass } from "./DisplayItemWidget";
+import { MicroControl } from "./microRegistry";
 
 @MicroControl('displaydot')
-class DisplayDotWidgetClass extends DisplayItemWidgetClass {
+export class DisplayDotWidgetClass extends DisplayItemWidgetClass {
   // When the card is created also create a html tag inside the display.
   override connectedCallback() {
     super.connectedCallback();

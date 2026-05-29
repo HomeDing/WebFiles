@@ -3,9 +3,8 @@
 // This file is part of the Widget implementation for the HomeDing Library
 // implementing the Web UI corresponding to an internal configured element.
 
-/// <reference path="micro.ts" />
-/// <reference path="microControls.ts" />
-/// <reference path="GenericWidget.ts" />
+import { GenericWidgetClass } from "./GenericWidget";
+import { MicroControl } from "./microRegistry";
 
 /**
  * A widget class for displaying log data in a line chart.
@@ -22,8 +21,9 @@
  * @property {boolean} _isSetup - Tracks if the chart is configured
  * @property {boolean} _isDirty - Tracks if the chart needs updating
  */
+
 @MicroControl('log')
-class LogWidgetClass extends GenericWidgetClass {
+export class LogWidgetClass extends GenericWidgetClass {
   private _fName?: string;
   private _chart!: HTMLElement | any | null;
   private _lineType!: string;

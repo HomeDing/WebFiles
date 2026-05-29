@@ -60,22 +60,22 @@ SelectWidgetClass;
 TimerWidgetClass;
 
 // extends to the full set of Widgets
-import { DisplayItemWidgetClass } from "./DisplayItemWidget";
-import { DisplayButtonWidgetClass } from "./DisplayButtonWidget";
-import { DisplayDotWidgetClass } from "./DisplayDotWidget";
-import { DisplayLineWidgetClass } from "./DisplayLineWidget";
-import { DisplayTextWidgetClass } from "./DisplayTextWidget";
-import { DisplayWidgetClass } from "./DisplayWidget";
-import { DSTimeWidgetClass } from "./DSTimeWidget";
-import { LogWidgetClass } from "./LogWidget";
+// import { DisplayItemWidgetClass } from "./DisplayItemWidget";
+// import { DisplayButtonWidgetClass } from "./DisplayButtonWidget";
+// import { DisplayDotWidgetClass } from "./DisplayDotWidget";
+// import { DisplayLineWidgetClass } from "./DisplayLineWidget";
+// import { DisplayTextWidgetClass } from "./DisplayTextWidget";
+// import { DisplayWidgetClass } from "./DisplayWidget";
+// import { DSTimeWidgetClass } from "./DSTimeWidget";
+// import { LogWidgetClass } from "./LogWidget";
 
-DisplayButtonWidgetClass;
-DisplayDotWidgetClass;
-DisplayItemWidgetClass;
-DisplayLineWidgetClass;
-DisplayTextWidgetClass;
-DisplayWidgetClass;
-DSTimeWidgetClass;
-LogWidgetClass;
+// DisplayButtonWidgetClass;
+// DisplayDotWidgetClass;
+// DisplayItemWidgetClass;
+// DisplayLineWidgetClass;
+// DisplayTextWidgetClass;
+// DisplayWidgetClass;
+// DSTimeWidgetClass;
+// LogWidgetClass;
 
 // End.

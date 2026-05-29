@@ -3,12 +3,12 @@
 // This file is part of the Widget implementation for the HomeDing Library
 // implementing the Web UI corresponding to an internal configured element.
 
-/// <reference path="micro.ts" />
-/// <reference path="microControls.ts" />
-/// <reference path="GenericWidget.ts" />
+import { GenericWidgetClass } from "./GenericWidget";
+import { MicroControl } from "./microRegistry";
+import { hub } from "./microHub";
 
 @MicroControl('select')
-class SelectWidgetClass extends GenericWidgetClass {
+export class SelectWidgetClass extends GenericWidgetClass {
   _objSelect!: HTMLSelectElement;
 
   override connectedCallback() {

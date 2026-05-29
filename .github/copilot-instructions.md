@@ -48,6 +48,7 @@ npm run build:server     # Compile server/*.ts → dist-server/
 npm run build:css        # Compile *.scss → *.css
 
 # Testing
+npm run typecheck:ts     # TypeScript type checking for all files in src/
 npm run test:ts          # ESLint on src/
 npm run test:server      # ESLint on server/
 npm run test:css         # stylelint on css/

@@ -1,8 +1,10 @@
 // some utils
 
+import { jsonFind, jsonLocate } from "./JsonParse";
+import { hub } from "./microHub";
 
 // convert a string to a boolean value where Boolean(v) doesn't cover everything.
-function toBool(s: string | null) {
+export function toBool(s: string | null) {
   if (!s) { return false; }
   switch (s.toLowerCase().trim()) {
     case 'true':
@@ -19,8 +21,8 @@ function toBool(s: string | null) {
 } // toBool()
 
 
-// convert a string to a duration or time value from various formate into seconde.
-function toSeconds(v: string): number {
+// convert a string to a duration or time value from various formats into seconde.
+export function toSeconds(v: string): number {
   let ret: number;
   v = v.toLowerCase();
   if (v.endsWith('h')) {
@@ -39,18 +41,18 @@ function toSeconds(v: string): number {
 
 
 // set text content only if the value is different to avoid unnecessary DOM updates.
-function setTextContent(el: HTMLElement, txt: string) {
+export function setTextContent(el: HTMLElement, txt: string) {
   if (el && (el.textContent !== txt)) { el.textContent = txt; }
 } // setTextContent
 
 // set an attribute only if the value is different to avoid unnecessary DOM updates.
-function setAttr(el: HTMLElement, name: string, value: string) {
+export function setAttr(el: HTMLElement, name: string, value: string) {
   if (el && (el.getAttribute(name) !== value)) { el.setAttribute(name, value); }
 } // setAttr
 
 
 /** find configuration file for the element (type/id) */
-function findConfig(id: string): { fName: string, config: any } {
+export function findConfig(id: string): { fName: string, config: any } {
   let c: any, config: any, fName: string;
 
   // try a env configuration first
@@ -71,7 +73,7 @@ function findConfig(id: string): { fName: string, config: any } {
 };
 
 /** change an element configuration in /env.json or /config.json */
-function changeConfig(id: string, newConfig: any) {
+export function changeConfig(id: string, newConfig: any) {
   const { fName, config } = findConfig(id);
 
   for (const n in newConfig) {
@@ -94,7 +96,7 @@ function changeConfig(id: string, newConfig: any) {
 /** Simple function for debouncing.
  * reduce the # of function calls when initiating events trigger too often
  * by deferring the function execution. */
-function debounce(func: () => void, wait = 20) {
+export function debounce(func: () => void, wait = 20) {
   let timer: number;
   return function() {
     if (timer) { clearTimeout(timer); }
@@ -127,7 +129,7 @@ function debounce(func: () => void, wait = 20) {
 
 
 // return actual parameters in hash part of URL as object
-function getHashParams(defaults: object) {
+export function getHashParams(defaults: object) {
   const params: any = { ...defaults };
 
   window.location.hash
@@ -141,7 +143,7 @@ function getHashParams(defaults: object) {
 } // getHashParams()
 
 
-function createHTMLElement(parentNode: HTMLElement, tag: string, attr: { [id: string]: string }, beforeNode: (HTMLElement | null) = null): HTMLElement {
+export function createHTMLElement(parentNode: HTMLElement, tag: string, attr: { [id: string]: string }, beforeNode: (HTMLElement | null) = null): HTMLElement {
   const o = document.createElement(tag);
   if (attr) {
     for (const a in attr) {
@@ -159,17 +161,18 @@ function createHTMLElement(parentNode: HTMLElement, tag: string, attr: { [id: st
 } // createHTMLElement()
 
 // initiate a fetch with JSON result expected.
-async function fetchJSON(url: string, options: object) {
+export async function fetchJSON(url: string, options: object) {
   const p = fetch(url, options)
     .then(raw => raw.json());
   return (p);
 }
 
 // initiate a fetch with Text result expected.
-async function fetchText(url: string, options: object) {
+export async function fetchText(url: string, options: object) {
   const p = fetch(url, options)
     .then(raw => raw.text());
   return (p);
 }
 
+console.log('utils.ts loaded', fetchJSON);
 // End

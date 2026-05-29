@@ -3,13 +3,11 @@
 // This file is part of the Widget implementation for the HomeDing Library
 // implementing the Web UI corresponding to an internal configured element.
 
-/// <reference path="micro.ts" />
-/// <reference path="microControls.ts" />
-/// <reference path="GenericWidget.ts" />
-/// <reference path="DisplayItemWidget.ts" />
+import { DisplayItemWidgetClass } from "./DisplayItemWidget";
+import { MicroControl } from "./microRegistry";
 
 @MicroControl('displayline')
-class DisplayLineWidgetClass extends DisplayItemWidgetClass {
+export class DisplayLineWidgetClass extends DisplayItemWidgetClass {
   _svgElem!: SVGElement;
 
   /**

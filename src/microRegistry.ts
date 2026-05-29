@@ -1,0 +1,249 @@
+// file: microRegistry.ts
+
+import {createHTMLElement} from "./utils";
+import { MicroControlClass } from "./microControls";
+
+enum MicroState {
+  PREP = 1,
+  INIT = 2,
+  LOADED = 3
+}
+
+export class MicroRegistry {
+  /** Templates Container Object */ 
+  protected _tco: HTMLElement | null = null;
+  
+  protected _registry: { [key: string]: MicroControlClass } = {}; // all registered mixins by name.
+  protected _state: MicroState = MicroState.PREP;
+
+  /// A list with all objects that are attached to any behavior
+  protected _unloadedList: Array<HTMLElement> = [];
+  protected List: Array<HTMLElement> = [];
+
+  constructor() {
+    this._state = MicroState.INIT;
+    window.addEventListener('DOMContentLoaded', this.init.bind(this));
+  }
+
+  /**
+   * Load html templates into container.
+   * @param {string} url file with templates
+   */
+  loadFile(url: string): Promise<void> {
+    // const scope = this;
+
+    const ret = fetch(url)
+      .then(raw => raw.text())
+      .then(htm => {
+        const f = document.createRange().createContextualFragment(htm);
+
+        if (!this._tco) { this._tco = document.getElementById('u-templates'); }
+        if (!this._tco) { this._tco = createHTMLElement(document.body, 'div', { id: 'u-templates' }); }
+
+        if (this._tco) {
+          this._tco.appendChild(f);
+        }
+      });
+    return ret;
+  } // loadFile()
+
+  // extend the element by the registered behavior mixin.
+  // The "u-is" attribute specifies what mixin should be used.
+  attach(elem: HTMLElement): void {
+    if (this._state === MicroState.LOADED) {
+      const cn = elem.getAttribute('u-is');
+      if (cn) {
+        const bc = this._registry[cn];
+        if (bc) {
+          this.loadBehavior(elem, bc);
+        }
+      }
+    } else {
+      this._unloadedList.push(elem);
+    }
+  } // attach()
+
+  /**
+   * replace placeholders like ${name} with the corresponding value in text nodes and attributes.
+   * @param {Node} obj
+   * @param {Object} props
+   */
+  _setPlaceholders(obj: Node, props: any) {
+    function fill(val: string): string {
+      // for (const p in props) { val = val.replace(new RegExp('\\$\\{' + p + '\\}', 'g'), props[p]); }
+      Object.getOwnPropertyNames(props).forEach(p => val = val.replace(new RegExp('\\$\\{' + p + '\\}', 'g'), props[p]));
+      return val;
+    } // fill
+
+    if (props) {
+      if (obj.nodeType === Node.TEXT_NODE) {
+        if (obj.textContent) {
+          obj.textContent = fill(obj.textContent);
+        }
+
+      } else if (obj.nodeType === Node.ELEMENT_NODE) {
+        const attr = (obj as HTMLElement).attributes;
+
+        for (let i = 0; i < attr.length; i++) {
+          const v: string = attr[i].value;
+          if (v.indexOf('${') >= 0) {
+            if (!(<any>obj)[attr[i].name]) {
+              // custom attribute
+              (obj as HTMLElement).setAttribute(attr[i].name, fill(v));
+            } else if ((<any>obj)[attr[i].name].baseVal !== undefined) {
+              // svg annimated
+              (<any>obj)[attr[i].name].baseVal = fill(v);
+            } else {
+              // html attribute
+              (obj as HTMLElement).setAttribute(attr[i].name, fill(v));
+            }
+          } // if
+        } // for
+        obj.childNodes.forEach(c => {
+          this._setPlaceholders(c, props);
+        });
+      }
+    }
+  } // _setPlaceholders
+
+
+  // verify that element is not hidden by styles and scrolled into the visible area.
+  isVisible(el: HTMLElement) {
+    let vis = false;
+    if (el.offsetWidth > 0 && el.offsetHeight > 0) {
+      const rect = el.getBoundingClientRect();
+      // Partially visible elements are treated as visible
+      vis = (rect.top <= window.innerHeight && rect.bottom >= 0);
+
+    }
+    return (vis);
+  } // isVisible()
+
+
+  // load the image when image is visible
+  loadDataImage(imgElem: HTMLElement) {
+    if ((imgElem.dataset['src']) && (this.isVisible(imgElem))) {
+      (imgElem as HTMLImageElement).src = imgElem.dataset['src'];
+    }
+  }
+
+
+  /**
+   * Insert a new control based on a template into the root object and activate behavior.
+   * @param {HTMLObjectElement} root parent object for the new control
+   * @param {string} controlName
+   * @param {Object} props
+   */
+  insertTemplate(root: HTMLElement, controlName: string, props: unknown): HTMLElement | null {
+    let e = null;
+    if (root && controlName && this._tco) {
+      const te = this._tco.querySelector('[u-control="' + controlName.toLowerCase() + '"]');
+      if (te) { e = te.cloneNode(true) as HTMLElement; }
+      if (e) {
+        (<any>e).params = props; // dialog parameters
+        this._setPlaceholders(e, props);
+        root.appendChild(e);
+        root.querySelectorAll('[u-is]').forEach(el => micro.attach(el as HTMLElement));
+        this._setPlaceholders(e, props); // again in case of includes
+        root.querySelectorAll('[data-src]:not([src])').forEach(el => this.loadDataImage(el as HTMLElement));
+      } // if
+    } // if
+    return e;
+  } // insertTemplate()
+
+
+  getMethods(obj: any): Set<string> {
+    const fSet = new Set<string>();
+    do {
+      Object.getOwnPropertyNames(obj)
+        .filter(item => typeof obj[item] === 'function')
+        .forEach(item => fSet.add(item));
+    } while ((obj = Object.getPrototypeOf(obj)));
+    return (fSet);
+  } // getMethods
+
+
+  // attach events, methods and default-values to a html object (using the english spelling)
+  loadBehavior(obj: HTMLElement, behavior: MicroControlClass) {
+    const b = behavior as any;
+    const oc: MicroControlClass = obj as MicroControlClass;
+
+    if (!obj) {
+      console.error('loadBehavior: obj argument is missing.');
+    } else if (!behavior) {
+      console.error('loadBehavior: behavior argument is missing.');
+    } else if (oc._attachedBehavior === behavior) {
+      // already done.
+    } else {
+
+      // copy all html attributes to obj properties
+      for (const a of obj.attributes) {
+        if (!(obj as any)[a.name]) { (obj as any)[a.name] = a.value; }
+      } // if
+
+      // for (const p in ms) {
+      for (const p of this.getMethods(b)) {
+        if (p === 'on_touchstart') {
+          obj.addEventListener(p.substring(3), b[p].bind(obj), { passive: true });
+        } else if (p.substring(0, 3) === 'on_') {
+          obj.addEventListener(p.substring(3), b[p].bind(obj), false);
+        } else if (p.substring(0, 2) === 'on') {
+          obj.addEventListener(p.substring(2), b[p].bind(obj), false);
+        } else if (b[p] == null || b[p].constructor !== Function) {
+          // set default-value
+          if (!(obj as any)[p]) { (obj as any)[p] = b[p]; }
+        } else {
+          // attach method
+          (obj as any)[p] = b[p];
+        } // if
+      } // for
+
+      oc._attachedBehavior = behavior;
+      if (obj.parentElement !== this._tco) {
+        // call connectedCallback only if not a template
+        oc.connectedCallback();
+        this.List.push(obj);
+      }
+    } // if
+  } // loadBehavior
+
+  // define a micro control mixin in the registry.
+  define(name: string, mixin: MicroControlClass) {
+    this._registry[name] = mixin;
+  }
+
+  // defer initialization of controls after DOM is loaded
+  protected init() {
+    this._state = MicroState.LOADED;
+    if (!this._tco) { this._tco = document.getElementById('u-templates'); }
+
+    document.querySelectorAll('[u-is]').forEach(el => micro.attach(el as HTMLElement));
+    this._unloadedList.forEach(el => {
+      const cn = el.getAttribute('u-is');
+      if (cn) {
+        const bc = this._registry[cn];
+        if (bc) {
+          this.loadBehavior(el, bc);
+        }
+        this.List.push(el);
+      }
+    });
+    this._unloadedList = [];
+  } // init()
+
+} // MicroRegistry class
+
+export const micro = new MicroRegistry();
+
+// Decorator for micro-controls.
+// Extend all DOM elements with the behavior specified by the target class.
+export function MicroControl(isSelector: string) {
+  // this is the decorator factory
+  return function(target: any) {
+    // this is the decorator class
+    micro.define(isSelector, new target() as MicroControlClass);
+    return target;
+  };
+}
+
+// End.

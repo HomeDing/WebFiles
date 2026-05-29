@@ -1,7 +1,7 @@
 // file: microHub.ts
 // Central information broker with memory.
 
-/// <reference path="JsonParse.ts" />
+import { JsonParseCallback, jsonParse } from "./JsonParse";
 
 interface HubEntry {
   id: number;
@@ -16,7 +16,7 @@ interface HubEntryList {
 /**
  *
  */
-class MicroHub {
+export class MicroHub {
   private _registrations: HubEntryList = {};
   private _registrationsId = 0;
   private _store: object = {};
@@ -185,7 +185,7 @@ class MicroHub {
   }
 } // MicroEvents class
 
-const hub = new MicroHub();
+export const hub = new MicroHub();
 window.addEventListener('unload', hub.onunload.bind(hub), false);
 
 // End.
