@@ -563,7 +563,7 @@ body {
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Living Room Dashboard</title>
     <link rel="stylesheet" href="/iotstyle.css" />
-    <script src="/micro.js"></script>
+    <script type="module" src="/micro.js"></script>
   </head>
   <body class="sitelayout">
     <header>
