@@ -1,4 +1,8 @@
-## memo for webfiles docu
+# Memo for the Project Webfiles
+
+This is a temporary file. containing pre-implementation and pre-documentation
+information. So ideally you will find all you need in the sources and documentation ...
+
 
 microHub.ts vs data-hub.md
 
