@@ -104,5 +104,8 @@
     "url": "https://github.com/HomeDing/WebFiles/issues"
   },
   "author": "Matthias Hertel",
-  "license": "BSD-3-Clause"
+  "license": "BSD-3-Clause",
+  "allowScripts": {
+    "esbuild@0.28.1": true
+  }
 }
