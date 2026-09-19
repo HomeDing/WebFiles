@@ -17,7 +17,7 @@
   <link rel="manifest" href="/site.webmanifest" />
   <meta name="theme-color" content="#ffffff" />
 
-  <link Content-Type="text/css" href="/iotstyle.css" rel="stylesheet" />
+  <link rel="stylesheet" href="/iotstyle.css" type="text/css" />
   <!-- <script type="module" src="/micro.js"></script> -->
   <script src="/sfc/loader.js"></script>
   <script>
@@ -134,7 +134,7 @@
   </main>
 
   <script type="module">
-    import {fetchJSON} from '/micro.js';
+    import { fetchJSON } from '/micro.js';
 
     window.onerror = function(msg, url, lineNo, columnNo, error) {
       var string = msg.toLowerCase();

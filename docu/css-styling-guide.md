@@ -59,7 +59,7 @@ npm run test:css
 
 ```html
 <head>
-  <link rel="stylesheet" href="/iotstyle.css" />
+  <link rel="stylesheet" href="/iotstyle.css" type="text/css" />
 </head>
 ```
 
@@ -414,7 +414,7 @@ Cards are the primary UI component for IoT dashboards.
 
 ```html
 <head>
-  <link rel="stylesheet" href="/iotstyle.css" />
+  <link rel="stylesheet" href="/iotstyle.css" type="text/css" />
   <style>
     /* Override styles for this page only */
     .card {
@@ -562,7 +562,7 @@ body {
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Living Room Dashboard</title>
-    <link rel="stylesheet" href="/iotstyle.css" />
+    <link rel="stylesheet" href="/iotstyle.css" type="text/css" />
     <script type="module" src="/micro.js"></script>
   </head>
   <body class="sitelayout">

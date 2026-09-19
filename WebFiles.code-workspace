@@ -1,0 +1,20 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"html.format.maxPreserveNewLines": 2,
+		"html.format.wrapLineLength": 120,
+		"editor.defaultFormatter": "vscode.html-language-features",
+		"[html]": {
+			"editor.defaultFormatter": "vscode.html-language-features"
+		},
+		"js/ts.format.insertSpaceAfterFunctionKeywordForAnonymousFunctions": false,
+		"js/ts.format.insertSpaceAfterKeywordsInControlFlowStatements": true,
+		"[svg]": {
+			"editor.defaultFormatter": "jock.svg"
+		}
+	}
+}
