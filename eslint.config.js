@@ -28,20 +28,19 @@ export default [
       "@typescript-eslint/ban-ts-comment": 1,
       "@typescript-eslint/no-unsafe-declaration-merging": 0,
     },
-    "globals": {
-      "micro": "readonly",
-      "MicroControl": "readonly",
-      "toBool": "readonly",
-      "toSeconds": "readonly",
-      "createHTMLElement": "readonly",
-      "GenericWidgetClass": "readonly",
-      "hub": "readonly",
-      "jsonFind": "readonly",
-      "updateState": "readonly",
-      "jsonLocate": "readonly"
-    }
-
+    "languageOptions": {
+      "globals": {
+        "micro": "readonly",
+        "MicroControl": "readonly",
+        "toBool": "readonly",
+        "toSeconds": "readonly",
+        "createHTMLElement": "readonly",
+        "GenericWidgetClass": "readonly",
+        "hub": "readonly",
+        "jsonFind": "readonly",
+        "updateState": "readonly",
+        "jsonLocate": "readonly"
+      }
+    },
   },
-
-
 ];
