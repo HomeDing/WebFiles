@@ -1,6 +1,5 @@
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
-var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
 var __decorateClass = (decorators, target, key, kind) => {
   var result = kind > 1 ? void 0 : kind ? __getOwnPropDesc(target, key) : target;
   for (var i = decorators.length - 1, decorator; i >= 0; i--)
@@ -9,7 +8,6 @@ var __decorateClass = (decorators, target, key, kind) => {
   if (kind && result) __defProp(target, key, result);
   return result;
 };
-var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
 
 // src/JsonParse.ts
 function jsonParse(obj, cbFunc) {
@@ -1047,46 +1045,6 @@ var ValueWidgetClass = class extends GenericWidgetClass {
 ValueWidgetClass = __decorateClass([
   MicroControl("value")
 ], ValueWidgetClass);
-
-// src/SceneWidget.ts
-var SceneWidgetClass = class extends GenericWidgetClass {
-  _buttonObj;
-  connectedCallback() {
-    super.connectedCallback();
-    if (!SceneWidgetClass._sceneCard) {
-      SceneWidgetClass._sceneCard = this;
-    } else {
-      this.style.display = "none";
-    }
-    const c = SceneWidgetClass._sceneCard.querySelector("div.block:last-child");
-    this._buttonObj = createHTMLElement(c, "button", {
-      "microid": this.microid
-    });
-    this._buttonObj.textContent = "-";
-  }
-  on_click(evt) {
-    const btnObj = evt.target;
-    let action = btnObj.getAttribute("microid");
-    if (action) {
-      if (action.startsWith("/")) action = action.substring(1);
-      this.dispatchAction(action + "?start=1", "1");
-    }
-  }
-  startScene() {
-    0;
-  }
-  newData(path, key, value) {
-    super.newData(path, key, value);
-    if (key === "title") {
-      this._buttonObj.textContent = value;
-    }
-  }
-  // newData()
-};
-__publicField(SceneWidgetClass, "_sceneCard");
-SceneWidgetClass = __decorateClass([
-  MicroControl("scene")
-], SceneWidgetClass);
 
 // src/SelectWidget.ts
 var SelectWidgetClass = class extends GenericWidgetClass {

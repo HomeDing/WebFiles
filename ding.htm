@@ -17,6 +17,10 @@
 
   <link rel="stylesheet" href="/iotstyle.css" type="text/css" />
   <script type="module" src="/micro.js"></script>
+  <script src="/sfc/loader.js"></script>
+  <script>
+    window.sceneComponentLoaded = window.loadComponent('hdw-scenes', '/hdw');
+  </script>
 </head>
 
 <body class="sitelayout" style="width:100%;--layout-gap: 0;--main-back:transparent">
@@ -42,6 +46,8 @@
         <div class="form-grid"><label>Value:</label><span u-text="value"></span></div>
       </div>
     </div>
+
+    <hdw-scenes class="card" u-control="scene" microID="${id}"></hdw-scenes>
 
     <div class="card" u-control="switch" id="${id}" u-is="generic" microID="${id}">
       <div u-is="include" ref=".cHead"></div>
@@ -162,13 +168,6 @@
     <div class="card small" u-control="webbutton" microID="${id}" u-is="button">
       <div class="main"><button u-text="description">.</button></div>
     </div>
-
-    <div class="card" u-control="scene" microID="${id}" u-is="scene">
-      <div class="header">
-        <h3>Scenes</h3>
-      </div>
-      <div class="block form-actions"></div>
-    </div>
   </div>
 
 
@@ -279,7 +278,9 @@
         });
       } // loaded()
 
-      window.addEventListener('load', loaded);
+      window.addEventListener('load', () => {
+        window.sceneComponentLoaded.then(loaded);
+      });
     })();
   </script>
 </body>
