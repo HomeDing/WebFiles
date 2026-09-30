@@ -20,8 +20,9 @@
   <script src="/sfc/loader.js"></script>
   <script>
     window.boardComponentsLoaded = window.loadComponent('/bundle.sfc')
+      .then(() => window.loadComponent('hdw-generic', '/hdw'))
       .then(() => window.loadComponent(
-        'hdw-generic,hdw-air,hdw-reference,hdw-schedule,hdw-switch,hdw-digitalvalue,hdw-onoff,hdw-scenes',
+        'hdw-air,hdw-reference,hdw-schedule,hdw-switch,hdw-digitalvalue,hdw-onoff,hdw-scenes,hdw-button',
         '/hdw'
       ));
   </script>
@@ -291,10 +292,11 @@
   </div>
  
   <script type="module">
-    import {hub, micro, fetchJSON, fetchText, getHashParams, toBool, setAttr, jsonParse} from '/micro.js';
+    import {hub, micro, fetchJSON, fetchText, getHashParams, toBool, setAttr, jsonParse, debounce} from '/micro.js';
     window.hub = hub;
     window.setAttr = setAttr;
     window.toBool = toBool;
+    window.debounce = debounce;
 
     if (window !== window.top) {
       // disable header and navbar in portal mode.
