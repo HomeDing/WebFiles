@@ -19,7 +19,8 @@
   <script type="module" src="/micro.js"></script>
   <script src="/sfc/loader.js"></script>
   <script>
-    window.sceneComponentLoaded = window.loadComponent('hdw-scenes', '/hdw');
+    window.sceneComponentLoaded = window.loadComponent('hdw-generic', '/hdw')
+      .then(() => window.loadComponent('hdw-scenes,hdw-button', '/hdw'));
   </script>
 </head>
 
@@ -165,9 +166,7 @@
       </div>
     </div>
 
-    <div class="card small" u-control="webbutton" microID="${id}" u-is="button">
-      <div class="main"><button u-text="description">.</button></div>
-    </div>
+    <hdw-button class="card small" u-control="webbutton" microID="${id}" label-key="description"></hdw-button>
   </div>
 
 
@@ -175,13 +174,14 @@
 
   <script type="module">
     import {
-      hub, micro, fetchJSON, fetchText, getHashParams, toBool, setAttr, jsonParse,
+      hub, micro, fetchJSON, fetchText, getHashParams, toBool, setAttr, jsonParse, debounce,
       createHTMLElement
     } from '/micro.js';
     window.hub = hub;
     window.setAttr = setAttr;
     window.toBool = toBool;
     window.createHTMLElement = createHTMLElement;
+    window.debounce = debounce;
 
     (function() { // allows variable names to be packed by minifier
       const REFRESH_INTERVAL = 4000;

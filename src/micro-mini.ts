@@ -32,7 +32,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // core set of Widgets
 import { BL0937WidgetClass } from "./BL0937Widget";
-import { ButtonWidgetClass } from "./ButtonWidget";
 import { ColorWidgetClass } from "./ColorWidget";
 import { InputWidgetClass } from "./InputWidget";
 import { PWMOutWidgetClass } from "./PWMoutWidget";
@@ -41,7 +40,6 @@ import { SelectWidgetClass } from "./SelectWidget";
 import { TimerWidgetClass } from "./TimerWidget";
 
 BL0937WidgetClass;
-ButtonWidgetClass;
 ColorWidgetClass;
 InputWidgetClass;
 PWMOutWidgetClass;

@@ -1,0 +1,107 @@
+<!--
+File: hdw-button.sfc
+
+Copyright (c) 2026 by Matthias Hertel, http://www.mathertel.de
+This work is licensed under a BSD-3-Clause license. See http://www.mathertel.de/License.aspx
+
+This component renders a configured button and groups buttons in one panel.
+-->
+
+<template light>
+  <div class="main">
+    <button type="button"></button>
+  </div>
+</template>
+
+<script>
+  export default class HDWButton extends HDWGeneric {
+    static _buttonPanel;
+
+    _button;
+    _layoutReady = false;
+    _genericConnected = false;
+    _timer;
+    _start;
+    _duration = 0;
+
+    connectedCallback() {
+      if (this.closest('#u-templates')) return;
+
+      this._button = this.querySelector('button');
+      if (!this._button) {
+        throw new Error('hdw-button requires a button in its template.');
+      }
+
+      if (!this._layoutReady) {
+        const panel = document.querySelector('#panl');
+        if (!panel) {
+          throw new Error('hdw-button requires a #panl container.');
+        }
+
+        if (!HDWButton._buttonPanel) {
+          HDWButton._buttonPanel = panel.querySelector('.btnPanel');
+        }
+        if (!HDWButton._buttonPanel) {
+          HDWButton._buttonPanel = document.createElement('div');
+          HDWButton._buttonPanel.className = 'card btnPanel';
+          panel.insertBefore(HDWButton._buttonPanel, panel.firstElementChild);
+        }
+
+        this._layoutReady = true;
+        HDWButton._buttonPanel.appendChild(this);
+        return;
+      }
+
+      if (!this._genericConnected) {
+        this._genericConnected = true;
+        super.connectedCallback();
+      }
+    }
+
+    newData(path, key, value) {
+      super.newData(path, key, value);
+      const labelKey = this.getAttribute('label-key') || 'title';
+      if (key === labelKey) {
+        this._button.textContent = value;
+      }
+    }
+
+    onclick(event) {
+      super.on_click(event);
+      if (event.target !== this._button) return;
+
+      if (this._duration > 800) {
+        this.dispatchAction('action=press', '1');
+      } else {
+        if (this._timer) window.clearTimeout(this._timer);
+        this._timer = window.setTimeout(() => {
+          this._timer = undefined;
+          this.dispatchAction('action=click', '1');
+        }, 250);
+      }
+      this._duration = 0;
+    }
+
+    ondblclick(event) {
+      if (event.target !== this._button) return;
+
+      if (this._timer) window.clearTimeout(this._timer);
+      this._timer = undefined;
+      this.dispatchAction('action=doubleclick', '1');
+    }
+
+    onpointerdown(event) {
+      if (event.target === this._button) {
+        this._start = Date.now();
+        this._duration = 0;
+      }
+    }
+
+    onpointerup(event) {
+      if (event.target === this._button && this._start !== undefined) {
+        this._duration = Date.now() - this._start;
+        this._start = undefined;
+      }
+    }
+  }
+</script>

@@ -727,66 +727,6 @@ BL0937WidgetClass = __decorateClass([
   MicroControl("bl0937")
 ], BL0937WidgetClass);
 
-// src/ButtonWidget.ts
-var ButtonWidgetClass = class extends GenericWidgetClass {
-  _timer;
-  _start;
-  _duration;
-  _objButton;
-  connectedCallback() {
-    super.connectedCallback();
-    const panelObj = document.querySelector("#panl");
-    let btnPanel = panelObj?.querySelector(".btnPanel");
-    if (!btnPanel) {
-      btnPanel = createHTMLElement(panelObj, "div", { class: "card btnPanel" }, panelObj.firstElementChild);
-    }
-    if (btnPanel) {
-      btnPanel.appendChild(this);
-    }
-    this._objButton = this.querySelector("button");
-  }
-  on_click(evt) {
-    super.on_click(evt);
-    if (evt.target === this._objButton) {
-      if (this._duration > 800) {
-        this.dispatchAction("action=press", "1");
-      } else {
-        if (this._timer) {
-          window.clearTimeout(this._timer);
-        }
-        this._timer = window.setTimeout(() => {
-          this.dispatchAction("action=click", "1");
-        }, 250);
-      }
-    }
-  }
-  // on_click
-  on_dblclick(evt) {
-    if (evt.target === this._objButton) {
-      if (this._timer) {
-        window.clearTimeout(this._timer);
-      }
-      this.dispatchAction("action=doubleclick", "1");
-    }
-  }
-  // on_dblclick
-  on_pointerdown(evt) {
-    if (evt.target === this._objButton) {
-      this._start = (/* @__PURE__ */ new Date()).valueOf();
-    }
-  }
-  // on_pointerdown
-  on_pointerup(evt) {
-    if (evt.target === this._objButton) {
-      this._duration = (/* @__PURE__ */ new Date()).valueOf() - this._start;
-    }
-  }
-  // on_pointerup()
-};
-ButtonWidgetClass = __decorateClass([
-  MicroControl("button")
-], ButtonWidgetClass);
-
 // src/ColorWidget.ts
 var ColorWidgetClass = class extends GenericWidgetClass {
   _value;

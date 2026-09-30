@@ -35,4 +35,7 @@ TODO: remove this annotation when the data hub migration is done.
 For scene elements, the simulator can be started with `node app.js -m=false -d -c=scene` using the configuration from the /case/scene folder.
 After migrating find a test case with the migrated widget or create a new one when none was found.
 
+## Button widget notes
+
+`ButtonWidget` supports both `button` (labelled from `title`) and `webbutton` (labelled from `description`). Preserve its shared `.btnPanel` grouping and distinguish the label key through a host attribute. Keep short-click dispatch delayed by 250 ms so a following double-click can cancel it; dispatch `doubleclick` for double-clicks and `press` for pointer presses longer than 800 ms. Test all three actions using the `/case/radio` configuration.
 
