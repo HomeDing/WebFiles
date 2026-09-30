@@ -1,0 +1,163 @@
+<!--
+File: hdw-log.sfc
+
+Copyright (c) 2026 by Matthias Hertel, http://www.mathertel.de
+This work is licensed under a BSD-3-Clause license. See http://www.mathertel.de/License.aspx
+
+This component displays log data in a line chart.
+-->
+
+<template light>
+  <div class="header">
+    <svg class="icon">
+      <use href="./icons.svg#${type}" />
+    </svg>
+    <h3 u-text="title"></h3>
+    <h4 u-text="description"></h4>
+    <svg class="fullscreen">
+      <use href="./icons.svg#fullscreen" />
+    </svg>
+    <svg class="setconfig">
+      <use href="./icons.svg#config" />
+    </svg>
+  </div>
+  <div class="main"><u-linechart style="width:100%"></u-linechart></div>
+</template>
+
+<script>
+  export default class HDWLog extends HDWGeneric {
+    _chart;
+    _fileName;
+    _lineType = 'line';
+    _xFormat = 'datetime';
+    _yFormat = 'num';
+    _chartSetup = false;
+    _loadId = 0;
+    _initializing = true;
+
+    connectedCallback() {
+      if (this.closest('#u-templates')) return;
+
+      this._chart = this.querySelector('u-linechart');
+      if (!this._chart) {
+        throw new Error('hdw-log requires a u-linechart in its template.');
+      }
+
+      super.connectedCallback();
+      this._initializing = false;
+      this.loadSVG();
+    }
+
+    newData(path, key, value) {
+      super.newData(path, key, value);
+
+      if (key === 'filename') {
+        this._fileName = value;
+      } else if (key === 'xformat') {
+        this._xFormat = value;
+        this._chartSetup = false;
+      } else if (key === 'yformat') {
+        this._yFormat = value;
+        this._chartSetup = false;
+      } else if (key === 'linetype') {
+        this._lineType = value;
+        this._chartSetup = false;
+      } else {
+        return;
+      }
+
+      this._loadId++;
+      if (!this._initializing) this.loadSVG();
+    }
+
+    loadSVG() {
+      if (!this._chart) return;
+      if (!this._fileName) {
+        this._loadId++;
+        return;
+      }
+
+      customElements.whenDefined('u-linechart').then(() => {
+        if (!this.isConnected || !this._fileName) return;
+
+        if (!this._chartSetup) {
+          this._chart.clear();
+          this._chart.add('line', { linetype: this._lineType });
+          this._chart.add([
+            { type: 'vAxis' },
+            { type: 'hAxis', options: { format: 'datetime' } },
+            { type: 'indicator', options: { xFormat: this._xFormat, yFormat: this._yFormat } },
+          ]);
+          this._chartSetup = true;
+        }
+
+        this.loadData();
+      });
+    }
+
+    async loadData() {
+      const fileName = this._fileName;
+      if (!fileName) return;
+
+      const loadId = ++this._loadId;
+      const loadFile = async (url) => {
+        const response = await fetch(url, { cache: 'no-store' });
+        if (!response.ok) {
+          throw new Error(`Loading log file ${url} failed: ${response.status} ${response.statusText}`);
+        }
+        return response.text();
+      };
+
+      const [current, previous] = await Promise.allSettled([
+        loadFile(fileName),
+        loadFile(fileName.replace('.txt', '_old.txt')),
+      ]);
+
+      if (loadId !== this._loadId || !this.isConnected) return;
+      if (current.status === 'rejected' && previous.status === 'rejected') {
+        throw new AggregateError(
+          [current.reason, previous.reason],
+          `No log data could be loaded for ${fileName}.`
+        );
+      }
+
+      const content = [
+        ...(previous.status === 'fulfilled' ? [previous.value] : []),
+        ...(current.status === 'fulfilled' ? [current.value] : []),
+      ].join('\n');
+      const data = content
+        .replace(/\r/g, '')
+        .split('\n')
+        .filter(line => /^\d{4,},\d+/.test(line))
+        .map(line => {
+          const [x, y] = line.split(',');
+          return { x, y };
+        });
+
+      this._chart.draw(data);
+      if (current.status === 'rejected') throw current.reason;
+    }
+
+    onclick(event) {
+      const target = event.target;
+      if (!(target instanceof Element)) return;
+
+      const config = target.closest('.setconfig');
+      if (config && this.contains(config)) {
+        const dialog = document.querySelector('#configElement');
+        if (!(dialog instanceof HTMLDialogElement)) {
+          throw new Error('hdw-log requires a #configElement dialog.');
+        }
+
+        const [, type, id] = this._microid.split('/');
+        dialog.showModal({ ...this.data, type, id });
+        return;
+      }
+
+      const fullscreen = target.closest('.fullscreen');
+      if (fullscreen && this.contains(fullscreen)) {
+        this.requestFullscreen();
+      }
+    }
+  }
+</script>
