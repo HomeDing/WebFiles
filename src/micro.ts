@@ -39,7 +39,6 @@ import { ColorWidgetClass } from "./ColorWidget";
 import { InputWidgetClass } from "./InputWidget";
 import { PWMOutWidgetClass } from "./PWMoutWidget";
 import { ValueWidgetClass } from "./ValueWidget";
-import { SceneWidgetClass } from "./SceneWidget";
 import { SelectWidgetClass } from "./SelectWidget";
 import { TimerWidgetClass } from "./TimerWidget";
 
@@ -49,7 +48,6 @@ ColorWidgetClass;
 InputWidgetClass;
 PWMOutWidgetClass;
 ValueWidgetClass;
-SceneWidgetClass;
 SelectWidgetClass;
 TimerWidgetClass;
 

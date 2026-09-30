@@ -1,0 +1,116 @@
+<!--
+File: hdw-scenes.sfc
+
+Copyright (c) 2026 by Matthias Hertel, http://www.mathertel.de
+This work is licensed under a BSD-3-Clause license. See http://www.mathertel.de/License.aspx
+
+This component groups configured scenes into one card.
+-->
+
+<template light>
+  <div class="header">
+    <h3>Scenes</h3>
+  </div>
+  <div class="block form-actions"></div>
+</template>
+
+<script>
+  export default class HDWScenes extends UComponent {
+    static _sceneCard;
+
+    scenes = new Map();
+    _buttonContainer;
+    _hub;
+    _subId;
+
+    connectedCallback() {
+      super.connectedCallback();
+      if (this.closest('#u-templates')) return;
+
+      if (!HDWScenes._sceneCard) {
+        HDWScenes._sceneCard = this;
+      } else if (HDWScenes._sceneCard !== this) {
+        this.style.display = 'none';
+      }
+    }
+
+    init() {
+      if (this.closest('#u-templates')) return;
+
+      if (HDWScenes._sceneCard !== this) return;
+
+      this._buttonContainer = this.querySelector('.block.form-actions');
+      if (!this._buttonContainer) {
+        throw new Error('hdw-scenes requires a .block.form-actions element.');
+      }
+
+      this._hub = window.hub;
+      if (!this._hub) {
+        throw new Error('hdw-scenes requires window.hub.');
+      }
+
+      this._subId = this._hub.subscribe('/scene/*?*', this.newData.bind(this));
+      this._hub.replay(this._subId);
+    }
+
+    newData(path, key, value) {
+      const id = path.replace(/^\/+/, '');
+      const idKey = id.toLowerCase();
+      let scene = this.scenes.get(idKey);
+
+      if (!scene) {
+        scene = { id, data: {}, button: null };
+        this.scenes.set(idKey, scene);
+      }
+      scene.data[key] = value;
+
+      if (key === 'title') {
+        if (!scene.button) {
+          scene.button = document.createElement('button');
+          scene.button.type = 'button';
+          scene.button.dataset.sceneId = scene.id;
+          this._buttonContainer.appendChild(scene.button);
+          this.style.display = '';
+        }
+        scene.button.textContent = value;
+        scene.button.classList.toggle('active', this.toBool(scene.data.active));
+      } else if (key === 'active' && scene.button) {
+        scene.button.classList.toggle('active', this.toBool(value));
+      }
+    }
+
+    toBool(value) {
+      if (!value) return false;
+      switch (String(value).toLowerCase().trim()) {
+        case 'true':
+        case 'yes':
+          return true;
+        case 'false':
+        case 'no':
+        case '0':
+          return false;
+        default:
+          return Boolean(value);
+      }
+    }
+
+    onclick(event) {
+      const target = event.target;
+      if (!(target instanceof Element)) return;
+
+      const button = target.closest('button[data-scene-id]');
+      const sceneId = button && button.getAttribute('data-scene-id');
+      if (!sceneId || !this.contains(button)) return;
+
+      const path = sceneId.split('/').map(encodeURIComponent).join('/');
+      fetch('/api/state/' + path + '?start=1')
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`Starting scene ${sceneId} failed: ${response.status} ${response.statusText}`);
+          }
+          if (typeof window.updateState === 'function') window.updateState();
+        })
+        .catch(error => console.error(error));
+    }
+  }
+</script>

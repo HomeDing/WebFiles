@@ -19,11 +19,11 @@
   <script type="module" src="/micro.js"></script>
   <script src="/sfc/loader.js"></script>
   <script>
-    window.loadComponent('/bundle.sfc')
-      .then(() => {
-        window.loadComponent('hdw-generic,hdw-air,hdw-reference,hdw-schedule,hdw-switch,hdw-digitalvalue,hdw-onoff', '/hdw');
-        // window.loadComponent('/hdwbundle.sfc', '/hdw');
-      });
+    window.boardComponentsLoaded = window.loadComponent('/bundle.sfc')
+      .then(() => window.loadComponent(
+        'hdw-generic,hdw-air,hdw-reference,hdw-schedule,hdw-switch,hdw-digitalvalue,hdw-onoff,hdw-scenes',
+        '/hdw'
+      ));
   </script>
   <style>
     svg.setconfig {
@@ -109,6 +109,7 @@
     <hdw-air class="card" u-control="air" id="${id}" microID="${id}"></hdw-air>
     <hdw-reference class="card" u-control="reference" id="${id}" microID="${id}"></hdw-reference>
     <hdw-schedule class="card" u-control="schedule" id="${id}" microID="${id}"></hdw-schedule>
+    <hdw-scenes class="card" u-control="scene" microID="${id}"></hdw-scenes>
 
     <div class="card" u-control="dstime" id="${id}" u-is="dstime" microID="${id}">
       <u-include ref="#cardHeader"></u-include>
@@ -260,13 +261,6 @@
         <button u-action="frequency" value="8840">B2</button>
       </div>
 
-    </div>
-
-    <div class="card" u-control="scene" microID="${id}" u-is="scene">
-      <div class="header">
-        <h3>Scenes</h3>
-      </div>
-      <div class="block form-actions"></div>
     </div>
 
     <div class="card" u-control="my" id="${id}" u-is="generic" microID="${id}">
@@ -442,7 +436,9 @@
         });
       } // loaded()
 
-      window.addEventListener('DOMContentLoaded', loaded);
+      window.addEventListener('DOMContentLoaded', () => {
+        window.boardComponentsLoaded.then(loaded);
+      });
     // })();
   </script>
 </body>
