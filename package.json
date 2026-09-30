@@ -14,7 +14,7 @@
   "dependencies": {
     "debug": "^4.3.5",
     "express": "^5.2.1",
-    "multer": "^2.2.0",
+    "multer": "^2.4.0",
     "multicast-dns": "^7.2.5",
     "qs": "^6.16.0",
     "timeout-signal": "^2.0.0",
@@ -52,7 +52,8 @@
   "scripts": {
     "all": "npm run build && npm run typecheck:ts && npm run test && npm run pack && npm run publish",
     "build": "npm run build:ts && npm run build:ts-mini && npm run build:css && npm run build:server",
-    "test": "npm audit && npm run test:ts && npm run test:server && npm run test:css",
+    "full-test": "npm audit && npm run test:ts && npm run test:server && npm run test:css",
+    "test": "npm run test:ts && npm run test:server && npm run test:css",
     "pack": "npm run pack:icons && npm run pack:dist && npm run pack:minimal && npm run pack:embed",
     "publish": "npm run publish:docu && npm run publish:webfiles",
     "clean": "shx rm -rf dist && shx rm -rf dist-mini",

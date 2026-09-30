@@ -20,16 +20,27 @@ export default [
       "space-before-function-paren": 0,
       "padded-blocks": 0,
       "no-empty": 0,
-      "no-unused-expressions": "off" ,
-      "@typescript-eslint/triple-slash-reference": 0,      
+      "no-unused-expressions": "off",
+      "@typescript-eslint/triple-slash-reference": 0,
       "@typescript-eslint/no-unused-vars": "off",
       "@typescript-eslint/no-unused-expressions": "off",
       "@typescript-eslint/no-explicit-any": "off",
       "@typescript-eslint/ban-ts-comment": 1,
       "@typescript-eslint/no-unsafe-declaration-merging": 0,
     },
-
+    "languageOptions": {
+      "globals": {
+        "micro": "readonly",
+        "MicroControl": "readonly",
+        "toBool": "readonly",
+        "toSeconds": "readonly",
+        "createHTMLElement": "readonly",
+        "GenericWidgetClass": "readonly",
+        "hub": "readonly",
+        "jsonFind": "readonly",
+        "updateState": "readonly",
+        "jsonLocate": "readonly"
+      }
+    },
   },
-
-
 ];
