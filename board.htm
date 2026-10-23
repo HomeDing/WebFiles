@@ -22,7 +22,7 @@
     window.boardComponentsLoaded = window.loadComponent('/bundle.sfc')
       .then(() => window.loadComponent('hdw-generic', '/hdw'))
       .then(() => window.loadComponent(
-        'hdw-air,hdw-reference,hdw-schedule,hdw-switch,hdw-digitalvalue,hdw-onoff,hdw-scenes,hdw-button',
+        'hdw-air,hdw-reference,hdw-schedule,hdw-switch,hdw-digitalvalue,hdw-onoff,hdw-scenes,hdw-button,hdw-log',
         '/hdw'
       ));
   </script>
@@ -272,22 +272,7 @@
       </div>
     </div>
 
-    <div class="card" u-control="log" u-is="log" microID="${id}">
-      <div class="header">
-        <svg class="icon">
-          <use href="./icons.svg#${type}" />
-        </svg>
-        <h3 u-text="title"></h3>
-        <h4 u-text="description"></h4>
-        <svg class="fullscreen">
-          <use href="./icons.svg#fullscreen" />
-        </svg>
-        <svg class="setconfig">
-          <use href="./icons.svg#config" />
-        </svg>
-      </div>
-      <div class="main"><u-linechart style="width:100%"></u-linechart></div>
-    </div>
+    <hdw-log class="card" u-control="log" microID="${id}"></hdw-log>
 
   </div>
  

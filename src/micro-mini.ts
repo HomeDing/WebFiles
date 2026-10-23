@@ -55,7 +55,6 @@ TimerWidgetClass;
 // import { DisplayTextWidgetClass } from "./DisplayTextWidget";
 // import { DisplayWidgetClass } from "./DisplayWidget";
 // import { DSTimeWidgetClass } from "./DSTimeWidget";
-// import { LogWidgetClass } from "./LogWidget";
 
 // DisplayButtonWidgetClass;
 // DisplayDotWidgetClass;
@@ -64,6 +63,5 @@ TimerWidgetClass;
 // DisplayTextWidgetClass;
 // DisplayWidgetClass;
 // DSTimeWidgetClass;
-// LogWidgetClass;
 
 // End.
