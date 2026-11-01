@@ -81,7 +81,7 @@
     "start": "node app.js",
     "dev": "run-p -n build:css-watch build:ts-watch build:ts-mini-watch",
     "sfc:sfc": "node sfc/bin/pack-sfc.js sfc/u-toast.sfc sfc/u-linechart.sfc sfc/u-piechart.sfc sfc/u-form-*.sfc sfc/u-tablesort.sfc sfc/u-include.sfc  -o bundle.sfc",
-    "sfc:hdw": "node sfc/bin/pack-sfc.js hdw/hdw-generic.sfc hdw/hdw-air.sfc hdw/hdw-digitalvalue.sfc hdw/hdw-reference.sfc hdw/hdw-schedule.sfc hdw/hdw-switch.sfc hdw/hdw-scenes.sfc hdw/hdw-button.sfc -o hdwbundle.sfc"
+    "sfc:hdw": "node sfc/bin/pack-sfc.js hdw/hdw-generic.sfc hdw/hdw-air.sfc hdw/hdw-digitalvalue.sfc hdw/hdw-reference.sfc hdw/hdw-schedule.sfc hdw/hdw-switch.sfc hdw/hdw-scenes.sfc hdw/hdw-button.sfc hdw/hdw-log.sfc -o hdwbundle.sfc"
   },
   "files": [
     "dist",

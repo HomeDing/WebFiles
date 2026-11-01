@@ -57,7 +57,6 @@ import { DisplayLineWidgetClass } from "./DisplayLineWidget";
 import { DisplayTextWidgetClass } from "./DisplayTextWidget";
 import { DisplayWidgetClass } from "./DisplayWidget";
 import { DSTimeWidgetClass } from "./DSTimeWidget";
-import { LogWidgetClass } from "./LogWidget";
 
 DisplayButtonWidgetClass;
 DisplayDotWidgetClass;
@@ -66,6 +65,5 @@ DisplayLineWidgetClass;
 DisplayTextWidgetClass;
 DisplayWidgetClass;
 DSTimeWidgetClass;
-LogWidgetClass;
 
 // End.
