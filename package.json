@@ -9,7 +9,8 @@
     "url": "https://github.com/HomeDing/WebFiles.git"
   },
   "bin": {
-    "pack-sfc": "sfc/bin/pack-sfc.js"
+    "pack-sfc": "sfc/bin/pack-sfc.js",
+    "rm-folder": "bin/rm-folder.js"
   },
   "dependencies": {
     "debug": "^4.3.5",
@@ -21,42 +22,35 @@
     "yargs": "^18.0.0"
   },
   "devDependencies": {
-    "@eslint/js": "^10.0.1",
     "@types/debug": "^4.1.12",
     "@types/express": "^5.0.0",
     "@types/multer": "^2.0.0",
     "@types/multicast-dns": "^7.2.4",
     "@types/yargs": "^17.0.32",
     "esbuild": "^0.28.1",
-    "eslint": "^10.10.0",
     "globals": "^17.0.0",
     "html-minifier-terser": "^7.2.0",
+    "markdownlint": "^0.42.0",
+    "markdownlint-cli": "^0.50.0",
     "npm-run-all2": "^9.0.1",
     "postcss": "^8.5.14",
     "postcss-scss": "^4.0.9",
-    "shelljs": "^0.10.0",
-    "shx": "^0.4.0",
+    "sass": "^1.101.0",
     "stylelint": "^17.4.0",
     "stylelint-config-standard-scss": "^17.0.0",
     "stylelint-scss": "^7.0.0",
     "svgstore": "^3.0.1",
     "terser": "^5.31.1",
-    "typescript": "^6.0.0",
-    "typescript-eslint": "^8.2.0"
-  },
-  "peerDependencies": {
-    "markdownlint": "^0.41.0",
-    "markdownlint-cli": "^0.49.0",
-    "sass": "^1.101.0"
+    "typescript": "^7.0.0"
   },
   "scripts": {
     "all": "npm run build && npm run typecheck:ts && npm run test && npm run pack && npm run publish",
     "build": "npm run build:ts && npm run build:ts-mini && npm run build:css && npm run build:server",
-    "full-test": "npm audit && npm run test:ts && npm run test:server && npm run test:css",
-    "test": "npm run test:ts && npm run test:server && npm run test:css",
+    "full-test": "npm audit && npm run typecheck:ts && npm run test:css",
+    "test": "npm run typecheck:ts && npm run test:css",
     "pack": "npm run pack:icons && npm run pack:dist && npm run pack:minimal && npm run pack:embed",
     "publish": "npm run publish:docu && npm run publish:webfiles",
-    "clean": "shx rm -rf dist && shx rm -rf dist-mini",
+    "clean": "rm-folder dist dist-mini",
     "xprebuild": "npm run test",
     "build:css": "sass docstyle.scss:docstyle.css iotstyle.scss:iotstyle.css",
     "build:css-watch": "npm run build:css -- -w",
@@ -68,8 +62,6 @@
     "build:ts-watch": "npm run build:ts -- --watch",
     "build:ts-mini-watch": "npm run build:ts-mini -- --watch",
     "test:css": "stylelint css/*.scss",
-    "test:server": "eslint ./server/*.ts",
-    "test:ts": "eslint ./src/*.ts",
     "typecheck:ts": "tsc -p src --project src/tsconfig.json --noEmit",
     "pack:dist": "node packdist.js",
     "pack:minimal": "node packminimal.js",
