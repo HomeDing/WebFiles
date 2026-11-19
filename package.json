@@ -36,6 +36,7 @@
     "postcss": "^8.5.14",
     "postcss-scss": "^4.0.9",
     "sass": "^1.101.0",
+    "shelljs": "^0.10.0",
     "stylelint": "^17.4.0",
     "stylelint-config-standard-scss": "^17.0.0",
     "stylelint-scss": "^7.0.0",
@@ -63,6 +64,7 @@
     "build:ts-mini-watch": "npm run build:ts-mini -- --watch",
     "test:css": "stylelint css/*.scss",
     "typecheck:ts": "tsc -p src --project src/tsconfig.json --noEmit",
+    "pack:dev": "node packdist.js -d",
     "pack:dist": "node packdist.js",
     "pack:minimal": "node packminimal.js",
     "pack:icons": "node packicons.js",
@@ -72,7 +74,8 @@
     "prestart": "npm run build",
     "start": "node app.js",
     "dev": "run-p -n build:css-watch build:ts-watch build:ts-mini-watch",
-    "sfc:sfc": "node sfc/bin/pack-sfc.js sfc/u-toast.sfc sfc/u-linechart.sfc sfc/u-piechart.sfc sfc/u-form-*.sfc sfc/u-tablesort.sfc sfc/u-include.sfc  -o bundle.sfc",
+    "sfc:dev": "pack-sfc -p=0 @board-sfc-list.txt -o board-bundle.sfc",
+    "sfc:board": "pack-sfc @board-sfc-list.txt -o board-bundle.sfc",
     "sfc:hdw": "node sfc/bin/pack-sfc.js hdw/hdw-generic.sfc hdw/hdw-air.sfc hdw/hdw-digitalvalue.sfc hdw/hdw-reference.sfc hdw/hdw-schedule.sfc hdw/hdw-switch.sfc hdw/hdw-scenes.sfc hdw/hdw-button.sfc hdw/hdw-log.sfc -o hdwbundle.sfc"
   },
   "files": [
