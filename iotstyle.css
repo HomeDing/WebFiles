@@ -16,6 +16,11 @@
   --focus: hsl(220, 50%, 50%);
   --text-spacing: 0.5rem;
   --transition: 0.3s ease;
+  --layout-padding: 4px;
+  --layout-padding-l: calc(var(--layout-padding)*4);
+  --border-radius-s: 0.25em ;
+  --border-radius: 0.5em;
+  --border-radius-l: 1em;
 }
 
 html,
@@ -123,8 +128,8 @@ select {
   padding-left: 0;
 }
 
-select:invalid,
-input:invalid {
+select:user-invalid,
+input:user-invalid {
   border-color: #ff5555;
 }
 
@@ -176,7 +181,22 @@ dialog::before {
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'><path d='M0 0h48v48h-16v-32h-32z' fill='red' /></svg>");
 }
 
-.warning {
+.info-box {
+  margin: var(--layout-padding);
+  padding: var(--layout-padding);
+  border-radius: var(--border-radius);
+  font-family: sans-serif;
+}
+
+.success,
+.valid {
+  border: 2px solid var(--success-line);
+  background-color: var(--success-back);
+  color: var(--success-color);
+}
+
+.warning,
+.invalid {
   border: 2px solid var(--warning-line);
   background-color: var(--warning-back);
   color: var(--warning-color);
@@ -186,18 +206,6 @@ dialog::before {
   border: 2px solid var(--error-line);
   background-color: var(--error-back);
   color: var(--error-color);
-}
-
-.invalid {
-  border: 2px solid #ff1111 !important;
-  background-color: #ffcccc !important;
-  color: var(--color);
-}
-
-.valid {
-  border: 2px solid #00cc00 !important;
-  background-color: #ccffcc !important;
-  color: var(--color);
 }
 
 @media print {

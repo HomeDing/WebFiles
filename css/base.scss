@@ -22,8 +22,11 @@ $u-border-color-active: hsl($u-hue 100% 30%);
 $u-disabled: gray; // disabled objects
 $u-connect: #00cc00; // connectivity / net
 
+$u-padding: 4px;
 $u-padding-text: 4px;
-$u-padding-block: calc(2 * $u-padding-text);
+$u-padding-block: calc($u-padding * 2);
+
+$u-radius: 0.5em;
 
 $u-border-size: 1px;
 $u-border: $u-border-size solid $u-border-color;
@@ -75,6 +78,13 @@ $u-font-sans-serif: arial, ui-sans-serif, sans-serif;
 
   --text-spacing: #{$u-text-spacing};
   --transition: 0.3s ease;
+
+  --layout-padding: #{$u-padding};
+  --layout-padding-l: calc(var(--layout-padding)*4);
+
+  --border-radius-s: #{calc($u-radius / 2)} ;
+  --border-radius: #{$u-radius};
+  --border-radius-l: #{calc($u-radius * 2)};
 }
 
 html,
@@ -197,8 +207,8 @@ select {
   padding-left: 0;
 }
 
-select:invalid,
-input:invalid {
+select:user-invalid,
+input:user-invalid {
   border-color: #ff5555;
 }
 
@@ -256,7 +266,22 @@ dialog {
   }
 }
 
-.warning {
+.info-box {
+  margin: var(--layout-padding);
+  padding: var(--layout-padding);
+  border-radius: var(--border-radius);
+  font-family: sans-serif;
+}
+
+.success,
+.valid {
+  border: 2px solid var(--success-line);
+  background-color: var(--success-back);
+  color: var(--success-color);
+}
+
+.warning,
+.invalid {
   border: 2px solid var(--warning-line);
   background-color: var(--warning-back);
   color: var(--warning-color);
@@ -266,18 +291,6 @@ dialog {
   border: 2px solid var(--error-line);
   background-color: var(--error-back);
   color: var(--error-color);
-}
-
-.invalid {
-  border: 2px solid #ff1111 !important;
-  background-color: #ffcccc !important;
-  color: var(--color);
-}
-
-.valid {
-  border: 2px solid #00cc00 !important;
-  background-color: #ccffcc !important;
-  color: var(--color);
 }
 
 .noprint {
