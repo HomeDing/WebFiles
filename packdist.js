@@ -24,6 +24,7 @@ console.log(`HomeDing: Packing ${distFolder} Folder`);
 const options = yargs(process.argv.slice(2))
   .usage('Usage: $0')
   .option('v', { alias: 'verbose', describe: 'Verbose logging', type: 'boolean', demandOption: false, default: false })
+  .option('d', { alias: 'develop', describe: 'do not minify for develop', type: 'boolean', demandOption: false, default: false })
   .argv;
 
 debug.enable(options.verbose ? '*' : '*:info');
@@ -102,6 +103,15 @@ async function packAssets(assets) {
         shell.ShellString(txt).to(distFolder + '/' + op.tar);
         break;
 
+      case 'sfc': // bundle components into a single sfc file using the provided list file
+        if (options.develop) {
+          shell.exec(`pack-sfc -p=0 ${op.src} -o ${op.tar}`);
+        } else {
+          shell.exec(`pack-sfc ${op.src} -o ${op.tar}`);
+        }
+        shell.cp(op.tar, distFolder + '/' + op.tar);
+        break;
+
       default:
         break;
     }
@@ -126,11 +136,13 @@ const assets = [
   { m: 'css', src: 'css/iot.scss', tar: 'iotstyle.css' },
 
   { m: 'js', src: 'sfc/loader.js' },
-  { m: 'm', src: 'sfc/u-color.sfc' },
-  { m: 'm', src: 'sfc/u-gaugechart.sfc' },
-  { m: 'm', src: 'sfc/u-linechart.sfc' },
-  { m: 'm', src: 'sfc/u-piechart.sfc' },
-  { m: 'm', src: 'sfc/u-toast.sfc' },
+  { m: 'sfc', src: '@board-sfc-list.txt', tar: 'board-bundle.sfc' },
+
+  // { m: 'm', src: 'sfc/u-color.sfc' },
+  // { m: 'm', src: 'sfc/u-gaugechart.sfc' },
+  // { m: 'm', src: 'sfc/u-linechart.sfc' },
+  // { m: 'm', src: 'sfc/u-piechart.sfc' },
+  // { m: 'm', src: 'sfc/u-toast.sfc' },
 
   { m: 'js', src: 'microsvg.js' },
 
