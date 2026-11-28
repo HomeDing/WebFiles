@@ -233,19 +233,37 @@
 
     <h2>Buttons:</h2>
 
-    <button type="button">Config</button>
+    <div>
+      <button type="button">Config</button>
 
-    <button type="button">
-      <svg>
-        <use href="/icons.svg#config" />
-      </svg>Config
-    </button>
+      <button class="not-pill">
+        <svg>
+          <use href="/icons.svg#config" />
+        </svg><span>Config</span>
+      </button>
 
-    <button type="button" class="icon">
-      <svg>
-        <use href="/icons.svg#config" />
-      </svg>
-    </button>
+      <button type="button" class="icon">
+        <svg>
+          <use href="/icons.svg#config" />
+        </svg>
+      </button>
+    </div>
+
+    <div style="margin-top: var(--text-gap)">
+      <button class="pill">Config</button>
+
+      <button class="pill">
+        <svg>
+          <use href="/icons.svg#config" />
+        </svg><span>Config</span>
+      </button>
+
+      <button class="icon">
+        <svg>
+          <use href="/icons.svg#config" />
+        </svg>
+      </button>
+    </div>
 
     <h2>Cards:</h2>
 
@@ -294,16 +312,16 @@
               <option>Option Text 2</option>
             </select>
             <div class="form-inline">
-              <label><input name="mode" u-value="mode" type="radio" value="off">Off</label>
-              <label><input name="mode" u-value="mode" type="radio" value="on">On</label>
-              <label><input name="mode" u-value="mode" type="radio" value="timer">Timer</label>
+              <label><input type="radio" name="mode" u-value="mode" value="off">Off</label>
+              <label><input type="radio" name="mode" u-value="mode" value="on">On</label>
+              <label><input type="radio" name="mode" u-value="mode" value="timer">Timer</label>
             </div>
             <label>label:</label>
             <span><label><input type="checkbox">done.</label></span>
             <div class="btn-group">
-              <label><input name="mode" u-value="mode" type="radio" value="off">Off</label>
-              <label><input name="mode" u-value="mode" type="radio" value="on">On</label>
-              <label><input name="mode" u-value="mode" type="radio" value="timer">Timer</label>
+              <label><input type="radio" name="mode2" u-value="mode" value="off">Off</label>
+              <label><input type="radio" name="mode2" u-value="mode" value="on">On</label>
+              <label><input type="radio" name="mode2" u-value="mode" value="timer">Timer</label>
             </div>
 
             <label>volume:</label>

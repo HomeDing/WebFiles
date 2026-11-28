@@ -76,13 +76,25 @@ $u-font-sans-serif: arial, ui-sans-serif, sans-serif;
 
   --focus: #{hsl($u-hue, 50%, 50%)};
 
+  --gap: 1em;
+
+  --text-gap: calc(var(--gap) / 2);
+
+  --input-padding-block: 0.5rem;
+  --input-padding-inline: 0.5rem;
+  --input-border-width: 2px;
+
   --text-spacing: #{$u-text-spacing};
+
+  // Transitions and animations
   --transition: 0.3s ease;
 
-  --layout-padding: #{$u-padding};
-  --layout-padding-l: calc(var(--layout-padding)*4);
+  --layout-gap: 1em;
 
-  --border-radius-s: #{calc($u-radius / 2)} ;
+  --layout-padding: #{$u-padding};
+  --layout-padding-l: calc(var(--layout-padding) * 4);
+
+  --border-radius-s: #{calc($u-radius / 2)};
   --border-radius: #{$u-radius};
   --border-radius-l: #{calc($u-radius * 2)};
 }
@@ -123,21 +135,6 @@ a:any-link {
 svg {
   color: currentcolor;
 
-  &.button {
-    width: 2em;
-    height: 2em;
-
-    .object {
-      fill: $u-primary;
-      fill-opacity: 1;
-    }
-
-    .connect {
-      fill: $u-connect;
-      fill-opacity: 1;
-    }
-  }
-
   &.icon {
     user-select: none;
   }
@@ -151,120 +148,6 @@ h1 {
 
 
 
-// form elements
-
-label,
-input,
-input+span,
-input::placeholder,
-select,
-output,
-button {
-  display: inline-block;
-  font-size: inherit;
-  margin: 0;
-  border: $u-border-none;
-  padding: 0.1em 0.2em;
-  color: currentcolor;
-}
-
-input[type='color'] {
-  padding: 0;
-  border: 0;
-}
-
-input::placeholder {
-  padding-top: 0.4em;
-  font-size: 0.8em;
-}
-
-label {
-  cursor: pointer;
-  height: 1.6em;
-
-  >img,
-  >.icon {
-    // vertical-align: middle;
-    width: 1em !important;
-    height: 1em !important;
-    margin: 0 !important;
-  }
-}
-
-input,
-select,
-button {
-  border-color: var(--color);
-}
-
-input,
-select {
-  width: 22ch;
-  border-radius: 0.2em;
-}
-
-select {
-  padding-left: 0;
-}
-
-select:user-invalid,
-input:user-invalid {
-  border-color: #ff5555;
-}
-
-input[type='checkbox'],
-input[type='radio'] {
-  width: 2ch;
-  vertical-align: baseline;
-}
-
-// ===== Native dialogs and focus Object
-
-dialog::backdrop {
-  background-color: rgb(200 200 200 / 70%);
-}
-
-dialog {
-  position: relative;
-  padding: 1rem;
-  background-color: canvas;
-  border: 0;
-
-  h2 {
-    margin: 0 0 var(--text-spacing) 0;
-  }
-
-  h3,
-  h4 {
-    margin: 0
-  }
-
-  .u-close {
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
-    height: 1.6rem;
-    width: 1.6rem;
-    background-color: red;
-    background-size: 1.6rem 1.6rem;
-    background-repeat: no-repeat;
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'><path d='M12 12L36 36M36 12L12 36' stroke='white' stroke-width='8' stroke-linecap='round' /></svg>");
-    z-index: 1 !important;
-    user-select: none;
-    cursor: pointer;
-  }
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 2rem;
-    height: 2rem;
-    z-index: -1;
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'><path d='M0 0h48v48h-16v-32h-32z' fill='red' /></svg>");
-  }
-}
 
 .info-box {
   margin: var(--layout-padding);

@@ -14,11 +14,17 @@
   --error-line: hsl(var(--error-hue) 90% 40%);
   --error-color: color;
   --focus: hsl(220, 50%, 50%);
+  --gap: 1em;
+  --text-gap: calc(var(--gap) / 2);
+  --input-padding-block: 0.5rem;
+  --input-padding-inline: 0.5rem;
+  --input-border-width: 2px;
   --text-spacing: 0.5rem;
   --transition: 0.3s ease;
+  --layout-gap: 1em;
   --layout-padding: 4px;
-  --layout-padding-l: calc(var(--layout-padding)*4);
-  --border-radius-s: 0.25em ;
+  --layout-padding-l: calc(var(--layout-padding) * 4);
+  --border-radius-s: 0.25em;
   --border-radius: 0.5em;
   --border-radius-l: 1em;
 }
@@ -56,129 +62,12 @@ a:any-link {
 svg {
   color: currentcolor;
 }
-svg.button {
-  width: 2em;
-  height: 2em;
-}
-svg.button .object {
-  fill: hsl(220, 80%, 30%);
-  fill-opacity: 1;
-}
-svg.button .connect {
-  fill: #00cc00;
-  fill-opacity: 1;
-}
 svg.icon {
   user-select: none;
 }
 
 h1 {
   font-size: 2em;
-}
-
-label,
-input,
-input + span,
-input::placeholder,
-select,
-output,
-button {
-  display: inline-block;
-  font-size: inherit;
-  margin: 0;
-  border: 1px solid transparent;
-  padding: 0.1em 0.2em;
-  color: currentcolor;
-}
-
-input[type=color] {
-  padding: 0;
-  border: 0;
-}
-
-input::placeholder {
-  padding-top: 0.4em;
-  font-size: 0.8em;
-}
-
-label {
-  cursor: pointer;
-  height: 1.6em;
-}
-label > img,
-label > .icon {
-  width: 1em !important;
-  height: 1em !important;
-  margin: 0 !important;
-}
-
-input,
-select,
-button {
-  border-color: var(--color);
-}
-
-input,
-select {
-  width: 22ch;
-  border-radius: 0.2em;
-}
-
-select {
-  padding-left: 0;
-}
-
-select:user-invalid,
-input:user-invalid {
-  border-color: #ff5555;
-}
-
-input[type=checkbox],
-input[type=radio] {
-  width: 2ch;
-  vertical-align: baseline;
-}
-
-dialog::backdrop {
-  background-color: rgba(200, 200, 200, 0.7);
-}
-
-dialog {
-  position: relative;
-  padding: 1rem;
-  background-color: canvas;
-  border: 0;
-}
-dialog h2 {
-  margin: 0 0 var(--text-spacing) 0;
-}
-dialog h3,
-dialog h4 {
-  margin: 0;
-}
-dialog .u-close {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  height: 1.6rem;
-  width: 1.6rem;
-  background-color: red;
-  background-size: 1.6rem 1.6rem;
-  background-repeat: no-repeat;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'><path d='M12 12L36 36M36 12L12 36' stroke='white' stroke-width='8' stroke-linecap='round' /></svg>");
-  z-index: 1 !important;
-  user-select: none;
-  cursor: pointer;
-}
-dialog::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 2rem;
-  height: 2rem;
-  z-index: -1;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'><path d='M0 0h48v48h-16v-32h-32z' fill='red' /></svg>");
 }
 
 .info-box {
@@ -607,39 +496,56 @@ body.sitelayout footer {
   max-height: 7.2rem;
 }
 
-:root {
-  --grid-width: 20ch;
-  --grid-gap: 1ch;
+svg.button {
+  width: 2em;
+  height: 2em;
+}
+svg.button .object {
+  fill: hsl(220, 80%, 30%);
+  fill-opacity: 1;
+}
+svg.button .connect {
+  fill: #00cc00;
+  fill-opacity: 1;
 }
 
-.card.active .border {
-  border-color: hsl(220, 100%, 30%);
-}
-.card.active .band::-webkit-slider-thumb {
-  border-color: hsl(220, 100%, 30%) transparent;
-}
-.card.active > .header {
-  background-color: var(--card-head-active);
-}
-.card img.active,
-.card svg.active {
-  background-color: limegreen;
-}
-.card > hr {
-  background-color: rgba(0, 0, 0, 0.125);
-  border: 0;
-  height: 1px;
+label,
+input,
+input + span,
+input::placeholder,
+select,
+output,
+button {
+  display: inline-block;
+  font-size: inherit;
+  line-height: inherit;
   margin: 0;
-  padding: 0;
+  border: 1px solid transparent;
+  padding: 0.1em 0.2em;
+  color: currentcolor;
+}
+
+input,
+input[type=checkbox],
+input[type=radio],
+button,
+label {
+  display: inline-flex;
+  vertical-align: bottom;
+  align-items: center;
+  gap: var(--text-gap);
+  white-space: nowrap;
 }
 
 button,
 .button {
-  display: inline-block;
-  height: 1.6em;
+  display: inline-flex;
+  align-items: center;
+  line-height: inherit;
   min-width: 6.5ch;
-  padding: 2px 4px;
-  border-radius: 4px;
+  padding: var(--input-padding-block) var(--input-padding-inline);
+  border-radius: var(--border-radius);
+  border-width: var(--input-border-width);
   border-color: hsl(220, 80%, 30%);
   background-color: hsl(220, 80%, 30%);
   color: white;
@@ -668,10 +574,23 @@ button.secondary,
 }
 button > svg,
 .button > svg {
-  height: 1.2em;
-  width: 1.2em;
-  vertical-align: text-top;
-  margin-right: 0.2em;
+  height: 1lh;
+  width: 1lh;
+  flex: none;
+}
+button.pill,
+.button.pill {
+  --r: calc(1lh + 2 * var(--input-padding-block) + 2 * var(--input-border-width));
+  --adjust: calc(var(--input-padding-block) - var(--input-padding-inline));
+  border-radius: var(--r);
+}
+button.pill > svg:first-child,
+.button.pill > svg:first-child {
+  margin-inline-start: var(--adjust);
+}
+button.pill > svg:last-child,
+.button.pill > svg:last-child {
+  margin-inline-end: var(--adjust);
 }
 button.icon,
 .button.icon {
@@ -682,6 +601,61 @@ button.icon,
 button.icon > svg,
 .button.icon > svg {
   margin: 0;
+}
+
+input[type=color] {
+  padding: 0;
+  border: 0;
+}
+
+input::placeholder {
+  padding-top: 0.4em;
+  font-size: 0.8em;
+}
+
+label {
+  cursor: pointer;
+  padding-block: calc(var(--input-padding-block) + var(--input-border-width));
+}
+label > img,
+label > .icon {
+  width: 1em !important;
+  height: 1em !important;
+  margin: 0 !important;
+}
+
+input,
+select {
+  border-color: var(--color);
+}
+
+input,
+select {
+  width: 22ch;
+  border-radius: var(--border-radius);
+}
+
+input {
+  border-width: var(--input-border-width);
+  padding-block: var(--input-padding-block);
+  padding-inline: var(--input-padding-inline);
+}
+
+select {
+  padding-left: 0;
+}
+
+select:user-invalid,
+input:user-invalid {
+  border-color: #ff5555;
+}
+
+input[type=checkbox],
+input[type=radio] {
+  width: 1lh;
+  height: 1lh;
+  margin-block: calc(var(--input-padding-block) + var(--input-border-width));
+  vertical-align: bottom;
 }
 
 option[disabled] {
@@ -713,6 +687,18 @@ input[type=range]::-webkit-slider-thumb {
 input.switch[type=range] {
   pointer-events: none;
   width: 2.5em !important;
+}
+
+input.band {
+  width: 100%;
+  border-radius: 0;
+  border-width: 1px;
+}
+input.band.hue {
+  background: linear-gradient(to right, red 0%, yellow 17%, lime 33%, aqua 50%, blue 67%, fuchsia 83%, red 100%);
+}
+input.band.white, input.band.lightness, input.band.saturation {
+  background: linear-gradient(to right, black 0%, white 100%);
 }
 
 *:focus {
@@ -781,6 +767,74 @@ input.switch[type=range] {
   display: flex;
   flex-flow: row wrap;
   gap: 0.25rem;
+}
+
+dialog::backdrop {
+  background-color: rgba(200, 200, 200, 0.7);
+}
+
+dialog {
+  position: relative;
+  padding: 1rem;
+  background-color: canvas;
+  border: 0;
+}
+dialog h2 {
+  margin: 0 0 var(--text-spacing) 0;
+}
+dialog h3,
+dialog h4 {
+  margin: 0;
+}
+dialog .u-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  height: 1.6rem;
+  width: 1.6rem;
+  background-color: red;
+  background-size: 1.6rem 1.6rem;
+  background-repeat: no-repeat;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'><path d='M12 12L36 36M36 12L12 36' stroke='white' stroke-width='8' stroke-linecap='round' /></svg>");
+  z-index: 1 !important;
+  user-select: none;
+  cursor: pointer;
+}
+dialog::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 2rem;
+  height: 2rem;
+  z-index: -1;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'><path d='M0 0h48v48h-16v-32h-32z' fill='red' /></svg>");
+}
+
+:root {
+  --grid-width: 20ch;
+  --grid-gap: 1ch;
+}
+
+.card.active .border {
+  border-color: hsl(220, 100%, 30%);
+}
+.card.active .band::-webkit-slider-thumb {
+  border-color: hsl(220, 100%, 30%) transparent;
+}
+.card.active > .header {
+  background-color: var(--card-head-active);
+}
+.card img.active,
+.card svg.active {
+  background-color: limegreen;
+}
+.card > hr {
+  background-color: rgba(0, 0, 0, 0.125);
+  border: 0;
+  height: 1px;
+  margin: 0;
+  padding: 0;
 }
 
 .element {
@@ -937,18 +991,6 @@ input.switch[type=range] {
   width: 1.2em;
   height: 1.2em;
   margin: 0;
-}
-
-input.band {
-  width: 100%;
-  border-radius: 0;
-  border-width: 1px;
-}
-input.band.hue {
-  background: linear-gradient(to right, red 0%, yellow 17%, lime 33%, aqua 50%, blue 67%, fuchsia 83%, red 100%);
-}
-input.band.white, input.band.lightness, input.band.saturation {
-  background: linear-gradient(to right, black 0%, white 100%);
 }
 
 /*# sourceMappingURL=iotstyle.css.map */

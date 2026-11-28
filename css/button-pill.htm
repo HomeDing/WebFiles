@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Round Button with icon</title>
+
+  <style>
+    /* reset */
+    @layer reset {
+      body {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-size: 1rem;
+        line-height: 1.2;
+        font-family: Arial;
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: inherit;
+      }
+
+      button,
+      input,
+      label {
+        font-size: 1rem;
+        line-height: inherit;
+      }
+    }
+
+    /* Style specific variables */
+    body {
+      /* gap to inline text elements  */
+      --text-gap: 0.5rem;
+
+      /* vertical padding for buttons, inputs */
+      --input-padding-block: 0.5rem;
+
+      /* horizontal padding for buttons, inputs */
+      --input-padding-inline: 1rem;
+
+      /* border width for inputs and buttons */
+      --input-border-width: 2px;
+    }
+
+    input,
+    input[type=checkbox],
+    input[type=radio],
+    button,
+    label {
+      display: inline-flex;
+      vertical-align: bottom;
+      gap: var(--text-gap);
+      white-space: nowrap;
+    }
+
+    button {
+      align-items: center;
+      padding: var(--input-padding-block) var(--input-padding-inline);
+      border: var(--input-border-width) solid black;
+
+      svg {
+        height: 1lh;
+        width: 1lh;
+        flex: none;
+      }
+    }
+
+    div {
+      background-color: silver;
+      border-block: 1px solid blue;
+    }
+
+    span {
+      background-color: lime;
+    }
+
+    button.pill {
+      /* real border radius */
+      --r: calc(1lh + 2 * var(--input-padding-block) + 2 * var(--input-border-width));
+
+      /* adjust icons */
+      --adjust: calc(var(--input-padding-block) - var(--input-padding-inline));
+
+      border-radius: var(--r);
+
+      svg:first-child {
+        margin-inline-start: var(--adjust);
+      }
+
+      svg:last-child {
+        margin-inline-end: var(--adjust);
+      }
+    }
+
+    label {
+      background-color: yellowgreen;
+      padding-block: calc(var(--input-padding-block) + var(--input-border-width));
+
+    }
+
+    input {
+      background-color: pink;
+      border: var(--input-border-width) solid black;
+      padding-block: var(--input-padding-block);
+    }
+
+    input[type=radio],
+    input[type=checkbox] {
+      width: 1lh;
+      height: 1lh;
+      margin-block: calc(var(--input-padding-block) + var(--input-border-width));
+    }
+  </style>
+</head>
+
+<body style="zoom:1;padding:2em">
+  <h2>Button implementation for this project</h2>
+
+  <p>This page is showing the bare CSS to style labels, buttons and inputs.</p>
+
+  <h3>Buttons</h3>
+  <ul>
+    <li>Buttons can be given round borders using the pill class on the button.</li>
+    <li>They optionally have leading or training icons.</li>
+    <li>Icons and text must be centered vertically</li>
+    <li>Text is on the same horizontal than the icon.</li>
+    <li>Text does not break into 2 lines when having a space.</li>
+    <li>center of the icon fits to the center of the circle of the button radius.</li>
+    <li>Don't change html only change css. When it cannot be styled by css only, make suggestions.</li>
+    <li>0.5em space between text and icon</li>
+    <li>#b2 button looks same as #b1</li>
+  </ul>
+
+  <p>The very simple buttons can be created as
+  <pre><code>&lt;button&gt;Submit&lt;/button&gt;</code></pre>
+  </p>
+
+  <p>Any button with a icon must be created with a &lt;span&gt; element around text:
+  <pre><code>&lt;button&gt;&lt;svg&gt;...&lt;/svg&gt;&lt;span&gt;Submit&lt;/span&gt;&lt;/button&gt;</code></pre>
+  This avoids that the text and icons are too close.
+  </p>
+
+  <h3>Labels </h3>
+
+  <hr>
+  <p>button variants with a leading icon</p>
+  <div>
+    <label>Label:</label>
+    <button id="b1" class="pill">
+      <svg viewBox="0 0 48 48">
+        <path
+          d="M25.111 12.889h-3.333v13.333l10.555 6.334L34 29.822l-8.889-5.266zM24 4C12.956 4 4 12.956 4 24s8.933 20 20 20c11.044 0 20-8.956 20-20S35.044 4 24 4zm0 35.556C15.4 39.556 8.444 32.6 8.444 24 8.444 15.4 15.4 8.444 24 8.444c8.6 0 15.556 6.956 15.556 15.556 0 8.6-6.956 15.556-15.556 15.556z"
+          fill="currentColor" />
+      </svg>
+      text-only
+    </button>
+
+    <button id="b1b" class="pill">
+      <svg viewBox="0 0 48 48">
+        <path
+          d="M25.111 12.889h-3.333v13.333l10.555 6.334L34 29.822l-8.889-5.266zM24 4C12.956 4 4 12.956 4 24s8.933 20 20 20c11.044 0 20-8.956 20-20S35.044 4 24 4zm0 35.556C15.4 39.556 8.444 32.6 8.444 24 8.444 15.4 15.4 8.444 24 8.444c8.6 0 15.556 6.956 15.556 15.556 0 8.6-6.956 15.556-15.556 15.556z"
+          fill="currentColor" />
+      </svg>
+      <span>text in span</span>
+    </button>
+    <input value="Hello good World">
+    <input type="radio">
+    <input type="checkbox"><label>agree</label>
+  </div>
+
+  <p>button with a trailing icon</p>
+  <div>
+    <label id="l2">Label:</label>
+    <button id="b2" class="pill">
+      text-only
+      <svg viewBox="0 0 48 48">
+        <path
+          d="M25.111 12.889h-3.333v13.333l10.555 6.334L34 29.822l-8.889-5.266zM24 4C12.956 4 4 12.956 4 24s8.933 20 20 20c11.044 0 20-8.956 20-20S35.044 4 24 4zm0 35.556C15.4 39.556 8.444 32.6 8.444 24 8.444 15.4 15.4 8.444 24 8.444c8.6 0 15.556 6.956 15.556 15.556 0 8.6-6.956 15.556-15.556 15.556z"
+          fill="currentColor" />
+      </svg>
+    </button>
+    <button id="b2b" class="pill">
+      <span>text in span</span>
+      <svg viewBox="0 0 48 48">
+        <path
+          d="M25.111 12.889h-3.333v13.333l10.555 6.334L34 29.822l-8.889-5.266zM24 4C12.956 4 4 12.956 4 24s8.933 20 20 20c11.044 0 20-8.956 20-20S35.044 4 24 4zm0 35.556C15.4 39.556 8.444 32.6 8.444 24 8.444 15.4 15.4 8.444 24 8.444c8.6 0 15.556 6.956 15.556 15.556 0 8.6-6.956 15.556-15.556 15.556z"
+          fill="currentColor" />
+      </svg>
+    </button>
+    <button class="pill">Submit</button>
+  </div>
+
+  <p>button with a icon only / text only</p>
+  <div>
+    <label>Label:</label>
+    <button id="b3" class="pill">
+      <svg viewBox="0 0 48 48">
+        <path
+          d="M25.111 12.889h-3.333v13.333l10.555 6.334L34 29.822l-8.889-5.266zM24 4C12.956 4 4 12.956 4 24s8.933 20 20 20c11.044 0 20-8.956 20-20S35.044 4 24 4zm0 35.556C15.4 39.556 8.444 32.6 8.444 24 8.444 15.4 15.4 8.444 24 8.444c8.6 0 15.556 6.956 15.556 15.556 0 8.6-6.956 15.556-15.556 15.556z"
+          fill="currentColor" />
+      </svg>
+    </button>
+
+    <button class="pill">Submit</button>
+  </div>
+
+</body>
+
+</html>l

@@ -9,7 +9,7 @@ This is a **hybrid monorepo**:
 * **Client-side UI** (`/src`, `/sfc`) — compiled into `micro.js` and deployed to embedded HomeDing devices or Node.js portal
 * **Portal Server** (`/server`) — Express-based Node.js server for discovering and managing local HomeDing devices
 * **SFC Subsystem** (`/sfc` subproject) — tiny Single File Component runtime (Web Components) used by portal and devices
-* **Assets** (`/css`, `/case`) — SCSS stylesheets and device simulation configs (e.g., `case-display/`, `case-rf/`)
+* **Device simulations** (`/case`) — device simulation configs (e.g., `case-display/`, `case-rf/`)
 
 ### Key Data Flow
 
@@ -32,10 +32,10 @@ This is a **hybrid monorepo**:
 ## Build & Dev Workflow (Explicit Commands)
 
 ```bash
-# Full build: TypeScript + SCSS + Server
+# Full build: client assets + server
 npm run build
 
-# Development (live reload SCSS + TS, auto-restart server)
+# Development (watch and rebuild frontend assets)
 npm run dev
 
 # Start server only (requires pre-built dist)
@@ -45,13 +45,11 @@ npm start
 npm run build:ts          # Compile src/*.ts → micro.js
 npm run build:ts-mini    # Compile src/*.ts → micro-mini.js (smaller bundle)
 npm run build:server     # Compile server/*.ts → dist-server/
-npm run build:css        # Compile *.scss → *.css
 
 # Testing
 npm run typecheck:ts     # TypeScript type checking for all files in src/
 npm run test:ts          # ESLint on src/
 npm run test:server      # ESLint on server/
-npm run test:css         # stylelint on css/
 
 # Packing (create distributable artifacts)
 npm run pack:dist        # Pack for standard devices (1 MB limit)
@@ -60,7 +58,7 @@ npm run pack:embed       # Create .h include file for sketches
 npm run pack:icons       # Generate icons.svg from icon sources
 ```
 
-**Key:** `npm run dev` combines all watchers in parallel for rapid iteration; `npm start` is for production simulation.
+**Key:** `npm run dev` combines frontend asset watchers in parallel for rapid iteration; `npm start` is for production simulation.
 
 ## Project Structure
 
@@ -82,10 +80,6 @@ npm run pack:icons       # Generate icons.svg from icon sources
 │   ├── loader.ts             # SFC parser & UComponent lifecycle
 │   ├── data-hub.ts           # Client-side data persistence
 │   └── *.sfc                 # Component definitions
-├── css/                      # SCSS stylesheets
-│   ├── base.scss             # Core theming variables
-│   ├── card.scss             # Card layout & components
-│   └── iot.scss              # Specific IoT UI patterns
 ├── case/                     # Device simulation folders
 │   ├── switch/, radio/, etc. # Config files per device type
 ├── test/                     # Test/demo HTML files
@@ -114,11 +108,10 @@ npm run pack:icons       # Generate icons.svg from icon sources
 * Routes map to device APIs: `/api/device/:id/...` proxies to real device or MockElements.
 * **Config proxying:** requests to `/config` or `/env.json` route to `ProxyElement.ts` for real devices or `MockElements.ts` for simulation.
 
-### 4. CSS Architecture (SCSS Modules)
+### 4. CSS
 
-* **Variable-driven design:** see `css/base.scss` for color scheme, spacing, typography.
-* Compiled to `iotstyle.css` (full site) and `docstyle.css` (docs).
-* Two distributions: `dist/` (all styles ~50 KB) and `dist-mini/` (stripped-down ~10 KB).
+CSS architecture, Sass modules, design tokens, implementation conventions, build and test commands, and device
+compatibility guidance are documented in [CSS implementation instructions](../css/instructions.md).
 
 ### 5. SFC (Single File Components) — Separate System
 
@@ -152,7 +145,6 @@ npm run pack:icons       # Generate icons.svg from icon sources
 * **`src/micro.ts`** — Widget registry initialization; breaking this breaks all UI binding.
 * **`src/microHub.ts`** — Data hub API (`publish`, `subscribe`, `get`); many components depend on exact behavior.
 * **`server/HomeDingServer.ts`** — Express app setup; affects all portal routing.
-* **`css/base.scss`** — Root CSS variables; used by all device UIs.
 
 ## Testing Before Merge
 
@@ -170,8 +162,8 @@ npm run build:css && npm run test:css        # SCSS lint
 
 1. **Preserve public APIs:** `window.hub` and `window.sfc` (from `/sfc/` subproject) are used by external configs and device code; breaking changes require version bump.
 2. **Bundle size matters:** Device distributions must fit constraints (`dist` ≤ 1 MB, `dist-mini` ≤ 128 KB). Use `npm run pack:*` to check footprints.
-3. **Minimal style assumptions:** Device UIs are deployed widely; CSS changes may break devices in field. Test across browsers and sizes.
-4. **mDNS discovery is optional:** Portal works with or without device discovery; keep `server/Discover.ts` changes backward compatible.
+3. **mDNS discovery is optional:** Portal works with or without device discovery; keep
+   `server/Discover.ts` changes backward compatible.
 
 ---
 

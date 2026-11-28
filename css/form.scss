@@ -1,0 +1,343 @@
+// file: form.scss
+// shared form, button, input, label, and dialog rules
+
+@use "base";
+
+svg.button {
+  width: 2em;
+  height: 2em;
+
+  .object {
+    fill: base.$u-primary;
+    fill-opacity: 1;
+  }
+
+  .connect {
+    fill: base.$u-connect;
+    fill-opacity: 1;
+  }
+}
+
+label,
+input,
+input+span,
+input::placeholder,
+select,
+output,
+button {
+  display: inline-block;
+  font-size: inherit;
+  line-height: inherit;
+  margin: 0;
+  border: base.$u-border-none;
+  padding: 0.1em 0.2em;
+  color: currentcolor;
+}
+
+input,
+input[type='checkbox'],
+input[type='radio'],
+button,
+label {
+  display: inline-flex;
+  vertical-align: bottom;
+  align-items: center;
+  gap: var(--text-gap);
+  white-space: nowrap;
+}
+
+
+button,
+.button {
+  display: inline-flex;
+  align-items: center;
+  line-height: inherit;
+  min-width: 6.5ch;
+  padding: var(--input-padding-block) var(--input-padding-inline);
+  border-radius: var(--border-radius);
+  border-width: var(--input-border-width);
+  border-color: base.$u-primary;
+  background-color: base.$u-primary;
+  color: base.$u-primary-text;
+  cursor: pointer;
+  user-select: none;
+
+  &:visited {
+    color: white;
+  }
+
+  &:disabled,
+  &:disabled:focus {
+    border-color: base.$u-disabled;
+    background-color: base.$u-disabled;
+  }
+
+  &.active {
+    background-color: #acc1e4 !important;
+    border-color: #203050 !important;
+  }
+
+  &.secondary {
+    background-color: base.$u-secondary;
+    border-color: base.$u-secondary-text;
+  }
+
+  >svg {
+    height: 1lh;
+    width: 1lh;
+    flex: none;
+  }
+
+  &.pill {
+    --r: calc(1lh + 2 * var(--input-padding-block) + 2 * var(--input-border-width));
+    --adjust: calc(var(--input-padding-block) - var(--input-padding-inline));
+
+    border-radius: var(--r);
+
+    >svg:first-child {
+      margin-inline-start: var(--adjust);
+    }
+
+    >svg:last-child {
+      margin-inline-end: var(--adjust);
+    }
+  }
+
+  &.icon {
+    width: 1.6em;
+    min-width: unset;
+    padding: 2px;
+
+    >svg {
+      margin: 0;
+    }
+  }
+}
+
+input[type='color'] {
+  padding: 0;
+  border: 0;
+}
+
+input::placeholder {
+  padding-top: 0.4em;
+  font-size: 0.8em;
+}
+
+label {
+  cursor: pointer;
+  padding-block: calc(var(--input-padding-block) + var(--input-border-width));
+
+  >img,
+  >.icon {
+    width: 1em !important;
+    height: 1em !important;
+    margin: 0 !important;
+  }
+}
+
+input,
+select {
+  border-color: var(--color);
+}
+
+input,
+select {
+  width: 22ch;
+  border-radius: var(--border-radius);
+}
+
+input {
+  border-width: var(--input-border-width);
+  padding-block: var(--input-padding-block);
+  padding-inline: var(--input-padding-inline);
+}
+
+select {
+  padding-left: 0;
+}
+
+select:user-invalid,
+input:user-invalid {
+  border-color: #ff5555;
+}
+
+input[type='checkbox'],
+input[type='radio'] {
+  width: 1lh;
+  height: 1lh;
+  margin-block: calc(var(--input-padding-block) + var(--input-border-width));
+  vertical-align: bottom;
+}
+
+option[disabled] {
+  color: base.$u-disabled;
+}
+
+input[type='range'] {
+  appearance: none;
+  -webkit-appearance: none; // stylelint-disable-line property-no-vendor-prefix
+  vertical-align: top;
+  margin: 0.2em;
+  height: 1.2em;
+  padding: 0;
+  width: 9.8em;
+  transition: 0.4s all ease-out;
+  border-radius: 0.6em;
+
+  &::-webkit-slider-thumb {
+    appearance: none;
+    -webkit-appearance: none; // stylelint-disable-line property-no-vendor-prefix
+    height: 1em;
+    width: 1em;
+    border-radius: 0.5em;
+    background: #203050;
+    border: 1px solid #f0f0f0;
+    cursor: pointer;
+  }
+}
+
+input.switch[type='range'] {
+  pointer-events: none;
+  width: 2.5em !important;
+}
+
+input.band {
+  width: 100%;
+  border-radius: 0;
+  border-width: 1px;
+
+  &.hue {
+    background: linear-gradient(to right, red 0%, yellow 17%, lime 33%, aqua 50%, blue 67%, fuchsia 83%, red 100%);
+  }
+
+  &.white,
+  &.lightness,
+  &.saturation {
+    background: linear-gradient(to right, black 0%, white 100%);
+  }
+}
+
+*:focus {
+  outline: 0;
+  box-shadow: 0 0 0.1rem 0.2rem var(--focus);
+}
+
+.btn-group {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: flex-start;
+
+  >* {
+    flex: 1 1 auto;
+    margin: 0;
+    border-radius: 0;
+  }
+
+  >*:first-child {
+    border-top-left-radius: base.$u-btn-radius;
+    border-bottom-left-radius: base.$u-btn-radius;
+  }
+
+  >*:last-child {
+    border-top-right-radius: base.$u-btn-radius;
+    border-bottom-right-radius: base.$u-btn-radius;
+  }
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 12.6ch auto;
+  gap: 5px;
+  margin-bottom: 0.5rem;
+
+  >* {
+    grid-column-end: -1;
+  }
+
+  >label {
+    grid-column: 1;
+    text-align: right;
+  }
+
+  >.wide {
+    grid-column: 1/-1;
+  }
+
+  .icon {
+    width: 1em;
+    height: 1em;
+    margin: 0.2em;
+  }
+}
+
+.form-inline {
+  height: 1.6em;
+
+  >* {
+    vertical-align: top;
+  }
+
+  >*:not(:first-child) {
+    margin-left: 3px;
+  }
+
+  >button {
+    padding: 0;
+    border: 0;
+    min-width: 0;
+    height: 1.4rem;
+  }
+}
+
+.form-actions {
+  display: flex;
+  flex-flow: row wrap;
+  gap: base.$u-gutter2;
+}
+
+dialog::backdrop {
+  background-color: rgb(200 200 200 / 70%);
+}
+
+dialog {
+  position: relative;
+  padding: 1rem;
+  background-color: canvas;
+  border: 0;
+
+  h2 {
+    margin: 0 0 var(--text-spacing) 0;
+  }
+
+  h3,
+  h4 {
+    margin: 0;
+  }
+
+  .u-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    height: 1.6rem;
+    width: 1.6rem;
+    background-color: red;
+    background-size: 1.6rem 1.6rem;
+    background-repeat: no-repeat;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'><path d='M12 12L36 36M36 12L12 36' stroke='white' stroke-width='8' stroke-linecap='round' /></svg>");
+    z-index: 1 !important;
+    user-select: none;
+    cursor: pointer;
+  }
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 2rem;
+    height: 2rem;
+    z-index: -1;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'><path d='M0 0h48v48h-16v-32h-32z' fill='red' /></svg>");
+  }
+}

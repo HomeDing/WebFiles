@@ -3,14 +3,16 @@
 This folder contains the modules of the style toolkit used for the micro frontends of the iot devices and the style for
 the documents based on the scss formats and compiled inti plain css files.
 
+For file responsibilities, control styling conventions, and build commands, see [CSS implementation instructions](./instructions.md).
+
 The modules can be combined into a single css file by including the required modules for the use-case.  This is done in
 the scss files in the root of the project.
 
-| assembly  | base  | page  |  doc  | display | dialog |
-| --------- | :---: | :---: | :---: | :----: | :----: |
-| docstyle  |   X   |   X   |   X   |        |        |
-| iotstyle  |   X   |   X   |       |   X    |        |
-| ministyle |   X   |   X   |       |        |        |
+| assembly  | base  | page  | doc | form | display | dialog |
+| --------- | :---: | :---: | :-: | :--: | :-----: | :----: |
+| docstyle  |   X   |   X   |  X  |  X   |         |   X    |
+| iotstyle  |   X   |   X   |     |  X   |    X    |   X    |
+| ministyle |   X   |   X   |     |      |         |        |
 
 The `docstyle` is created for text-heavy pages.  It is a variant that supports flowing content in the main sections for
 writing the documentation and blogs.
@@ -54,6 +56,19 @@ It defines the following (partially optional) page-level areas:
 `<nav class='sidebar'>` -— This optional area is made to provide more detailled navigation within the domain. This may be the
 
 `<footer>` -— This optional area exists for web site references like copyright and legal statements.
+
+
+## Form Module
+
+The form module is implemented in `form.scss`. It contains shared rules for native form elements and form layouts:
+
+* buttons and `.button` variants
+* labels, inputs, selects, and outputs
+* checkbox, radio, range, band, and pill controls
+* `.btn-group`, `.form-grid`, `.form-inline`, and `.form-actions`
+* native dialogs and their close controls
+
+The module is included by both `doc.scss` and `iot.scss`. Runtime control values belong in `base.scss`.
 
 
 ## Doc Module
